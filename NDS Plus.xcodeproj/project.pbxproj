@@ -1,0 +1,593 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806E9F72C97E1B10081D3E8 /* NDS_PlusApp.swift */; };
+		E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806E9F92C97E1B10081D3E8 /* ContentView.swift */; };
+		E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */; };
+		E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E806E9FE2C97E1B20081D3E8 /* Preview Assets.xcassets */; };
+		E806EA092C97E1B20081D3E8 /* NDS_PlusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA082C97E1B20081D3E8 /* NDS_PlusTests.swift */; };
+		E806EA132C97E1B20081D3E8 /* NDS_PlusUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA122C97E1B20081D3E8 /* NDS_PlusUITests.swift */; };
+		E806EA152C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA142C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E806EA052C97E1B20081D3E8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E806E9EC2C97E1B10081D3E8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E806E9F32C97E1B10081D3E8;
+			remoteInfo = "NDS Plus";
+		};
+		E806EA0F2C97E1B20081D3E8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E806E9EC2C97E1B10081D3E8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E806E9F32C97E1B10081D3E8;
+			remoteInfo = "NDS Plus";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		E806E9F42C97E1B10081D3E8 /* NDS Plus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NDS Plus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E806E9F72C97E1B10081D3E8 /* NDS_PlusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusApp.swift; sourceTree = "<group>"; };
+		E806E9F92C97E1B10081D3E8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E806E9FE2C97E1B20081D3E8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E806EA042C97E1B20081D3E8 /* NDS PlusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NDS PlusTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E806EA082C97E1B20081D3E8 /* NDS_PlusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusTests.swift; sourceTree = "<group>"; };
+		E806EA0E2C97E1B20081D3E8 /* NDS PlusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NDS PlusUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E806EA122C97E1B20081D3E8 /* NDS_PlusUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusUITests.swift; sourceTree = "<group>"; };
+		E806EA142C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E806E9F12C97E1B10081D3E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E806EA012C97E1B20081D3E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E806EA0B2C97E1B20081D3E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E806E9EB2C97E1B10081D3E8 = {
+			isa = PBXGroup;
+			children = (
+				E806E9F62C97E1B10081D3E8 /* NDS Plus */,
+				E806EA072C97E1B20081D3E8 /* NDS PlusTests */,
+				E806EA112C97E1B20081D3E8 /* NDS PlusUITests */,
+				E806E9F52C97E1B10081D3E8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E806E9F52C97E1B10081D3E8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E806E9F42C97E1B10081D3E8 /* NDS Plus.app */,
+				E806EA042C97E1B20081D3E8 /* NDS PlusTests.xctest */,
+				E806EA0E2C97E1B20081D3E8 /* NDS PlusUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E806E9F62C97E1B10081D3E8 /* NDS Plus */ = {
+			isa = PBXGroup;
+			children = (
+				E806E9F72C97E1B10081D3E8 /* NDS_PlusApp.swift */,
+				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
+				E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */,
+				E806E9FD2C97E1B20081D3E8 /* Preview Content */,
+			);
+			path = "NDS Plus";
+			sourceTree = "<group>";
+		};
+		E806E9FD2C97E1B20081D3E8 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				E806E9FE2C97E1B20081D3E8 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		E806EA072C97E1B20081D3E8 /* NDS PlusTests */ = {
+			isa = PBXGroup;
+			children = (
+				E806EA082C97E1B20081D3E8 /* NDS_PlusTests.swift */,
+			);
+			path = "NDS PlusTests";
+			sourceTree = "<group>";
+		};
+		E806EA112C97E1B20081D3E8 /* NDS PlusUITests */ = {
+			isa = PBXGroup;
+			children = (
+				E806EA122C97E1B20081D3E8 /* NDS_PlusUITests.swift */,
+				E806EA142C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift */,
+			);
+			path = "NDS PlusUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E806E9F32C97E1B10081D3E8 /* NDS Plus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E806EA182C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS Plus" */;
+			buildPhases = (
+				E806E9F02C97E1B10081D3E8 /* Sources */,
+				E806E9F12C97E1B10081D3E8 /* Frameworks */,
+				E806E9F22C97E1B10081D3E8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "NDS Plus";
+			productName = "NDS Plus";
+			productReference = E806E9F42C97E1B10081D3E8 /* NDS Plus.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E806EA032C97E1B20081D3E8 /* NDS PlusTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E806EA1B2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS PlusTests" */;
+			buildPhases = (
+				E806EA002C97E1B20081D3E8 /* Sources */,
+				E806EA012C97E1B20081D3E8 /* Frameworks */,
+				E806EA022C97E1B20081D3E8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E806EA062C97E1B20081D3E8 /* PBXTargetDependency */,
+			);
+			name = "NDS PlusTests";
+			productName = "NDS PlusTests";
+			productReference = E806EA042C97E1B20081D3E8 /* NDS PlusTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		E806EA0D2C97E1B20081D3E8 /* NDS PlusUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E806EA1E2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS PlusUITests" */;
+			buildPhases = (
+				E806EA0A2C97E1B20081D3E8 /* Sources */,
+				E806EA0B2C97E1B20081D3E8 /* Frameworks */,
+				E806EA0C2C97E1B20081D3E8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E806EA102C97E1B20081D3E8 /* PBXTargetDependency */,
+			);
+			name = "NDS PlusUITests";
+			productName = "NDS PlusUITests";
+			productReference = E806EA0E2C97E1B20081D3E8 /* NDS PlusUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E806E9EC2C97E1B10081D3E8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					E806E9F32C97E1B10081D3E8 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					E806EA032C97E1B20081D3E8 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = E806E9F32C97E1B10081D3E8;
+					};
+					E806EA0D2C97E1B20081D3E8 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = E806E9F32C97E1B10081D3E8;
+					};
+				};
+			};
+			buildConfigurationList = E806E9EF2C97E1B10081D3E8 /* Build configuration list for PBXProject "NDS Plus" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E806E9EB2C97E1B10081D3E8;
+			productRefGroup = E806E9F52C97E1B10081D3E8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E806E9F32C97E1B10081D3E8 /* NDS Plus */,
+				E806EA032C97E1B20081D3E8 /* NDS PlusTests */,
+				E806EA0D2C97E1B20081D3E8 /* NDS PlusUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E806E9F22C97E1B10081D3E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */,
+				E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E806EA022C97E1B20081D3E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E806EA0C2C97E1B20081D3E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E806E9F02C97E1B10081D3E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
+				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E806EA002C97E1B20081D3E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E806EA092C97E1B20081D3E8 /* NDS_PlusTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E806EA0A2C97E1B20081D3E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E806EA152C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift in Sources */,
+				E806EA132C97E1B20081D3E8 /* NDS_PlusUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E806EA062C97E1B20081D3E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E806E9F32C97E1B10081D3E8 /* NDS Plus */;
+			targetProxy = E806EA052C97E1B20081D3E8 /* PBXContainerItemProxy */;
+		};
+		E806EA102C97E1B20081D3E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E806E9F32C97E1B10081D3E8 /* NDS Plus */;
+			targetProxy = E806EA0F2C97E1B20081D3E8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		E806EA162C97E1B20081D3E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E806EA172C97E1B20081D3E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E806EA192C97E1B20081D3E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"NDS Plus/Preview Content\"";
+				DEVELOPMENT_TEAM = 72VANXCC9C;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-Plus";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E806EA1A2C97E1B20081D3E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"NDS Plus/Preview Content\"";
+				DEVELOPMENT_TEAM = 72VANXCC9C;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-Plus";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E806EA1C2C97E1B20081D3E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72VANXCC9C;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NDS Plus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NDS Plus";
+			};
+			name = Debug;
+		};
+		E806EA1D2C97E1B20081D3E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72VANXCC9C;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NDS Plus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NDS Plus";
+			};
+			name = Release;
+		};
+		E806EA1F2C97E1B20081D3E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72VANXCC9C;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "NDS Plus";
+			};
+			name = Debug;
+		};
+		E806EA202C97E1B20081D3E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 72VANXCC9C;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "NDS Plus";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E806E9EF2C97E1B10081D3E8 /* Build configuration list for PBXProject "NDS Plus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E806EA162C97E1B20081D3E8 /* Debug */,
+				E806EA172C97E1B20081D3E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E806EA182C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS Plus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E806EA192C97E1B20081D3E8 /* Debug */,
+				E806EA1A2C97E1B20081D3E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E806EA1B2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS PlusTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E806EA1C2C97E1B20081D3E8 /* Debug */,
+				E806EA1D2C97E1B20081D3E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E806EA1E2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS PlusUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E806EA1F2C97E1B20081D3E8 /* Debug */,
+				E806EA202C97E1B20081D3E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E806E9EC2C97E1B10081D3E8 /* Project object */;
+}
