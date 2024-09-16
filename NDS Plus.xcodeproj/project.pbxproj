@@ -16,6 +16,7 @@
 		E806EA152C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA142C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift */; };
 		E806EA222C97E87A0081D3E8 /* GameView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E806EA212C97E87A0081D3E8 /* GameView.xib */; };
 		E806EA242C97E8930081D3E8 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA232C97E8930081D3E8 /* GameViewController.swift */; };
+		E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,8 @@
 		E806EA142C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		E806EA212C97E87A0081D3E8 /* GameView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameView.xib; sourceTree = "<group>"; };
 		E806EA232C97E8930081D3E8 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		E806EA2B2C9824A80081D3E8 /* NDS-Plus-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "NDS-Plus-Info.plist"; sourceTree = SOURCE_ROOT; };
+		E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentFile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,8 +101,10 @@
 		E806E9F62C97E1B10081D3E8 /* NDS Plus */ = {
 			isa = PBXGroup;
 			children = (
+				E806EA2B2C9824A80081D3E8 /* NDS-Plus-Info.plist */,
 				E806E9F72C97E1B10081D3E8 /* NDS_PlusApp.swift */,
 				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
+				E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */,
 				E806EA212C97E87A0081D3E8 /* GameView.xib */,
 				E806EA232C97E8930081D3E8 /* GameViewController.swift */,
 				E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */,
@@ -267,6 +272,7 @@
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E806EA242C97E8930081D3E8 /* GameViewController.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
+				E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,6 +439,7 @@
 				DEVELOPMENT_TEAM = 72VANXCC9C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "NDS-Plus-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -462,6 +469,7 @@
 				DEVELOPMENT_TEAM = 72VANXCC9C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "NDS-Plus-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -6,15 +6,21 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ContentView: View {
     @State private var showSettings = false
-    @State private var bios7Loaded = false
-    @State private var bios9Loaded = false
-    @State private var firmwareLoaded = false
+    @State private var showRomDialog = false
+
+    @State private var bios7Data: Data? = nil
+    @State private var bios9Data: Data? = nil
+    @State private var firmwareData: Data? = nil
+    @State private var romData: Data? = nil
+    
+    let ndsType = UTType("com.nds.nds")
     
     var buttonDisabled: Bool {
-        return !bios7Loaded || !bios9Loaded || !firmwareLoaded
+        return bios7Data == nil || bios9Data == nil || firmwareData == nil
     }
     
     var buttonColor: Color {
@@ -45,9 +51,9 @@ struct ContentView: View {
             .sheet(isPresented: $showSettings) {
                 VStack {
                     SettingsView(
-                        bios7Loaded: $bios7Loaded,
-                        bios9Loaded: $bios9Loaded,
-                        firmwareLoaded: $firmwareLoaded
+                        bios7Data: $bios7Data,
+                        bios9Data: $bios9Data,
+                        firmwareData: $firmwareData
                     )
                 }
                 .background(colorScheme == .dark ? Color.black : Color.white)
@@ -61,13 +67,21 @@ struct ContentView: View {
             Spacer()
             HStack {
                 Button("Load Game", systemImage: "square.and.arrow.up.circle") {
-                    print("you clicked me!")
+                    showRomDialog = true
                 }
                 .foregroundColor(buttonColor)
                 .disabled(buttonDisabled)
                 .font(.title)
             }
             Spacer()
+        }
+        .fileImporter(isPresented: $showRomDialog, allowedContentTypes: [ndsType.unsafelyUnwrapped]) { result in
+        
+            if let url = try? result.get() {
+                if let data = try? Data(contentsOf: url) {
+                    romData = data
+                }
+            }
         }
         .background(colorScheme == .dark ? Color.black : Color.white )
     }
@@ -77,12 +91,16 @@ struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     
-    @Binding var bios7Loaded: Bool
-    @Binding var bios9Loaded: Bool
-    @Binding var firmwareLoaded: Bool
+    @Binding var bios7Data: Data?
+    @Binding var bios9Data: Data?
+    @Binding var firmwareData: Data?
     
     @State private var showFileBrowser = false
     
+    @State private var currentFile: CurrentFile? = nil
+    
+    let binType = UTType(filenameExtension: "bin", conformingTo: .data)
+
     var body: some View {
         VStack {
             HStack {
@@ -93,10 +111,11 @@ struct SettingsView: View {
             List {
                 HStack {
                     Button("Bios 7") {
-                       
+                        showFileBrowser = true
+                        currentFile = CurrentFile.bios7
                     }
                     Spacer()
-                    if bios7Loaded {
+                    if bios7Data != nil {
                         Image(systemName: "checkmark")
                             .foregroundColor(.green)
                     }
@@ -104,10 +123,11 @@ struct SettingsView: View {
                 
                 HStack {
                     Button("Bios 9") {
-                        bios9Loaded = true
+                        showFileBrowser = true
+                        currentFile = CurrentFile.bios9
                     }
                     Spacer()
-                    if bios9Loaded {
+                    if bios9Data != nil {
                         Image(systemName: "checkmark")
                             .foregroundColor(.green)
                     }
@@ -115,10 +135,11 @@ struct SettingsView: View {
                
                 HStack {
                     Button("Firmware") {
-                        firmwareLoaded = true
+                        showFileBrowser = true
+                        currentFile = CurrentFile.firmware
                     }
                     Spacer()
-                    if firmwareLoaded {
+                    if firmwareData != nil {
                         Image(systemName: "checkmark")
                             .foregroundColor(.green)
                     }
@@ -129,7 +150,25 @@ struct SettingsView: View {
                 dismiss()
             }
         }
-        .sheet(isPresented: $showFileBrowser) {
+        .fileImporter(isPresented: $showFileBrowser, allowedContentTypes: [binType.unsafelyUnwrapped]) { result in
+            
+            
+            if let url = try? result.get() {
+                if let data = try? Data(contentsOf: url) {
+                    
+                    if let file = currentFile {
+                        switch file {
+                        case .bios7:
+                            bios7Data = data
+                        case .bios9:
+                            bios9Data = data
+                        case .firmware:
+                            firmwareData = data
+                        }
+                    }
+                }
+                
+            }
             
         }
     }
