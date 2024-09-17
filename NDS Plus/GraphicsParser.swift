@@ -9,10 +9,19 @@ import Foundation
 import CoreGraphics
 import UIKit
 
+let SCREEN_WIDTH = 256
+let SCREEN_HEIGHT = 192
+
 class GraphicsParser {
-    func fromBytes(bytes: [UInt8]) -> UIImage? {
-        let width = 256
-        let height = 192
+    func fromPointer(ptr: UnsafePointer<UInt8>) -> UIImage? {
+        let buffer = UnsafeBufferPointer(start: ptr, count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
+        
+        let pixelsArr = Array(buffer)
+        
+        return fromBytes(bytes: pixelsArr)
+    }
+    
+    private func fromBytes(bytes: [UInt8]) -> UIImage? {
         let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue)
         let bitsPerComponent = 8
@@ -25,11 +34,11 @@ class GraphicsParser {
             else { return nil }
 
         guard let cgim = CGImage(
-                width: width,
-                height: height,
+                width: SCREEN_WIDTH,
+                height: SCREEN_HEIGHT,
                 bitsPerComponent: bitsPerComponent,
                 bitsPerPixel: bitsPerPixel,
-                bytesPerRow: width * 4,
+                bytesPerRow: SCREEN_WIDTH * 4,
                 space: rgbColorSpace,
                 bitmapInfo: bitmapInfo,
                 provider: providerRef,

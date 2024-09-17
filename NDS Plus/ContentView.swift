@@ -21,45 +21,58 @@ struct ContentView: View {
     @State private var bottomImage: UIImage = UIImage()
     
     @State private var workItem: DispatchWorkItem? = nil
+    @State private var isRunning = false
     
     let graphicsParser = GraphicsParser()
     @State private var emulator: MobileEmulator? = nil {
         didSet {
             workItem = DispatchWorkItem {
-                while true {
-                    emulator!.step_frame()
-                    
-                    let aPixels = emulator!.get_engine_a_picture_pointer()
-                    
-                    let buffer = UnsafeBufferPointer(start: aPixels, count: 192 * 256 * 4)
-                    
-                    let aPixelsArr = Array(buffer)
-                    
-                    if let image = graphicsParser.fromBytes(bytes: aPixelsArr) {
-                        DispatchQueue.main.async {
-                            topImage = image
+                if let emu = emulator {
+                    while true {
+                        emu.step_frame()
+                            
+                        let aPixels = emu.get_engine_a_picture_pointer()
+                        
+                        var imageA = UIImage()
+                        var imageB = UIImage()
+                        
+                        if let image = graphicsParser.fromPointer(ptr: aPixels) {
+                            imageA = image
+                            
                         }
-                    }
-                    
-                    let bPixels = emulator!.get_engine_b_picture_pointer()
-                    
-                    let bbuffer = UnsafeBufferPointer(start: bPixels, count: 192 * 256 * 4)
-                    
-                    let bPixelsArr = Array(bbuffer)
-                    
-                    if let image = graphicsParser.fromBytes(bytes: bPixelsArr) {
-                        DispatchQueue.main.async {
-                            bottomImage = image
+                        
+                        let bPixels = emu.get_engine_b_picture_pointer()
+                        
+                        if let image = graphicsParser.fromPointer(ptr: bPixels) {
+                            imageB = image
+                            
+                        }
+                        
+                        if emu.is_top_a() {
+                            DispatchQueue.main.async {
+                                topImage = imageA
+                                bottomImage = imageB
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                topImage = imageB
+                                bottomImage = imageA
+                            }
+                        }
+                        
+                        if !isRunning {
+                            break
                         }
                     }
                 }
+                
             }
             
             DispatchQueue.global().async(execute: workItem!)
         }
     }
     
-    let ndsType = UTType("com.nds.nds")
+    let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
     
     var buttonDisabled: Bool {
         return bios7Data == nil || bios9Data == nil || firmwareData == nil
@@ -111,9 +124,18 @@ struct ContentView: View {
                 .frame(width: 256, height: 192)
             Image(uiImage: bottomImage)
                 .frame(width: 256, height: 192)
+                .onTapGesture() { location in
+                    print("you clicked me at \(location)!")
+                }
             Spacer()
             HStack {
                 Button("Load Game", systemImage: "square.and.arrow.up.circle") {
+                    emulator = nil
+                    workItem?.cancel()
+                    isRunning = false
+                    
+                    workItem = nil
+                    
                     showRomDialog = true
                 }
                 .foregroundColor(buttonColor)
@@ -127,44 +149,52 @@ struct ContentView: View {
             allowedContentTypes: [ndsType.unsafelyUnwrapped]
         ) { result in
             if let url = try? result.get() {
-                if let data = try? Data(contentsOf: url) {
+                if url.startAccessingSecurityScopedResource() {
+                    defer {
+                        url.stopAccessingSecurityScopedResource()
+                    }
+                    if let data = try? Data(contentsOf: url) {
 
-                    romData = data
-                    
-                    if bios7Data != nil && bios9Data != nil && firmwareData != nil {
-                        let bios7Arr: [UInt8] = Array(bios7Data!)
-                        let bios9Arr: [UInt8] = Array(bios9Data!)
-                        let firmwareArr: [UInt8] = Array(firmwareData!)
-                        let romArr: [UInt8] = Array(romData!)
+                        romData = data
                         
-                        var bios7Ptr: UnsafeBufferPointer<UInt8>? = nil
-                        var bios9Ptr: UnsafeBufferPointer<UInt8>? = nil
-                        var firmwarePtr: UnsafeBufferPointer<UInt8>? = nil
-                        var romPtr: UnsafeBufferPointer<UInt8>? = nil
-                        
-                        bios7Arr.withUnsafeBufferPointer() { ptr in
-                            bios7Ptr = ptr
+                        if bios7Data != nil && bios9Data != nil && firmwareData != nil {
+                            let bios7Arr: [UInt8] = Array(bios7Data!)
+                            let bios9Arr: [UInt8] = Array(bios9Data!)
+                            let firmwareArr: [UInt8] = Array(firmwareData!)
+                            let romArr: [UInt8] = Array(romData!)
+                            
+                            var bios7Ptr: UnsafeBufferPointer<UInt8>? = nil
+                            var bios9Ptr: UnsafeBufferPointer<UInt8>? = nil
+                            var firmwarePtr: UnsafeBufferPointer<UInt8>? = nil
+                            var romPtr: UnsafeBufferPointer<UInt8>? = nil
+                            
+                            bios7Arr.withUnsafeBufferPointer() { ptr in
+                                bios7Ptr = ptr
+                            }
+                            
+                            bios9Arr.withUnsafeBufferPointer() { ptr in
+                                bios9Ptr = ptr
+                            }
+                            
+                            firmwareArr.withUnsafeBufferPointer() { ptr in
+                                firmwarePtr = ptr
+                            }
+                            romArr.withUnsafeBufferPointer() { ptr in
+                                romPtr = ptr
+                            }
+                            
+                            // we finally have an emulator!
+                            emulator = DSEmulatorMobile.MobileEmulator(
+                                bios7Ptr!,
+                                bios9Ptr!,
+                                firmwarePtr!,
+                                romPtr!
+                            )
+                            
+                            isRunning = true
+                            
+                            print("emulator set!")
                         }
-                        
-                        bios9Arr.withUnsafeBufferPointer() { ptr in
-                            bios9Ptr = ptr
-                        }
-                        
-                        firmwareArr.withUnsafeBufferPointer() { ptr in
-                            firmwarePtr = ptr
-                        }
-                        romArr.withUnsafeBufferPointer() { ptr in
-                            romPtr = ptr
-                        }
-                        
-                        // we finally have an emulator!
-                        emulator = DSEmulatorMobile.MobileEmulator(
-                            bios7Ptr!,
-                            bios9Ptr!,
-                            firmwarePtr!,
-                            romPtr!
-                        )
-                        print("emulator set!")
                     }
                 }
             }
@@ -240,21 +270,33 @@ struct SettingsView: View {
             isPresented: $showFileBrowser,
             allowedContentTypes: [binType.unsafelyUnwrapped]
         ) { result in
+            print("processing file")
             if let url = try? result.get() {
-                if let data = try? Data(contentsOf: url) {
-                    
-                    if let file = currentFile {
-                        switch file {
-                        case .bios7:
-                            bios7Data = data
-                        case .bios9:
-                            bios9Data = data
-                        case .firmware:
-                            firmwareData = data
+                print("got file URL")
+                print("url = \(url)")
+                if url.startAccessingSecurityScopedResource() {
+                    defer {
+                        url.stopAccessingSecurityScopedResource()
+                    }
+                    if let data = try? Data(contentsOf: url) {
+                        print("got file data")
+                        
+                        if let file = currentFile {
+                            switch file {
+                            case .bios7:
+                                print("setting bios7Data")
+                                bios7Data = data
+                            case .bios9:
+                                print("setting bios9Data")
+                                bios9Data = data
+                            case .firmware:
+                                print("setting firmwareData")
+                                firmwareData = data
+                            }
                         }
                     }
                 }
-                
+               
             }
             
             if bios7Data != nil && bios9Data != nil && firmwareData != nil {
