@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,7 @@
 		E806EA222C97E87A0081D3E8 /* GameView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E806EA212C97E87A0081D3E8 /* GameView.xib */; };
 		E806EA242C97E8930081D3E8 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA232C97E8930081D3E8 /* GameViewController.swift */; };
 		E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */; };
+		E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */ = {isa = PBXBuildFile; productRef = E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,6 +156,9 @@
 			dependencies = (
 			);
 			name = "NDS Plus";
+			packageProductDependencies = (
+				E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */,
+			);
 			productName = "NDS Plus";
 			productReference = E806E9F42C97E1B10081D3E8 /* NDS Plus.app */;
 			productType = "com.apple.product-type.application";
@@ -226,6 +231,9 @@
 				Base,
 			);
 			mainGroup = E806E9EB2C97E1B10081D3E8;
+			packageReferences = (
+				E806EA2E2C991CF70081D3E8 /* XCLocalSwiftPackageReference "../../rust-projects/ds-emulator/mobile/DSEmulatorMobile" */,
+			);
 			productRefGroup = E806E9F52C97E1B10081D3E8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -604,6 +612,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		E806EA2E2C991CF70081D3E8 /* XCLocalSwiftPackageReference "../../rust-projects/ds-emulator/mobile/DSEmulatorMobile" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../rust-projects/ds-emulator/mobile/DSEmulatorMobile";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DSEmulatorMobile;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E806E9EC2C97E1B10081D3E8 /* Project object */;
 }

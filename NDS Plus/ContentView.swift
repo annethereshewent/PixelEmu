@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import DSEmulatorMobile
 
 struct ContentView: View {
     @State private var showSettings = false
@@ -75,11 +76,60 @@ struct ContentView: View {
             }
             Spacer()
         }
-        .fileImporter(isPresented: $showRomDialog, allowedContentTypes: [ndsType.unsafelyUnwrapped]) { result in
+        .fileImporter(
+            isPresented: $showRomDialog,
+            allowedContentTypes: [ndsType.unsafelyUnwrapped]
+        ) { result in
         
             if let url = try? result.get() {
                 if let data = try? Data(contentsOf: url) {
                     romData = data
+                    
+                    if bios7Data != nil && bios9Data != nil && firmwareData != nil {
+                        var bios7Arr: [UInt8] = Array(bios7Data!)
+                        var bios9Arr: [UInt8] = Array(bios9Data!)
+                        var firmwareArr: [UInt8] = Array(firmwareData!)
+                        var romArr: [UInt8] = Array(romData!)
+                        
+                        var bios7Ptr: UnsafeBufferPointer<UInt8>? = nil
+                        var bios9Ptr: UnsafeBufferPointer<UInt8>? = nil
+                        var firmwarePtr: UnsafeBufferPointer<UInt8>? = nil
+                        var romPtr: UnsafeBufferPointer<UInt8>? = nil
+                        
+                        bios7Arr.withUnsafeBufferPointer() { ptr in
+                            bios7Ptr = ptr
+                        }
+                        
+                        bios9Arr.withUnsafeBufferPointer() { ptr in
+                            bios9Ptr = ptr
+                        }
+                        
+                        firmwareArr.withUnsafeBufferPointer() { ptr in
+                            firmwarePtr = ptr
+                        }
+                        romArr.withUnsafeBufferPointer() { ptr in
+                            romPtr = ptr
+                        }
+                        
+                        let emulator = DSEmulatorMobile.MobileEmulator(
+                            bios7Ptr!,
+                            bios9Ptr!,
+                            firmwarePtr!,
+                            romPtr!
+                        )
+                        
+                        // we finally have an emulator!!!!!
+                        while (true) {
+                            let rustVec = RustVec<UInt8>()
+                            
+                            emulator.step_frame()
+                            
+                            let aPixels = emulator.get_engine_a_picture_pointer()
+                            let bPixels = emulator.get_engine_b_picture_pointer()
+                            
+                            
+                        }
+                    }
                 }
             }
         }
@@ -150,7 +200,10 @@ struct SettingsView: View {
                 dismiss()
             }
         }
-        .fileImporter(isPresented: $showFileBrowser, allowedContentTypes: [binType.unsafelyUnwrapped]) { result in
+        .fileImporter(
+            isPresented: $showFileBrowser,
+            allowedContentTypes: [binType.unsafelyUnwrapped]
+        ) { result in
             
             
             if let url = try? result.get() {
