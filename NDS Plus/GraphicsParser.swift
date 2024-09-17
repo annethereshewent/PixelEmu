@@ -14,13 +14,13 @@ class GraphicsParser {
         let width = 256
         let height = 192
         let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue)
         let bitsPerComponent = 8
         let bitsPerPixel = 32
 
         var data = bytes // Copy to mutable []
         guard let providerRef = CGDataProvider(data: NSData(bytes: &data,
-                                length: data.count * 4)
+                                length: data.count)
             )
             else { return nil }
 
