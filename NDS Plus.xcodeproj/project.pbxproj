@@ -14,10 +14,9 @@
 		E806EA092C97E1B20081D3E8 /* NDS_PlusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA082C97E1B20081D3E8 /* NDS_PlusTests.swift */; };
 		E806EA132C97E1B20081D3E8 /* NDS_PlusUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA122C97E1B20081D3E8 /* NDS_PlusUITests.swift */; };
 		E806EA152C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA142C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift */; };
-		E806EA222C97E87A0081D3E8 /* GameView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E806EA212C97E87A0081D3E8 /* GameView.xib */; };
-		E806EA242C97E8930081D3E8 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA232C97E8930081D3E8 /* GameViewController.swift */; };
 		E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */; };
 		E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */ = {isa = PBXBuildFile; productRef = E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */; };
+		E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA312C9935D00081D3E8 /* GraphicsParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,10 +47,9 @@
 		E806EA0E2C97E1B20081D3E8 /* NDS PlusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NDS PlusUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E806EA122C97E1B20081D3E8 /* NDS_PlusUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusUITests.swift; sourceTree = "<group>"; };
 		E806EA142C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		E806EA212C97E87A0081D3E8 /* GameView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameView.xib; sourceTree = "<group>"; };
-		E806EA232C97E8930081D3E8 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		E806EA2B2C9824A80081D3E8 /* NDS-Plus-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "NDS-Plus-Info.plist"; sourceTree = SOURCE_ROOT; };
 		E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentFile.swift; sourceTree = "<group>"; };
+		E806EA312C9935D00081D3E8 /* GraphicsParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphicsParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,10 +105,9 @@
 				E806E9F72C97E1B10081D3E8 /* NDS_PlusApp.swift */,
 				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
 				E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */,
-				E806EA212C97E87A0081D3E8 /* GameView.xib */,
-				E806EA232C97E8930081D3E8 /* GameViewController.swift */,
 				E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */,
 				E806E9FD2C97E1B20081D3E8 /* Preview Content */,
+				E806EA312C9935D00081D3E8 /* GraphicsParser.swift */,
 			);
 			path = "NDS Plus";
 			sourceTree = "<group>";
@@ -250,7 +247,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E806EA222C97E87A0081D3E8 /* GameView.xib in Resources */,
 				E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */,
 				E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */,
 			);
@@ -277,8 +273,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */,
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
-				E806EA242C97E8930081D3E8 /* GameViewController.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
 				E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */,
 			);

@@ -17,6 +17,47 @@ struct ContentView: View {
     @State private var bios9Data: Data? = nil
     @State private var firmwareData: Data? = nil
     @State private var romData: Data? = nil
+    @State private var topImage: UIImage = UIImage()
+    @State private var bottomImage: UIImage = UIImage()
+    
+    @State private var workItem: DispatchWorkItem? = nil
+    
+    let graphicsParser = GraphicsParser()
+    @State private var emulator: MobileEmulator? = nil {
+        didSet {
+            workItem = DispatchWorkItem {
+                while true {
+                    emulator!.step_frame()
+                    
+                    let aPixels = emulator!.get_engine_a_picture_pointer()
+                    
+                    let buffer = UnsafeBufferPointer(start: aPixels, count: 192 * 256 * 4)
+                    
+                    let aPixelsArr = Array(buffer)
+                    
+                    if let image = graphicsParser.fromBytes(bytes: aPixelsArr) {
+                        DispatchQueue.main.async {
+                            topImage = image
+                        }
+                    }
+                    
+                    let bPixels = emulator!.get_engine_b_picture_pointer()
+                    
+                    let bbuffer = UnsafeBufferPointer(start: bPixels, count: 192 * 256 * 4)
+                    
+                    let bPixelsArr = Array(bbuffer)
+                    
+                    if let image = graphicsParser.fromBytes(bytes: bPixelsArr) {
+                        DispatchQueue.main.async {
+                            bottomImage = image
+                        }
+                    }
+                }
+            }
+            
+            DispatchQueue.global().async(execute: workItem!)
+        }
+    }
     
     let ndsType = UTType("com.nds.nds")
     
@@ -65,6 +106,11 @@ struct ContentView: View {
                     .foregroundColor(colorScheme == .dark ? .white : .black)
                     .frame(alignment: .center)
             }
+            // Spacer()
+            Image(uiImage: topImage)
+                .frame(width: 256, height: 192)
+            Image(uiImage: bottomImage)
+                .frame(width: 256, height: 192)
             Spacer()
             HStack {
                 Button("Load Game", systemImage: "square.and.arrow.up.circle") {
@@ -80,16 +126,16 @@ struct ContentView: View {
             isPresented: $showRomDialog,
             allowedContentTypes: [ndsType.unsafelyUnwrapped]
         ) { result in
-        
             if let url = try? result.get() {
                 if let data = try? Data(contentsOf: url) {
+
                     romData = data
                     
                     if bios7Data != nil && bios9Data != nil && firmwareData != nil {
-                        var bios7Arr: [UInt8] = Array(bios7Data!)
-                        var bios9Arr: [UInt8] = Array(bios9Data!)
-                        var firmwareArr: [UInt8] = Array(firmwareData!)
-                        var romArr: [UInt8] = Array(romData!)
+                        let bios7Arr: [UInt8] = Array(bios7Data!)
+                        let bios9Arr: [UInt8] = Array(bios9Data!)
+                        let firmwareArr: [UInt8] = Array(firmwareData!)
+                        let romArr: [UInt8] = Array(romData!)
                         
                         var bios7Ptr: UnsafeBufferPointer<UInt8>? = nil
                         var bios9Ptr: UnsafeBufferPointer<UInt8>? = nil
@@ -111,24 +157,14 @@ struct ContentView: View {
                             romPtr = ptr
                         }
                         
-                        let emulator = DSEmulatorMobile.MobileEmulator(
+                        // we finally have an emulator!
+                        emulator = DSEmulatorMobile.MobileEmulator(
                             bios7Ptr!,
                             bios9Ptr!,
                             firmwarePtr!,
                             romPtr!
                         )
-                        
-                        // we finally have an emulator!!!!!
-                        while (true) {
-                            let rustVec = RustVec<UInt8>()
-                            
-                            emulator.step_frame()
-                            
-                            let aPixels = emulator.get_engine_a_picture_pointer()
-                            let bPixels = emulator.get_engine_b_picture_pointer()
-                            
-                            
-                        }
+                        print("emulator set!")
                     }
                 }
             }
@@ -204,8 +240,6 @@ struct SettingsView: View {
             isPresented: $showFileBrowser,
             allowedContentTypes: [binType.unsafelyUnwrapped]
         ) { result in
-            
-            
             if let url = try? result.get() {
                 if let data = try? Data(contentsOf: url) {
                     
@@ -221,6 +255,10 @@ struct SettingsView: View {
                     }
                 }
                 
+            }
+            
+            if bios7Data != nil && bios9Data != nil && firmwareData != nil {
+                dismiss()
             }
             
         }
