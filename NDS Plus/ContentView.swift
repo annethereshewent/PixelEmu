@@ -24,7 +24,7 @@ struct ContentView: View {
     @State private var workItem: DispatchWorkItem? = nil
     @State private var isRunning = false
     
-    private let gameController = GameController()
+    @State private var gameController = GameController()
     
     
     let graphicsParser = GraphicsParser()
@@ -50,7 +50,21 @@ struct ContentView: View {
     
     private func handleInput() {
         if let controller = self.gameController.controller.extendedGamepad {
-            
+            emulator!.update_input(ButtonEvent.ButtonA, controller.buttonA.isPressed)
+            emulator!.update_input(ButtonEvent.ButtonB, controller.buttonB.isPressed)
+            emulator!.update_input(ButtonEvent.ButtonY, controller.buttonY.isPressed)
+            emulator!.update_input(ButtonEvent.ButtonX, controller.buttonX.isPressed)
+            emulator!.update_input(ButtonEvent.ButtonL, controller.leftShoulder.isPressed)
+            emulator!.update_input(ButtonEvent.ButtonR, controller.rightShoulder.isPressed)
+            emulator!.update_input(ButtonEvent.Start, controller.buttonMenu.isPressed)
+            emulator!.update_input(
+                ButtonEvent.Select,
+                controller.buttonOptions?.isPressed ?? false
+            )
+            emulator!.update_input(ButtonEvent.Up, controller.dpad.up.isPressed)
+            emulator!.update_input(ButtonEvent.Down, controller.dpad.down.isPressed)
+            emulator!.update_input(ButtonEvent.Left, controller.dpad.left.isPressed)
+            emulator!.update_input(ButtonEvent.Right, controller.dpad.right.isPressed)
         }
     }
     

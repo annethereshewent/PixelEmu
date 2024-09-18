@@ -18,7 +18,7 @@ class GameController {
             name: NSNotification.Name.GCControllerDidConnect, object: nil
         )
         if let controller = GCController.controllers().first {
-            controller = controller
+            self.controller = controller
         }
     }
     
