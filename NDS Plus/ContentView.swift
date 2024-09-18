@@ -9,6 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 import GameController
 import DSEmulatorMobile
+import GLKit
 
 struct ContentView: View {
     @State private var showSettings = false
@@ -46,6 +47,65 @@ struct ContentView: View {
         default:
             return buttonDisabled ? Color.gray : Color.cyan
         }
+    }
+    
+    private func run(
+        bios7Ptr: UnsafeBufferPointer<UInt8>,
+        bios9Ptr: UnsafeBufferPointer<UInt8>,
+        firmwarePtr: UnsafeBufferPointer<UInt8>,
+        romPtr: UnsafeBufferPointer<UInt8>
+    ) {
+        emulator = MobileEmulator(
+            bios7Ptr,
+            bios9Ptr,
+            firmwarePtr,
+            romPtr
+        )
+        
+        isRunning = true
+        
+        workItem = DispatchWorkItem {
+            if let emu = emulator {
+                while true {
+                    DispatchQueue.main.sync {
+                        emu.step_frame()
+                        
+                        let aPixels = emu.get_engine_a_picture_pointer()
+                        
+                        var imageA = UIImage()
+                        var imageB = UIImage()
+                        
+                        if let image = graphicsParser.fromPointer(ptr: aPixels) {
+                            imageA = image
+                        }
+                        
+                        let bPixels = emu.get_engine_b_picture_pointer()
+                        
+                        if let image = graphicsParser.fromPointer(ptr: bPixels) {
+                            imageB = image
+                            
+                        }
+                        
+                        if emu.is_top_a() {
+                            topImage = imageA
+                            bottomImage = imageB
+                        } else {
+                            topImage = imageB
+                            bottomImage = imageA
+                        }
+                        
+                        self.handleInput()
+                    }
+                    
+                    if !isRunning {
+                        break
+                    }
+                }
+            }
+            
+        }
+        
+        DispatchQueue.global().async(execute: workItem!)
     }
     
     private func handleInput() {
@@ -99,15 +159,23 @@ struct ContentView: View {
             }
             // Spacer()
             Image(uiImage: topImage)
-                .frame(width: 256, height: 192)
+                .resizable()
+                .frame(
+                    width: CGFloat(SCREEN_WIDTH) * 1.25,
+                    height: CGFloat(SCREEN_HEIGHT) * 1.25
+                )
             Image(uiImage: bottomImage)
-                .frame(width: 256, height: 192)
+                .resizable()
+                .frame(
+                    width: CGFloat(SCREEN_WIDTH) * 1.25,
+                    height: CGFloat(SCREEN_HEIGHT) * 1.25
+                )
                 .onTapGesture() { location in
                     if location.x >= 0 && location.y >= 0 {
-                        emulator?.touch_screen(
-                            UInt16(location.x),
-                            UInt16(location.y)
-                        )
+                        let x = UInt16(Float(location.x) / 1.25)
+                        let y = UInt16(Float(location.y) / 1.25)
+                    
+                        emulator?.touch_screen(x, y)
                         
                         DispatchQueue.global().async(execute: DispatchWorkItem {
                             usleep(200)
@@ -122,18 +190,16 @@ struct ContentView: View {
                     DragGesture(minimumDistance: 0)
                         .onChanged() { value in
                             if value.location.x >= 0 && value.location.y >= 0 {
-                                emulator?.touch_screen(
-                                    UInt16(value.location.x),
-                                    UInt16(value.location.y)
-                                )
+                                let x = UInt16(Float(value.location.x) / 1.25)
+                                let y = UInt16(Float(value.location.y) / 1.25)
+                                emulator?.touch_screen(x, y)
                             }
                         }
                         .onEnded() { value in
                             if value.location.x >= 0 && value.location.y >= 0 {
-                                emulator?.touch_screen(
-                                    UInt16(value.location.x),
-                                    UInt16(value.location.y)
-                                )
+                                let x = UInt16(Float(value.location.x) / 1.25)
+                                let y = UInt16(Float(value.location.y) / 1.25)
+                                emulator?.touch_screen(x, y)
                                 DispatchQueue.global().async(execute: DispatchWorkItem {
                                     usleep(200)
                                     DispatchQueue.main.sync() {
@@ -202,57 +268,12 @@ struct ContentView: View {
                             }
                             
                             // we finally have an emulator!
-                            emulator = DSEmulatorMobile.MobileEmulator(
-                                bios7Ptr!,
-                                bios9Ptr!,
-                                firmwarePtr!,
-                                romPtr!
+                            self.run(
+                                bios7Ptr: bios7Ptr!,
+                                bios9Ptr: bios9Ptr!,
+                                firmwarePtr: firmwarePtr!,
+                                romPtr: romPtr!
                             )
-                            
-                            isRunning = true
-                            
-                            workItem = DispatchWorkItem {
-                                if let emu = emulator {
-                                    while true {
-                                        DispatchQueue.main.sync {
-                                            emu.step_frame()
-                                            
-                                            let aPixels = emu.get_engine_a_picture_pointer()
-                                            
-                                            var imageA = UIImage()
-                                            var imageB = UIImage()
-                                            
-                                            if let image = graphicsParser.fromPointer(ptr: aPixels) {
-                                                imageA = image
-                                            }
-                                            
-                                            let bPixels = emu.get_engine_b_picture_pointer()
-                                            
-                                            if let image = graphicsParser.fromPointer(ptr: bPixels) {
-                                                imageB = image
-                                                
-                                            }
-                                            
-                                            if emu.is_top_a() {
-                                                topImage = imageA
-                                                bottomImage = imageB
-                                            } else {
-                                                topImage = imageB
-                                                bottomImage = imageA
-                                            }
-                                            
-                                            self.handleInput()
-                                        }
-                                        
-                                        if !isRunning {
-                                            break
-                                        }
-                                    }
-                                }
-                                
-                            }
-                            
-                            DispatchQueue.global().async(execute: workItem!)
                         }
                     }
                 }
