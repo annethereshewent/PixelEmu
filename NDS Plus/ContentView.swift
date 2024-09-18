@@ -138,6 +138,7 @@ struct ContentView: View {
                 Button("", systemImage: "gear") {
                     showSettings.toggle()
                 }
+                .font(.title)
                 .frame(alignment: .trailing)
                 .foregroundColor(.indigo)
                 .padding(.trailing)
