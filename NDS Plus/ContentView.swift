@@ -24,53 +24,8 @@ struct ContentView: View {
     @State private var isRunning = false
     
     let graphicsParser = GraphicsParser()
-    @State private var emulator: MobileEmulator? = nil {
-        didSet {
-            workItem = DispatchWorkItem {
-                if let emu = emulator {
-                    while true {
-                        emu.step_frame()
-                            
-                        let aPixels = emu.get_engine_a_picture_pointer()
-                        
-                        var imageA = UIImage()
-                        var imageB = UIImage()
-                        
-                        if let image = graphicsParser.fromPointer(ptr: aPixels) {
-                            imageA = image
-                            
-                        }
-                        
-                        let bPixels = emu.get_engine_b_picture_pointer()
-                        
-                        if let image = graphicsParser.fromPointer(ptr: bPixels) {
-                            imageB = image
-                            
-                        }
-                        
-                        if emu.is_top_a() {
-                            DispatchQueue.main.async {
-                                topImage = imageA
-                                bottomImage = imageB
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                topImage = imageB
-                                bottomImage = imageA
-                            }
-                        }
-                        
-                        if !isRunning {
-                            break
-                        }
-                    }
-                }
-                
-            }
-            
-            DispatchQueue.global().async(execute: workItem!)
-        }
-    }
+    
+    @State private var emulator: MobileEmulator? = nil
     
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
     
@@ -125,8 +80,15 @@ struct ContentView: View {
             Image(uiImage: bottomImage)
                 .frame(width: 256, height: 192)
                 .onTapGesture() { location in
-                    print("you clicked me at \(location)!")
+                    emulator?.touch_screen(UInt16(location.x), UInt16(location.y))
+                    DispatchQueue.global().async(execute: DispatchWorkItem {
+                        usleep(200)
+                        DispatchQueue.main.sync() {
+                            emulator?.release_screen()
+                        }
+                    })
                 }
+                
             Spacer()
             HStack {
                 Button("Load Game", systemImage: "square.and.arrow.up.circle") {
@@ -193,7 +155,46 @@ struct ContentView: View {
                             
                             isRunning = true
                             
-                            print("emulator set!")
+                            workItem = DispatchWorkItem {
+                                if let emu = emulator {
+                                    while true {
+                                        DispatchQueue.main.sync {
+                                            emu.step_frame()
+                                            
+                                            let aPixels = emu.get_engine_a_picture_pointer()
+                                            
+                                            var imageA = UIImage()
+                                            var imageB = UIImage()
+                                            
+                                            if let image = graphicsParser.fromPointer(ptr: aPixels) {
+                                                imageA = image
+                                            }
+                                            
+                                            let bPixels = emu.get_engine_b_picture_pointer()
+                                            
+                                            if let image = graphicsParser.fromPointer(ptr: bPixels) {
+                                                imageB = image
+                                                
+                                            }
+                                            
+                                            if emu.is_top_a() {
+                                                topImage = imageA
+                                                bottomImage = imageB
+                                            } else {
+                                                topImage = imageB
+                                                bottomImage = imageA
+                                            }
+                                        }
+                                        
+                                        if !isRunning {
+                                            break
+                                        }
+                                    }
+                                }
+                                
+                            }
+                            
+                            DispatchQueue.global().async(execute: workItem!)
                         }
                     }
                 }
@@ -270,27 +271,19 @@ struct SettingsView: View {
             isPresented: $showFileBrowser,
             allowedContentTypes: [binType.unsafelyUnwrapped]
         ) { result in
-            print("processing file")
             if let url = try? result.get() {
-                print("got file URL")
-                print("url = \(url)")
                 if url.startAccessingSecurityScopedResource() {
                     defer {
                         url.stopAccessingSecurityScopedResource()
                     }
                     if let data = try? Data(contentsOf: url) {
-                        print("got file data")
-                        
                         if let file = currentFile {
                             switch file {
                             case .bios7:
-                                print("setting bios7Data")
                                 bios7Data = data
                             case .bios9:
-                                print("setting bios9Data")
                                 bios9Data = data
                             case .firmware:
-                                print("setting firmwareData")
                                 firmwareData = data
                             }
                         }
