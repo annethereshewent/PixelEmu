@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import GameController
 import DSEmulatorMobile
 
 struct ContentView: View {
@@ -22,6 +23,9 @@ struct ContentView: View {
     
     @State private var workItem: DispatchWorkItem? = nil
     @State private var isRunning = false
+    
+    private let gameController = GameController()
+    
     
     let graphicsParser = GraphicsParser()
     
@@ -44,6 +48,11 @@ struct ContentView: View {
         }
     }
     
+    private func handleInput() {
+        if let controller = self.gameController.controller.extendedGamepad {
+            
+        }
+    }
     
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
@@ -80,14 +89,47 @@ struct ContentView: View {
             Image(uiImage: bottomImage)
                 .frame(width: 256, height: 192)
                 .onTapGesture() { location in
-                    emulator?.touch_screen(UInt16(location.x), UInt16(location.y))
-                    DispatchQueue.global().async(execute: DispatchWorkItem {
-                        usleep(200)
-                        DispatchQueue.main.sync() {
-                            emulator?.release_screen()
-                        }
-                    })
+                    if location.x >= 0 && location.y >= 0 {
+                        emulator?.touch_screen(
+                            UInt16(location.x),
+                            UInt16(location.y)
+                        )
+                        
+                        DispatchQueue.global().async(execute: DispatchWorkItem {
+                            usleep(200)
+                            DispatchQueue.main.sync() {
+                                emulator?.release_screen()
+                            }
+                        })
+                    }
+                   
                 }
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged() { value in
+                            if value.location.x >= 0 && value.location.y >= 0 {
+                                emulator?.touch_screen(
+                                    UInt16(value.location.x),
+                                    UInt16(value.location.y)
+                                )
+                            }
+                        }
+                        .onEnded() { value in
+                            if value.location.x >= 0 && value.location.y >= 0 {
+                                emulator?.touch_screen(
+                                    UInt16(value.location.x),
+                                    UInt16(value.location.y)
+                                )
+                                DispatchQueue.global().async(execute: DispatchWorkItem {
+                                    usleep(200)
+                                    DispatchQueue.main.sync() {
+                                        emulator?.release_screen()
+                                    }
+                                })
+                            }
+                            
+                        }
+                )
                 
             Spacer()
             HStack {
@@ -184,6 +226,8 @@ struct ContentView: View {
                                                 topImage = imageB
                                                 bottomImage = imageA
                                             }
+                                            
+                                            self.handleInput()
                                         }
                                         
                                         if !isRunning {
@@ -201,102 +245,6 @@ struct ContentView: View {
             }
         }
         .background(colorScheme == .dark ? Color.black : Color.white )
-    }
-}
-
-struct SettingsView: View {
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.colorScheme) var colorScheme
-    
-    @Binding var bios7Data: Data?
-    @Binding var bios9Data: Data?
-    @Binding var firmwareData: Data?
-    
-    @State private var showFileBrowser = false
-    
-    @State private var currentFile: CurrentFile? = nil
-    
-    let binType = UTType(filenameExtension: "bin", conformingTo: .data)
-
-    var body: some View {
-        VStack {
-            HStack {
-                Text("Settings")
-                    .font(.title)
-                    .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
-            }
-            List {
-                HStack {
-                    Button("Bios 7") {
-                        showFileBrowser = true
-                        currentFile = CurrentFile.bios7
-                    }
-                    Spacer()
-                    if bios7Data != nil {
-                        Image(systemName: "checkmark")
-                            .foregroundColor(.green)
-                    }
-                }
-                
-                HStack {
-                    Button("Bios 9") {
-                        showFileBrowser = true
-                        currentFile = CurrentFile.bios9
-                    }
-                    Spacer()
-                    if bios9Data != nil {
-                        Image(systemName: "checkmark")
-                            .foregroundColor(.green)
-                    }
-                }
-               
-                HStack {
-                    Button("Firmware") {
-                        showFileBrowser = true
-                        currentFile = CurrentFile.firmware
-                    }
-                    Spacer()
-                    if firmwareData != nil {
-                        Image(systemName: "checkmark")
-                            .foregroundColor(.green)
-                    }
-                }
-            }
-            Spacer()
-            Button("Dismiss") {
-                dismiss()
-            }
-        }
-        .fileImporter(
-            isPresented: $showFileBrowser,
-            allowedContentTypes: [binType.unsafelyUnwrapped]
-        ) { result in
-            if let url = try? result.get() {
-                if url.startAccessingSecurityScopedResource() {
-                    defer {
-                        url.stopAccessingSecurityScopedResource()
-                    }
-                    if let data = try? Data(contentsOf: url) {
-                        if let file = currentFile {
-                            switch file {
-                            case .bios7:
-                                bios7Data = data
-                            case .bios9:
-                                bios9Data = data
-                            case .firmware:
-                                firmwareData = data
-                            }
-                        }
-                    }
-                }
-               
-            }
-            
-            if bios7Data != nil && bios9Data != nil && firmwareData != nil {
-                dismiss()
-            }
-            
-        }
     }
 }
 
