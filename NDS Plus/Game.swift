@@ -6,14 +6,17 @@
 //
 
 import Foundation
+import SwiftData
 
-
+@Model
 class Game {
+    @Attribute(.unique)
     let path: URL
-    let contents: Data
+    let gameName: String
     
-    init(path: URL, contents: Data) {
+    init(path: URL, gameName: String) {
+        print("Storing \(gameName)")
         self.path = path
-        self.contents = contents
+        self.gameName = gameName
     }
 }

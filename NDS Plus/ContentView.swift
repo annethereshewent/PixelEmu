@@ -8,6 +8,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
 import DSEmulatorMobile
+import SwiftData
 
 struct ContentView: View {
     @State private var showSettings = false
@@ -23,9 +24,11 @@ struct ContentView: View {
     @State private var workItem: DispatchWorkItem? = nil
     @State private var isRunning = false
     @State private var loggedInCloud = false
-    @State private var games: [Game] = []
-    
+
     @State private var gameController = GameController()
+    @Environment(\.modelContext) private var context
+    
+    @Query private var games: [Game] = []
     
     init() {
         bios7Data = nil
@@ -85,17 +88,36 @@ struct ContentView: View {
         }
     }
     
-    private func run(
-        bios7Ptr: UnsafeBufferPointer<UInt8>,
-        bios9Ptr: UnsafeBufferPointer<UInt8>,
-        firmwarePtr: UnsafeBufferPointer<UInt8>,
-        romPtr: UnsafeBufferPointer<UInt8>
-    ) {
+    private func run() {
+        let bios7Arr: [UInt8] = Array(bios7Data!)
+        let bios9Arr: [UInt8] = Array(bios9Data!)
+        let firmwareArr: [UInt8] = Array(firmwareData!)
+        let romArr: [UInt8] = Array(romData!)
+        
+        var bios7Ptr: UnsafeBufferPointer<UInt8>? = nil
+        var bios9Ptr: UnsafeBufferPointer<UInt8>? = nil
+        var firmwarePtr: UnsafeBufferPointer<UInt8>? = nil
+        var romPtr: UnsafeBufferPointer<UInt8>? = nil
+        
+        bios7Arr.withUnsafeBufferPointer() { ptr in
+            bios7Ptr = ptr
+        }
+        
+        bios9Arr.withUnsafeBufferPointer() { ptr in
+            bios9Ptr = ptr
+        }
+        
+        firmwareArr.withUnsafeBufferPointer() { ptr in
+            firmwarePtr = ptr
+        }
+        romArr.withUnsafeBufferPointer() { ptr in
+            romPtr = ptr
+        }
         emulator = MobileEmulator(
-            bios7Ptr,
-            bios9Ptr,
-            firmwarePtr,
-            romPtr
+            bios7Ptr!,
+            bios9Ptr!,
+            firmwarePtr!,
+            romPtr!
         )
         
         isRunning = true
@@ -257,7 +279,22 @@ struct ContentView: View {
             if games.count > 0 {
                 List {
                     Section(header: Text("Games")) {
-                        
+                        ForEach(games) { game in
+                            HStack {
+                                Button(game.gameName.removingPercentEncoding!) {
+                                    if let data = try? Data(contentsOf: game.path) {
+                                        romData = data
+                                        
+                                        if bios7Data != nil && 
+                                            bios9Data != nil &&
+                                            firmwareData != nil
+                                        {
+                                            self.run()
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             } else {
@@ -294,38 +331,21 @@ struct ContentView: View {
                         romData = data
                         
                         if bios7Data != nil && bios9Data != nil && firmwareData != nil {
-                            let bios7Arr: [UInt8] = Array(bios7Data!)
-                            let bios9Arr: [UInt8] = Array(bios9Data!)
-                            let firmwareArr: [UInt8] = Array(firmwareData!)
-                            let romArr: [UInt8] = Array(romData!)
+                            self.run()
                             
-                            var bios7Ptr: UnsafeBufferPointer<UInt8>? = nil
-                            var bios9Ptr: UnsafeBufferPointer<UInt8>? = nil
-                            var firmwarePtr: UnsafeBufferPointer<UInt8>? = nil
-                            var romPtr: UnsafeBufferPointer<UInt8>? = nil
-                            
-                            bios7Arr.withUnsafeBufferPointer() { ptr in
-                                bios7Ptr = ptr
-                            }
-                            
-                            bios9Arr.withUnsafeBufferPointer() { ptr in
-                                bios9Ptr = ptr
-                            }
-                            
-                            firmwareArr.withUnsafeBufferPointer() { ptr in
-                                firmwarePtr = ptr
-                            }
-                            romArr.withUnsafeBufferPointer() { ptr in
-                                romPtr = ptr
-                            }
-                            
-                            // we finally have an emulator!
-                            self.run(
-                                bios7Ptr: bios7Ptr!,
-                                bios9Ptr: bios9Ptr!,
-                                firmwarePtr: firmwarePtr!,
-                                romPtr: romPtr!
+                            // finally store the game in local db for use later.
+                            let game = Game(
+                                path: url,
+                                gameName: String(url
+                                    .relativeString
+                                    .split(separator: "/")
+                                    .last
+                                    .unsafelyUnwrapped
+                                )
+                                .removingPercentEncoding!
                             )
+                            
+                            context.insert(game)
                         }
                     }
                 }
