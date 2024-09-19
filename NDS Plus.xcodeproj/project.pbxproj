@@ -19,6 +19,7 @@
 		E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA312C9935D00081D3E8 /* GraphicsParser.swift */; };
 		E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA592C9A834D0081D3E8 /* SettingsView.swift */; };
 		E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA5B2C9A8EA70081D3E8 /* GameController.swift */; };
+		E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA5D2C9BD6420081D3E8 /* Game.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		E806EA312C9935D00081D3E8 /* GraphicsParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphicsParser.swift; sourceTree = "<group>"; };
 		E806EA592C9A834D0081D3E8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E806EA5B2C9A8EA70081D3E8 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
+		E806EA5D2C9BD6420081D3E8 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 				E806E9FD2C97E1B20081D3E8 /* Preview Content */,
 				E806EA312C9935D00081D3E8 /* GraphicsParser.swift */,
 				E806EA5B2C9A8EA70081D3E8 /* GameController.swift */,
+				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
 			);
 			path = "NDS Plus";
 			sourceTree = "<group>";
@@ -281,6 +284,7 @@
 			files = (
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
+				E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */,
 				E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */,
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,

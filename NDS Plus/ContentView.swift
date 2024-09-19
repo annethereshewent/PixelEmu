@@ -7,25 +7,62 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
-import GameController
 import DSEmulatorMobile
 
 struct ContentView: View {
     @State private var showSettings = false
     @State private var showRomDialog = false
 
-    @State private var bios7Data: Data? = nil
-    @State private var bios9Data: Data? = nil
-    @State private var firmwareData: Data? = nil
+    @State private var bios7Data: Data?
+    @State private var bios9Data: Data?
+    @State private var firmwareData: Data?
     @State private var romData: Data? = nil
     @State private var topImage: UIImage = UIImage()
     @State private var bottomImage: UIImage = UIImage()
     
     @State private var workItem: DispatchWorkItem? = nil
     @State private var isRunning = false
+    @State private var loggedInCloud = false
+    @State private var games: [Game] = []
     
     @State private var gameController = GameController()
     
+    init() {
+        bios7Data = nil
+        bios9Data = nil
+        firmwareData = nil
+        
+        self.checkForBinaries(currentFile: CurrentFile.bios7)
+        self.checkForBinaries(currentFile: CurrentFile.bios9)
+        self.checkForBinaries(currentFile: CurrentFile.firmware)
+    }
+    
+    mutating func checkForBinaries(currentFile: CurrentFile) {
+        if let applicationUrl = try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
+        
+            switch currentFile {
+            case .bios7:
+                if let fileUrl = URL(string: "bios7.bin", relativeTo: applicationUrl) {
+                    if let data = try? Data(contentsOf: fileUrl) {
+                        _bios7Data = State(initialValue: data)
+                    }
+                }
+                
+            case .bios9:
+                if let fileUrl = URL(string: "bios9.bin", relativeTo: applicationUrl) {
+                    if let data = try? Data(contentsOf: fileUrl) {
+                        _bios9Data = State(initialValue: data)
+                    }
+                }
+            case .firmware:
+                if let fileUrl = URL(string: "firmware.bin", relativeTo: applicationUrl) {
+                    if let data = try? Data(contentsOf: fileUrl) {
+                        _firmwareData = State(initialValue: data)
+                    }
+                }
+            }
+        }
+    }
     
     let graphicsParser = GraphicsParser()
     
@@ -149,7 +186,8 @@ struct ContentView: View {
                     SettingsView(
                         bios7Data: $bios7Data,
                         bios9Data: $bios9Data,
-                        firmwareData: $firmwareData
+                        firmwareData: $firmwareData,
+                        loggedInCloud: $loggedInCloud
                     )
                 }
                 .background(colorScheme == .dark ? Color.black : Color.white)
@@ -161,60 +199,71 @@ struct ContentView: View {
                     .frame(alignment: .center)
             }
             // Spacer()
-            Image(uiImage: topImage)
-                .resizable()
-                .frame(
-                    width: CGFloat(SCREEN_WIDTH) * 1.25,
-                    height: CGFloat(SCREEN_HEIGHT) * 1.25
-                )
-            Image(uiImage: bottomImage)
-                .resizable()
-                .frame(
-                    width: CGFloat(SCREEN_WIDTH) * 1.25,
-                    height: CGFloat(SCREEN_HEIGHT) * 1.25
-                )
-                .onTapGesture() { location in
-                    if location.x >= 0 && location.y >= 0 {
-                        let x = UInt16(Float(location.x) / 1.25)
-                        let y = UInt16(Float(location.y) / 1.25)
-                    
-                        emulator?.touch_screen(x, y)
-                        
-                        DispatchQueue.global().async(execute: DispatchWorkItem {
-                            usleep(200)
-                            DispatchQueue.main.sync() {
-                                emulator?.release_screen()
-                            }
-                        })
-                    }
-                   
-                }
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged() { value in
-                            if value.location.x >= 0 && value.location.y >= 0 {
-                                let x = UInt16(Float(value.location.x) / 1.25)
-                                let y = UInt16(Float(value.location.y) / 1.25)
-                                emulator?.touch_screen(x, y)
-                            }
-                        }
-                        .onEnded() { value in
-                            if value.location.x >= 0 && value.location.y >= 0 {
-                                let x = UInt16(Float(value.location.x) / 1.25)
-                                let y = UInt16(Float(value.location.y) / 1.25)
-                                emulator?.touch_screen(x, y)
-                                DispatchQueue.global().async(execute: DispatchWorkItem {
-                                    usleep(200)
-                                    DispatchQueue.main.sync() {
-                                        emulator?.release_screen()
-                                    }
-                                })
-                            }
-                            
-                        }
-                )
-                
+//            Image(uiImage: topImage)
+//                .resizable()
+//                .frame(
+//                    width: CGFloat(SCREEN_WIDTH) * 1.25,
+//                    height: CGFloat(SCREEN_HEIGHT) * 1.25
+//                )
+//            Image(uiImage: bottomImage)
+//                .resizable()
+//                .frame(
+//                    width: CGFloat(SCREEN_WIDTH) * 1.25,
+//                    height: CGFloat(SCREEN_HEIGHT) * 1.25
+//                )
+//                .onTapGesture() { location in
+//                    if location.x >= 0 && location.y >= 0 {
+//                        let x = UInt16(Float(location.x) / 1.25)
+//                        let y = UInt16(Float(location.y) / 1.25)
+//                    
+//                        emulator?.touch_screen(x, y)
+//                        
+//                        DispatchQueue.global().async(execute: DispatchWorkItem {
+//                            usleep(200)
+//                            DispatchQueue.main.sync() {
+//                                emulator?.release_screen()
+//                            }
+//                        })
+//                    }
+//                   
+//                }
+//                .simultaneousGesture(
+//                    DragGesture(minimumDistance: 0)
+//                        .onChanged() { value in
+//                            if value.location.x >= 0 && value.location.y >= 0 {
+//                                let x = UInt16(Float(value.location.x) / 1.25)
+//                                let y = UInt16(Float(value.location.y) / 1.25)
+//                                emulator?.touch_screen(x, y)
+//                            }
+//                        }
+//                        .onEnded() { value in
+//                            if value.location.x >= 0 && value.location.y >= 0 {
+//                                let x = UInt16(Float(value.location.x) / 1.25)
+//                                let y = UInt16(Float(value.location.y) / 1.25)
+//                                emulator?.touch_screen(x, y)
+//                                DispatchQueue.global().async(execute: DispatchWorkItem {
+//                                    usleep(200)
+//                                    DispatchQueue.main.sync() {
+//                                        emulator?.release_screen()
+//                                    }
+//                                })
+//                            }
+//                            
+//                        }
+//                )
+//                
+//            Spacer()
             Spacer()
+            if games.count > 0 {
+                List {
+                    Section(header: Text("Games")) {
+                        
+                    }
+                }
+            } else {
+                Spacer()
+                Spacer()
+            }
             HStack {
                 Button("Load Game", systemImage: "square.and.arrow.up.circle") {
                     emulator = nil
