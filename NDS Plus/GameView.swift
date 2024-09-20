@@ -137,12 +137,14 @@ struct GameView: View {
                         width: CGFloat(SCREEN_WIDTH) * 1.5,
                         height: CGFloat(SCREEN_HEIGHT) * 1.5
                     )
+                    .shadow(color: .gray, radius: 0.1)
                 Image(uiImage: bottomImage)
                     .resizable()
                     .frame(
                         width: CGFloat(SCREEN_WIDTH) * 1.5,
                         height: CGFloat(SCREEN_HEIGHT) * 1.5
                     )
+                    .shadow(color: .gray, radius: 0.1)
                     .onTapGesture() { location in
                         if location.x >= 0 && location.y >= 0 {
                             let x = UInt16(Float(location.x) / 1.5)

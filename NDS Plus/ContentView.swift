@@ -41,7 +41,12 @@ struct ContentView: View {
     }
     
     mutating func checkForBinaries(currentFile: CurrentFile) {
-        if let applicationUrl = try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
+        if let applicationUrl = try? FileManager.default.url(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        ) {
         
             switch currentFile {
             case .bios7:
@@ -123,16 +128,31 @@ struct ContentView: View {
                             ForEach(games) { game in
                                 HStack {
                                     Button(game.gameName.removingPercentEncoding!) {
-                                        if let data = try? Data(contentsOf: game.path) {
-                                            romData = data
-                                            
-                                            if bios7Data != nil &&
-                                                bios9Data != nil &&
-                                                firmwareData != nil
-                                            {
-                                                path.append("GameView")
+                                        // refresh the url's bookmark
+                                        var isStale = false
+                                        if let url = try? URL(
+                                            resolvingBookmarkData: game.bookmark,
+                                            options: [.withoutUI],
+                                            relativeTo: nil,
+                                            bookmarkDataIsStale: &isStale
+                                        ) {
+                                            if url.startAccessingSecurityScopedResource() {
+                                                defer {
+                                                    url.stopAccessingSecurityScopedResource()
+                                                }
+                                                if let data = try? Data(contentsOf: url) {
+                                                    romData = data
+                                                    
+                                                    if bios7Data != nil &&
+                                                        bios9Data != nil &&
+                                                        firmwareData != nil
+                                                    {
+                                                        path.append("GameView")
+                                                    }
+                                                }
                                             }
                                         }
+                                        
                                     }
                                 }
                             }
@@ -167,21 +187,23 @@ struct ContentView: View {
                             url.stopAccessingSecurityScopedResource()
                         }
                         if let data = try? Data(contentsOf: url) {
-                            
                             romData = data
                             
                             if bios7Data != nil && bios9Data != nil && firmwareData != nil {
-                                let game = Game(
-                                    path: url,
-                                    gameName: String(url
-                                        .relativeString
-                                        .split(separator: "/")
-                                        .last
-                                        .unsafelyUnwrapped
-                                    )
-                                    .removingPercentEncoding!
-                                )
-                                context.insert(game)
+//                                let game = Game(
+//                                    path: url,
+//                                    gameName: String(url
+//                                        .relativeString
+//                                        .split(separator: "/")
+//                                        .last
+//                                        .unsafelyUnwrapped
+//                                    )
+//                                    .removingPercentEncoding!
+//                                )
+//
+                                if let game = Game.storeGame(data: data, url: url) {
+                                    context.insert(game)
+                                }
                                 path.append("GameView")
                             }
                         }

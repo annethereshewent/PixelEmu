@@ -11,12 +11,29 @@ import SwiftData
 @Model
 class Game {
     @Attribute(.unique)
-    let path: URL
     let gameName: String
+    let bookmark: Data
     
-    init(path: URL, gameName: String) {
-        print("Storing \(gameName)")
-        self.path = path
+    init(gameName: String, bookmark: Data) {
+        self.bookmark = bookmark
         self.gameName = gameName
+    }
+    
+    static func storeGame(data: Data, url: URL) -> Game? {
+        let gameName = String(url
+            .relativeString
+            .split(separator: "/")
+            .last
+            .unsafelyUnwrapped
+        )
+            .removingPercentEncoding
+            .unsafelyUnwrapped
+        
+        // store bookmark for later use
+        if let bookmark = try? url.bookmarkData(options: []) {
+            return Game(gameName: gameName, bookmark: bookmark)
+        }
+        
+        return nil
     }
 }
