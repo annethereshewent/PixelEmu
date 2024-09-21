@@ -197,6 +197,15 @@ struct GameView: View {
                                 
                             }
                     )
+                HStack {
+                    Spacer()
+                    Image("L Button")
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    Image("R Button")
+                    Spacer()
+                }
                 Spacer()
                 HStack {
                     Spacer()
@@ -230,5 +239,6 @@ struct GameView: View {
         .navigationBarTitle("")
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+        .statusBarHidden()
     }
 }
