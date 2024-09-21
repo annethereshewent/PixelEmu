@@ -30,6 +30,16 @@ struct GameView: View {
     
     private let graphicsParser = GraphicsParser()
     
+    private let buttonPoints: [ButtonPoint:ButtonEvent] = Self.initButtonPoints()
+    
+    private static func initButtonPoints() -> [ButtonPoint:ButtonEvent] {
+        var buttonPoints = [ButtonPoint:ButtonEvent]()
+        
+        buttonPoints[ButtonPoint(top: 75, bottom: 120, left: 80, right: 120)] = ButtonEvent.Up
+        
+        return buttonPoints
+    }
+    
     private func run() {
         let bios7Arr: [UInt8] = Array(bios7Data!)
         let bios9Arr: [UInt8] = Array(bios9Data!)
@@ -117,6 +127,24 @@ struct GameView: View {
         DispatchQueue.global().async(execute: workItem!)
     }
     
+    private func checkButtonLocation(point: CGPoint) -> ButtonEvent? {
+        print("location = \(point )")
+        for buttonPoint in buttonPoints {
+            let location = buttonPoint.key
+            
+            
+            if point.x > location.left &&
+                point.x < location.right &&
+                point.y > location.top &&
+                point.y < location.bottom 
+            {
+                return buttonPoint.value
+            }
+        }
+        
+        return nil
+    }
+    
     private func handleControlPad() {
         
     }
@@ -202,67 +230,58 @@ struct GameView: View {
                                 
                             }
                     )
-                HStack {
-                    Spacer()
-                    Image("L Button")
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    Image("R Button")
-                    Spacer()
-                }
-                Spacer()
-                HStack {
-                    Spacer()
-                    Image("Control Pad")
-                        .resizable()
-                        .frame(width: 150, height: 150)
-                        .sensoryFeedback(.impact, trigger: touch)
-                        .onTapGesture { location in
-                            touch = !touch
-                            print("you pressed \(location)")
+                ZStack {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Image("L Button")
+                            Spacer()
+                            Spacer()
+                            Spacer()
+                            Image("R Button")
+                            Spacer()
                         }
-                        .simultaneousGesture(
-                            DragGesture(minimumDistance: 0)
-                                .onChanged() { result in
-                                    print("you pressed \(result.location)")
-                                }
-                                .onEnded() { result in
-                                    print("you stopped pressing the control pad.")
-                                }
-                        )
-                    Spacer()
-                    Spacer()
-                    Image("Buttons")
-                        .resizable()
-                        .frame(width: 175, height: 175)
-                        .onTapGesture { location in
-                            touch = !touch
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Image("Control Pad")
+                                .resizable()
+                                .frame(width: 150, height: 150)
+                            Spacer()
+                            Spacer()
+                            Image("Buttons")
+                                .resizable()
+                                .frame(width: 175, height: 175)
+                            Spacer()
                         }
-                        .sensoryFeedback(.impact, trigger: touch)
-                    Spacer()
-                }
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button {
-                        presentationMode.wrappedValue.dismiss()
-                    } label: {
-                        Image("Home Button")
-                            .resizable()
-                            .frame(width:  40, height: 40)
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Image("Home Button")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            Spacer()
+                            Image("Select")
+                                .resizable()
+                                .frame(width: 72, height: 24)
+                            Spacer()
+                            Image("Start")
+                                .resizable()
+                                .frame(width: 72, height: 24)
+                            Spacer()
+                        }
                     }
-                    Spacer()
-                    Image("Select")
-                        .resizable()
-                        .frame(width: 72, height: 24)
-                    Spacer()
-                    Image("Start")
-                        .resizable()
-                        .frame(width: 72, height: 24)
-                    Spacer()
+                    TapView { touchViews in
+                        for entry in touchViews {
+                            let location = entry.value
+                            
+                            // check if location is a button
+                            if let button = self.checkButtonLocation(point: location) {
+                                print("you pressed \(button)")
+                            }
+                        }
+                    }
                 }
-                Spacer()
             }
         }
             .onAppear {
@@ -270,7 +289,7 @@ struct GameView: View {
             }
             .navigationBarTitle("")
             .navigationBarHidden(true)
-            .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+            .ignoresSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
             .statusBarHidden()
     }
 }

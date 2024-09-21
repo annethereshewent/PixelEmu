@@ -10,7 +10,7 @@ import SwiftUI
 
 struct TapView: UIViewRepresentable {
 
-    var tappedCallback: (UITouch, CGPoint?) -> Void
+    var tappedCallback: ([UITouch:CGPoint]) -> Void
 
     func makeUIView(context: UIViewRepresentableContext<TapView>) -> TapView.UIViewType {
         let v = UIView(frame: .zero)

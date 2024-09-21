@@ -11,11 +11,11 @@ import UIKit
 
 class NFingerGestureRecognizer: UIGestureRecognizer {
 
-    var tappedCallback: (UITouch, CGPoint?) -> Void
+    var tappedCallback: ([UITouch:CGPoint]) -> Void
 
     var touchViews = [UITouch:CGPoint]()
 
-    init(target: Any?, tappedCallback: @escaping (UITouch, CGPoint?) -> ()) {
+    init(target: Any?, tappedCallback: @escaping ([UITouch:CGPoint]) -> ()) {
         self.tappedCallback = tappedCallback
         super.init(target: target, action: nil)
     }
@@ -24,8 +24,8 @@ class NFingerGestureRecognizer: UIGestureRecognizer {
         for touch in touches {
             let location = touch.location(in: touch.view)
             touchViews[touch] = location
-            tappedCallback(touch, location)
         }
+        tappedCallback(touchViews)
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
@@ -33,14 +33,14 @@ class NFingerGestureRecognizer: UIGestureRecognizer {
             let newLocation = touch.location(in: touch.view)
 
             touchViews[touch] = newLocation
-            tappedCallback(touch, newLocation)
         }
+        tappedCallback(touchViews)
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
         for touch in touches {
             touchViews.removeValue(forKey: touch)
-            tappedCallback(touch, nil)
         }
+        tappedCallback(touchViews)
     }
 }
