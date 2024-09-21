@@ -22,10 +22,10 @@ struct GameView: View {
     @Binding var gameUrl: URL?
     
     @State private var gameController = GameController()
-    
     @State private var workItem: DispatchWorkItem? = nil
     
     @Environment(\.modelContext) private var context
+    @Environment(\.presentationMode) var presentationMode
     
     private let graphicsParser = GraphicsParser()
     
@@ -238,9 +238,18 @@ struct GameView: View {
                 Spacer()
                 HStack {
                     Spacer()
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Image("Home Button")
+                            .resizable()
+                            .frame(width:  40, height: 40)
+                    }
+                    Spacer()
                     Image("Select")
                         .resizable()
                         .frame(width: 72, height: 24)
+                    Spacer()
                     Image("Start")
                         .resizable()
                         .frame(width: 72, height: 24)
