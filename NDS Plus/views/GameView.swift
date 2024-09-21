@@ -176,24 +176,25 @@ struct GameView: View {
             Color.mint
             VStack {
                 Spacer()
+                Spacer()
                 Image(uiImage: topImage)
                     .resizable()
                     .frame(
-                        width: CGFloat(SCREEN_WIDTH) * 1.5,
-                        height: CGFloat(SCREEN_HEIGHT) * 1.5
+                        width: CGFloat(SCREEN_WIDTH) * 1.4,
+                        height: CGFloat(SCREEN_HEIGHT) * 1.4
                     )
                     .shadow(color: .gray, radius: 1.0, y: 1)
                 Image(uiImage: bottomImage)
                     .resizable()
                     .frame(
-                        width: CGFloat(SCREEN_WIDTH) * 1.5,
-                        height: CGFloat(SCREEN_HEIGHT) * 1.5
+                        width: CGFloat(SCREEN_WIDTH) * 1.4,
+                        height: CGFloat(SCREEN_HEIGHT) * 1.4
                     )
                     .shadow(color: .gray, radius: 1.0, y: 1)
                     .onTapGesture() { location in
                         if location.x >= 0 && location.y >= 0 {
-                            let x = UInt16(Float(location.x) / 1.5)
-                            let y = UInt16(Float(location.y) / 1.5)
+                            let x = UInt16(Float(location.x) / 1.4)
+                            let y = UInt16(Float(location.y) / 1.4)
                             
                             emulator?.touchScreen(x, y)
                             
@@ -210,15 +211,15 @@ struct GameView: View {
                         DragGesture(minimumDistance: 0)
                             .onChanged() { value in
                                 if value.location.x >= 0 && value.location.y >= 0 {
-                                    let x = UInt16(Float(value.location.x) / 1.5)
-                                    let y = UInt16(Float(value.location.y) / 1.5)
+                                    let x = UInt16(Float(value.location.x) / 1.4)
+                                    let y = UInt16(Float(value.location.y) / 1.4)
                                     emulator?.touchScreen(x, y)
                                 }
                             }
                             .onEnded() { value in
                                 if value.location.x >= 0 && value.location.y >= 0 {
-                                    let x = UInt16(Float(value.location.x) / 1.5)
-                                    let y = UInt16(Float(value.location.y) / 1.5)
+                                    let x = UInt16(Float(value.location.x) / 1.4)
+                                    let y = UInt16(Float(value.location.y) / 1.4)
                                     emulator?.touchScreen(x, y)
                                     DispatchQueue.global().async(execute: DispatchWorkItem {
                                         usleep(200)
@@ -270,6 +271,7 @@ struct GameView: View {
                                 .frame(width: 72, height: 24)
                             Spacer()
                         }
+                        Spacer()
                     }
                     TapView { touchViews in
                         for entry in touchViews {
@@ -282,6 +284,7 @@ struct GameView: View {
                         }
                     }
                 }
+
             }
         }
             .onAppear {
@@ -289,7 +292,8 @@ struct GameView: View {
             }
             .navigationBarTitle("")
             .navigationBarHidden(true)
-            .ignoresSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+            .ignoresSafeArea(.all)
+            .edgesIgnoringSafeArea(.all)
             .statusBarHidden()
     }
 }
