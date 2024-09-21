@@ -116,6 +116,10 @@ struct GameView: View {
         DispatchQueue.global().async(execute: workItem!)
     }
     
+    private func handleControlPad() {
+        
+    }
+    
     private func handleInput() {
         if let controller = self.gameController.controller.extendedGamepad {
             if let emu = emulator {
@@ -212,20 +216,32 @@ struct GameView: View {
                     Image("Control Pad")
                         .resizable()
                         .frame(width: 150, height: 150)
+                        .onTapGesture { location in
+                            print("you pressed \(location)")
+                        }
+                        .simultaneousGesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged() { result in
+                                    print("you pressed \(result.location)")
+                                }
+                                .onEnded() { result in
+                                    print("you stopped pressing the control pad.")
+                                }
+                        )
                     Spacer()
                     Spacer()
                     Image("Buttons")
                         .resizable()
-                        .frame(width: 150, height: 150)
+                        .frame(width: 175, height: 175)
                     Spacer()
                 }
                 Spacer()
                 HStack {
                     Spacer()
-                    Image("Start")
+                    Image("Select")
                         .resizable()
                         .frame(width: 72, height: 24)
-                    Image("Select")
+                    Image("Start")
                         .resizable()
                         .frame(width: 72, height: 24)
                     Spacer()
