@@ -92,7 +92,6 @@ struct GameView: View {
                         
                         if let image = graphicsParser.fromPointer(ptr: bPixels) {
                             imageB = image
-                            
                         }
                         
                         if emu.isTopA() {
@@ -199,6 +198,29 @@ struct GameView: View {
                             }
                     )
                 Spacer()
+                HStack {
+                    Spacer()
+                    Image("Control Pad")
+                        .resizable()
+                        .frame(width: 150, height: 150)
+                    Spacer()
+                    Spacer()
+                    Image("Buttons")
+                        .resizable()
+                        .frame(width: 150, height: 150)
+                    Spacer()
+                }
+                Spacer()
+                HStack {
+                    Spacer()
+                    Image("Start")
+                        .resizable()
+                        .frame(width: 72, height: 24)
+                    Image("Select")
+                        .resizable()
+                        .frame(width: 72, height: 24)
+                    Spacer()
+                }
                 Spacer()
             }
         }
