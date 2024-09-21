@@ -19,10 +19,13 @@ struct GameView: View {
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
     @Binding var romData: Data?
+    @Binding var gameUrl: URL?
     
     @State private var gameController = GameController()
     
     @State private var workItem: DispatchWorkItem? = nil
+    
+    @Environment(\.modelContext) private var context
     
     private let graphicsParser = GraphicsParser()
     
@@ -57,6 +60,16 @@ struct GameView: View {
             firmwarePtr!,
             romPtr!
         )
+        
+        if gameUrl != nil {
+            if let game = Game.storeGame(
+                data: romData!,
+                url: gameUrl!,
+                iconPtr: emulator!.get_game_icon_pointer()
+            ) {
+                context.insert(game)
+            }
+        }
         
         isRunning = true
         
@@ -137,14 +150,14 @@ struct GameView: View {
                         width: CGFloat(SCREEN_WIDTH) * 1.5,
                         height: CGFloat(SCREEN_HEIGHT) * 1.5
                     )
-                    .shadow(color: .gray, radius: 0.1)
+                    .shadow(color: .gray, radius: 0.5, y: 8)
                 Image(uiImage: bottomImage)
                     .resizable()
                     .frame(
                         width: CGFloat(SCREEN_WIDTH) * 1.5,
                         height: CGFloat(SCREEN_HEIGHT) * 1.5
                     )
-                    .shadow(color: .gray, radius: 0.1)
+                    .shadow(color: .gray, radius: 0.5, y: 8)
                     .onTapGesture() { location in
                         if location.x >= 0 && location.y >= 0 {
                             let x = UInt16(Float(location.x) / 1.5)

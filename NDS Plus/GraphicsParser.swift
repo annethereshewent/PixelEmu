@@ -18,10 +18,10 @@ class GraphicsParser {
         
         let pixelsArr = Array(buffer)
         
-        return fromBytes(bytes: pixelsArr)
+        return fromBytes(bytes: pixelsArr, width: SCREEN_WIDTH, height: SCREEN_HEIGHT)
     }
     
-    private func fromBytes(bytes: [UInt8]) -> UIImage? {
+    func fromBytes(bytes: [UInt8], width: Int, height: Int) -> UIImage? {   
         let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue)
         let bitsPerComponent = 8
@@ -34,11 +34,11 @@ class GraphicsParser {
             else { return nil }
 
         guard let cgim = CGImage(
-                width: SCREEN_WIDTH,
-                height: SCREEN_HEIGHT,
+                width: width,
+                height: height,
                 bitsPerComponent: bitsPerComponent,
                 bitsPerPixel: bitsPerPixel,
-                bytesPerRow: SCREEN_WIDTH * 4,
+                bytesPerRow: width * 4,
                 space: rgbColorSpace,
                 bitmapInfo: bitmapInfo,
                 provider: providerRef,

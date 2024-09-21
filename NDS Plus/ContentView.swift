@@ -25,8 +25,7 @@ struct ContentView: View {
     
     @State private var path = NavigationPath()
     @State private var emulator: MobileEmulator? = nil
-
-    @Environment(\.modelContext) private var context
+    @State private var gameUrl: URL? = nil
     
     @Query private var games: [Game] = []
     
@@ -127,6 +126,9 @@ struct ContentView: View {
                         Section(header: Text("Games")) {
                             ForEach(games) { game in
                                 HStack {
+                                    if let image = GraphicsParser().fromBytes(bytes: game.gameIcon, width: 32, height: 32) {
+                                        Image(uiImage: image)
+                                    }
                                     Button(game.gameName.removingPercentEncoding!) {
                                         // refresh the url's bookmark
                                         var isStale = false
@@ -137,6 +139,7 @@ struct ContentView: View {
                                             bookmarkDataIsStale: &isStale
                                         ) {
                                             if url.startAccessingSecurityScopedResource() {
+                                                gameUrl = url
                                                 defer {
                                                     url.stopAccessingSecurityScopedResource()
                                                 }
@@ -190,20 +193,7 @@ struct ContentView: View {
                             romData = data
                             
                             if bios7Data != nil && bios9Data != nil && firmwareData != nil {
-//                                let game = Game(
-//                                    path: url,
-//                                    gameName: String(url
-//                                        .relativeString
-//                                        .split(separator: "/")
-//                                        .last
-//                                        .unsafelyUnwrapped
-//                                    )
-//                                    .removingPercentEncoding!
-//                                )
-//
-                                if let game = Game.storeGame(data: data, url: url) {
-                                    context.insert(game)
-                                }
+                                gameUrl = url
                                 path.append("GameView")
                             }
                         }
@@ -218,7 +208,8 @@ struct ContentView: View {
                         bios7Data: $bios7Data,
                         bios9Data: $bios9Data,
                         firmwareData: $firmwareData,
-                        romData: $romData
+                        romData: $romData,
+                        gameUrl: $gameUrl
                     )
                 }
             }
