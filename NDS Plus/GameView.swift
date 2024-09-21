@@ -65,7 +65,7 @@ struct GameView: View {
             if let game = Game.storeGame(
                 data: romData!,
                 url: gameUrl!,
-                iconPtr: emulator!.get_game_icon_pointer()
+                iconPtr: emulator!.getGameIconPointer()
             ) {
                 context.insert(game)
             }
@@ -77,9 +77,9 @@ struct GameView: View {
             if let emu = emulator {
                 while true {
                     DispatchQueue.main.sync {
-                        emu.step_frame()
+                        emu.stepFrame()
                         
-                        let aPixels = emu.get_engine_a_picture_pointer()
+                        let aPixels = emu.getEngineAPicturePointer()
                         
                         var imageA = UIImage()
                         var imageB = UIImage()
@@ -88,14 +88,14 @@ struct GameView: View {
                             imageA = image
                         }
                         
-                        let bPixels = emu.get_engine_b_picture_pointer()
+                        let bPixels = emu.getEngineBPicturePointer()
                         
                         if let image = graphicsParser.fromPointer(ptr: bPixels) {
                             imageB = image
                             
                         }
                         
-                        if emu.is_top_a() {
+                        if emu.isTopA() {
                             topImage = imageA
                             bottomImage = imageB
                         } else {
@@ -120,28 +120,28 @@ struct GameView: View {
     private func handleInput() {
         if let controller = self.gameController.controller.extendedGamepad {
             if let emu = emulator {
-                emu.update_input(ButtonEvent.ButtonA, controller.buttonA.isPressed)
-                emu.update_input(ButtonEvent.ButtonB, controller.buttonB.isPressed)
-                emu.update_input(ButtonEvent.ButtonY, controller.buttonY.isPressed)
-                emu.update_input(ButtonEvent.ButtonX, controller.buttonX.isPressed)
-                emu.update_input(ButtonEvent.ButtonL, controller.leftShoulder.isPressed)
-                emu.update_input(ButtonEvent.ButtonR, controller.rightShoulder.isPressed)
-                emu.update_input(ButtonEvent.Start, controller.buttonMenu.isPressed)
-                emu.update_input(
+                emu.updateInput(ButtonEvent.ButtonA, controller.buttonA.isPressed)
+                emu.updateInput(ButtonEvent.ButtonB, controller.buttonB.isPressed)
+                emu.updateInput(ButtonEvent.ButtonY, controller.buttonY.isPressed)
+                emu.updateInput(ButtonEvent.ButtonX, controller.buttonX.isPressed)
+                emu.updateInput(ButtonEvent.ButtonL, controller.leftShoulder.isPressed)
+                emu.updateInput(ButtonEvent.ButtonR, controller.rightShoulder.isPressed)
+                emu.updateInput(ButtonEvent.Start, controller.buttonMenu.isPressed)
+                emu.updateInput(
                     ButtonEvent.Select,
                     controller.buttonOptions?.isPressed ?? false
                 )
-                emu.update_input(ButtonEvent.Up, controller.dpad.up.isPressed)
-                emu.update_input(ButtonEvent.Down, controller.dpad.down.isPressed)
-                emu.update_input(ButtonEvent.Left, controller.dpad.left.isPressed)
-                emu.update_input(ButtonEvent.Right, controller.dpad.right.isPressed)
+                emu.updateInput(ButtonEvent.Up, controller.dpad.up.isPressed)
+                emu.updateInput(ButtonEvent.Down, controller.dpad.down.isPressed)
+                emu.updateInput(ButtonEvent.Left, controller.dpad.left.isPressed)
+                emu.updateInput(ButtonEvent.Right, controller.dpad.right.isPressed)
             }
             
         }
     }
     var body: some View {
         ZStack {
-            Color.pink
+            Color.mint
             VStack {
                 Spacer()
                 Image(uiImage: topImage)
@@ -150,25 +150,25 @@ struct GameView: View {
                         width: CGFloat(SCREEN_WIDTH) * 1.5,
                         height: CGFloat(SCREEN_HEIGHT) * 1.5
                     )
-                    .shadow(color: .gray, radius: 0.5, y: 8)
+                    .shadow(color: .gray, radius: 1.0, y: 1)
                 Image(uiImage: bottomImage)
                     .resizable()
                     .frame(
                         width: CGFloat(SCREEN_WIDTH) * 1.5,
                         height: CGFloat(SCREEN_HEIGHT) * 1.5
                     )
-                    .shadow(color: .gray, radius: 0.5, y: 8)
+                    .shadow(color: .gray, radius: 1.0, y: 1)
                     .onTapGesture() { location in
                         if location.x >= 0 && location.y >= 0 {
                             let x = UInt16(Float(location.x) / 1.5)
                             let y = UInt16(Float(location.y) / 1.5)
                             
-                            emulator?.touch_screen(x, y)
+                            emulator?.touchScreen(x, y)
                             
                             DispatchQueue.global().async(execute: DispatchWorkItem {
                                 usleep(200)
                                 DispatchQueue.main.sync() {
-                                    emulator?.release_screen()
+                                    emulator?.releaseScreen()
                                 }
                             })
                         }
@@ -180,18 +180,18 @@ struct GameView: View {
                                 if value.location.x >= 0 && value.location.y >= 0 {
                                     let x = UInt16(Float(value.location.x) / 1.5)
                                     let y = UInt16(Float(value.location.y) / 1.5)
-                                    emulator?.touch_screen(x, y)
+                                    emulator?.touchScreen(x, y)
                                 }
                             }
                             .onEnded() { value in
                                 if value.location.x >= 0 && value.location.y >= 0 {
                                     let x = UInt16(Float(value.location.x) / 1.5)
                                     let y = UInt16(Float(value.location.y) / 1.5)
-                                    emulator?.touch_screen(x, y)
+                                    emulator?.touchScreen(x, y)
                                     DispatchQueue.global().async(execute: DispatchWorkItem {
                                         usleep(200)
                                         DispatchQueue.main.sync() {
-                                            emulator?.release_screen()
+                                            emulator?.releaseScreen()
                                         }
                                     })
                                 }

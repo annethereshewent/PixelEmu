@@ -94,7 +94,7 @@ struct SettingsView: View {
                 }
                 Section(header: Text("Miscellaneous")) {
                     HStack {
-                        Button("Google saves") {
+                        Button("Cloud saves") {
                             
                         }
                         Spacer()
