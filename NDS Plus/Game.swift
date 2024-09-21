@@ -34,15 +34,22 @@ class Game {
         )
             .removingPercentEncoding
             .unsafelyUnwrapped
+        
         let buffer = UnsafeBufferPointer(start: iconPtr, count: ICON_WIDTH * ICON_HEIGHT * 4)
         
         let pixelsArr = Array(buffer)
         
+        print(url)
+        print(data)
+        
         // store bookmark for later use
-        if let bookmark = try? url.bookmarkData(options: []) {
-            return Game(gameName: gameName, bookmark: bookmark, gameIcon: pixelsArr)
+        if url.startAccessingSecurityScopedResource() {
+            if let bookmark = try? url.bookmarkData(options: []) {
+                return Game(gameName: gameName, bookmark: bookmark, gameIcon: pixelsArr)
+            }
         }
-
+        
+        
         return nil
     }
 }
