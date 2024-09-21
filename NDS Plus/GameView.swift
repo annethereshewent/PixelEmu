@@ -23,6 +23,7 @@ struct GameView: View {
     
     @State private var gameController = GameController()
     @State private var workItem: DispatchWorkItem? = nil
+    @State private var touch = false
     
     @Environment(\.modelContext) private var context
     @Environment(\.presentationMode) var presentationMode
@@ -216,7 +217,9 @@ struct GameView: View {
                     Image("Control Pad")
                         .resizable()
                         .frame(width: 150, height: 150)
+                        .sensoryFeedback(.impact, trigger: touch)
                         .onTapGesture { location in
+                            touch = !touch
                             print("you pressed \(location)")
                         }
                         .simultaneousGesture(
@@ -233,6 +236,10 @@ struct GameView: View {
                     Image("Buttons")
                         .resizable()
                         .frame(width: 175, height: 175)
+                        .onTapGesture { location in
+                            touch = !touch
+                        }
+                        .sensoryFeedback(.impact, trigger: touch)
                     Spacer()
                 }
                 Spacer()
