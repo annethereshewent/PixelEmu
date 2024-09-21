@@ -21,6 +21,8 @@
 		E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA5B2C9A8EA70081D3E8 /* GameController.swift */; };
 		E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA5D2C9BD6420081D3E8 /* Game.swift */; };
 		E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA5F2C9BF9840081D3E8 /* GameView.swift */; };
+		E806EA622C9E9B070081D3E8 /* NFingerGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA612C9E9B070081D3E8 /* NFingerGestureRecognizer.swift */; };
+		E806EA692C9E9BE30081D3E8 /* TapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA682C9E9BE30081D3E8 /* TapView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +60,8 @@
 		E806EA5B2C9A8EA70081D3E8 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		E806EA5D2C9BD6420081D3E8 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		E806EA5F2C9BF9840081D3E8 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		E806EA612C9E9B070081D3E8 /* NFingerGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFingerGestureRecognizer.swift; sourceTree = "<group>"; };
+		E806EA682C9E9BE30081D3E8 /* TapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,17 +113,15 @@
 		E806E9F62C97E1B10081D3E8 /* NDS Plus */ = {
 			isa = PBXGroup;
 			children = (
+				E806EA672C9E9BA60081D3E8 /* enums */,
+				E806EA662C9E9B880081D3E8 /* input */,
+				E806EA652C9E9B340081D3E8 /* models */,
+				E806EA642C9E9B290081D3E8 /* util */,
+				E806EA632C9E9B210081D3E8 /* views */,
 				E806EA2B2C9824A80081D3E8 /* NDS-Plus-Info.plist */,
 				E806E9F72C97E1B10081D3E8 /* NDS_PlusApp.swift */,
-				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
-				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
-				E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */,
 				E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */,
 				E806E9FD2C97E1B20081D3E8 /* Preview Content */,
-				E806EA312C9935D00081D3E8 /* GraphicsParser.swift */,
-				E806EA5B2C9A8EA70081D3E8 /* GameController.swift */,
-				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
-				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
 			);
 			path = "NDS Plus";
 			sourceTree = "<group>";
@@ -147,6 +149,50 @@
 				E806EA142C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift */,
 			);
 			path = "NDS PlusUITests";
+			sourceTree = "<group>";
+		};
+		E806EA632C9E9B210081D3E8 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
+				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
+				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
+				E806EA682C9E9BE30081D3E8 /* TapView.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		E806EA642C9E9B290081D3E8 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				E806EA612C9E9B070081D3E8 /* NFingerGestureRecognizer.swift */,
+				E806EA312C9935D00081D3E8 /* GraphicsParser.swift */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		E806EA652C9E9B340081D3E8 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
+		E806EA662C9E9B880081D3E8 /* input */ = {
+			isa = PBXGroup;
+			children = (
+				E806EA5B2C9A8EA70081D3E8 /* GameController.swift */,
+			);
+			path = input;
+			sourceTree = "<group>";
+		};
+		E806EA672C9E9BA60081D3E8 /* enums */ = {
+			isa = PBXGroup;
+			children = (
+				E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */,
+			);
+			path = enums;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -287,9 +333,11 @@
 			files = (
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
+				E806EA692C9E9BE30081D3E8 /* TapView.swift in Sources */,
 				E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */,
 				E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */,
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
+				E806EA622C9E9B070081D3E8 /* NFingerGestureRecognizer.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
 				E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */,

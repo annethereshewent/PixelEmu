@@ -265,12 +265,12 @@ struct GameView: View {
                 Spacer()
             }
         }
-        .onAppear {
-            self.run()
-        }
-        .navigationBarTitle("")
-        .navigationBarHidden(true)
-        .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
-        .statusBarHidden()
+            .onAppear {
+                self.run()
+            }
+            .navigationBarTitle("")
+            .navigationBarHidden(true)
+            .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+            .statusBarHidden()
     }
 }
