@@ -204,56 +204,54 @@ struct GameView: View {
     }
     
     private func checkForHapticFeedback(point: CGPoint) {
-        if let emu = emulator {
-            for entry in buttons {
-                if entry.value.contains(point) && !buttonStarted[entry.key]! {
-                    feedbackGenerator.impactOccurred()
-                    buttonStarted[entry.key] = true
-                    break
-                }
+        for entry in buttons {
+            if entry.value.contains(point) && !buttonStarted[entry.key]! {
+                feedbackGenerator.impactOccurred()
+                buttonStarted[entry.key] = true
+                break
             }
         }
     }
     
     private func releaseHapticFeedback() {
-        for entry in buttonStarted {
-            buttonStarted[entry.key] = false
-        }
+        buttonStarted[ButtonEvent.ButtonA] = false
+        buttonStarted[ButtonEvent.ButtonB] = false
+        buttonStarted[ButtonEvent.ButtonY] = false
+        buttonStarted[ButtonEvent.ButtonX] = false
     }
     
     var body: some View {
         ZStack {
             Color.mint
             VStack {
-                Spacer()
-                Spacer()
                 Image(uiImage: topImage)
                     .resizable()
                     .frame(
-                        width: CGFloat(SCREEN_WIDTH) * 1.4,
-                        height: CGFloat(SCREEN_HEIGHT) * 1.4
+                        width: CGFloat(SCREEN_WIDTH) * 1.36,
+                        height: CGFloat(SCREEN_HEIGHT) * 1.36
                     )
                     .shadow(color: .gray, radius: 1.0, y: 1)
+                    .padding(.top, 50)
                 Image(uiImage: bottomImage)
                     .resizable()
                     .frame(
-                        width: CGFloat(SCREEN_WIDTH) * 1.4,
-                        height: CGFloat(SCREEN_HEIGHT) * 1.4
+                        width: CGFloat(SCREEN_WIDTH) * 1.36,
+                        height: CGFloat(SCREEN_HEIGHT) * 1.36
                     )
                     .shadow(color: .gray, radius: 1.0, y: 1)
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged() { value in
                                 if value.location.x >= 0 && value.location.y >= 0 {
-                                    let x = UInt16(Float(value.location.x) / 1.4)
-                                    let y = UInt16(Float(value.location.y) / 1.4)
+                                    let x = UInt16(Float(value.location.x) / 1.36)
+                                    let y = UInt16(Float(value.location.y) / 1.36)
                                     emulator?.touchScreen(x, y)
                                 }
                             }
                             .onEnded() { value in
                                 if value.location.x >= 0 && value.location.y >= 0 {
-                                    let x = UInt16(Float(value.location.x) / 1.4)
-                                    let y = UInt16(Float(value.location.y) / 1.4)
+                                    let x = UInt16(Float(value.location.x) / 1.36)
+                                    let y = UInt16(Float(value.location.y) / 1.36)
                                     emulator?.touchScreen(x, y)
                                     DispatchQueue.global().async(execute: DispatchWorkItem {
                                         usleep(200)
@@ -266,6 +264,7 @@ struct GameView: View {
                             }
                     )
                 VStack {
+                    Spacer()
                     HStack {
                         Spacer()
                         Image("L Button")
