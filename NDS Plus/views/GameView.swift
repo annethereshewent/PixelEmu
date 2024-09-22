@@ -29,16 +29,8 @@ struct GameView: View {
     @Environment(\.presentationMode) var presentationMode
     
     private let graphicsParser = GraphicsParser()
-    
-    private let buttonPoints: [ButtonPoint:ButtonEvent] = Self.initButtonPoints()
-    
-    private static func initButtonPoints() -> [ButtonPoint:ButtonEvent] {
-        var buttonPoints = [ButtonPoint:ButtonEvent]()
-        
-        buttonPoints[ButtonPoint(top: 75, bottom: 120, left: 80, right: 120)] = ButtonEvent.Up
-        
-        return buttonPoints
-    }
+
+    @State private var buttons: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
     
     private func run() {
         let bios7Arr: [UInt8] = Array(bios7Data!)
@@ -127,26 +119,27 @@ struct GameView: View {
         DispatchQueue.global().async(execute: workItem!)
     }
     
-    private func checkButtonLocation(point: CGPoint) -> ButtonEvent? {
-        print("location = \(point )")
-        for buttonPoint in buttonPoints {
-            let location = buttonPoint.key
-            
-            
-            if point.x > location.left &&
-                point.x < location.right &&
-                point.y > location.top &&
-                point.y < location.bottom 
-            {
-                return buttonPoint.value
-            }
-        }
+    private func handleControlPad(point: CGPoint) {
+        let upPressed = buttons[ButtonEvent.Up]?.contains(point) ?? false
+        let downPressed = buttons[ButtonEvent.Down]?.contains(point) ?? false
+        let leftPressed = buttons[ButtonEvent.Left]?.contains(point) ?? false
+        let rightPressed = buttons[ButtonEvent.Right]?.contains(point) ?? false
         
-        return nil
+        if let emu = emulator {
+            emu.updateInput(ButtonEvent.Up, upPressed)
+            emu.updateInput(ButtonEvent.Down, downPressed)
+            emu.updateInput(ButtonEvent.Left, leftPressed)
+            emu.updateInput(ButtonEvent.Right, rightPressed)
+        }
     }
     
-    private func handleControlPad() {
-        
+    private func releaseControlPad() {
+        if let emu = emulator {
+            emu.updateInput(ButtonEvent.Up, false)
+            emu.updateInput(ButtonEvent.Left, false)
+            emu.updateInput(ButtonEvent.Right, false)
+            emu.updateInput(ButtonEvent.Down, false)
+        }
     }
     
     private func handleInput() {
@@ -231,69 +224,161 @@ struct GameView: View {
                                 
                             }
                     )
-                ZStack {
-                    VStack {
-                        HStack {
-                            Spacer()
-                            Image("L Button")
-                            Spacer()
-                            Spacer()
-                            Spacer()
-                            Image("R Button")
-                            Spacer()
-                        }
+                VStack {
+                    HStack {
                         Spacer()
-                        HStack {
-                            Spacer()
-                            Image("Control Pad")
-                                .resizable()
-                                .frame(width: 150, height: 150)
-                            Spacer()
-                            Spacer()
-                            Image("Buttons")
-                                .resizable()
-                                .frame(width: 175, height: 175)
-                            Spacer()
-                        }
+                        Image("L Button")
+                            .onTapGesture { location in
+                                print("you tapped the l button!")
+                            }
+                            .simultaneousGesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged() { result in
+                                        print("you're holding the l button!")
+                                    }
+                                    .onEnded() { result in
+                                        print("you stopped pressing the l button.")
+                                    }
+                            )
                         Spacer()
-                        HStack {
-                            Spacer()
+                        Spacer()
+                        Spacer()
+                        Image("R Button")
+                            .onTapGesture { location in
+                                print("you're pressing the r button!")
+                            }
+                            .simultaneousGesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged() { result in
+                                        print("you're holding the r button!")
+                                    }
+                                    .onEnded() { result in
+                                        print("you stopped pressing r button!")
+                                    }
+                            )
+                        Spacer()
+                    }
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Image("Control Pad")
+                            .resizable()
+                            .background(
+                                GeometryReader { geometry in
+                                    Color.clear
+                                        .onAppear {
+                                            let frame = geometry.frame(in: .local)
+                                            let up = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height / 3)
+                                            let down = CGRect(x: frame.minX, y: (frame.maxY / 3) * 2, width: frame.width, height: frame.height / 3)
+                                            let right = CGRect(x: (frame.maxX / 3) * 2, y: frame.minY, width: frame.width / 3, height: frame.height)
+                                            let left = CGRect(x: frame.minX, y: frame.minY, width: frame.width / 3, height: frame.height)
+                                            
+                                            buttons[ButtonEvent.Up] = up
+                                            buttons[ButtonEvent.Down] = down
+                                            buttons[ButtonEvent.Left] = left
+                                            buttons[ButtonEvent.Right] = right
+                                        }
+                                }
+                            )
+                            .frame(width: 150, height: 150)
+                            .onTapGesture { location in
+                                print("you tapped the control pad at \(location)")
+                                self.handleControlPad(point: location)
+                                
+                                DispatchQueue.global().async(execute: DispatchWorkItem {
+                                    usleep(200)
+                                    DispatchQueue.main.sync {
+                                        self.releaseControlPad()
+                                    }
+                                })
+                            }
+                            .simultaneousGesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged() { result in
+                                        print("you pressed \(result.location) on control pad!")
+                                        self.handleControlPad(point: result.location)
+                                    }
+                                    .onEnded() { result in
+                                        self.releaseControlPad()
+                                        print("you stopped pressing the control pad.")
+                                    }
+                            )
+                        Spacer()
+                        Spacer()
+                        Image("Buttons")
+                            .resizable()
+                            .frame(width: 175, height: 175)
+                            .onTapGesture { location in
+                                print("you tapped the buttons at \(location)")
+                            }
+                            .simultaneousGesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged() { result in
+                                        print("you pressed \(result.location) on buttons!")
+                                    }
+                                    .onEnded() { result in
+                                        print("you stopped pressing buttons.")
+                                    }
+                            )
+                        Spacer()
+                    }
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button {
+                            presentationMode.wrappedValue.dismiss()
+                        } label: {
                             Image("Home Button")
                                 .resizable()
-                                .frame(width: 40, height: 40)
-                            Spacer()
-                            Image("Select")
-                                .resizable()
-                                .frame(width: 72, height: 24)
-                            Spacer()
-                            Image("Start")
-                                .resizable()
-                                .frame(width: 72, height: 24)
-                            Spacer()
+                                .frame(width:  40, height: 40)
                         }
                         Spacer()
-                    }
-                    TapView { touchViews in
-                        for entry in touchViews {
-                            let location = entry.value
-                            
-                            // check if location is a button
-                            if let button = self.checkButtonLocation(point: location) {
-                                print("you pressed \(button)")
+                        Image("Select")
+                            .resizable()
+                            .frame(width: 72, height: 24)
+                            .onTapGesture { location in
+                                print("you tapped the select button")
                             }
-                        }
+                            .simultaneousGesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged() { result in
+                                        print("you're holding the select button")
+                                    }
+                                    .onEnded() { result in
+                                        print("you stopped pressing the select button")
+                                    }
+                            )
+                        Spacer()
+                        Image("Start")
+                            .resizable()
+                            .frame(width: 72, height: 24)
+                            .onTapGesture { location in
+                                print("you tapped the start button!")
+                            }
+                            .simultaneousGesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged() { result in
+                                        print("you're holding the start button.")
+                                    }
+                                    .onEnded() { result in
+                                        print("you stopped pressing the start button.")
+                                    }
+                            )
+                        Spacer()
                     }
+                    Spacer()
                 }
 
             }
         }
-            .onAppear {
-                self.run()
-            }
-            .navigationBarTitle("")
-            .navigationBarHidden(true)
-            .ignoresSafeArea(.all)
-            .edgesIgnoringSafeArea(.all)
-            .statusBarHidden()
-    }
+        .coordinateSpace(name: "screen")
+        .onAppear {
+            self.run()
+        }
+        .navigationBarTitle("")
+        .navigationBarHidden(true)
+        .ignoresSafeArea(.all)
+        .edgesIgnoringSafeArea(.all)
+        .statusBarHidden()
+}
 }
