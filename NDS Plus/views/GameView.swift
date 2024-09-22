@@ -128,7 +128,6 @@ struct GameView: View {
         if let emu = emulator {
             for entry in entries {
                 if entry.value.contains(point) {
-                    print("pressing button \(entry.key)")
                     emu.updateInput(entry.key, true)
                 } else {
                     emu.updateInput(entry.key, false)
@@ -201,22 +200,6 @@ struct GameView: View {
                         height: CGFloat(SCREEN_HEIGHT) * 1.4
                     )
                     .shadow(color: .gray, radius: 1.0, y: 1)
-                    .onTapGesture() { location in
-                        if location.x >= 0 && location.y >= 0 {
-                            let x = UInt16(Float(location.x) / 1.4)
-                            let y = UInt16(Float(location.y) / 1.4)
-                            
-                            emulator?.touchScreen(x, y)
-                            
-                            DispatchQueue.global().async(execute: DispatchWorkItem {
-                                usleep(200)
-                                DispatchQueue.main.sync() {
-                                    emulator?.releaseScreen()
-                                }
-                            })
-                        }
-                        
-                    }
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged() { value in
@@ -249,11 +232,9 @@ struct GameView: View {
                                 DragGesture(minimumDistance: 0)
                                     .onChanged() { result in
                                         emulator?.updateInput(ButtonEvent.ButtonL, true)
-                                        print("you're holding the l button!")
                                     }
                                     .onEnded() { result in
                                         emulator?.updateInput(ButtonEvent.ButtonL, false)
-                                        print("you stopped pressing the l button.")
                                     }
                             )
                         Spacer()
@@ -263,11 +244,9 @@ struct GameView: View {
                             .simultaneousGesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged() { result in
-                                        print("you're holding the r button!")
                                         emulator?.updateInput(ButtonEvent.ButtonR, true)
                                     }
                                     .onEnded() { result in
-                                        print("you stopped pressing r button!")
                                         emulator?.updateInput(ButtonEvent.ButtonR, false)
                                     }
                             )
@@ -303,7 +282,6 @@ struct GameView: View {
                                     }
                                     .onEnded() { result in
                                         self.releaseControlPad()
-                                        print("you stopped pressing the control pad.")
                                     }
                             )
                         Spacer()
@@ -316,13 +294,7 @@ struct GameView: View {
                                     Color.clear
                                         .onAppear {
                                             let frame = geometry.frame(in: .local)
-                                            // .32 is the multiplier for y
-                                            // y = 56 for bottom part of x button
-                                            // 56 * 2 for the top part of b
-                                            // .35 multipler for left part of x and b
-                                            // right part of y is 56 so .32 multiplier
-                                            // left part of a is 56 * 2
-                                            
+
                                             let width = frame.maxY * 0.32
                                             let height = frame.maxY * 0.32
                                             
@@ -335,8 +307,6 @@ struct GameView: View {
                                             buttons[ButtonEvent.ButtonX] = xButton
                                             buttons[ButtonEvent.ButtonY] = yButton
                                             buttons[ButtonEvent.ButtonB] = bButton
-                                            
-                                            print(frame)
                                         }
                                 }
                             )
@@ -346,7 +316,6 @@ struct GameView: View {
                                         self.handleButtons(point: result.location)
                                     }
                                     .onEnded() { result in
-                                        print("you stopped pressing buttons.")
                                         self.releaseButtons()
                                     }
                             )
@@ -370,11 +339,9 @@ struct GameView: View {
                                 DragGesture(minimumDistance: 0)
                                     .onChanged() { result in
                                         emulator?.updateInput(ButtonEvent.Select, true)
-                                        print("you're holding the select button")
                                     }
                                     .onEnded() { result in
-                                        emulator?.updateInput(ButtonEvent.Start, false)
-                                        print("you stopped pressing the select button")
+                                        emulator?.updateInput(ButtonEvent.Select, false)
                                     }
                             )
                         Spacer()
@@ -385,11 +352,9 @@ struct GameView: View {
                                 DragGesture(minimumDistance: 0)
                                     .onChanged() { result in
                                         emulator?.updateInput(ButtonEvent.Start, true)
-                                        print("you're holding the start button.")
                                     }
                                     .onEnded() { result in
                                         emulator?.updateInput(ButtonEvent.Start, false)
-                                        print("you stopped pressing the start button.")
                                     }
                             )
                         Spacer()
