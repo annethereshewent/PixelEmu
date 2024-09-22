@@ -25,6 +25,8 @@ struct GameView: View {
     @State private var workItem: DispatchWorkItem? = nil
     @State private var touch = false
     
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+    
     @Environment(\.modelContext) private var context
     @Environment(\.presentationMode) var presentationMode
     
@@ -32,6 +34,26 @@ struct GameView: View {
 
     @State private var buttons: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
     @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
+    
+    @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
+    
+    private func initializeButtonState() {
+        self.buttonStarted[ButtonEvent.Up] = false
+        self.buttonStarted[ButtonEvent.Down] = false
+        self.buttonStarted[ButtonEvent.Left] = false
+        self.buttonStarted[ButtonEvent.Right] = false
+        
+        self.buttonStarted[ButtonEvent.ButtonA] = false
+        self.buttonStarted[ButtonEvent.ButtonB] = false
+        self.buttonStarted[ButtonEvent.ButtonY] = false
+        self.buttonStarted[ButtonEvent.ButtonX] = false
+        
+        self.buttonStarted[ButtonEvent.ButtonL] = false
+        self.buttonStarted[ButtonEvent.ButtonR] = false
+        
+        self.buttonStarted[ButtonEvent.Start] = false
+        self.buttonStarted[ButtonEvent.Select] = false
+    }
     
     private func run() {
         let bios7Arr: [UInt8] = Array(bios7Data!)
@@ -180,6 +202,25 @@ struct GameView: View {
             
         }
     }
+    
+    private func checkForHapticFeedback(point: CGPoint) {
+        if let emu = emulator {
+            for entry in buttons {
+                if entry.value.contains(point) && !buttonStarted[entry.key]! {
+                    feedbackGenerator.impactOccurred()
+                    buttonStarted[entry.key] = true
+                    break
+                }
+            }
+        }
+    }
+    
+    private func releaseHapticFeedback() {
+        for entry in buttonStarted {
+            buttonStarted[entry.key] = false
+        }
+    }
+    
     var body: some View {
         ZStack {
             Color.mint
@@ -231,9 +272,14 @@ struct GameView: View {
                             .simultaneousGesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged() { result in
+                                        if !buttonStarted[ButtonEvent.ButtonL]! {
+                                            feedbackGenerator.impactOccurred()
+                                            buttonStarted[ButtonEvent.ButtonL] = true
+                                        }
                                         emulator?.updateInput(ButtonEvent.ButtonL, true)
                                     }
                                     .onEnded() { result in
+                                        buttonStarted[ButtonEvent.ButtonL] = false
                                         emulator?.updateInput(ButtonEvent.ButtonL, false)
                                     }
                             )
@@ -244,9 +290,14 @@ struct GameView: View {
                             .simultaneousGesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged() { result in
+                                        if !buttonStarted[ButtonEvent.ButtonR]! {
+                                            feedbackGenerator.impactOccurred()
+                                            buttonStarted[ButtonEvent.ButtonR] = true
+                                        }
                                         emulator?.updateInput(ButtonEvent.ButtonR, true)
                                     }
                                     .onEnded() { result in
+                                        buttonStarted[ButtonEvent.ButtonR] = false
                                         emulator?.updateInput(ButtonEvent.ButtonR, false)
                                     }
                             )
@@ -278,9 +329,16 @@ struct GameView: View {
                             .simultaneousGesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged() { result in
+                                        // you can use any of the control pad buttons here and it'll work ok
+                                        // the choice to use up is arbitrary
+                                        if !buttonStarted[ButtonEvent.Up]! {
+                                            feedbackGenerator.impactOccurred()
+                                            buttonStarted[ButtonEvent.Up] = true
+                                        }
                                         self.handleControlPad(point: result.location)
                                     }
                                     .onEnded() { result in
+                                        buttonStarted[ButtonEvent.Up] = false
                                         self.releaseControlPad()
                                     }
                             )
@@ -313,10 +371,12 @@ struct GameView: View {
                             .simultaneousGesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged() { result in
+                                        self.checkForHapticFeedback(point: result.location)
                                         self.handleButtons(point: result.location)
                                     }
                                     .onEnded() { result in
                                         self.releaseButtons()
+                                        self.releaseHapticFeedback()
                                     }
                             )
                         Spacer()
@@ -338,9 +398,14 @@ struct GameView: View {
                             .simultaneousGesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged() { result in
+                                        if !buttonStarted[ButtonEvent.Select]! {
+                                            feedbackGenerator.impactOccurred()
+                                            buttonStarted[ButtonEvent.Select] = true
+                                        }
                                         emulator?.updateInput(ButtonEvent.Select, true)
                                     }
                                     .onEnded() { result in
+                                        buttonStarted[ButtonEvent.Select] = false
                                         emulator?.updateInput(ButtonEvent.Select, false)
                                     }
                             )
@@ -351,9 +416,14 @@ struct GameView: View {
                             .simultaneousGesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged() { result in
+                                        if !buttonStarted[ButtonEvent.Start]! {
+                                            feedbackGenerator.impactOccurred()
+                                            buttonStarted[ButtonEvent.Start] = true
+                                        }
                                         emulator?.updateInput(ButtonEvent.Start, true)
                                     }
                                     .onEnded() { result in
+                                        buttonStarted[ButtonEvent.Start] = false
                                         emulator?.updateInput(ButtonEvent.Start, false)
                                     }
                             )
@@ -366,6 +436,7 @@ struct GameView: View {
         }
         .coordinateSpace(name: "screen")
         .onAppear {
+            self.initializeButtonState()
             self.run()
         }
         .navigationBarTitle("")
