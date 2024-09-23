@@ -39,6 +39,8 @@ struct GameView: View {
     
     @State private var gameName = ""
     
+    @State private var backupFile: BackupFile? = nil
+    
     private func initializeButtonState() {
         self.buttonStarted[ButtonEvent.Up] = false
         self.buttonStarted[ButtonEvent.Down] = false
@@ -55,27 +57,6 @@ struct GameView: View {
         
         self.buttonStarted[ButtonEvent.Start] = false
         self.buttonStarted[ButtonEvent.Select] = false
-    }
-    
-    private func decodeGameDb() -> [GameEntry]? {
-        guard let path = Bundle.main.path(forResource: "game_db", ofType: "json") else { return nil }
-        
-        let url = URL(fileURLWithPath: path)
-        
-        var gameEntries: [GameEntry]? = nil
-        
-        do {
-            let data = try Data(contentsOf: url)
-            let decoder = JSONDecoder()
-            
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            
-            gameEntries = try decoder.decode([GameEntry].self, from: data)
-        } catch {
-            print(error)
-        }
-        
-        return gameEntries
     }
     
     private func run() {
@@ -131,11 +112,11 @@ struct GameView: View {
             
             let gameCode = emulator!.getGameCode()
             
-            if let entries = self.decodeGameDb() {
+            if let entries = GameEntry.decodeGameDb() {
                 let entries = entries.filter { $0.gameCode == gameCode }
-                
                 if entries.count > 0 {
-                    if let data = BackupFile.createBackupFile(entry: entries[0], gameUrl: url) {
+                    backupFile = BackupFile(entry: entries[0], gameUrl: url)
+                    if let data = backupFile!.createBackupFile() {
                         emulator!.setBackup(entries[0].saveType, entries[0].ramCapacity, data)
                     }
                 }
@@ -174,6 +155,7 @@ struct GameView: View {
                         }
                         
                         self.handleInput()
+                        self.checkSaves()
                     }
                     
                     if !isRunning {

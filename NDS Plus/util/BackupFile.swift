@@ -8,7 +8,16 @@
 import Foundation
 
 class BackupFile {
-    static func createBackupFile(entry: GameEntry, gameUrl: URL) -> UnsafeBufferPointer<UInt8>? {
+    var entry: GameEntry
+    var gameUrl: URL
+    var saveUrl: URL? = nil
+    
+    init(entry: GameEntry, gameUrl: URL) {
+        self.entry = entry
+        self.gameUrl = gameUrl
+    }
+    
+    func createBackupFile() -> UnsafeBufferPointer<UInt8>? {
         let saveName = String(gameUrl
             .deletingPathExtension()
             .appendingPathExtension("sav")
@@ -20,8 +29,6 @@ class BackupFile {
             .removingPercentEncoding
             .unsafelyUnwrapped
 
-        print("creating backup file from \(entry.saveType) with save name \(saveName)")
-        
         if var location = try? FileManager.default.url(
              for: .applicationSupportDirectory,
              in: .userDomainMask,
@@ -37,8 +44,6 @@ class BackupFile {
             // finally, see if the file exists in the directory and load that, otherwise create it
             location.appendPathComponent(saveName)
             
-            print(location.absoluteString)
-            
             if FileManager.default.fileExists(atPath: location.path) {
                 if let data = try? Data(contentsOf: location){
                     let buffer = Array(data)
@@ -47,10 +52,11 @@ class BackupFile {
                         return ptr
                     }
                     
+                    saveUrl = location
+                    
                     return ptr
                 }
             } else {
-                print("didn't find the file :-(")
                 let buffer = [UInt8](repeating: 0xff, count: Int(entry.ramCapacity))
                 
                 let ptr = buffer.withUnsafeBufferPointer { ptr in
@@ -61,10 +67,11 @@ class BackupFile {
                 
                 do {
                     try data.write(to: location)
-                    print("successfully wrote the file!")
                 } catch {
                     print(error)
                 }
+                
+                saveUrl = location
                 
                 return ptr
             }
