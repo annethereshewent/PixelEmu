@@ -27,6 +27,7 @@
 		E806EA702CA0D8330081D3E8 /* game_db.json in Resources */ = {isa = PBXBuildFile; fileRef = E806EA6F2CA0D8330081D3E8 /* game_db.json */; };
 		E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA712CA0DA720081D3E8 /* GameEntry.swift */; };
 		E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA732CA0EE100081D3E8 /* BackupFile.swift */; };
+		E806EA782CA1078F0081D3E8 /* TouchControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,7 @@
 		E806EA6F2CA0D8330081D3E8 /* game_db.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = game_db.json; sourceTree = "<group>"; };
 		E806EA712CA0DA720081D3E8 /* GameEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntry.swift; sourceTree = "<group>"; };
 		E806EA732CA0EE100081D3E8 /* BackupFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupFile.swift; sourceTree = "<group>"; };
+		E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchControlsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +169,7 @@
 				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
 				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
 				E806EA682C9E9BE30081D3E8 /* TapView.swift */,
+				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -352,6 +355,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E806EA782CA1078F0081D3E8 /* TouchControlsView.swift in Sources */,
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
 				E806EA692C9E9BE30081D3E8 /* TapView.swift in Sources */,
