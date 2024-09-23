@@ -489,7 +489,6 @@ struct GameView: View {
 
             }
         }
-        .coordinateSpace(name: "screen")
         .onAppear {
             self.initButtonState()
             self.run()
