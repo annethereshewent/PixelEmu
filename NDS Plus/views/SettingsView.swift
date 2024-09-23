@@ -28,22 +28,16 @@ struct SettingsView: View {
         switch currentFile {
         case .bios7:
             if let url = URL(string: "bios7.bin", relativeTo: location) {
-                if let success = try? data.write(to: url) {
-                    print(success)
-                }
+                try? data.write(to: url)
             }
         case .bios9:
             if let url = URL(string: "bios9.bin", relativeTo: location) {
-                if let success = try? data.write(to: url) {
-                    print(success)
-                }
+                try? data.write(to: url)
             }
         
         case .firmware:
             if let url = URL(string: "firmware.bin", relativeTo: location) {
-                if let success = try? data.write(to: url) {
-                    print(success)
-                }
+                try? data.write(to: url)
             }
         }
     }
@@ -94,7 +88,7 @@ struct SettingsView: View {
                 }
                 Section(header: Text("Miscellaneous")) {
                     HStack {
-                        Button("Cloud saves") {
+                        Button("Google saves") {
                             
                         }
                         Spacer()

@@ -25,22 +25,10 @@ class Game {
         self.gameIcon = gameIcon
     }
     
-    static func storeGame(data: Data, url: URL, iconPtr: UnsafePointer<UInt8>) -> Game? {
-        let gameName = String(url
-            .relativeString
-            .split(separator: "/")
-            .last
-            .unsafelyUnwrapped
-        )
-            .removingPercentEncoding
-            .unsafelyUnwrapped
-        
+    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>) -> Game? {
         let buffer = UnsafeBufferPointer(start: iconPtr, count: ICON_WIDTH * ICON_HEIGHT * 4)
         
         let pixelsArr = Array(buffer)
-        
-        print(url)
-        print(data)
         
         // store bookmark for later use
         if url.startAccessingSecurityScopedResource() {
