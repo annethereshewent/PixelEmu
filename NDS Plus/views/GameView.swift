@@ -25,7 +25,7 @@ struct GameView: View {
     @State private var workItem: DispatchWorkItem? = nil
     @State private var touch = false
     
-    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
     @Environment(\.modelContext) private var context
     @Environment(\.presentationMode) var presentationMode
@@ -41,7 +41,9 @@ struct GameView: View {
     
     @State private var backupFile: BackupFile? = nil
     
-    private func initializeButtonState() {
+    @State private var debounceTimer: Timer? = nil
+    
+    private func initButtonState() {
         self.buttonStarted[ButtonEvent.Up] = false
         self.buttonStarted[ButtonEvent.Down] = false
         self.buttonStarted[ButtonEvent.Left] = false
@@ -57,6 +59,34 @@ struct GameView: View {
         
         self.buttonStarted[ButtonEvent.Start] = false
         self.buttonStarted[ButtonEvent.Select] = false
+    }
+    
+    private func checkSaves() {
+        if emulator!.hasSaved() {
+            emulator!.setSaved(false)
+            debounceTimer?.invalidate()
+            
+            debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { _ in
+                self.saveGame()
+            }
+        }
+    }
+    
+    private func saveGame() {
+        let ptr = emulator!.backupPointer();
+        
+        let buffer = UnsafeBufferPointer(start: ptr, count: Int(emulator!.backupLength()))
+        
+        let data = Data(buffer)
+        
+        if let saveUrl = backupFile?.saveUrl {
+            do {
+                try data.write(to: saveUrl)
+            } catch {
+                print(error)
+            }
+        }
+        
     }
     
     private func run() {
@@ -461,7 +491,7 @@ struct GameView: View {
         }
         .coordinateSpace(name: "screen")
         .onAppear {
-            self.initializeButtonState()
+            self.initButtonState()
             self.run()
         }
         .navigationBarTitle("")
