@@ -150,6 +150,13 @@ struct ContentView: View {
                                                         bios9Data != nil &&
                                                         firmwareData != nil
                                                     {
+                                                        print("canceling shit")
+                                                        emulator = nil
+                                                        workItem?.cancel()
+                                                        isRunning = false
+                                                        
+                                                        workItem = nil
+                                                        
                                                         path.append("GameView")
                                                     }
                                                 }

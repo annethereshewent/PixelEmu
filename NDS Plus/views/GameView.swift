@@ -15,6 +15,8 @@ struct GameView: View {
     
     @State private var isRunning = false
     
+    private let SCREEN_RATIO: Float = 1.36
+    
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
@@ -204,31 +206,31 @@ struct GameView: View {
                 Image(uiImage: topImage)
                     .resizable()
                     .frame(
-                        width: CGFloat(SCREEN_WIDTH) * 1.36,
-                        height: CGFloat(SCREEN_HEIGHT) * 1.36
+                        width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
+                        height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
                     )
                     .shadow(color: .gray, radius: 1.0, y: 1)
                     .padding(.top, 50)
                 Image(uiImage: bottomImage)
                     .resizable()
                     .frame(
-                        width: CGFloat(SCREEN_WIDTH) * 1.36,
-                        height: CGFloat(SCREEN_HEIGHT) * 1.36
+                        width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
+                        height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
                     )
                     .shadow(color: .gray, radius: 1.0, y: 1)
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged() { value in
                                 if value.location.x >= 0 && value.location.y >= 0 {
-                                    let x = UInt16(Float(value.location.x) / 1.36)
-                                    let y = UInt16(Float(value.location.y) / 1.36)
+                                    let x = UInt16(Float(value.location.x) / SCREEN_RATIO)
+                                    let y = UInt16(Float(value.location.y) / SCREEN_RATIO)
                                     emulator?.touchScreen(x, y)
                                 }
                             }
                             .onEnded() { value in
                                 if value.location.x >= 0 && value.location.y >= 0 {
-                                    let x = UInt16(Float(value.location.x) / 1.36)
-                                    let y = UInt16(Float(value.location.y) / 1.36)
+                                    let x = UInt16(Float(value.location.x) / SCREEN_RATIO)
+                                    let y = UInt16(Float(value.location.y) / SCREEN_RATIO)
                                     emulator?.touchScreen(x, y)
                                     DispatchQueue.global().async(execute: DispatchWorkItem {
                                         usleep(200)
