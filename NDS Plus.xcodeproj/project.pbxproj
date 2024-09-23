@@ -21,13 +21,13 @@
 		E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA5B2C9A8EA70081D3E8 /* GameController.swift */; };
 		E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA5D2C9BD6420081D3E8 /* Game.swift */; };
 		E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA5F2C9BF9840081D3E8 /* GameView.swift */; };
-		E806EA622C9E9B070081D3E8 /* NFingerGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA612C9E9B070081D3E8 /* NFingerGestureRecognizer.swift */; };
-		E806EA692C9E9BE30081D3E8 /* TapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA682C9E9BE30081D3E8 /* TapView.swift */; };
 		E806EA6D2C9EAFA90081D3E8 /* ButtonPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA6C2C9EAFA90081D3E8 /* ButtonPoint.swift */; };
 		E806EA702CA0D8330081D3E8 /* game_db.json in Resources */ = {isa = PBXBuildFile; fileRef = E806EA6F2CA0D8330081D3E8 /* game_db.json */; };
 		E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA712CA0DA720081D3E8 /* GameEntry.swift */; };
 		E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA732CA0EE100081D3E8 /* BackupFile.swift */; };
 		E806EA782CA1078F0081D3E8 /* TouchControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */; };
+		E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA792CA1117E0081D3E8 /* GamesListView.swift */; };
+		E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA7B2CA115FA0081D3E8 /* CloudService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,13 +65,13 @@
 		E806EA5B2C9A8EA70081D3E8 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		E806EA5D2C9BD6420081D3E8 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		E806EA5F2C9BF9840081D3E8 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
-		E806EA612C9E9B070081D3E8 /* NFingerGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFingerGestureRecognizer.swift; sourceTree = "<group>"; };
-		E806EA682C9E9BE30081D3E8 /* TapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapView.swift; sourceTree = "<group>"; };
 		E806EA6C2C9EAFA90081D3E8 /* ButtonPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPoint.swift; sourceTree = "<group>"; };
 		E806EA6F2CA0D8330081D3E8 /* game_db.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = game_db.json; sourceTree = "<group>"; };
 		E806EA712CA0DA720081D3E8 /* GameEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntry.swift; sourceTree = "<group>"; };
 		E806EA732CA0EE100081D3E8 /* BackupFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupFile.swift; sourceTree = "<group>"; };
 		E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchControlsView.swift; sourceTree = "<group>"; };
+		E806EA792CA1117E0081D3E8 /* GamesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListView.swift; sourceTree = "<group>"; };
+		E806EA7B2CA115FA0081D3E8 /* CloudService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,8 +168,8 @@
 				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
 				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
 				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
-				E806EA682C9E9BE30081D3E8 /* TapView.swift */,
 				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
+				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -177,10 +177,10 @@
 		E806EA642C9E9B290081D3E8 /* util */ = {
 			isa = PBXGroup;
 			children = (
-				E806EA612C9E9B070081D3E8 /* NFingerGestureRecognizer.swift */,
 				E806EA312C9935D00081D3E8 /* GraphicsParser.swift */,
 				E806EA6C2C9EAFA90081D3E8 /* ButtonPoint.swift */,
 				E806EA732CA0EE100081D3E8 /* BackupFile.swift */,
+				E806EA7B2CA115FA0081D3E8 /* CloudService.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -358,15 +358,15 @@
 				E806EA782CA1078F0081D3E8 /* TouchControlsView.swift in Sources */,
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
-				E806EA692C9E9BE30081D3E8 /* TapView.swift in Sources */,
 				E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */,
+				E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */,
 				E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */,
 				E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */,
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */,
-				E806EA622C9E9B070081D3E8 /* NFingerGestureRecognizer.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
+				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
 				E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */,
 				E806EA6D2C9EAFA90081D3E8 /* ButtonPoint.swift in Sources */,
 			);

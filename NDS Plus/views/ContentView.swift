@@ -8,7 +8,6 @@
 import SwiftUI
 import UniformTypeIdentifiers
 import DSEmulatorMobile
-import SwiftData
 
 struct ContentView: View {
     @State private var showSettings = false
@@ -26,8 +25,6 @@ struct ContentView: View {
     @State private var path = NavigationPath()
     @State private var emulator: MobileEmulator? = nil
     @State private var gameUrl: URL? = nil
-    
-    @Query private var games: [Game] = []
     
     init() {
         bios7Data = nil
@@ -121,57 +118,17 @@ struct ContentView: View {
                         .frame(alignment: .center)
                 }
                 Spacer()
-                if games.count > 0 {
-                    List {
-                        Section(header: Text("Games")) {
-                            ForEach(games) { game in
-                                HStack {
-                                    if let image = GraphicsParser().fromBytes(bytes: game.gameIcon, width: 32, height: 32) {
-                                        Image(uiImage: image)
-                                    }
-                                    Button(game.gameName.removingPercentEncoding!) {
-                                        // refresh the url's bookmark
-                                        var isStale = false
-                                        if let url = try? URL(
-                                            resolvingBookmarkData: game.bookmark,
-                                            options: [.withoutUI],
-                                            relativeTo: nil,
-                                            bookmarkDataIsStale: &isStale
-                                        ) {
-                                            if url.startAccessingSecurityScopedResource() {
-                                                gameUrl = url
-                                                defer {
-                                                    url.stopAccessingSecurityScopedResource()
-                                                }
-                                                if let data = try? Data(contentsOf: url) {
-                                                    romData = data
-                                                    
-                                                    if bios7Data != nil &&
-                                                        bios9Data != nil &&
-                                                        firmwareData != nil
-                                                    {
-                                                        print("canceling shit")
-                                                        emulator = nil
-                                                        workItem?.cancel()
-                                                        isRunning = false
-                                                        
-                                                        workItem = nil
-                                                        
-                                                        path.append("GameView")
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    Spacer()
-                    Spacer()
-                }
+                GamesListView(
+                    romData: $romData,
+                    bios7Data: $bios7Data,
+                    bios9Data: $bios9Data,
+                    firmwareData: $firmwareData,
+                    isRunning: $isRunning,
+                    workItem: $workItem,
+                    emulator: $emulator,
+                    gameUrl: $gameUrl,
+                    path: $path
+                )
                 HStack {
                     Button("Load Game", systemImage: "square.and.arrow.up.circle") {
                         emulator = nil
