@@ -253,5 +253,5 @@ struct GameView: View {
         .ignoresSafeArea(.all)
         .edgesIgnoringSafeArea(.all)
         .statusBarHidden()
-}
+    }
 }

@@ -18,6 +18,7 @@ struct SettingsView: View {
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
     @Binding var loggedInCloud: Bool
+    @Binding var user: GIDGoogleUser?
     
     @State private var showFileBrowser = false
     
@@ -36,8 +37,7 @@ struct SettingsView: View {
                 print(error)
                 return
             }
-            // If sign in succeeded, display the app's main content View.
-            print(result.user.accessToken)
+            user = result.user
         }
     }
     

@@ -53,7 +53,6 @@ struct GamesListView: View {
                                                 bios9Data != nil &&
                                                 firmwareData != nil
                                             {
-                                                print("canceling shit")
                                                 emulator = nil
                                                 workItem?.cancel()
                                                 isRunning = false

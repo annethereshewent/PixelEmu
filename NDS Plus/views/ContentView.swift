@@ -109,7 +109,8 @@ struct ContentView: View {
                             bios7Data: $bios7Data,
                             bios9Data: $bios9Data,
                             firmwareData: $firmwareData,
-                            loggedInCloud: $loggedInCloud
+                            loggedInCloud: $loggedInCloud,
+                            user: $user
                         )
                     }
                     .background(colorScheme == .dark ? Color.black : Color.white)
@@ -188,7 +189,13 @@ struct ContentView: View {
             GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
                 if let signedInUser = user {
                     self.user = signedInUser
-                    print("found user with access token \(user!.accessToken.tokenString)")
+                    
+                    self.user?.refreshTokensIfNeeded { user, error in
+                        guard error == nil else { return }
+                        guard let user = user else { return }
+                        
+                        self.user = user
+                    }
                 }
             }
         }

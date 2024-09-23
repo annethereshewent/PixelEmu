@@ -6,7 +6,12 @@
 //
 
 import Foundation
+import GoogleSignIn
 
 class CloudService {
+    private let user: GIDGoogleUser
     
+    init(user: GIDGoogleUser) {
+        self.user = user
+    }
 }
