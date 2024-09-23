@@ -7,6 +7,8 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import GoogleSignInSwift
+import GoogleSignIn
 
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
@@ -22,6 +24,22 @@ struct SettingsView: View {
     @State private var currentFile: CurrentFile? = nil
     
     let binType = UTType(filenameExtension: "bin", conformingTo: .data)
+    
+    private func handleSignInButton() {
+        guard let rootViewController = (UIApplication.shared.connectedScenes.first
+                  as? UIWindowScene)?.windows.first?.rootViewController
+        else {
+            return
+        }
+        GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { signInResult, error in
+            guard let result = signInResult else {
+                print(error)
+                return
+            }
+            // If sign in succeeded, display the app's main content View.
+            print(result.user.accessToken)
+        }
+    }
     
 
     private func storeFile(location: URL, data: Data, currentFile: CurrentFile) {
@@ -86,16 +104,9 @@ struct SettingsView: View {
                         }
                     }
                 }
-                Section(header: Text("Miscellaneous")) {
+                Section(header: Text("Cloud Saves")) {
                     HStack {
-                        Button("Google saves") {
-                            
-                        }
-                        Spacer()
-                        if loggedInCloud {
-                            Image(systemName: "checkmark")
-                                .foregroundColor(.green)
-                        }
+                        GoogleSignInButton(action: handleSignInButton)
                     }
                 }
                 

@@ -34,6 +34,17 @@
 		</dict>
 		<dict/>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.3451169812-5tsvud264t5bqam96c6ipfso6243p13t</string>
+			</array>
+		</dict>
+	</array>
 	<key>GCSupportedGameControllers</key>
 	<array>
 		<dict>
@@ -43,6 +54,8 @@
 	</array>
 	<key>GCSupportsControllerUserInteraction</key>
 	<true/>
+	<key>GIDClientID</key>
+	<string>353451169812-5tsvud264t5bqam96c6ipfso6243p13t.apps.googleusercontent.com</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -87,17 +100,6 @@
 			</dict>
 		</dict>
 		<dict/>
-	</array>
-	<key>GIDClientID</key>
-	<string>353451169812-5tsvud264t5bqam96c6ipfso6243p13t.apps.googleusercontent.com</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.3451169812-5tsvud264t5bqam96c6ipfso6243p13t</string>
-			</array>
-		</dict>
 	</array>
 </dict>
 </plist>

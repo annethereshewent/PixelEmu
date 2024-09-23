@@ -8,6 +8,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
 import DSEmulatorMobile
+import GoogleSignIn
 
 struct ContentView: View {
     @State private var showSettings = false
@@ -25,6 +26,8 @@ struct ContentView: View {
     @State private var path = NavigationPath()
     @State private var emulator: MobileEmulator? = nil
     @State private var gameUrl: URL? = nil
+    
+    @State private var user: GIDGoogleUser? = nil
     
     init() {
         bios7Data = nil
@@ -175,6 +178,17 @@ struct ContentView: View {
                         romData: $romData,
                         gameUrl: $gameUrl
                     )
+                }
+            }
+        }
+        .onOpenURL { url in
+            GIDSignIn.sharedInstance.handle(url)
+        }
+        .onAppear {
+            GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+                if let signedInUser = user {
+                    self.user = signedInUser
+                    print("found user with access token \(user!.accessToken.tokenString)")
                 }
             }
         }
