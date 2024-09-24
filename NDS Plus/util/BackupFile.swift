@@ -40,6 +40,20 @@ class BackupFile {
         return ptr
     }
     
+    func saveGame(ptr: UnsafePointer<UInt8>, backupLength: Int) {
+        let buffer = UnsafeBufferPointer(start: ptr, count: backupLength)
+        
+        let data = Data(buffer)
+        
+        if let saveUrl = self.saveUrl {
+            do {
+                try data.write(to: saveUrl)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
     func createBackupFile() -> UnsafeBufferPointer<UInt8>? {
         let saveName = Self.getSaveName(gameUrl: gameUrl)
 

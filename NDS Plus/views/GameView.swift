@@ -56,19 +56,28 @@ struct GameView: View {
     }
     
     private func saveGame() {
-        let ptr = emulator!.backupPointer();
-        
-        let buffer = UnsafeBufferPointer(start: ptr, count: Int(emulator!.backupLength()))
-        
-        let data = Data(buffer)
-        
-        if let saveUrl = backupFile?.saveUrl {
-            do {
-                try data.write(to: saveUrl)
-            } catch {
-                print(error)
+        if let emu = emulator {
+            let ptr = emu.backupPointer();
+            let backupLength = Int(emu.backupLength())
+    
+            if let cloudService = cloudService {
+                if let url = gameUrl {
+                    let buffer = UnsafeBufferPointer(start: ptr, count: backupLength)
+                    
+                    let data = Data(buffer)
+                    
+                    Task {
+                        await cloudService.uploadSave(
+                            saveName: BackupFile.getSaveName(gameUrl: url),
+                            data: data
+                        )
+                    }
+                }
+            } else {
+                backupFile?.saveGame(ptr: ptr, backupLength: backupLength)
             }
         }
+        
     }
     
     private func handleInput() {
@@ -156,8 +165,10 @@ struct GameView: View {
                             if let saveData = await self.cloudService!.getSave(saveName: BackupFile.getSaveName(gameUrl: url)) {
                                 let ptr = BackupFile.getPointer(saveData)
                                 emulator!.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
+                            } else {
+                                let ptr = BackupFile.getPointer(Data())
+                                emulator!.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
                             }
-                            
                         }
                     } else {
                         backupFile = BackupFile(entry: entries[0], gameUrl: url)
