@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DSEmulatorMobile
+import GoogleSignIn
 
 struct GameView: View {
     @State private var topImage = UIImage()
@@ -22,9 +23,10 @@ struct GameView: View {
     @Binding var firmwareData: Data?
     @Binding var romData: Data?
     @Binding var gameUrl: URL?
+    @Binding var user: GIDGoogleUser?
     
     @State private var workItem: DispatchWorkItem? = nil
-    @State private var touch = false
+    @State private var cloudService: CloudService? = nil
     
     @Environment(\.modelContext) private var context
     
@@ -40,14 +42,17 @@ struct GameView: View {
     @State private var gameController = GameController()
     
     private func checkSaves() {
-        if emulator!.hasSaved() {
-            emulator!.setSaved(false)
-            debounceTimer?.invalidate()
-            
-            debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { _ in
-                self.saveGame()
+        if let emu = emulator {
+            if emu.hasSaved() {
+                emu.setSaved(false)
+                debounceTimer?.invalidate()
+                
+                debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { _ in
+                    self.saveGame()
+                }
             }
         }
+        
     }
     
     private func saveGame() {
@@ -64,7 +69,6 @@ struct GameView: View {
                 print(error)
             }
         }
-        
     }
     
     private func handleInput() {
@@ -90,7 +94,7 @@ struct GameView: View {
         }
     }
     
-    private func run() {
+    private func run() async {
         let bios7Arr: [UInt8] = Array(bios7Data!)
         let bios9Arr: [UInt8] = Array(bios9Data!)
         let firmwareArr: [UInt8] = Array(firmwareData!)
@@ -146,9 +150,22 @@ struct GameView: View {
             if let entries = GameEntry.decodeGameDb() {
                 let entries = entries.filter { $0.gameCode == gameCode }
                 if entries.count > 0 {
-                    backupFile = BackupFile(entry: entries[0], gameUrl: url)
-                    if let data = backupFile!.createBackupFile() {
-                        emulator!.setBackup(entries[0].saveType, entries[0].ramCapacity, data)
+                    if let user = user {
+                        self.cloudService = CloudService(user: user)
+                        if let url = gameUrl {
+                            if let saveData = await self.cloudService!.getSave(saveName: BackupFile.getSaveName(gameUrl: url)) {
+                                print(saveData.count)
+                                print("YESSS!!!!! we made it to here!")
+                                let ptr = BackupFile.getPointer(saveData)
+                                emulator!.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
+                            }
+                            
+                        }
+                    } else {
+                        backupFile = BackupFile(entry: entries[0], gameUrl: url)
+                        if let data = backupFile!.createBackupFile() {
+                            emulator!.setBackup(entries[0].saveType, entries[0].ramCapacity, data)
+                        }
                     }
                 }
             }
@@ -246,7 +263,9 @@ struct GameView: View {
             }
         }
         .onAppear {
-            self.run()
+            Task {
+                await self.run()
+            }
         }
         .navigationBarTitle("")
         .navigationBarHidden(true)

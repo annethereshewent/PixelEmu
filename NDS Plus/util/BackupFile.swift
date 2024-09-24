@@ -17,8 +17,8 @@ class BackupFile {
         self.gameUrl = gameUrl
     }
     
-    func createBackupFile() -> UnsafeBufferPointer<UInt8>? {
-        let saveName = String(gameUrl
+    static func getSaveName(gameUrl: URL) -> String {
+        return String(gameUrl
             .deletingPathExtension()
             .appendingPathExtension("sav")
             .relativeString
@@ -28,6 +28,20 @@ class BackupFile {
         )
             .removingPercentEncoding
             .unsafelyUnwrapped
+    }
+    
+    static func getPointer(_ data: Data) -> UnsafeBufferPointer<UInt8> {
+        let buffer = Array(data)
+        
+        let ptr = buffer.withUnsafeBufferPointer { ptr in
+            return ptr
+        }
+        
+        return ptr
+    }
+    
+    func createBackupFile() -> UnsafeBufferPointer<UInt8>? {
+        let saveName = Self.getSaveName(gameUrl: gameUrl)
 
         if var location = try? FileManager.default.url(
              for: .applicationSupportDirectory,
@@ -46,15 +60,9 @@ class BackupFile {
             
             if FileManager.default.fileExists(atPath: location.path) {
                 if let data = try? Data(contentsOf: location){
-                    let buffer = Array(data)
-                    
-                    let ptr = buffer.withUnsafeBufferPointer { ptr in
-                        return ptr
-                    }
-                    
                     saveUrl = location
                     
-                    return ptr
+                    return Self.getPointer(data)
                 }
             } else {
                 let buffer = [UInt8](repeating: 0xff, count: Int(entry.ramCapacity))

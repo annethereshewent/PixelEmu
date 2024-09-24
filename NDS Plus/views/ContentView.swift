@@ -177,7 +177,8 @@ struct ContentView: View {
                         bios9Data: $bios9Data,
                         firmwareData: $firmwareData,
                         romData: $romData,
-                        gameUrl: $gameUrl
+                        gameUrl: $gameUrl,
+                        user: $user
                     )
                 }
             }

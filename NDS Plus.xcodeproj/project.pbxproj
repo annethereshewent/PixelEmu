@@ -32,6 +32,8 @@
 		E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA792CA1117E0081D3E8 /* GamesListView.swift */; };
 		E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA7B2CA115FA0081D3E8 /* CloudService.swift */; };
 		E806EA9A2CA1284B0081D3E8 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E806EA992CA1284B0081D3E8 /* .gitignore */; };
+		E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9B2CA246760081D3E8 /* DriveResponse.swift */; };
+		E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +88,8 @@
 		E806EA792CA1117E0081D3E8 /* GamesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListView.swift; sourceTree = "<group>"; };
 		E806EA7B2CA115FA0081D3E8 /* CloudService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudService.swift; sourceTree = "<group>"; };
 		E806EA992CA1284B0081D3E8 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		E806EA9B2CA246760081D3E8 /* DriveResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveResponse.swift; sourceTree = "<group>"; };
+		E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileJSON.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,6 +237,8 @@
 			children = (
 				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
 				E806EA712CA0DA720081D3E8 /* GameEntry.swift */,
+				E806EA9B2CA246760081D3E8 /* DriveResponse.swift */,
+				E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -509,6 +515,8 @@
 			files = (
 				E806EA782CA1078F0081D3E8 /* TouchControlsView.swift in Sources */,
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
+				E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */,
+				E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
 				E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */,
 				E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */,
