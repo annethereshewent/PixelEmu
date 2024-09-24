@@ -47,25 +47,8 @@ class CloudService {
             }
         }
         
-        let capturedRequest = request
-        
-        let task = Task {
-            do {
-                let (data, _) = try await URLSession.shared.data(for: capturedRequest)
-                
-                // if Data? type isn't explicitly defined, compiler won't allow nil to be returned below
-                let dataCopy: Data? = data
-     
-                return dataCopy
-            } catch {
-                print(error)
-            }
-            
-            return nil
-        }
-        
         do {
-            let data = try await task.result.get()
+            let (data, _) = try await URLSession.shared.data(for: request)
             
             return data
         } catch {
