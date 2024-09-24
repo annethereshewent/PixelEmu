@@ -53,7 +53,7 @@ class CloudService {
             do {
                 let (data, _) = try await URLSession.shared.data(for: capturedRequest)
                 
-                // fuck you
+                // if Data? type isn't explicitly defined, compiler won't allow nil to be returned below
                 let dataCopy: Data? = data
      
                 return dataCopy
