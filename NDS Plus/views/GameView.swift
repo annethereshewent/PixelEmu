@@ -154,8 +154,6 @@ struct GameView: View {
                         self.cloudService = CloudService(user: user)
                         if let url = gameUrl {
                             if let saveData = await self.cloudService!.getSave(saveName: BackupFile.getSaveName(gameUrl: url)) {
-                                print(saveData.count)
-                                print("YESSS!!!!! we made it to here!")
                                 let ptr = BackupFile.getPointer(saveData)
                                 emulator!.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
                             }

@@ -17,6 +17,12 @@ class CloudService {
     
     init(user: GIDGoogleUser) {
         self.user = user
+        
+        let defaults = UserDefaults.standard
+        
+        if let dsFolderId = defaults.string(forKey: "dsFolderId") {
+            self.dsFolderId = dsFolderId
+        }
     }
     
     
@@ -49,7 +55,7 @@ class CloudService {
      
                 return dataCopy
             } catch {
-                print("failed to send request: \(error)")
+                print(error)
             }
             
             return nil
@@ -75,23 +81,24 @@ class CloudService {
         
         let url = buildUrl(params: params)
         
-        var request = URLRequest(url: url)
+        let request = URLRequest(url: url)
         
         if let data = await self.cloudRequest(request: request) {
-            print("made it past the request....")
             do {
                 let driveResponse = try jsonDecoder.decode(DriveResponse.self, from: data)
-                print("got the drive response.....")
                 if driveResponse.files.count > 0 {
-                    print("yeah")
+                    self.dsFolderId = driveResponse.files[0].id
+                    
+                    let defaults = UserDefaults.standard
+                    
+                    defaults.set(self.dsFolderId, forKey: "dsFolderId")
+                    
                     return driveResponse.files[0].id
                 }
             } catch {
                 print(error)
             }
         }
-        
-        print("yo what the fuck")
         
         // create the folder
         let folderParams = [URLQueryItem(name: "uploadType", value: "media")]
@@ -104,15 +111,18 @@ class CloudService {
                 mimeType: "application/vnd.google-apps.folder"
             ))
             
-            throw NSError()
-            
             request.httpMethod = "POST"
-            
             
             if let data = await self.cloudRequest(request: request) {
                 do {
                     let driveResponse = try jsonDecoder.decode(DriveResponse.self, from: data)
                     if driveResponse.files.count > 0 {
+                        self.dsFolderId = driveResponse.files[0].id
+                        
+                        let defaults = UserDefaults.standard
+                        
+                        defaults.set(self.dsFolderId, forKey: "dsFolderId")
+                        
                         return driveResponse.files[0].id
                     }
                 } catch {
@@ -147,11 +157,7 @@ class CloudService {
                         
                         let url = buildUrl(params: params, urlStr: "\(drivesUrl)/\(fileId)")
                         
-                        print(url)
-                        
                         let request = URLRequest(url: url)
-                        
-                        print("we made it to here")
                         
                         return await self.cloudRequest(request: request)
                     }
@@ -160,6 +166,10 @@ class CloudService {
         }
         
         return nil
+    }
+    
+    func uploadSave() {
+        
     }
     
     func buildUrl(params: [URLQueryItem], urlStr: String? = nil) -> URL {
