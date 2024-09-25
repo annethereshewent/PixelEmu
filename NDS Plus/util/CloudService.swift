@@ -123,6 +123,44 @@ class CloudService {
         return nil
     }
     
+    func getSaves(games: [Game]) async -> [SaveEntry] {
+        if let folderId = await self.checkForDSFolder() {
+            let params = [URLQueryItem(name: "q", value: "parents in \"" + folderId + "\"")]
+            
+            let url = buildUrl(params: params)
+            
+            let request = URLRequest(url: url)
+            
+            if let data = await self.cloudRequest(request: request) {
+                do {
+                    let driveResponse = try jsonDecoder.decode(DriveResponse.self, from: data)
+                    
+                    var gameDictionary = [String:Game]()
+                    
+                    for game in games {
+                        gameDictionary[game.gameName] = game
+                    }
+                    
+                    var saveEntries = [SaveEntry]()
+                    
+                    for file in driveResponse.files {
+                        let gameName = file.name.replacing(".sav", with: ".nds")
+                        if let game = gameDictionary[gameName] {
+                            saveEntries.append(SaveEntry(game: game))
+                        }
+                    }
+                    
+                    return saveEntries
+                } catch {
+                    print(error)
+                }
+            }
+        }
+        
+        
+        return []
+    }
+    
     private func getSaveInfo(_ saveName: String, _ folderId: String) async -> DriveResponse? {
         let params = [
             URLQueryItem(name: "q", value: "name = \"\(saveName)\" and parents in \"\(folderId)\""),

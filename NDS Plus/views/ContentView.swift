@@ -28,7 +28,8 @@ struct ContentView: View {
     @State private var gameUrl: URL? = nil
     
     @State private var user: GIDGoogleUser? = nil
-    
+    @State private var cloudService: CloudService? = nil
+
     init() {
         bios7Data = nil
         bios9Data = nil
@@ -110,7 +111,8 @@ struct ContentView: View {
                             bios9Data: $bios9Data,
                             firmwareData: $firmwareData,
                             loggedInCloud: $loggedInCloud,
-                            user: $user
+                            user: $user,
+                            cloudService: $cloudService
                         )
                     }
                     .background(colorScheme == .dark ? Color.black : Color.white)
@@ -178,7 +180,8 @@ struct ContentView: View {
                         firmwareData: $firmwareData,
                         romData: $romData,
                         gameUrl: $gameUrl,
-                        user: $user
+                        user: $user,
+                        cloudService: $cloudService
                     )
                 }
             }
@@ -196,6 +199,8 @@ struct ContentView: View {
                         guard let user = user else { return }
                         
                         self.user = user
+                        
+                        self.cloudService = CloudService(user: self.user!)
                     }
                 }
             }

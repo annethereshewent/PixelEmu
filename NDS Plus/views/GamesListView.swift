@@ -20,7 +20,6 @@ struct GamesListView: View {
     @Binding var emulator: MobileEmulator?
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
-    
     @Query private var games: [Game] = []
     
     var body: some View {
@@ -28,43 +27,37 @@ struct GamesListView: View {
             List {
                 Section(header: Text("Games")) {
                     ForEach(games) { game in
-                        HStack {
-                            if let image = GraphicsParser().fromBytes(bytes: game.gameIcon, width: 32, height: 32) {
-                                Image(uiImage: image)
-                            }
-                            Button(game.gameName.removingPercentEncoding!) {
-                                // refresh the url's bookmark
-                                var isStale = false
-                                if let url = try? URL(
-                                    resolvingBookmarkData: game.bookmark,
-                                    options: [.withoutUI],
-                                    relativeTo: nil,
-                                    bookmarkDataIsStale: &isStale
-                                ) {
-                                    if url.startAccessingSecurityScopedResource() {
-                                        gameUrl = url
-                                        defer {
-                                            url.stopAccessingSecurityScopedResource()
-                                        }
-                                        if let data = try? Data(contentsOf: url) {
-                                            romData = data
+                        GameEntryView(game: game) {
+                            // refresh the url's bookmark
+                            var isStale = false
+                            if let url = try? URL(
+                                resolvingBookmarkData: game.bookmark,
+                                options: [.withoutUI],
+                                relativeTo: nil,
+                                bookmarkDataIsStale: &isStale
+                            ) {
+                                if url.startAccessingSecurityScopedResource() {
+                                    gameUrl = url
+                                    defer {
+                                        url.stopAccessingSecurityScopedResource()
+                                    }
+                                    if let data = try? Data(contentsOf: url) {
+                                        romData = data
+                                        
+                                        if bios7Data != nil &&
+                                            bios9Data != nil &&
+                                            firmwareData != nil
+                                        {
+                                            emulator = nil
+                                            workItem?.cancel()
+                                            isRunning = false
                                             
-                                            if bios7Data != nil &&
-                                                bios9Data != nil &&
-                                                firmwareData != nil
-                                            {
-                                                emulator = nil
-                                                workItem?.cancel()
-                                                isRunning = false
-                                                
-                                                workItem = nil
-                                                
-                                                path.append("GameView")
-                                            }
+                                            workItem = nil
+                                            
+                                            path.append("GameView")
                                         }
                                     }
                                 }
-                                
                             }
                         }
                     }

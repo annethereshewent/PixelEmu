@@ -26,7 +26,7 @@ struct GameView: View {
     @Binding var user: GIDGoogleUser?
     
     @State private var workItem: DispatchWorkItem? = nil
-    @State private var cloudService: CloudService? = nil
+    @Binding var cloudService: CloudService?
     
     @Environment(\.modelContext) private var context
     
