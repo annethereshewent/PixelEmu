@@ -129,15 +129,13 @@ struct CloudView: View {
                             saveName: currentEntry!.game.gameName.replacing(".nds", with: ".sav"),
                             data: data
                         )
+                        currentEntry = nil
                         loading = false
                     }
                 }
             } catch {
                 print(error)
             }
-            
-              
-            
         }
         .onAppear {
             if user != nil {
@@ -149,7 +147,7 @@ struct CloudView: View {
             }
         }
         .confirmationDialog("Confirm delete", isPresented: $showDialog) {
-            Button("Delete save?") {
+            Button("Delete save?", role: .destructive) {
                 let saveName = currentEntry!.game.gameName.replacing(".nds", with: ".sav")
                 
                 loading = true
