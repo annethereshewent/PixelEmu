@@ -112,12 +112,13 @@ struct CloudView: View {
                     }
                     
                     let data = try Data(contentsOf: url)
-                    
+                    loading = true
                     Task {
                         await cloudService?.uploadSave(
                             saveName: currentEntry!.game.gameName.replacing(".nds", with: ".sav"),
                             data: data
                         )
+                        loading = false
                     }
                 }
             } catch {
