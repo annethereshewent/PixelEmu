@@ -38,6 +38,10 @@ struct CloudView: View {
                 return
             }
             user = result.user
+            cloudService = CloudService(user: user!)
+            Task {
+                saveEntries = await cloudService!.getSaves(games: games)
+            }
         }
     }
     
@@ -58,13 +62,20 @@ struct CloudView: View {
                 Button("Sign Out of Google") {
                     GIDSignIn.sharedInstance.signOut()
                     user = nil
+                    saveEntries = []
+                    cloudService = nil
+                    currentEntry = nil
                 }
             }
             List {
                 Section("Save management") {
                     ForEach(saveEntries, id: \.game.gameName) { saveEntry in
                         GameEntryView(game: saveEntry.game) {
-                            currentEntry = saveEntry
+                            if currentEntry == saveEntry {
+                                currentEntry = nil
+                            } else {
+                                currentEntry = saveEntry
+                            }
                         }
                         if currentEntry == saveEntry {
                             Section {
