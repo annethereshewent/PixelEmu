@@ -7,7 +7,11 @@
 
 import Foundation
 
-class SaveEntry {
+class SaveEntry: Equatable {
+    static func == (lhs: SaveEntry, rhs: SaveEntry) -> Bool {
+        lhs.game.gameName == rhs.game.gameName
+    }
+    
     let game: Game
     
     init(game: Game) {

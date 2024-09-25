@@ -200,6 +200,29 @@ class CloudService {
         return nil
     }
     
+    func deleteSave(saveName: String) async -> Bool{
+        if let folderId = await self.checkForDSFolder() {
+            if let driveResponse = await self.getSaveInfo(saveName, folderId) {
+                if driveResponse.files.count > 0 {
+                    let fileId = driveResponse.files[0].id
+                    
+                    let url = buildUrl(params: [], urlStr: "\(drivesUrl)/\(fileId)")
+                    
+                    var request = URLRequest(url: url)
+                    
+                    request.httpMethod = "DELETE"
+                    
+                    if let _ = await self.cloudRequest(request: request) {
+                        return true
+                    }
+                }
+            }
+        }
+        
+        
+        return false
+    }
+    
     func uploadSave(saveName: String, data: Data) async {
         if let folderId = await self.checkForDSFolder() {
             if let driveResponse = await self.getSaveInfo(saveName, folderId) {
