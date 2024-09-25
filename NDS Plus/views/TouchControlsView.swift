@@ -13,6 +13,8 @@ struct TouchControlsView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @Binding var emulator: MobileEmulator?
+    @Binding var workItem: DispatchWorkItem?
+    @Binding var isRunning: Bool
     
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
@@ -216,6 +218,11 @@ struct TouchControlsView: View {
             HStack {
                 Spacer()
                 Button {
+                    emulator = nil
+                    isRunning = false
+                    workItem?.cancel()
+                    workItem = nil
+                    
                     presentationMode.wrappedValue.dismiss()
                 } label: {
                     Image("Home Button")

@@ -30,7 +30,6 @@ struct GameView: View {
     
     @Environment(\.modelContext) private var context
     
-    
     private let graphicsParser = GraphicsParser()
     
     @State private var gameName = ""
@@ -268,7 +267,11 @@ struct GameView: View {
                                 
                             }
                     )
-                TouchControlsView(emulator: $emulator)
+                TouchControlsView(
+                    emulator: $emulator,
+                    workItem: $workItem,
+                    isRunning: $isRunning
+                )
             }
         }
         .onAppear {
