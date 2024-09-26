@@ -54,6 +54,28 @@ class BackupFile {
         }
     }
     
+    static func saveCloudFile(saveName: String, saveFile: Data) {
+        if var location = try? FileManager.default.url(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        ) {
+            location.appendPathComponent("saves")
+            
+            if !FileManager.default.fileExists(atPath: location.path) {
+                try? FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
+            }
+            
+            location.appendPathComponent(saveName)
+            do {
+                try saveFile.write(to: location)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
     func createBackupFile() -> UnsafeBufferPointer<UInt8>? {
         let saveName = Self.getSaveName(gameUrl: gameUrl)
 

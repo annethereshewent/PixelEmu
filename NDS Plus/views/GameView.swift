@@ -153,25 +153,25 @@ struct GameView: View {
                 context.insert(game)
             }
             
-            let gameCode = emulator!.getGameCode()
+            let gameCode = emulator?.getGameCode()
             
             if let entries = GameEntry.decodeGameDb() {
                 let entries = entries.filter { $0.gameCode == gameCode }
                 if entries.count > 0 {
-                    if let user = user {
+                    if user != nil {
                         if let url = gameUrl {
                             if let saveData = await self.cloudService!.getSave(saveName: BackupFile.getSaveName(gameUrl: url)) {
                                 let ptr = BackupFile.getPointer(saveData)
-                                emulator!.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
+                                emulator?.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
                             } else {
                                 let ptr = BackupFile.getPointer(Data())
-                                emulator!.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
+                                emulator?.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
                             }
                         }
                     } else {
                         backupFile = BackupFile(entry: entries[0], gameUrl: url)
                         if let data = backupFile!.createBackupFile() {
-                            emulator!.setBackup(entries[0].saveType, entries[0].ramCapacity, data)
+                            emulator?.setBackup(entries[0].saveType, entries[0].ramCapacity, data)
                         }
                     }
                 }

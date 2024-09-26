@@ -20,6 +20,8 @@ struct CloudView: View {
     @State private var isPresented = false
     @State private var showDialog = false
     @State private var loading = false
+    @State private var showAlert = false
+    @State private var showDeleteAlert = false
     
     @Query var games: [Game]
     
@@ -90,8 +92,23 @@ struct CloudView: View {
                                     Image(systemName: "arrow.down")
                                         .foregroundColor(.white)
                                     Button("Download Save") {
-                                        // download save to local device or icloud
+                                        // download save for offline use
+                                        let saveName = currentEntry!.game.gameName.replacing(".nds" ,with: ".sav")
                                         
+                                        loading = true
+                                        Task {
+                                            if let save = await cloudService?.getSave(saveName: saveName) {
+                                                BackupFile.saveCloudFile(saveName: saveName, saveFile: save)
+                                            }
+                                            loading = false
+                                            showAlert = true
+                                        }
+                                    }
+                                    .alert("Save downloaded successfully", isPresented: $showAlert) {
+                                        Button("Ok", role: .cancel) {
+                                            showAlert = false
+                                            currentEntry = nil
+                                        }
                                     }
                                 }
                                 HStack {
@@ -99,6 +116,12 @@ struct CloudView: View {
                                         .foregroundColor(.red)
                                     Button("Delete Save") {
                                         showDialog = true
+                                    }
+                                    .alert("Successfully deleted save", isPresented: $showDeleteAlert) {
+                                        Button("Ok", role: .cancel) {
+                                            showDeleteAlert = false
+                                            currentEntry = nil
+                                        }
                                     }
                                 }
                                
@@ -160,7 +183,7 @@ struct CloudView: View {
                             saveEntries.remove(at: index)
                         }
                         
-                        currentEntry = nil
+                        showDeleteAlert = true
                     }
                 }
             }
