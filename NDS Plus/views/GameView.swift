@@ -159,7 +159,6 @@ struct GameView: View {
                 let entries = entries.filter { $0.gameCode == gameCode }
                 if entries.count > 0 {
                     if let user = user {
-                        self.cloudService = CloudService(user: user)
                         if let url = gameUrl {
                             if let saveData = await self.cloudService!.getSave(saveName: BackupFile.getSaveName(gameUrl: url)) {
                                 let ptr = BackupFile.getPointer(saveData)
