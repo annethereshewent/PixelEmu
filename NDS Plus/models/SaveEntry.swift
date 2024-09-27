@@ -17,6 +17,4 @@ class SaveEntry: Equatable {
     init(game: Game) {
         self.game = game
     }
-    
-    
 }

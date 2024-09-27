@@ -93,12 +93,12 @@ struct SettingsView: View {
                     }
                     Section(header: Text("Miscellaneous")) {
                         NavigationLink {
-                            CloudView(
+                            SaveManagementView(
                                 user: $user,
                                 cloudService: $cloudService
                             )
                         } label: {
-                            Text("Cloud Saves")
+                            Text("Save management")
                         }
                     }
                     

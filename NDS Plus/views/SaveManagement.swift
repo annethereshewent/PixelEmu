@@ -1,5 +1,5 @@
 //
-//  CloudView.swift
+//  SaveManagementView.swift
 //  NDS Plus
 //
 //  Created by Anne Castrillon on 9/24/24.
@@ -11,22 +11,24 @@ import GoogleSignInSwift
 import SwiftData
 import UniformTypeIdentifiers
 
-struct CloudView: View {
+struct SaveManagementView: View {
     @Binding var user: GIDGoogleUser?
     @Binding var cloudService: CloudService?
     
     @State private var saveEntries: [SaveEntry] = []
-    @State private var currentEntry: SaveEntry? = nil
+    @State private var localSaves: [SaveEntry] = []
+    @State private var cloudEntry: SaveEntry? = nil
+    @State private var localEntry: SaveEntry? = nil
     @State private var isPresented = false
     @State private var showDialog = false
     @State private var loading = false
-    @State private var showAlert = false
+    @State private var showDownloadAlert = false
     @State private var showDeleteAlert = false
+    @State private var showUploadAlert = false
     
     @Query var games: [Game]
     
     let savType = UTType(filenameExtension: "sav", conformingTo: .data)
-    
     
     private func handleSignInButton() {
         guard let rootViewController = (UIApplication.shared.connectedScenes.first
@@ -49,7 +51,7 @@ struct CloudView: View {
     
     var body: some View {
         VStack {
-            Text("Cloud saves")
+            Text("Save Management")
                 .font(.title)
             if user == nil {
                 HStack {
@@ -66,25 +68,25 @@ struct CloudView: View {
                     user = nil
                     saveEntries = []
                     cloudService = nil
-                    currentEntry = nil
+                    cloudEntry = nil
                 }
             }
             List {
-                Section("Save management") {
+                Section("Cloud Saves") {
                     ForEach(saveEntries, id: \.game.gameName) { saveEntry in
                         GameEntryView(game: saveEntry.game) {
-                            if currentEntry == saveEntry {
-                                currentEntry = nil
+                            if cloudEntry == saveEntry {
+                                cloudEntry = nil
                             } else {
-                                currentEntry = saveEntry
+                                cloudEntry = saveEntry
                             }
                         }
-                        if currentEntry == saveEntry {
+                        if cloudEntry == saveEntry {
                             Section {
                                 HStack {
-                                    Image(systemName: "arrow.up")
+                                    Image(systemName: "square.and.arrow.up")
                                         .foregroundColor(.green)
-                                    Button("Upload Save") {
+                                    Button("Modify Save") {
                                         isPresented = true
                                     }
                                 }
@@ -93,7 +95,7 @@ struct CloudView: View {
                                         .foregroundColor(.white)
                                     Button("Download Save") {
                                         // download save for offline use
-                                        let saveName = currentEntry!.game.gameName.replacing(".nds" ,with: ".sav")
+                                        let saveName = cloudEntry!.game.gameName.replacing(".nds" ,with: ".sav")
                                         
                                         loading = true
                                         Task {
@@ -101,13 +103,7 @@ struct CloudView: View {
                                                 BackupFile.saveCloudFile(saveName: saveName, saveFile: save)
                                             }
                                             loading = false
-                                            showAlert = true
-                                        }
-                                    }
-                                    .alert("Save downloaded successfully", isPresented: $showAlert) {
-                                        Button("Ok", role: .cancel) {
-                                            showAlert = false
-                                            currentEntry = nil
+                                            showDownloadAlert = true
                                         }
                                     }
                                 }
@@ -117,18 +113,72 @@ struct CloudView: View {
                                     Button("Delete Save") {
                                         showDialog = true
                                     }
-                                    .alert("Successfully deleted save", isPresented: $showDeleteAlert) {
-                                        Button("Ok", role: .cancel) {
-                                            showDeleteAlert = false
-                                            currentEntry = nil
-                                        }
-                                    }
                                 }
                                
                             }
                             .padding(.leading, 20)
                         }
                     }
+                }
+                Section("Local saves") {
+                    ForEach(localSaves, id: \.game.gameName) { saveEntry in
+                        GameEntryView(game: saveEntry.game) {
+                            if localEntry == saveEntry {
+                                localEntry = nil
+                            } else {
+                                localEntry = saveEntry
+                            }
+                        }
+                        if localEntry == saveEntry {
+                            Section {
+                                HStack {
+                                    Image(systemName: "arrow.up")
+                                        .foregroundColor(.green)
+                                    Button("Upload save") {
+                                        let saveName = localEntry!.game.gameName.replacing(".nds", with: ".sav")
+                                        if let saveData = BackupFile.getSave(saveName: saveName) {
+                                            loading = true
+                                            Task {
+                                                await self.cloudService?.uploadSave(saveName: saveName, data: saveData)
+                                                loading = false
+                                                showUploadAlert = true
+                                            }
+                                        }
+                                    }
+                                }
+                                HStack {
+                                    Image(systemName: "minus.circle")
+                                        .foregroundColor(.red)
+                                    Button("Delete save") {
+                                        
+                                    }
+                                }
+                            }
+                            .padding(.leading, 20)
+                        }
+                    }
+                }
+                    
+            }
+            .alert("Successfully uploaded save", isPresented: $showUploadAlert) {
+                Button("Ok", role: .cancel) {
+                    showUploadAlert = false
+                    cloudEntry = nil
+                    localEntry = nil
+                }
+            }
+            .alert("Successfully deleted save", isPresented: $showDeleteAlert) {
+                Button("Ok", role: .cancel) {
+                    showDeleteAlert = false
+                    cloudEntry = nil
+                    localEntry = nil
+                }
+            }
+            .alert("Save downloaded successfully", isPresented: $showDownloadAlert) {
+                Button("Ok", role: .cancel) {
+                    showDownloadAlert = false
+                    cloudEntry = nil
+                    localEntry = nil
                 }
             }
             if loading {
@@ -149,11 +199,10 @@ struct CloudView: View {
                     loading = true
                     Task {
                         await cloudService?.uploadSave(
-                            saveName: currentEntry!.game.gameName.replacing(".nds", with: ".sav"),
+                            saveName: cloudEntry!.game.gameName.replacing(".nds", with: ".sav"),
                             data: data
                         )
-                        currentEntry = nil
-                        loading = false
+                        showUploadAlert = true
                     }
                 }
             } catch {
@@ -168,10 +217,12 @@ struct CloudView: View {
                     }
                 }
             }
+            // get any local saves
+            localSaves = BackupFile.getLocalSaves(games: games)
         }
         .confirmationDialog("Confirm delete", isPresented: $showDialog) {
             Button("Delete save?", role: .destructive) {
-                let saveName = currentEntry!.game.gameName.replacing(".nds", with: ".sav")
+                let saveName = cloudEntry!.game.gameName.replacing(".nds", with: ".sav") 
                 
                 loading = true
                 Task {
@@ -179,7 +230,7 @@ struct CloudView: View {
                     
                     loading = false
                     if success {
-                        if let index = saveEntries.firstIndex(of: currentEntry!) {
+                        if let index = saveEntries.firstIndex(of: cloudEntry!) {
                             saveEntries.remove(at: index)
                         }
                         

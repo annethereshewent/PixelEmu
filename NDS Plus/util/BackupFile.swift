@@ -76,6 +76,60 @@ class BackupFile {
         }
     }
     
+    static func getSave(saveName: String) -> Data? {
+        do {
+            var location = try FileManager.default.url(
+                for: .applicationSupportDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            location.appendPathComponent("saves")
+            
+            location.appendPathComponent(saveName)
+            
+            let data = try Data(contentsOf: location)
+            
+            return data
+        } catch {
+            print(error)
+        }
+        
+        return nil
+    }
+    
+    static func getLocalSaves(games: [Game]) -> [SaveEntry] {
+        var saveEntries = [SaveEntry]()
+        do {
+            var location = try FileManager.default.url(
+                for: .applicationSupportDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            location.appendPathComponent("saves")
+                
+            let items = try FileManager.default.contentsOfDirectory(atPath: location.path)
+            
+            var gameDictionary = [String:Game]()
+            
+            for game in games {
+                gameDictionary[game.gameName.replacing(".nds", with: ".sav")] = game
+            }
+            
+            for item in items {
+                if let game = gameDictionary[item] {
+                    saveEntries.append(SaveEntry(game: game))
+                }
+            }
+            
+        } catch {
+            print(error)
+        }
+        
+        return saveEntries
+    }
+    
     func createBackupFile() -> UnsafeBufferPointer<UInt8>? {
         let saveName = Self.getSaveName(gameUrl: gameUrl)
 

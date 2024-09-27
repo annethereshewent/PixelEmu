@@ -33,7 +33,7 @@
 		E806EA9A2CA1284B0081D3E8 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E806EA992CA1284B0081D3E8 /* .gitignore */; };
 		E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9B2CA246760081D3E8 /* DriveResponse.swift */; };
 		E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */; };
-		E806EAA02CA3AD080081D3E8 /* CloudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9F2CA3AD080081D3E8 /* CloudView.swift */; };
+		E806EAA02CA3AD080081D3E8 /* SaveManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */; };
 		E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */; };
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
 /* End PBXBuildFile section */
@@ -91,7 +91,7 @@
 		E806EA992CA1284B0081D3E8 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		E806EA9B2CA246760081D3E8 /* DriveResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveResponse.swift; sourceTree = "<group>"; };
 		E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileJSON.swift; sourceTree = "<group>"; };
-		E806EA9F2CA3AD080081D3E8 /* CloudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudView.swift; sourceTree = "<group>"; };
+		E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveManagement.swift; sourceTree = "<group>"; };
 		E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -221,7 +221,7 @@
 				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
 				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
 				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
-				E806EA9F2CA3AD080081D3E8 /* CloudView.swift */,
+				E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */,
 				E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */,
 			);
 			path = views;
@@ -532,7 +532,7 @@
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
-				E806EAA02CA3AD080081D3E8 /* CloudView.swift in Sources */,
+				E806EAA02CA3AD080081D3E8 /* SaveManagement.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
 				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
