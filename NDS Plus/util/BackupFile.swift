@@ -54,6 +54,42 @@ class BackupFile {
         }
     }
     
+    static func getFileLocation(saveName: String) -> URL? {
+        do {
+            var location = try FileManager.default.url(
+                for: .applicationSupportDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            location.appendPathComponent("saves")
+            
+            location.appendPathComponent(saveName)
+            
+            return location
+        } catch {
+            print(error)
+        }
+        
+        return nil
+    }
+    
+    static func deleteSave(saveName: String) -> Bool {
+        do {
+            print(saveName)
+            if let location = Self.getFileLocation(saveName: saveName) {
+                try FileManager.default.removeItem(at: location)
+                
+                return true
+            }
+        } catch {
+            print(error)
+        }
+        
+        
+        return false
+    }
+    
     static func saveCloudFile(saveName: String, saveFile: Data) {
         if var location = try? FileManager.default.url(
             for: .applicationSupportDirectory,
@@ -78,19 +114,11 @@ class BackupFile {
     
     static func getSave(saveName: String) -> Data? {
         do {
-            var location = try FileManager.default.url(
-                for: .applicationSupportDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true
-            )
-            location.appendPathComponent("saves")
-            
-            location.appendPathComponent(saveName)
-            
-            let data = try Data(contentsOf: location)
-            
-            return data
+            if let location = Self.getFileLocation(saveName: saveName) {
+                let data = try Data(contentsOf: location)
+                
+                return data
+            }
         } catch {
             print(error)
         }

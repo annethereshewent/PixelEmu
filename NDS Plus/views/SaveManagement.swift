@@ -20,11 +20,14 @@ struct SaveManagementView: View {
     @State private var cloudEntry: SaveEntry? = nil
     @State private var localEntry: SaveEntry? = nil
     @State private var isPresented = false
-    @State private var showDialog = false
+    @State private var showDeleteDialog = false
+    // remove this maybe
+    @State private var showLocalDelete = false
     @State private var loading = false
     @State private var showDownloadAlert = false
     @State private var showDeleteAlert = false
     @State private var showUploadAlert = false
+    @State private var deleteAction: () -> Void = {}
     
     @Query var games: [Game]
     
@@ -102,6 +105,7 @@ struct SaveManagementView: View {
                                             if let save = await cloudService?.getSave(saveName: saveName) {
                                                 BackupFile.saveCloudFile(saveName: saveName, saveFile: save)
                                             }
+                                            localSaves.append(SaveEntry(game: cloudEntry!.game))
                                             loading = false
                                             showDownloadAlert = true
                                         }
@@ -111,7 +115,25 @@ struct SaveManagementView: View {
                                     Image(systemName: "minus.circle")
                                         .foregroundColor(.red)
                                     Button("Delete Save") {
-                                        showDialog = true
+                                        deleteAction = {
+                                            let saveName = cloudEntry!.game.gameName.replacing(".nds", with: ".sav")
+                                            
+                                            loading = true
+                                            Task {
+                                                let success = await cloudService?.deleteSave(saveName: saveName) ?? false
+                                                
+                                                loading = false
+                                                if success {
+                                                    if let index = saveEntries.firstIndex(of: cloudEntry!) {
+                                                        saveEntries.remove(at: index)
+                                                    }
+                                                
+                                                    showDeleteAlert = true
+                                                }
+                                                showDeleteDialog = false
+                                            }
+                                        }
+                                        showDeleteDialog = true
                                     }
                                 }
                                
@@ -141,7 +163,12 @@ struct SaveManagementView: View {
                                             Task {
                                                 await self.cloudService?.uploadSave(saveName: saveName, data: saveData)
                                                 loading = false
+                                                if saveEntries.firstIndex(of: localEntry!) == nil {
+                                                    saveEntries.insert(SaveEntry(game: localEntry!.game), at: 0)
+                                                }
+                                                
                                                 showUploadAlert = true
+                                                
                                             }
                                         }
                                     }
@@ -150,6 +177,17 @@ struct SaveManagementView: View {
                                     Image(systemName: "minus.circle")
                                         .foregroundColor(.red)
                                     Button("Delete save") {
+                                        deleteAction = {
+                                            if BackupFile.deleteSave(saveName: localEntry!.game.gameName.replacing(".nds", with: ".sav")) {
+                                                showDeleteAlert = true
+                                                if let index = localSaves.firstIndex(of: localEntry!) {
+                                                    localSaves.remove(at: index)
+                                                }
+                                            }
+                                            showDeleteDialog = false
+                                            
+                                        }
+                                        showDeleteDialog = true
                                         
                                     }
                                 }
@@ -211,33 +249,19 @@ struct SaveManagementView: View {
         }
         .onAppear {
             if user != nil {
+                loading = true
                 Task {
                     if let saveEntries = await cloudService?.getSaves(games: games) {
                         self.saveEntries = saveEntries
                     }
+                    loading = false
                 }
             }
             // get any local saves
             localSaves = BackupFile.getLocalSaves(games: games)
         }
-        .confirmationDialog("Confirm delete", isPresented: $showDialog) {
-            Button("Delete save?", role: .destructive) {
-                let saveName = cloudEntry!.game.gameName.replacing(".nds", with: ".sav") 
-                
-                loading = true
-                Task {
-                    let success = await cloudService?.deleteSave(saveName: saveName) ?? false
-                    
-                    loading = false
-                    if success {
-                        if let index = saveEntries.firstIndex(of: cloudEntry!) {
-                            saveEntries.remove(at: index)
-                        }
-                        
-                        showDeleteAlert = true
-                    }
-                }
-            }
+        .confirmationDialog("Confirm delete", isPresented: $showDeleteDialog) {
+            Button("Delete save?", role: .destructive, action: deleteAction)
         }
     }
 }
