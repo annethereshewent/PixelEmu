@@ -40,6 +40,8 @@ struct GameView: View {
     
     @State private var gameController = GameController()
     
+    @State private var audioPlayer: AudioPlayer? = nil
+    
     private func checkSaves() {
         if let emu = emulator {
             if emu.hasSaved() {
@@ -176,51 +178,60 @@ struct GameView: View {
                     }
                 }
             }
-        }
-        
-        isRunning = true
-        
-        workItem = DispatchWorkItem {
-            if let emu = emulator {
-                while true {
-                    DispatchQueue.main.sync {
-                        emu.stepFrame()
+            isRunning = true
+            
+            self.audioPlayer = AudioPlayer()
+            
+            workItem = DispatchWorkItem {
+                if let emu = emulator {
+                    while true {
+                        DispatchQueue.main.sync {
+                            emu.stepFrame()
+                            
+                            let aPixels = emu.getEngineAPicturePointer()
+                            
+                            var imageA = UIImage()
+                            var imageB = UIImage()
+                            
+                            if let image = graphicsParser.fromPointer(ptr: aPixels) {
+                                imageA = image
+                            }
+                            
+                            let bPixels = emu.getEngineBPicturePointer()
+                            
+                            if let image = graphicsParser.fromPointer(ptr: bPixels) {
+                                imageB = image
+                            }
+                            
+                            if emu.isTopA() {
+                                topImage = imageA
+                                bottomImage = imageB
+                            } else {
+                                topImage = imageB
+                                bottomImage = imageA
+                            }
+                            
+                            let audioBufferLength = emu.audioBufferLength()
                         
-                        let aPixels = emu.getEngineAPicturePointer()
-                        
-                        var imageA = UIImage()
-                        var imageB = UIImage()
-                        
-                        if let image = graphicsParser.fromPointer(ptr: aPixels) {
-                            imageA = image
+                            let audioBufferPtr = emu.audioBufferPtr()
+                            
+                            let bufferPtr = UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength))
+                            
+                            self.audioPlayer?.updateBuffer(bufferPtr: bufferPtr)
+                            
+                            self.handleInput()
+                            self.checkSaves()
                         }
                         
-                        let bPixels = emu.getEngineBPicturePointer()
-                        
-                        if let image = graphicsParser.fromPointer(ptr: bPixels) {
-                            imageB = image
+                        if !isRunning {
+                            break
                         }
-                        
-                        if emu.isTopA() {
-                            topImage = imageA
-                            bottomImage = imageB
-                        } else {
-                            topImage = imageB
-                            bottomImage = imageA
-                        }
-                        
-                        self.handleInput()
-                        self.checkSaves()
-                    }
-                    
-                    if !isRunning {
-                        break
                     }
                 }
             }
+            
+            DispatchQueue.global().async(execute: workItem!)
         }
-        
-        DispatchQueue.global().async(execute: workItem!)
     }
     
     var body: some View {
