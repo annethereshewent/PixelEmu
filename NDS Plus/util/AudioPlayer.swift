@@ -44,24 +44,48 @@ class AudioPlayer {
         if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.audioFormat!, frameCapacity: AVAudioFrameCount(8192)) {
             // we just need one inputBuffer
             if let floatBuffer = outputBuffer.floatChannelData {
-                var bufferPtr: UnsafePointer<Float>? = nil
-                buffer.withUnsafeBufferPointer { ptr in
+                var left = [Float]()
+                var right = [Float]()
+                
+                var isEven = true
+                
+                for sample in buffer {
+                    if isEven {
+                        left.append(sample)
+                    } else {
+                        right.append(sample)
+                    }
                     
-                    bufferPtr = ptr.baseAddress!
+                    isEven = !isEven
+                }
+                
+                var leftPtr: UnsafePointer<Float>? = nil
+                
+                left.withUnsafeBufferPointer { ptr in
+                    leftPtr = ptr.baseAddress
+                }
+                
+                var rightPtr: UnsafePointer<Float>? = nil
+                
+                right.withUnsafeBufferPointer { ptr in
+                    rightPtr = ptr.baseAddress
                 }
                 
                 // print(buffer)
 
-                memcpy(floatBuffer[0], bufferPtr!, buffer.count * 4)
+                memcpy(floatBuffer[0], leftPtr!, left.count * 4)
+                memcpy(floatBuffer[1], rightPtr!, right.count * 4)
                 
-                let frameLength = AVAudioFrameCount((buffer.count * 4) / Int(self.audioFormat!.streamDescription.pointee.mBytesPerFrame))
+                let frameLength = AVAudioFrameCount(buffer.count)
                 outputBuffer.frameLength = frameLength
             }
             
             self.audioNode.scheduleBuffer(outputBuffer) { [weak self, weak node = audioNode] in
                 if node?.isPlaying == true {
                     if let self = self {
-                        self.playAudio()
+                        DispatchQueue.global().async {
+                            self.playAudio()
+                        }
                     }
                 }
             }
