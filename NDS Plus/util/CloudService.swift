@@ -58,7 +58,7 @@ class CloudService {
         return nil
     }
     
-    private func checkForDSFolder() async -> String? {
+    private func checkForDsFolder() async -> String? {
         if let folderId = self.dsFolderId {
             return folderId
         }
@@ -124,7 +124,7 @@ class CloudService {
     }
     
     func getSaves(games: [Game]) async -> [SaveEntry] {
-        if let folderId = await self.checkForDSFolder() {
+        if let folderId = await self.checkForDsFolder() {
             let params = [URLQueryItem(name: "q", value: "parents in \"" + folderId + "\"")]
             
             let url = buildUrl(params: params)
@@ -172,8 +172,11 @@ class CloudService {
         let request = URLRequest(url: url)
     
         if let data = await self.cloudRequest(request: request) {
-            if let driveResponse = try? jsonDecoder.decode(DriveResponse.self, from: data) {
+            do {
+                let driveResponse = try jsonDecoder.decode(DriveResponse.self, from: data)
                 return driveResponse
+            } catch {
+                print(error)
             }
         }
         
@@ -181,7 +184,7 @@ class CloudService {
     }
     
     func getSave(saveName: String) async -> Data? {
-        if let folderId = await self.checkForDSFolder() {
+        if let folderId = await self.checkForDsFolder() {
             if let driveResponse = await self.getSaveInfo(saveName, folderId) {
                 if driveResponse.files.count > 0 {
                     let fileId = driveResponse.files[0].id
@@ -201,7 +204,7 @@ class CloudService {
     }
     
     func deleteSave(saveName: String) async -> Bool{
-        if let folderId = await self.checkForDSFolder() {
+        if let folderId = await self.checkForDsFolder() {
             if let driveResponse = await self.getSaveInfo(saveName, folderId) {
                 if driveResponse.files.count > 0 {
                     let fileId = driveResponse.files[0].id
@@ -224,7 +227,7 @@ class CloudService {
     }
     
     func uploadSave(saveName: String, data: Data) async {
-        if let folderId = await self.checkForDSFolder() {
+        if let folderId = await self.checkForDsFolder() {
             if let driveResponse = await self.getSaveInfo(saveName, folderId) {
                 var headers = [String:String]()
                 
