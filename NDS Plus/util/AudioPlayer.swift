@@ -32,7 +32,9 @@ class AudioPlayer {
             
             self.audioNode.play()
             
-            self.playAudio()
+            DispatchQueue.global().async {
+                self.playAudio()
+            }
         } catch {
             print(error)
         }
@@ -47,7 +49,7 @@ class AudioPlayer {
     }
     
     private func playAudio() {
-        if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.audioFormat!, frameCapacity: AVAudioFrameCount(8192)) {
+        if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.audioFormat!, frameCapacity: AVAudioFrameCount(8192*2)) {
             // we just need one inputBuffer
             if let floatBuffer = outputBuffer.floatChannelData {
                 var left = [Float]()
@@ -85,14 +87,16 @@ class AudioPlayer {
                 memcpy(floatBuffer[0], leftPtr!, left.count * 4)
                 memcpy(floatBuffer[1], rightPtr!, right.count * 4)
                 
-                let frameLength = AVAudioFrameCount(4096)
+                let frameLength = AVAudioFrameCount(8192)
                 outputBuffer.frameLength = frameLength
             }
                         
             self.audioNode.scheduleBuffer(outputBuffer) { [weak self, weak node = self.audioNode] in
                 if node?.isPlaying == true {
                     if let self = self {
-                        self.playAudio()
+                        DispatchQueue.global().async {
+                            self.playAudio()
+                        }
                     }
                 }
             }
