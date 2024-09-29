@@ -13,6 +13,8 @@ class AudioPlayer {
     private let audioNode = AVAudioPlayerNode()
     private let audioFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)
     
+    private let nslock = NSLock()
+    
     private var buffer: [Float] = []
     
     init() {
@@ -37,7 +39,11 @@ class AudioPlayer {
     }
     
     func updateBuffer(bufferPtr: UnsafeBufferPointer<Float>) {
-        buffer = Array(bufferPtr)
+        let samples = Array(bufferPtr)
+
+        nslock.lock()
+        buffer.append(contentsOf: samples)
+        nslock.unlock()
     }
     
     private func playAudio() {
@@ -49,15 +55,20 @@ class AudioPlayer {
                 
                 var isEven = true
                 
-                for sample in buffer {
+                var numSamples = 0
+                
+                nslock.lock()
+                while buffer.count > 0 {
+                    let sample = buffer.removeFirst()
                     if isEven {
                         left.append(sample)
                     } else {
                         right.append(sample)
                     }
-                    
+                    numSamples += 1
                     isEven = !isEven
                 }
+                nslock.unlock()
                 
                 var leftPtr: UnsafePointer<Float>? = nil
                 
@@ -70,22 +81,18 @@ class AudioPlayer {
                 right.withUnsafeBufferPointer { ptr in
                     rightPtr = ptr.baseAddress
                 }
-                
-                // print(buffer)
 
                 memcpy(floatBuffer[0], leftPtr!, left.count * 4)
                 memcpy(floatBuffer[1], rightPtr!, right.count * 4)
                 
-                let frameLength = AVAudioFrameCount(buffer.count)
+                let frameLength = AVAudioFrameCount(4096)
                 outputBuffer.frameLength = frameLength
             }
-            
-            self.audioNode.scheduleBuffer(outputBuffer) { [weak self, weak node = audioNode] in
+                        
+            self.audioNode.scheduleBuffer(outputBuffer) { [weak self, weak node = self.audioNode] in
                 if node?.isPlaying == true {
                     if let self = self {
-                        DispatchQueue.global().async {
-                            self.playAudio()
-                        }
+                        self.playAudio()
                     }
                 }
             }
