@@ -293,9 +293,13 @@ struct GameView: View {
             }
         }
         .onAppear {
+            UIApplication.shared.isIdleTimerDisabled = true
             Task {
                 await self.run()
             }
+        }
+        .onDisappear {
+            UIApplication.shared.isIdleTimerDisabled = false
         }
         .navigationBarTitle("")
         .navigationBarHidden(true)
