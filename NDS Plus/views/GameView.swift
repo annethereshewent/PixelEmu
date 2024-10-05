@@ -10,13 +10,11 @@ import DSEmulatorMobile
 import GoogleSignIn
 
 struct GameView: View {
-    @State private var topImage = UIImage()
-    @State private var bottomImage = UIImage()
+    @State private var topImage: CGImage?
+    @State private var bottomImage: CGImage?
     @Binding var emulator: MobileEmulator?
     
     @State private var isRunning = false
-    
-    private let SCREEN_RATIO: Float = 1.36
     
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -190,8 +188,8 @@ struct GameView: View {
                             
                             let aPixels = emu.getEngineAPicturePointer()
                             
-                            var imageA = UIImage()
-                            var imageB = UIImage()
+                            var imageA: CGImage? = nil
+                            var imageB: CGImage? = nil
                             
                             if let image = graphicsParser.fromPointer(ptr: aPixels) {
                                 imageA = image
@@ -238,16 +236,14 @@ struct GameView: View {
         ZStack {
             Color.mint
             VStack {
-                Image(uiImage: topImage)
-                    .resizable()
+                GameScreenView(image: $topImage)
                     .frame(
                         width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
                         height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
                     )
                     .shadow(color: .gray, radius: 1.0, y: 1)
                     .padding(.top, 50)
-                Image(uiImage: bottomImage)
-                    .resizable()
+                GameScreenView(image: $bottomImage)
                     .frame(
                         width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
                         height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)

@@ -37,6 +37,8 @@
 		E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */; };
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
 		E896C28D2CA67FFA008161AA /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E896C28C2CA67FFA008161AA /* AudioPlayer.swift */; };
+		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
+		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +98,8 @@
 		E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
 		E896C28C2CA67FFA008161AA /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
+		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
+		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,6 +229,8 @@
 				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
 				E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */,
 				E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */,
+				E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */,
+				E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -246,8 +252,8 @@
 				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
 				E806EA712CA0DA720081D3E8 /* GameEntry.swift */,
 				E806EA9B2CA246760081D3E8 /* DriveResponse.swift */,
-				E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */,
 				E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */,
+				E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -524,8 +530,10 @@
 			files = (
 				E806EA782CA1078F0081D3E8 /* TouchControlsView.swift in Sources */,
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
+				E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */,
 				E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */,
 				E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */,
+				E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */,
 				E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
 				E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */,

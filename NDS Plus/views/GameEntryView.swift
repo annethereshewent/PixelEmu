@@ -14,7 +14,8 @@ struct GameEntryView: View {
     var body: some View {
         HStack {
             if let image = GraphicsParser().fromBytes(bytes: game.gameIcon, width: 32, height: 32) {
-                Image(uiImage: image)
+                let uiImage = UIImage(cgImage: image)
+                Image(uiImage: uiImage)
             }
             Button(game.gameName.removingPercentEncoding!) {
                 callback()

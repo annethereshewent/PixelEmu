@@ -11,9 +11,10 @@ import UIKit
 
 let SCREEN_WIDTH = 256
 let SCREEN_HEIGHT = 192
+let SCREEN_RATIO: Float = 1.36
 
 class GraphicsParser {
-    func fromPointer(ptr: UnsafePointer<UInt8>) -> UIImage? {
+    func fromPointer(ptr: UnsafePointer<UInt8>) -> CGImage? {
         let buffer = UnsafeBufferPointer(start: ptr, count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
         
         let pixelsArr = Array(buffer)
@@ -21,7 +22,7 @@ class GraphicsParser {
         return fromBytes(bytes: pixelsArr, width: SCREEN_WIDTH, height: SCREEN_HEIGHT)
     }
     
-    func fromBytes(bytes: [UInt8], width: Int, height: Int) -> UIImage? {   
+    func fromBytes(bytes: [UInt8], width: Int, height: Int) -> CGImage? {
         let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue)
         let bitsPerComponent = 8
@@ -33,7 +34,7 @@ class GraphicsParser {
             )
             else { return nil }
 
-        guard let cgim = CGImage(
+        guard let image = CGImage(
                 width: width,
                 height: height,
                 bitsPerComponent: bitsPerComponent,
@@ -47,7 +48,7 @@ class GraphicsParser {
                 intent: .defaultIntent
             )
             else { return nil }
-
-        return UIImage(cgImage: cgim)
+        
+        return image
     }
 }
