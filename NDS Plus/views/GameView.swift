@@ -12,10 +12,16 @@ import GoogleSignIn
 struct GameView: View {
     @State private var topImage: CGImage?
     @State private var bottomImage: CGImage?
-    @Binding var emulator: MobileEmulator?
-    
+    @State private var gameName = ""
+    @State private var backupFile: BackupFile? = nil
+    @State private var debounceTimer: Timer? = nil
+    @State private var gameController = GameController()
+    @State private var audioPlayer: AudioPlayer? = nil
     @State private var isRunning = false
+    @State private var workItem: DispatchWorkItem? = nil
+    @State private var loading = false
     
+    @Binding var emulator: MobileEmulator?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
@@ -23,22 +29,13 @@ struct GameView: View {
     @Binding var gameUrl: URL?
     @Binding var user: GIDGoogleUser?
     
-    @State private var workItem: DispatchWorkItem? = nil
     @Binding var cloudService: CloudService?
     
     @Environment(\.modelContext) private var context
     
     private let graphicsParser = GraphicsParser()
     
-    @State private var gameName = ""
     
-    @State private var backupFile: BackupFile? = nil
-    
-    @State private var debounceTimer: Timer? = nil
-    
-    @State private var gameController = GameController()
-    
-    @State private var audioPlayer: AudioPlayer? = nil
     
     private func checkSaves() {
         if let emu = emulator {
@@ -160,6 +157,7 @@ struct GameView: View {
                 if entries.count > 0 {
                     if user != nil {
                         if let url = gameUrl {
+                            loading = true
                             if let saveData = await self.cloudService!.getSave(saveName: BackupFile.getSaveName(gameUrl: url)) {
                                 let ptr = BackupFile.getPointer(saveData)
                                 emulator?.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
@@ -167,6 +165,7 @@ struct GameView: View {
                                 let ptr = BackupFile.getPointer(Data())
                                 emulator?.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
                             }
+                            loading = false
                         }
                     } else {
                         backupFile = BackupFile(entry: entries[0], gameUrl: url)
