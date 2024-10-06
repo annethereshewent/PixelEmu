@@ -12,21 +12,42 @@ class AudioPlayer {
     private let audioEngine = AVAudioEngine()
     private let audioNode = AVAudioPlayerNode()
     private let audioFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)
+    private var mic: AVAudioInputNode!
     
     private let nslock = NSLock()
     
     private var buffer: [Float] = []
+    
+    private var sampleIndex = 0
+    
+    private var micBuffer: [Float] = []
+    private var samples: [Float] = [Float](repeating: 0.0, count: 2048)
+    
+    var isRunning = true
     
     init() {
         do {
             try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.005)
             try AVAudioSession.sharedInstance().setCategory(.playAndRecord, options: [.allowAirPlay, .mixWithOthers])
             try AVAudioSession.sharedInstance().setActive(true)
+            try AVAudioSession.sharedInstance().setAllowHapticsAndSystemSoundsDuringRecording(true)
             
             try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
             
             self.audioEngine.attach(self.audioNode)
             self.audioEngine.connect(self.audioNode, to: self.audioEngine.outputNode, format: self.audioFormat)
+            
+            mic = audioEngine.inputNode
+            let micFormat = mic.inputFormat(forBus: 0)
+
+            mic.installTap(onBus: 0, bufferSize: 1024, format: micFormat) { (buffer, when) in
+                let samples = Array(UnsafeBufferPointer(start: buffer.floatChannelData![0], count: Int(buffer.frameLength)))
+                self.micBuffer.append(contentsOf: samples)
+                
+                if !self.isRunning {
+                    self.mic.removeTap(onBus: 0)
+                }
+            }
             
             try self.audioEngine.start()
             
@@ -38,6 +59,20 @@ class AudioPlayer {
         } catch {
             print(error)
         }
+    }
+    
+    func getSamples() -> [Float]? {
+        while micBuffer.count > 0 && sampleIndex < 2048 {
+            samples[sampleIndex] = micBuffer.remove(at: 0)
+            sampleIndex += 1
+        }
+        
+        if sampleIndex == 2048 {
+            sampleIndex = 0
+            return samples
+        }
+        
+        return nil
     }
     
     func updateBuffer(bufferPtr: UnsafeBufferPointer<Float>) {

@@ -35,8 +35,6 @@ struct GameView: View {
     
     private let graphicsParser = GraphicsParser()
     
-    
-    
     private func checkSaves() {
         if let emu = emulator {
             if emu.hasSaved() {
@@ -185,6 +183,19 @@ struct GameView: View {
                         DispatchQueue.main.sync {
                             emu.stepFrame()
                             
+                            if let player = audioPlayer {
+                                if let samples = player.getSamples() {
+                                    var bufferPtr: UnsafeBufferPointer<Float>!
+                                    
+                                    samples.withUnsafeBufferPointer { ptr in
+                                        bufferPtr = ptr
+                                    }
+                                    
+                                    emu.updateAudioBuffer(bufferPtr)
+                                }
+                                
+                            }
+                            
                             let aPixels = emu.getEngineAPicturePointer()
                             
                             var imageA: CGImage? = nil
@@ -286,6 +297,7 @@ struct GameView: View {
                     )
                 TouchControlsView(
                     emulator: $emulator,
+                    audioPlayer: $audioPlayer,
                     workItem: $workItem,
                     isRunning: $isRunning
                 )

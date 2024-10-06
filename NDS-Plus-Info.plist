@@ -101,5 +101,7 @@
 		</dict>
 		<dict/>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Need microphone access for recording audio for certain games</string>
 </dict>
 </plist>

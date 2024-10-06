@@ -13,6 +13,7 @@ struct TouchControlsView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @Binding var emulator: MobileEmulator?
+    @Binding var audioPlayer: AudioPlayer?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
     
@@ -33,6 +34,7 @@ struct TouchControlsView: View {
     private func checkForHapticFeedback(point: CGPoint) {
         for entry in buttons {
             if entry.value.contains(point) && !buttonStarted[entry.key]! {
+                print("impact occurred!")
                 feedbackGenerator.impactOccurred()
                 buttonStarted[entry.key] = true
                 break
@@ -106,6 +108,7 @@ struct TouchControlsView: View {
                         DragGesture(minimumDistance: 0)
                             .onChanged() { result in
                                 if !buttonStarted[ButtonEvent.ButtonL]! {
+                                    print("impact occurred!")
                                     feedbackGenerator.impactOccurred()
                                     buttonStarted[ButtonEvent.ButtonL] = true
                                 }
@@ -124,6 +127,7 @@ struct TouchControlsView: View {
                         DragGesture(minimumDistance: 0)
                             .onChanged() { result in
                                 if !buttonStarted[ButtonEvent.ButtonR]! {
+                                    print("impact occurred!")
                                     feedbackGenerator.impactOccurred()
                                     buttonStarted[ButtonEvent.ButtonR] = true
                                 }
@@ -165,6 +169,7 @@ struct TouchControlsView: View {
                                 // you can use any of the control pad buttons here and it'll work ok
                                 // the choice to use up is arbitrary
                                 if !buttonStarted[ButtonEvent.Up]! {
+                                    print("impact occurred!")
                                     feedbackGenerator.impactOccurred()
                                     buttonStarted[ButtonEvent.Up] = true
                                 }
@@ -223,6 +228,8 @@ struct TouchControlsView: View {
                     workItem?.cancel()
                     workItem = nil
                     
+                    audioPlayer?.isRunning = false
+                    
                     presentationMode.wrappedValue.dismiss()
                 } label: {
                     Image("Home Button")
@@ -237,6 +244,7 @@ struct TouchControlsView: View {
                         DragGesture(minimumDistance: 0)
                             .onChanged() { result in
                                 if !buttonStarted[ButtonEvent.Select]! {
+                                    print("impact occurred!")
                                     feedbackGenerator.impactOccurred()
                                     buttonStarted[ButtonEvent.Select] = true
                                 }
@@ -255,6 +263,7 @@ struct TouchControlsView: View {
                         DragGesture(minimumDistance: 0)
                             .onChanged() { result in
                                 if !buttonStarted[ButtonEvent.Start]! {
+                                    print("impact occurred!")
                                     feedbackGenerator.impactOccurred()
                                     buttonStarted[ButtonEvent.Start] = true
                                 }
