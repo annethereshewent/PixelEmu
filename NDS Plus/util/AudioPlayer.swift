@@ -27,6 +27,8 @@ class AudioPlayer {
     
     private var converter: AVAudioConverter!
     
+    var bufferPtr: UnsafeBufferPointer<Float>? = nil
+    
     var isRunning = true
     
     init() {
@@ -71,12 +73,7 @@ class AudioPlayer {
                         
                         return self.sourceBuffer
                     }
-                    
-                    let samples = Array(UnsafeBufferPointer(start: outputBuffer.floatChannelData![0], count: Int(self.sourceBuffer.frameLength)))
-
-                    self.nslock.lock()
-                    self.micBuffer.append(contentsOf: samples)
-                    self.nslock.unlock()
+                    self.bufferPtr = UnsafeBufferPointer(start: outputBuffer.floatChannelData![0], count: Int(self.sourceBuffer.frameLength))
                 }
             }
             
@@ -92,24 +89,10 @@ class AudioPlayer {
         }
     }
     
-    func getSamples() -> [Float]? {
-        nslock.lock()
-        if micBuffer.count == 0 {
-            nslock.unlock()
-            return nil
-        }
-       
-        if sampleIndex + micBuffer.count > 2048 {
-            sampleIndex = 0
-        }
+    func getBufferPtr() -> UnsafeBufferPointer<Float>? {
+        let ptr = bufferPtr
         
-        while micBuffer.count > 0 && sampleIndex < 2048 {
-            samples[sampleIndex] = micBuffer.remove(at: 0)
-            sampleIndex += 1
-        }
-        nslock.unlock()
-        
-        return samples
+        return ptr
     }
     
     func updateBuffer(bufferPtr: UnsafeBufferPointer<Float>) {

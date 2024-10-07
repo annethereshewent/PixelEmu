@@ -184,16 +184,9 @@ struct GameView: View {
                             emu.stepFrame()
                             
                             if let player = audioPlayer {
-                                if let samples = player.getSamples() {
-                                    var bufferPtr: UnsafeBufferPointer<Float>!
-                                    
-                                    samples.withUnsafeBufferPointer { ptr in
-                                        bufferPtr = ptr
-                                    }
+                                if let bufferPtr = player.getBufferPtr() {
                                     emu.updateAudioBuffer(bufferPtr)
                                 }
-                                
-                                
                             }
                             
                             let aPixels = emu.getEngineAPicturePointer()
