@@ -190,9 +190,9 @@ struct GameView: View {
                                     samples.withUnsafeBufferPointer { ptr in
                                         bufferPtr = ptr
                                     }
-                                    
                                     emu.updateAudioBuffer(bufferPtr)
                                 }
+                                
                                 
                             }
                             

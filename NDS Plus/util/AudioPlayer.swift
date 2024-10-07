@@ -23,6 +23,10 @@ class AudioPlayer {
     private var micBuffer: [Float] = []
     private var samples: [Float] = [Float](repeating: 0.0, count: 2048)
     
+    private var sourceBuffer: AVAudioPCMBuffer!
+    
+    private var converter: AVAudioConverter!
+    
     var isRunning = true
     
     init() {
@@ -34,18 +38,45 @@ class AudioPlayer {
             
             try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
             
+            
             self.audioEngine.attach(self.audioNode)
             self.audioEngine.connect(self.audioNode, to: self.audioEngine.outputNode, format: self.audioFormat)
             
             mic = audioEngine.inputNode
             let micFormat = mic.inputFormat(forBus: 0)
+            
+            sourceBuffer = AVAudioPCMBuffer(pcmFormat: micFormat, frameCapacity: 4096)
+            
+            if let outputFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 44100.0, channels: 1, interleaved: false) {
+                converter = AVAudioConverter(from: micFormat, to: outputFormat)
+            }
 
             mic.installTap(onBus: 0, bufferSize: 1024, format: micFormat) { (buffer, when) in
-                let samples = Array(UnsafeBufferPointer(start: buffer.floatChannelData![0], count: Int(buffer.frameLength)))
-                self.micBuffer.append(contentsOf: samples)
-                
                 if !self.isRunning {
                     self.mic.removeTap(onBus: 0)
+                }
+                if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.converter.outputFormat, frameCapacity: buffer.frameCapacity) {
+                    var error: NSError?
+                    
+                    _ = self.converter.convert(to: outputBuffer, error: &error) { [unowned self] numberOfFrames, inputStatus in
+                        inputStatus.pointee = .haveData
+                    
+                        let data = self.sourceBuffer.floatChannelData![0]
+                        
+                        for index in 0..<Int(numberOfFrames) {
+                            data[index] = buffer.floatChannelData![0][index]
+                        }
+                        
+                        self.sourceBuffer.frameLength = numberOfFrames
+                        
+                        return self.sourceBuffer
+                    }
+                    
+                    let samples = Array(UnsafeBufferPointer(start: outputBuffer.floatChannelData![0], count: Int(self.sourceBuffer.frameLength)))
+
+                    self.nslock.lock()
+                    self.micBuffer.append(contentsOf: samples)
+                    self.nslock.unlock()
                 }
             }
             
@@ -62,17 +93,23 @@ class AudioPlayer {
     }
     
     func getSamples() -> [Float]? {
+        nslock.lock()
+        if micBuffer.count == 0 {
+            nslock.unlock()
+            return nil
+        }
+       
+        if sampleIndex + micBuffer.count > 2048 {
+            sampleIndex = 0
+        }
+        
         while micBuffer.count > 0 && sampleIndex < 2048 {
             samples[sampleIndex] = micBuffer.remove(at: 0)
             sampleIndex += 1
         }
+        nslock.unlock()
         
-        if sampleIndex == 2048 {
-            sampleIndex = 0
-            return samples
-        }
-        
-        return nil
+        return samples
     }
     
     func updateBuffer(bufferPtr: UnsafeBufferPointer<Float>) {
