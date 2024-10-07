@@ -90,9 +90,7 @@ class AudioPlayer {
     }
     
     func getBufferPtr() -> UnsafeBufferPointer<Float>? {
-        let ptr = bufferPtr
-        
-        return ptr
+        return bufferPtr
     }
     
     func updateBuffer(bufferPtr: UnsafeBufferPointer<Float>) {
