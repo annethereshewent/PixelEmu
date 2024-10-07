@@ -73,7 +73,9 @@ class AudioPlayer {
                         
                         return self.sourceBuffer
                     }
-                    self.bufferPtr = UnsafeBufferPointer(start: outputBuffer.floatChannelData![0], count: Int(self.sourceBuffer.frameLength))
+                    let samples = Array(UnsafeBufferPointer(start: outputBuffer.floatChannelData![0], count: Int(self.sourceBuffer.frameLength)))
+                    
+                    self.micBuffer.append(contentsOf: samples)
                 }
             }
             
@@ -90,6 +92,21 @@ class AudioPlayer {
     }
     
     func getBufferPtr() -> UnsafeBufferPointer<Float>? {
+        if sampleIndex + micBuffer.count > samples.count {
+            sampleIndex = 0
+        }
+        
+        while micBuffer.count > 0 && sampleIndex < samples.count {
+            samples[sampleIndex] = micBuffer.removeFirst()
+            sampleIndex += 1
+        }
+        
+        var bufferPtr: UnsafeBufferPointer<Float>!
+        
+        samples.withUnsafeBufferPointer() { ptr in
+            bufferPtr = ptr
+        }
+        
         return bufferPtr
     }
     
