@@ -62,18 +62,9 @@ class AudioPlayer {
                     
                     _ = self.converter.convert(to: outputBuffer, error: &error) { [unowned self] numberOfFrames, inputStatus in
                         inputStatus.pointee = .haveData
-                    
-                        let data = self.sourceBuffer.floatChannelData![0]
-                        
-                        for index in 0..<Int(numberOfFrames) {
-                            data[index] = buffer.floatChannelData![0][index]
-                        }
-                        
-                        self.sourceBuffer.frameLength = numberOfFrames
-                        
-                        return self.sourceBuffer
+                        return buffer
                     }
-                    let samples = Array(UnsafeBufferPointer(start: outputBuffer.floatChannelData![0], count: Int(self.sourceBuffer.frameLength)))
+                    let samples = Array(UnsafeBufferPointer(start: outputBuffer.floatChannelData![0], count: Int(outputBuffer.frameLength)))
                     
                     self.micBuffer.append(contentsOf: samples)
                 }
