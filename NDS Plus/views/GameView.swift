@@ -16,7 +16,7 @@ struct GameView: View {
     @State private var backupFile: BackupFile? = nil
     @State private var debounceTimer: Timer? = nil
     @State private var gameController = GameController()
-    @State private var audioPlayer: AudioPlayer? = nil
+    @State private var audioManager: AudioManager? = nil
     @State private var isRunning = false
     @State private var workItem: DispatchWorkItem? = nil
     @State private var loading = false
@@ -175,7 +175,7 @@ struct GameView: View {
             }
             isRunning = true
             
-            self.audioPlayer = AudioPlayer()
+            self.audioManager = AudioManager()
             
             workItem = DispatchWorkItem {
                 if let emu = emulator {
@@ -183,7 +183,7 @@ struct GameView: View {
                         DispatchQueue.main.sync {
                             emu.stepFrame()
                             
-                            if let player = audioPlayer {
+                            if let player = audioManager {
                                 if let bufferPtr = player.getBufferPtr() {
                                     emu.updateAudioBuffer(bufferPtr)
                                 }
@@ -218,7 +218,7 @@ struct GameView: View {
                             
                             let bufferPtr = UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength))
                             
-                            self.audioPlayer?.updateBuffer(bufferPtr: bufferPtr)
+                            self.audioManager?.updateBuffer(bufferPtr: bufferPtr)
                             
                             self.handleInput()
                             self.checkSaves()
@@ -290,7 +290,7 @@ struct GameView: View {
                     )
                 TouchControlsView(
                     emulator: $emulator,
-                    audioPlayer: $audioPlayer,
+                    audioManager: $audioManager,
                     workItem: $workItem,
                     isRunning: $isRunning
                 )

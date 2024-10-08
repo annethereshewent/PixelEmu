@@ -36,7 +36,7 @@
 		E806EAA02CA3AD080081D3E8 /* SaveManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */; };
 		E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */; };
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
-		E896C28D2CA67FFA008161AA /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E896C28C2CA67FFA008161AA /* AudioPlayer.swift */; };
+		E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E896C28C2CA67FFA008161AA /* AudioManager.swift */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
 /* End PBXBuildFile section */
@@ -97,7 +97,7 @@
 		E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveManagement.swift; sourceTree = "<group>"; };
 		E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
-		E896C28C2CA67FFA008161AA /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
+		E896C28C2CA67FFA008161AA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
 		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -241,7 +241,7 @@
 				E806EA312C9935D00081D3E8 /* GraphicsParser.swift */,
 				E806EA732CA0EE100081D3E8 /* BackupFile.swift */,
 				E806EA7B2CA115FA0081D3E8 /* CloudService.swift */,
-				E896C28C2CA67FFA008161AA /* AudioPlayer.swift */,
+				E896C28C2CA67FFA008161AA /* AudioManager.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -542,7 +542,7 @@
 				E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */,
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */,
-				E896C28D2CA67FFA008161AA /* AudioPlayer.swift in Sources */,
+				E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
 				E806EAA02CA3AD080081D3E8 /* SaveManagement.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,

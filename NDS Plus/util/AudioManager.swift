@@ -1,5 +1,5 @@
 //
-//  AudioPlayer.swift
+//  AudioManager.swift
 //  NDS Plus
 //
 //  Created by Anne Castrillon on 9/26/24.
@@ -8,7 +8,7 @@
 import Foundation
 import AVFoundation
 
-class AudioPlayer {
+class AudioManager {
     private let audioEngine = AVAudioEngine()
     private let audioNode = AVAudioPlayerNode()
     private let audioFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)

@@ -13,7 +13,7 @@ struct TouchControlsView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @Binding var emulator: MobileEmulator?
-    @Binding var audioPlayer: AudioPlayer?
+    @Binding var audioManager: AudioManager?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
     
@@ -224,7 +224,7 @@ struct TouchControlsView: View {
                     workItem?.cancel()
                     workItem = nil
                     
-                    audioPlayer?.isRunning = false
+                    audioManager?.isRunning = false
                     
                     presentationMode.wrappedValue.dismiss()
                 } label: {
