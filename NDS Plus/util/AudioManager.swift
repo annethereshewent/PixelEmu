@@ -21,7 +21,7 @@ class AudioManager {
     private var sampleIndex = 0
     
     private var micBuffer: [Float] = []
-    private var samples: [Float] = [Float](repeating: 0.0, count: 2048)
+    private var samples: [Float] = [Float](repeating: 0.0, count: 4800)
     
     private var sourceBuffer: AVAudioPCMBuffer!
     
@@ -53,7 +53,7 @@ class AudioManager {
                 converter = AVAudioConverter(from: micFormat, to: outputFormat)
             }
 
-            mic.installTap(onBus: 0, bufferSize: 1024, format: micFormat) { (buffer, when) in
+            mic.installTap(onBus: 0, bufferSize: 2048, format: micFormat) { (buffer, when) in
                 if !self.isRunning {
                     self.mic.removeTap(onBus: 0)
                 }
