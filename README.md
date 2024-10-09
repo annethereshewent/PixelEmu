@@ -25,7 +25,7 @@ To get the project up and running locally, you'll need to go through the followi
 8. Select `Add Local` then select the `external/nds-plus-emulator/mobile/DSEmulatorMobile` directory.
 9. Go to the project's general panel, and under `Frameworks, Libraries, and Embedded Content` and hit the `+` button.
 10. Select the DSEmulatorMobile package from under `Workspace`.
-11. Lastly you will need to have cocoapods installed, then in the root directory of this project, run `pod install`.
+11. Install Cocoapods if it's not already installed, then in the root directory of this project, run `pod install`.
 12. Build/run the project like normal.
 
 This is still very much a work-in-progress and needs a lot of overhaul in its design in particular, but it should work for most games.
