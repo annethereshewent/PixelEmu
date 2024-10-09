@@ -1,0 +1,3 @@
+[submodule "external/nds-plus-emulator"]
+	path = external/nds-plus-emulator
+	url = git@github.com:annethereshewent/nds-plus.git
