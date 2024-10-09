@@ -27,6 +27,7 @@ struct SaveManagementView: View {
     @State private var showDownloadAlert = false
     @State private var showDeleteAlert = false
     @State private var showUploadAlert = false
+    @State private var showErrorAlert = false
     @State private var deleteAction: () -> Void = {}
     
     @Query var games: [Game]
@@ -104,10 +105,15 @@ struct SaveManagementView: View {
                                         Task {
                                             if let save = await cloudService?.getSave(saveName: saveName) {
                                                 BackupFile.saveCloudFile(saveName: saveName, saveFile: save)
+                                                let saveEntry = SaveEntry(game: cloudEntry!.game)
+                                                if !localSaves.contains(saveEntry) {
+                                                    localSaves.append(saveEntry)
+                                                }
+                                                showDownloadAlert = true
+                                            } else {
+                                                showErrorAlert = true
                                             }
-                                            localSaves.append(SaveEntry(game: cloudEntry!.game))
                                             loading = false
-                                            showDownloadAlert = true
                                         }
                                     }
                                 }
@@ -213,6 +219,13 @@ struct SaveManagementView: View {
                 }
             }
             .alert("Save downloaded successfully", isPresented: $showDownloadAlert) {
+                Button("Ok", role: .cancel) {
+                    showDownloadAlert = false
+                    cloudEntry = nil
+                    localEntry = nil
+                }
+            }
+            .alert("Couldn't download save", isPresented: $showErrorAlert) {
                 Button("Ok", role: .cancel) {
                     showDownloadAlert = false
                     cloudEntry = nil
