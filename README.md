@@ -21,13 +21,12 @@ To get the project up and running locally, you'll need to go through the followi
   --macos target/universal-macos/release/libds_emulator_mobile.a \
   --name DSEmulatorMobile
   ```
-7. Open NDS Plus.xcworkspace, then go to `File -> Add Package Dependencies`
+8. Install Cocoapods if it's not already installed, then in the root directory of this project, run `pod install`.
+7. Open the generated workspace file from the above command, then go to `File -> Add Package Dependencies`
 8. Select `Add Local` then select the `external/nds-plus-emulator/mobile/DSEmulatorMobile` directory.
 9. Go to the project's general panel, and under `Frameworks, Libraries, and Embedded Content` and hit the `+` button.
 10. Select the DSEmulatorMobile package from under `Workspace`.
-11. Install Cocoapods if it's not already installed, then in the root directory of this project, run `pod install`.
-12. You may need to reopen the project with the newly generated file from Cocoapods to get everything working properly.
-13. Build/run the project like normal.
+11. Build/run the project like normal.
 
 This is still very much a work-in-progress and needs a lot of overhaul in its design in particular, but it should work for most games.
 
