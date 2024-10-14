@@ -76,7 +76,6 @@ class BackupFile {
     
     static func deleteSave(saveName: String) -> Bool {
         do {
-            print(saveName)
             if let location = Self.getFileLocation(saveName: saveName) {
                 try FileManager.default.removeItem(at: location)
                 

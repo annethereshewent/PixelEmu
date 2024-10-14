@@ -22,13 +22,14 @@ struct TouchControlsView: View {
     @Binding var firmwareData: Data?
     @Binding var romData: Data?
     @Binding var gameName: String
+    @Binding var isMenuPresented: Bool
     
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
     @State private var buttons: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
     @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()    
     @State private var buttonsMisc: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
-    @State private var isMenuPresented = false
+    
 
     
     private func releaseHapticFeedback() {
@@ -106,6 +107,17 @@ struct TouchControlsView: View {
         }
     }
     
+    private func goHome() {
+        emulator = nil
+        isRunning = false
+        workItem?.cancel()
+        workItem = nil
+        
+        audioManager?.isRunning = false
+        
+        presentationMode.wrappedValue.dismiss()
+    }
+    
     private func handleMiscButtons(point: CGPoint) {
         for entry in buttonsMisc {
             if entry.value.contains(point) {
@@ -114,14 +126,7 @@ struct TouchControlsView: View {
                         emu.updateInput(entry.key, true)
                     }
                 } else {
-                    emulator = nil
-                    isRunning = false
-                    workItem?.cancel()
-                    workItem = nil
-                    
-                    audioManager?.isRunning = false
-                    
-                    presentationMode.wrappedValue.dismiss()
+                    goHome()
                     break
                 }
             } else if entry.key != ButtonEvent.ButtonHome {
@@ -269,172 +274,6 @@ struct TouchControlsView: View {
         }
         .onAppear {
             initButtonState()
-        }
-        .sheet(
-            isPresented: $isMenuPresented
-        ) {
-            HStack {
-                Spacer()
-                Button() {
-                    if let emu = emulator {
-                        let dataPtr = emu.createSaveState()
-                        let compressedLength = emu.compressedLength()
-                        
-                        let unsafeBufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(compressedLength))
-                        
-                        let data = Data(unsafeBufferPtr)
-                        
-                        do {
-                            var location = try FileManager.default.url(
-                                 for: .applicationSupportDirectory,
-                                 in: .userDomainMask,
-                                 appropriateFor: nil,
-                                 create: true
-                             )
-                            
-                            location.appendPathComponent("save_states")
-                            
-                            if !FileManager.default.fileExists(atPath: location.path) {
-                                try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
-                            }
-                            
-                            let gameFolder = gameName.replacing(".nds", with: "")
-                            
-                            location.appendPathComponent(gameFolder)
-                            
-                            if !FileManager.default.fileExists(atPath: location.path) {
-                                try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
-                            }
-                            
-                            location.appendPathComponent("state_1.save")
-                            
-                            try data.write(to: location)
-                        } catch {
-                            print(error)
-                        }
-                        isMenuPresented = false
-                    }
-                } label: {
-                    VStack {
-                        Image(systemName: "tray.and.arrow.up")
-                            .resizable()
-                            .frame(width: 35, height: 35)
-                        Text("Save state")
-                            .font(.callout)
-                    }
-                }
-                Spacer()
-                Button() {
-                    do {
-                        var location = try FileManager.default.url(
-                            for: .applicationSupportDirectory,
-                            in: .userDomainMask,
-                            appropriateFor: nil,
-                            create: true
-                        )
-                        
-                        location.appendPathComponent("save_states")
-                        
-                        if !FileManager.default.fileExists(atPath: location.path) {
-                            try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
-                        }
-                        
-                        let gameFolder = gameName.replacing(".nds", with: "")
-                        
-                        location.appendPathComponent(gameFolder)
-                        
-                        if !FileManager.default.fileExists(atPath: location.path) {
-                            try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
-                        }
-                        
-                        location.appendPathComponent("state_1.save")
-                        
-                        if let data = try? Array(Data(contentsOf: location)) {
-                            if let emu = emulator {
-                                var dataPtr: UnsafeBufferPointer<UInt8>!
-                                data.withUnsafeBufferPointer { ptr in
-                                    dataPtr = ptr
-                                }
-                                
-                                if let bios7 = bios7Data, let bios9 = bios9Data, let rom = romData {
-                                    var bios7Ptr: UnsafeBufferPointer<UInt8>!
-                                    var bios9Ptr: UnsafeBufferPointer<UInt8>!
-                                    var romPtr: UnsafeBufferPointer<UInt8>!
-                                    
-                                    let bios7Arr = Array(bios7)
-                                    
-                                    bios7Arr.withUnsafeBufferPointer { ptr in
-                                        bios7Ptr = ptr
-                                    }
-                                    
-                                    let bios9Arr = Array(bios9)
-                                    
-                                    bios9Arr.withUnsafeBufferPointer { ptr in
-                                        bios9Ptr = ptr
-                                    }
-                                    
-                                    let romArr = Array(rom)
-                                    
-                                    romArr.withUnsafeBufferPointer { ptr in
-                                        romPtr = ptr
-                                    }
-                                    
-                                    emu.loadSaveState(dataPtr)
-                                    emu.reloadBios(bios7Ptr, bios9Ptr)
-                                    
-                                    if let firmwareData = firmwareData {
-                                        var firmwarePtr: UnsafeBufferPointer<UInt8>!
-                                        let firmwareArr = Array(firmwareData)
-                                        
-                                        firmwareArr.withUnsafeBufferPointer { ptr in
-                                            firmwarePtr = ptr
-                                        }
-                                        
-                                        emu.reloadFirmware(firmwarePtr)
-                                    } else {
-                                        emu.hleFirmware()
-                                    }
-                                    emu.reloadRom(romPtr)
-                                }
-                                isMenuPresented = false
-                            }
-                        } else {
-                            isMenuPresented = false
-                        }
-                    } catch {
-                        print(error)
-                    }
-                } label: {
-                    VStack {
-                        Image(systemName: "tray.and.arrow.down")
-                            .resizable()
-                            .frame(width: 35, height: 35)
-                        Text("Load state")
-                            .font(.callout)
-                    }
-                    
-                }
-                Spacer()
-                Button() {
-                    isMenuPresented = false
-                } label: {
-                    VStack {
-                        Image(systemName: "play")
-                            .resizable()
-                            .frame(width: 35, height: 35)
-                        Text("Resume game")
-                            .font(.callout)
-                    }
-                }
-                
-                Spacer()
-            }
-            .onDisappear() {
-                if let emu = emulator {
-                    emu.setPause(false)
-                }
-            }
-            .presentationDetents([.height(150)])
         }
     }
 }

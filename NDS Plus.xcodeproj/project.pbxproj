@@ -40,6 +40,7 @@
 		E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */; };
 		E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */; };
 		E8C245EF2CBCC36F00B6DF67 /* DualScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */; };
+		E8C245F62CBDBA4500B6DF67 /* StateMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 		E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = drastic_bios_arm9.bin; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_arm9.bin"; sourceTree = "<group>"; };
 		E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = drastic_bios_arm7.bin; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_arm7.bin"; sourceTree = "<group>"; };
 		E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DualScreenView.swift; sourceTree = "<group>"; };
+		E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMenuView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -278,6 +280,7 @@
 				E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */,
 				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
 				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
+				E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */,
 			);
 			path = game;
 			sourceTree = "<group>";
@@ -563,6 +566,7 @@
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
 				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
+				E8C245F62CBDBA4500B6DF67 /* StateMenuView.swift in Sources */,
 				E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

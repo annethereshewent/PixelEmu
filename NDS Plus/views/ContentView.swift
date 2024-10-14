@@ -57,8 +57,6 @@ struct ContentView: View {
                         do {
                             let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
                             _bios7Data = State(initialValue: data)
-                            
-                            print("found bios7 data!")
                         } catch {
                             print(error)
                         }

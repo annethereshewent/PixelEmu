@@ -10,6 +10,8 @@ import DSEmulatorMobile
 import GoogleSignIn
 
 struct GameView: View {
+    @Environment(\.presentationMode) var presentationMode
+    
     @State private var topImage: CGImage?
     @State private var bottomImage: CGImage?
     @State private var gameName = ""
@@ -20,6 +22,9 @@ struct GameView: View {
     @State private var isRunning = false
     @State private var workItem: DispatchWorkItem? = nil
     @State private var loading = false
+    @State private var isMenuPresented = false
+    @State private var homePressed = false
+    @State private var shouldGoHome = false
     
     @Binding var emulator: MobileEmulator?
     @Binding var bios7Data: Data?
@@ -37,6 +42,19 @@ struct GameView: View {
     @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
     
     private let graphicsParser = GraphicsParser()
+
+    private func goHome() {
+        isMenuPresented = false
+        
+        emulator = nil
+        isRunning = false
+        workItem?.cancel()
+        workItem = nil
+        
+        audioManager?.isRunning = false
+        
+        presentationMode.wrappedValue.dismiss()
+    }
     
     private func checkSaves() {
         if let emu = emulator {
@@ -95,6 +113,15 @@ struct GameView: View {
                 emu.updateInput(ButtonEvent.Down, controller.dpad.down.isPressed)
                 emu.updateInput(ButtonEvent.Left, controller.dpad.left.isPressed)
                 emu.updateInput(ButtonEvent.Right, controller.dpad.right.isPressed)
+            }
+            if controller.buttonHome?.isPressed ?? false && !homePressed {
+                homePressed = true
+                
+                isMenuPresented = !isMenuPresented
+                
+                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                    homePressed = false
+                }
             }
             
         }
@@ -270,22 +297,42 @@ struct GameView: View {
                         bios9Data: $bios9Data,
                         firmwareData: $firmwareData,
                         romData: $romData,
-                        gameName: $gameName
+                        gameName: $gameName,
+                        isMenuPresented: $isMenuPresented
                     )
                 }
             }
         }
+        .sheet(
+            isPresented: $isMenuPresented
+        ) {
+            StateMenuView(
+                emulator: $emulator,
+                isRunning: $isRunning,
+                workItem: $workItem,
+                audioManager: $audioManager,
+                isMenuPresented: $isMenuPresented,
+                gameName: $gameName,
+                bios7Data: $bios7Data,
+                bios9Data: $bios9Data,
+                firmwareData: $firmwareData,
+                romData: $romData,
+                shouldGoHome: $shouldGoHome
+            )
+        }
         .onAppear {
-            print("disabling timer")
-            print(gameController.controller.extendedGamepad == nil)
             UIApplication.shared.isIdleTimerDisabled = true
             Task {
                 await self.run()
             }
         }
         .onDisappear {
-            print("enabling timer again")
             UIApplication.shared.isIdleTimerDisabled = false
+        }
+        .onChange(of: shouldGoHome) {
+            if shouldGoHome {
+                goHome()
+            }
         }
         .navigationBarTitle("")
         .navigationBarHidden(true)

@@ -8,6 +8,7 @@
 import Foundation
 import GameController
 
+@Observable
 class GameController {
     var controller = GCController()
     
@@ -28,5 +29,7 @@ class GameController {
         }
         
         self.controller = gameController
+        
+        controller.physicalInputProfile.buttons[GCInputButtonHome]?.preferredSystemGestureState = GCControllerElement.SystemGestureState.disabled
     }
 }
