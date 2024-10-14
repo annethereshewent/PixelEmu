@@ -302,6 +302,7 @@ struct GameView: View {
                                         }
                                 )
                         }
+                        .padding(.top, 125)
                         VStack(spacing: 0) {
                             HStack {
                                 Spacer()
