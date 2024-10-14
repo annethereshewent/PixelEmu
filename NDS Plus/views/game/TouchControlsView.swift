@@ -23,6 +23,7 @@ struct TouchControlsView: View {
     @State private var buttons: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
     @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()    
     @State private var buttonsMisc: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
+    @State private var isMenuPresented = false
 
     
     private func releaseHapticFeedback() {
@@ -214,7 +215,11 @@ struct TouchControlsView: View {
                                     }
                             }
                         )
+                    Button() {
+                        isMenuPresented = !isMenuPresented
+                    } label: {
                         Image("Red Button")
+                    }
                 }
                 Spacer()
                 Image("Buttons")
@@ -256,6 +261,52 @@ struct TouchControlsView: View {
         }
         .onAppear {
             initButtonState()
+        }
+        .sheet(
+            isPresented: $isMenuPresented
+        ) {
+            HStack {
+                Spacer()
+                Button() {
+                    
+                } label: {
+                    VStack {
+                        Image(systemName: "tray.and.arrow.up")
+                            .resizable()
+                            .frame(width: 35, height: 35)
+                        Text("Save state")
+                            .font(.callout)
+                    }
+                }
+                Spacer()
+                Button() {
+                    
+                } label: {
+                    VStack {
+                        Image(systemName: "tray.and.arrow.down")
+                            .resizable()
+                            .frame(width: 35, height: 35)
+                        Text("Load state")
+                            .font(.callout)
+                    }
+                    
+                }
+                Spacer()
+                Button() {
+                   
+                } label: {
+                    VStack {
+                        Image(systemName: "play")
+                            .resizable()
+                            .frame(width: 35, height: 35)
+                        Text("Resume game")
+                            .font(.callout)
+                    }
+                }
+                
+                Spacer()
+            }
+            .presentationDetents([.height(150)])
         }
     }
 }
