@@ -231,16 +231,8 @@
 		E806EA632C9E9B210081D3E8 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
-				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
-				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
-				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
-				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
-				E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */,
-				E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */,
-				E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */,
-				E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */,
-				E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */,
+				E8C245F22CBCC55500B6DF67 /* settings */,
+				E8C245F12CBCC54F00B6DF67 /* game */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -300,6 +292,30 @@
 				E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */,
 			);
 			path = bin;
+			sourceTree = "<group>";
+		};
+		E8C245F12CBCC54F00B6DF67 /* game */ = {
+			isa = PBXGroup;
+			children = (
+				E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */,
+				E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */,
+				E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */,
+				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
+				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
+			);
+			path = game;
+			sourceTree = "<group>";
+		};
+		E8C245F22CBCC55500B6DF67 /* settings */ = {
+			isa = PBXGroup;
+			children = (
+				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
+				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
+				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
+				E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */,
+				E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */,
+			);
+			path = settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
