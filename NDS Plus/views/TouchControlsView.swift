@@ -102,8 +102,7 @@ struct TouchControlsView: View {
             Spacer()
             HStack {
                 Spacer()
-                Image("Control Pad New")
-                    // .resizable()
+                Image("Control Pad")
                     .background(
                         GeometryReader { geometry in
                             Color.clear
@@ -121,7 +120,6 @@ struct TouchControlsView: View {
                                 }
                         }
                     )
-                    // .frame(width: 150, height: 150)
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged() { result in
@@ -144,9 +142,7 @@ struct TouchControlsView: View {
                     Image("Red Button")
                 }
                 Spacer()
-                Image("Buttons New")
-                    // .resizable()
-                    //.frame(width: 175, height: 175)
+                Image("Buttons")
                     .background(
                         GeometryReader { geometry in
                             Color.clear

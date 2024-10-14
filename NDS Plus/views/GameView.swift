@@ -29,6 +29,8 @@ struct GameView: View {
     @Binding var gameUrl: URL?
     @Binding var user: GIDGoogleUser?
     
+    private let rectangleImage = UIImage(named: "Rectangle")
+    
     @Binding var cloudService: CloudService?
     
     @Environment(\.modelContext) private var context
@@ -250,7 +252,9 @@ struct GameView: View {
                 Spacer()
                 ZStack {
                     Image("Rectangle")
-                        .padding(.top, 25)
+                        .resizable()
+                        //.padding(.top, 25)
+                        .frame(width: rectangleImage!.size.width * 1.05, height: rectangleImage!.size.height * 0.9 )
                     VStack(spacing: 0) {
                         VStack{
                             GameScreenView(image: $topImage)
@@ -302,11 +306,11 @@ struct GameView: View {
                                         }
                                 )
                         }
-                        .padding(.top, 125)
+                        .padding(.top, 40)
                         VStack(spacing: 0) {
                             HStack {
                                 Spacer()
-                                Image("L Button New")
+                                Image("L Button")
                                     .simultaneousGesture(
                                         DragGesture(minimumDistance: 0)
                                             .onChanged() { result in
@@ -324,7 +328,7 @@ struct GameView: View {
                                 Spacer()
                                 Image("Volume Button")
                                 Spacer()
-                                Image("R Button New")
+                                Image("R Button")
                                     .simultaneousGesture(
                                         DragGesture(minimumDistance: 0)
                                             .onChanged() { result in
