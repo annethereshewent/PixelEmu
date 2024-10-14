@@ -42,6 +42,7 @@
 		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
 		E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */; };
 		E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */; };
+		E8C245EF2CBCC36F00B6DF67 /* DualScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +107,7 @@
 		E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = drastic_bios_readme.txt; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_readme.txt"; sourceTree = "<group>"; };
 		E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = drastic_bios_arm9.bin; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_arm9.bin"; sourceTree = "<group>"; };
 		E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = drastic_bios_arm7.bin; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_arm7.bin"; sourceTree = "<group>"; };
+		E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DualScreenView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +240,7 @@
 				E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */,
 				E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */,
 				E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */,
+				E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -564,6 +567,7 @@
 				E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */,
 				E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
+				E8C245EF2CBCC36F00B6DF67 /* DualScreenView.swift in Sources */,
 				E806EAA02CA3AD080081D3E8 /* SaveManagement.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
