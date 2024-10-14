@@ -102,11 +102,21 @@ class AudioManager {
     }
     
     func updateBuffer(bufferPtr: UnsafeBufferPointer<Float>) {
-        let samples = Array(bufferPtr)
-
-        nslock.lock()
-        buffer.append(contentsOf: samples)
-        nslock.unlock()
+        if audioNode.isPlaying {
+            let samples = Array(bufferPtr)
+            
+            nslock.lock()
+            buffer.append(contentsOf: samples)
+            nslock.unlock()
+        }
+    }
+    
+    func toggleAudio() {
+        if audioNode.isPlaying {
+            audioNode.pause()
+        } else {
+            audioNode.play()
+        }
     }
     
     private func playAudio() {

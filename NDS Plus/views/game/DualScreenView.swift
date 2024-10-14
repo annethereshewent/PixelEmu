@@ -14,6 +14,7 @@ struct DualScreenView: View {
     @Binding var bottomImage: CGImage?
     @Binding var emulator: MobileEmulator?
     @Binding var buttonStarted: [ButtonEvent:Bool]
+    @Binding var audioManager: AudioManager?
   
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
@@ -92,7 +93,14 @@ struct DualScreenView: View {
                                 }
                         )
                     Spacer()
-                    Image("Volume Button")
+                    Button {
+                        if let manager = audioManager {
+                            feedbackGenerator.impactOccurred()
+                            manager.toggleAudio()
+                        }
+                    } label: {
+                        Image("Volume Button")
+                    }
                     Spacer()
                     Image("R Button")
                         .simultaneousGesture(

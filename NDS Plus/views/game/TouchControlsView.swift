@@ -184,6 +184,9 @@ struct TouchControlsView: View {
                                 }
                                 .onEnded() { result in
                                     buttonStarted[ButtonEvent.Start] = false
+                                    buttonStarted[ButtonEvent.Select] = false
+                                    buttonStarted[ButtonEvent.ButtonHome] = false
+                                    
                                     releaseMiscButtons()
                                 }
                         )
@@ -194,12 +197,12 @@ struct TouchControlsView: View {
                                         let frame = geometry.frame(in: .local)
                                         
                                         // below numbers were gotten by dividing the heights of
-                                        // buttons with the height of the entire buttons image
+                                        // buttons with the height of the entire button's image
                                         let width = frame.width
                                         let height = frame.height * (16.0 / 71.33333333333)
                                         
-                                        let selectY = frame.maxY * (28 / 71.333333333333)
-                                        let homeY = frame.maxY * (54.0 / 71.333333333)
+                                        let selectY = frame.maxY * (28 / 71.33333333333333)
+                                        let homeY = frame.maxY * (54.0 / 71.33333333333333)
                                     
                                         let startButton = CGRect(x: 0, y: 0, width: width, height: height)
                                         let selectButton = CGRect(x: 0, y: selectY, width: width, height: height)

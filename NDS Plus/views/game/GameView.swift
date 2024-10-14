@@ -253,7 +253,8 @@ struct GameView: View {
                         topImage: $topImage,
                         bottomImage: $bottomImage,
                         emulator: $emulator,
-                        buttonStarted: $buttonStarted
+                        buttonStarted: $buttonStarted,
+                        audioManager: $audioManager
                     )
                 }
                 TouchControlsView(
