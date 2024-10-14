@@ -22,6 +22,7 @@ struct TouchControlsView: View {
     
     @State private var buttons: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
     @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()    
+    @State private var buttonsMisc: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
 
     
     private func releaseHapticFeedback() {
@@ -31,8 +32,8 @@ struct TouchControlsView: View {
         buttonStarted[ButtonEvent.ButtonX] = false
     }
     
-    private func checkForHapticFeedback(point: CGPoint) {
-        for entry in buttons {
+    private func checkForHapticFeedback(point: CGPoint, entries: [ButtonEvent:CGRect]) {
+        for entry in entries {
             if entry.value.contains(point) && !buttonStarted[entry.key]! {
                 feedbackGenerator.impactOccurred()
                 buttonStarted[entry.key] = true
@@ -57,6 +58,8 @@ struct TouchControlsView: View {
         
         self.buttonStarted[ButtonEvent.Start] = false
         self.buttonStarted[ButtonEvent.Select] = false
+        
+        self.buttonStarted[ButtonEvent.ButtonHome] = false
     }
     
     private func handleControlPad(point: CGPoint) {
@@ -96,7 +99,40 @@ struct TouchControlsView: View {
             emu.updateInput(ButtonEvent.ButtonX, false)
         }
     }
+    
+    private func handleMiscButtons(point: CGPoint) {
+        for entry in buttonsMisc {
+            if entry.value.contains(point) {
+                if entry.key != ButtonEvent.ButtonHome {
+                    if let emu = emulator {
+                        emu.updateInput(entry.key, true)
+                    }
+                } else {
+                    emulator = nil
+                    isRunning = false
+                    workItem?.cancel()
+                    workItem = nil
+                    
+                    audioManager?.isRunning = false
+                    
+                    presentationMode.wrappedValue.dismiss()
+                    break
+                }
+            } else if entry.key != ButtonEvent.ButtonHome {
+                if let emu = emulator {
+                    emu.updateInput(entry.key, false)
+                }
+            }
+        }
+        self.handleInput(point: point, entries: buttonsMisc)
+    }
 
+    private func releaseMiscButtons() {
+        if let emu = emulator {
+            emu.updateInput(ButtonEvent.Start, false)
+            emu.updateInput(ButtonEvent.Select, false)
+        }
+    }
     var body: some View {
         VStack {
             Spacer()
@@ -129,17 +165,53 @@ struct TouchControlsView: View {
                                     feedbackGenerator.impactOccurred()
                                     buttonStarted[ButtonEvent.Up] = true
                                 }
-                                self.handleControlPad(point: result.location)
+                                handleControlPad(point: result.location)
                             }
                             .onEnded() { result in
                                 buttonStarted[ButtonEvent.Up] = false
-                                self.releaseControlPad()
+                                releaseControlPad()
                             }
                     )
                 Spacer()
                 VStack {
                     Image("Buttons Misc")
-                    Image("Red Button")
+                        .padding(.bottom, 10)
+                        .simultaneousGesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged() { result in
+                                    checkForHapticFeedback(point: result.location, entries: buttonsMisc)
+                                    handleMiscButtons(point: result.location)
+                                }
+                                .onEnded() { result in
+                                    buttonStarted[ButtonEvent.Start] = false
+                                    releaseMiscButtons()
+                                }
+                        )
+                        .background(
+                            GeometryReader { geometry in
+                                Color.clear
+                                    .onAppear {
+                                        let frame = geometry.frame(in: .local)
+                                        
+                                        // below numbers were gotten by dividing the heights of
+                                        // buttons with the height of the entire buttons image
+                                        let width = frame.width
+                                        let height = frame.height * (16.0 / 71.33333333333)
+                                        
+                                        let selectY = frame.maxY * (28 / 71.333333333333)
+                                        let homeY = frame.maxY * (54.0 / 71.333333333)
+                                    
+                                        let startButton = CGRect(x: 0, y: 0, width: width, height: height)
+                                        let selectButton = CGRect(x: 0, y: selectY, width: width, height: height)
+                                        let homeButton = CGRect(x:0, y: homeY, width: width, height: height)
+                                        
+                                        buttonsMisc[ButtonEvent.Start] = startButton
+                                        buttonsMisc[ButtonEvent.Select] = selectButton
+                                        buttonsMisc[ButtonEvent.ButtonHome] = homeButton
+                                    }
+                            }
+                        )
+                        Image("Red Button")
                 }
                 Spacer()
                 Image("Buttons")
@@ -167,12 +239,12 @@ struct TouchControlsView: View {
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged() { result in
-                                self.checkForHapticFeedback(point: result.location)
-                                self.handleButtons(point: result.location)
+                                checkForHapticFeedback(point: result.location, entries: buttons)
+                                handleButtons(point: result.location)
                             }
                             .onEnded() { result in
-                                self.releaseButtons()
-                                self.releaseHapticFeedback()
+                                releaseButtons()
+                                releaseHapticFeedback()
                             }
                     )
                 Spacer()
@@ -180,7 +252,7 @@ struct TouchControlsView: View {
             Spacer()
         }
         .onAppear {
-            self.initButtonState()
+            initButtonState()
         }
     }
 }
