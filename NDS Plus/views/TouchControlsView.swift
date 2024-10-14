@@ -16,10 +16,10 @@ struct TouchControlsView: View {
     @Binding var audioManager: AudioManager?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
+    @Binding var buttonStarted: [ButtonEvent:Bool]
     
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
-    @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
     @State private var buttons: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
     @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()    
 
@@ -99,43 +99,6 @@ struct TouchControlsView: View {
 
     var body: some View {
         VStack {
-            HStack {
-                Spacer()
-                Image("L Button New")
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged() { result in
-                                if !buttonStarted[ButtonEvent.ButtonL]! {
-                                    feedbackGenerator.impactOccurred()
-                                    buttonStarted[ButtonEvent.ButtonL] = true
-                                }
-                                emulator?.updateInput(ButtonEvent.ButtonL, true)
-                            }
-                            .onEnded() { result in
-                                buttonStarted[ButtonEvent.ButtonL] = false
-                                emulator?.updateInput(ButtonEvent.ButtonL, false)
-                            }
-                    )
-                Spacer()
-                Image("Volume Button")
-                Spacer()
-                Image("R Button New")
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged() { result in
-                                if !buttonStarted[ButtonEvent.ButtonR]! {
-                                    feedbackGenerator.impactOccurred()
-                                    buttonStarted[ButtonEvent.ButtonR] = true
-                                }
-                                emulator?.updateInput(ButtonEvent.ButtonR, true)
-                            }
-                            .onEnded() { result in
-                                buttonStarted[ButtonEvent.ButtonR] = false
-                                emulator?.updateInput(ButtonEvent.ButtonR, false)
-                            }
-                    )
-                Spacer()
-            }
             Spacer()
             HStack {
                 Spacer()

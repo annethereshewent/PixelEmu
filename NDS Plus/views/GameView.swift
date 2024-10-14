@@ -33,6 +33,9 @@ struct GameView: View {
     
     @Environment(\.modelContext) private var context
     
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
+    
     private let graphicsParser = GraphicsParser()
     
     private func checkSaves() {
@@ -253,7 +256,7 @@ struct GameView: View {
                                 height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
                             )
                             .shadow(color: .gray, radius: 1.0, y: 1)
-                            .padding(.top, 50)
+                            //.padding(.top, 75)
                         GameScreenView(image: $bottomImage)
                             .frame(
                                 width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
@@ -296,13 +299,51 @@ struct GameView: View {
                                         
                                     }
                             )
+                        HStack {
+                            Spacer()
+                            Image("L Button New")
+                                .simultaneousGesture(
+                                    DragGesture(minimumDistance: 0)
+                                        .onChanged() { result in
+                                            if !buttonStarted[ButtonEvent.ButtonL]! {
+                                                feedbackGenerator.impactOccurred()
+                                                buttonStarted[ButtonEvent.ButtonL] = true
+                                            }
+                                            emulator?.updateInput(ButtonEvent.ButtonL, true)
+                                        }
+                                        .onEnded() { result in
+                                            buttonStarted[ButtonEvent.ButtonL] = false
+                                            emulator?.updateInput(ButtonEvent.ButtonL, false)
+                                        }
+                                )
+                            Spacer()
+                            Image("Volume Button")
+                            Spacer()
+                            Image("R Button New")
+                                .simultaneousGesture(
+                                    DragGesture(minimumDistance: 0)
+                                        .onChanged() { result in
+                                            if !buttonStarted[ButtonEvent.ButtonR]! {
+                                                feedbackGenerator.impactOccurred()
+                                                buttonStarted[ButtonEvent.ButtonR] = true
+                                            }
+                                            emulator?.updateInput(ButtonEvent.ButtonR, true)
+                                        }
+                                        .onEnded() { result in
+                                            buttonStarted[ButtonEvent.ButtonR] = false
+                                            emulator?.updateInput(ButtonEvent.ButtonR, false)
+                                        }
+                                )
+                            Spacer()
+                        }
                     }
                 }
                 TouchControlsView(
                     emulator: $emulator,
                     audioManager: $audioManager,
                     workItem: $workItem,
-                    isRunning: $isRunning
+                    isRunning: $isRunning,
+                    buttonStarted: $buttonStarted
                 )
             }
         }

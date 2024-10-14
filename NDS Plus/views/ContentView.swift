@@ -49,14 +49,10 @@ struct ContentView: View {
         ) {
             switch currentFile {
             case .bios7:
-                print("checking for bios7")
                 if let fileUrl = URL(string: "bios7.bin", relativeTo: applicationUrl) {
-                    print("in here dawg!!!!!!")
                     if let data = try? Data(contentsOf: fileUrl) {
-                        print("wut")
                         _bios7Data = State(initialValue: data)
                     } else {
-                        print("now here")
                         let filePath = Bundle.main.path(forResource: "drastic_bios_arm7", ofType: "bin")!
                         do {
                             let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
@@ -78,8 +74,6 @@ struct ContentView: View {
                         do {
                             let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
                             _bios9Data = State(initialValue: data)
-                            
-                            print("found bios9 data!")
                         } catch {
                             print(error)
                         }
