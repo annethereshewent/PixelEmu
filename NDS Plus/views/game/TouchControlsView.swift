@@ -217,6 +217,10 @@ struct TouchControlsView: View {
                         )
                     Button() {
                         isMenuPresented = !isMenuPresented
+                        if let emu = emulator {
+                            print("setting paused to \(isMenuPresented)")
+                            emu.setPause(isMenuPresented)
+                        }
                     } label: {
                         Image("Red Button")
                     }
@@ -293,7 +297,9 @@ struct TouchControlsView: View {
                 }
                 Spacer()
                 Button() {
-                   
+                    if let emu = emulator {
+                        isMenuPresented = false
+                    }
                 } label: {
                     VStack {
                         Image(systemName: "play")
@@ -305,6 +311,11 @@ struct TouchControlsView: View {
                 }
                 
                 Spacer()
+            }
+            .onDisappear() {
+                if let emu = emulator {
+                    emu.setPause(false)
+                }
             }
             .presentationDetents([.height(150)])
         }
