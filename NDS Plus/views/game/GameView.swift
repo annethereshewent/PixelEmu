@@ -244,40 +244,47 @@ struct GameView: View {
     
     var body: some View {
         ZStack {
-            // Color(red: 0x82, green: 0x82, blue: 0x82)
-            Color.cyan
+            if gameController.controller.extendedGamepad == nil {
+                Color.cyan
+            } else {
+                Color.black
+            }
             VStack(spacing: 0) {
                 Spacer()
-                ZStack {
-                    DualScreenView(
-                        topImage: $topImage,
-                        bottomImage: $bottomImage,
+                DualScreenView(
+                    topImage: $topImage,
+                    bottomImage: $bottomImage,
+                    emulator: $emulator,
+                    buttonStarted: $buttonStarted,
+                    audioManager: $audioManager,
+                    gameController: $gameController
+                )
+                if gameController.controller.extendedGamepad == nil {
+                    TouchControlsView(
                         emulator: $emulator,
+                        audioManager: $audioManager,
+                        workItem: $workItem,
+                        isRunning: $isRunning,
                         buttonStarted: $buttonStarted,
-                        audioManager: $audioManager
+                        bios7Data: $bios7Data,
+                        bios9Data: $bios9Data,
+                        firmwareData: $firmwareData,
+                        romData: $romData,
+                        gameName: $gameName
                     )
                 }
-                TouchControlsView(
-                    emulator: $emulator,
-                    audioManager: $audioManager,
-                    workItem: $workItem,
-                    isRunning: $isRunning,
-                    buttonStarted: $buttonStarted,
-                    bios7Data: $bios7Data,
-                    bios9Data: $bios9Data,
-                    firmwareData: $firmwareData,
-                    romData: $romData,
-                    gameName: $gameName
-                )
             }
         }
         .onAppear {
+            print("disabling timer")
+            print(gameController.controller.extendedGamepad == nil)
             UIApplication.shared.isIdleTimerDisabled = true
             Task {
                 await self.run()
             }
         }
         .onDisappear {
+            print("enabling timer again")
             UIApplication.shared.isIdleTimerDisabled = false
         }
         .navigationBarTitle("")
