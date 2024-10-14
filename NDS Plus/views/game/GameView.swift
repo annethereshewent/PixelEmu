@@ -262,7 +262,12 @@ struct GameView: View {
                     audioManager: $audioManager,
                     workItem: $workItem,
                     isRunning: $isRunning,
-                    buttonStarted: $buttonStarted
+                    buttonStarted: $buttonStarted,
+                    bios7Data: $bios7Data,
+                    bios9Data: $bios9Data,
+                    firmwareData: $firmwareData,
+                    romData: $romData,
+                    gameName: $gameName
                 )
             }
         }

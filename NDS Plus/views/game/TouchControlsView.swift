@@ -17,6 +17,11 @@ struct TouchControlsView: View {
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
     @Binding var buttonStarted: [ButtonEvent:Bool]
+    @Binding var bios7Data: Data?
+    @Binding var bios9Data: Data?
+    @Binding var firmwareData: Data?
+    @Binding var romData: Data?
+    @Binding var gameName: String
     
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
@@ -218,7 +223,6 @@ struct TouchControlsView: View {
                     Button() {
                         isMenuPresented = !isMenuPresented
                         if let emu = emulator {
-                            print("setting paused to \(isMenuPresented)")
                             emu.setPause(isMenuPresented)
                         }
                     } label: {
@@ -272,7 +276,44 @@ struct TouchControlsView: View {
             HStack {
                 Spacer()
                 Button() {
-                    
+                    if let emu = emulator {
+                        let dataPtr = emu.createSaveState()
+                        let compressedLength = emu.compressedLength()
+                        
+                        let unsafeBufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(compressedLength))
+                        
+                        let data = Data(unsafeBufferPtr)
+                        
+                        do {
+                            var location = try FileManager.default.url(
+                                 for: .applicationSupportDirectory,
+                                 in: .userDomainMask,
+                                 appropriateFor: nil,
+                                 create: true
+                             )
+                            
+                            location.appendPathComponent("save_states")
+                            
+                            if !FileManager.default.fileExists(atPath: location.path) {
+                                try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
+                            }
+                            
+                            let gameFolder = gameName.replacing(".nds", with: "")
+                            
+                            location.appendPathComponent(gameFolder)
+                            
+                            if !FileManager.default.fileExists(atPath: location.path) {
+                                try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
+                            }
+                            
+                            location.appendPathComponent("state_1.save")
+                            
+                            try data.write(to: location)
+                        } catch {
+                            print(error)
+                        }
+                        isMenuPresented = false
+                    }
                 } label: {
                     VStack {
                         Image(systemName: "tray.and.arrow.up")
@@ -284,7 +325,85 @@ struct TouchControlsView: View {
                 }
                 Spacer()
                 Button() {
-                    
+                    do {
+                        var location = try FileManager.default.url(
+                            for: .applicationSupportDirectory,
+                            in: .userDomainMask,
+                            appropriateFor: nil,
+                            create: true
+                        )
+                        
+                        location.appendPathComponent("save_states")
+                        
+                        if !FileManager.default.fileExists(atPath: location.path) {
+                            try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
+                        }
+                        
+                        let gameFolder = gameName.replacing(".nds", with: "")
+                        
+                        location.appendPathComponent(gameFolder)
+                        
+                        if !FileManager.default.fileExists(atPath: location.path) {
+                            try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
+                        }
+                        
+                        location.appendPathComponent("state_1.save")
+                        
+                        if let data = try? Array(Data(contentsOf: location)) {
+                            if let emu = emulator {
+                                var dataPtr: UnsafeBufferPointer<UInt8>!
+                                data.withUnsafeBufferPointer { ptr in
+                                    dataPtr = ptr
+                                }
+                                
+                                if let bios7 = bios7Data, let bios9 = bios9Data, let rom = romData {
+                                    var firmwarePtr: UnsafeBufferPointer<UInt8>? = nil
+                                    var bios7Ptr: UnsafeBufferPointer<UInt8>!
+                                    var bios9Ptr: UnsafeBufferPointer<UInt8>!
+                                    var romPtr: UnsafeBufferPointer<UInt8>!
+                                    
+                                    let bios7Arr = Array(bios7)
+                                    
+                                    bios7Arr.withUnsafeBufferPointer { ptr in
+                                        bios7Ptr = ptr
+                                    }
+                                    
+                                    let bios9Arr = Array(bios9)
+                                    
+                                    bios9Arr.withUnsafeBufferPointer { ptr in
+                                        bios9Ptr = ptr
+                                    }
+                                    
+                                    let romArr = Array(rom)
+                                    
+                                    romArr.withUnsafeBufferPointer { ptr in
+                                        romPtr = ptr
+                                    }
+                                    
+                                    emu.loadSaveState(dataPtr)
+                                    emu.reloadBios(bios7Ptr, bios9Ptr)
+                                    
+                                    if let firmwareData = firmwareData {
+                                        let firmwareArr = Array(firmwareData)
+                                        
+                                        firmwareArr.withUnsafeBufferPointer { ptr in
+                                            firmwarePtr = ptr
+                                        }
+                                        
+                                        emu.reloadFirmware(firmwarePtr!)
+                                    } else {
+                                        emu.hleFirmware()
+                                    }
+                                    emu.reloadRom(romPtr)
+                                }
+                                isMenuPresented = false
+                            }
+                        } else {
+                            isMenuPresented = false
+                        }
+                    } catch {
+                        print(error)
+                    }
                 } label: {
                     VStack {
                         Image(systemName: "tray.and.arrow.down")
@@ -297,9 +416,7 @@ struct TouchControlsView: View {
                 }
                 Spacer()
                 Button() {
-                    if let emu = emulator {
-                        isMenuPresented = false
-                    }
+                    isMenuPresented = false
                 } label: {
                     VStack {
                         Image(systemName: "play")
