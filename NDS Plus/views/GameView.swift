@@ -100,7 +100,11 @@ struct GameView: View {
     private func run() async {
         let bios7Arr: [UInt8] = Array(bios7Data!)
         let bios9Arr: [UInt8] = Array(bios9Data!)
-        let firmwareArr: [UInt8] = Array(firmwareData!)
+        let firmwareArr: [UInt8] = if let firmware = firmwareData {
+            Array(firmware)
+        } else {
+            []
+        }
         let romArr: [UInt8] = Array(romData!)
         
         var bios7Ptr: UnsafeBufferPointer<UInt8>? = nil
@@ -238,56 +242,62 @@ struct GameView: View {
     var body: some View {
         ZStack {
             Color.mint
-            VStack {
-                GameScreenView(image: $topImage)
-                    .frame(
-                        width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
-                        height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
-                    )
-                    .shadow(color: .gray, radius: 1.0, y: 1)
-                    .padding(.top, 50)
-                GameScreenView(image: $bottomImage)
-                    .frame(
-                        width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
-                        height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
-                    )
-                    .shadow(color: .gray, radius: 1.0, y: 1)
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged() { value in
-                                if value.location.x >= 0 && 
-                                    value.location.y >= 0 &&
-                                    value.location.x < CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO) &&
-                                    value.location.y < CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
-                                {
-                                    let x = UInt16(Float(value.location.x) / SCREEN_RATIO)
-                                    let y = UInt16(Float(value.location.y) / SCREEN_RATIO)
-                                    emulator?.touchScreen(x, y)
-                                } else {
-                                    emulator?.releaseScreen()
-                                }
-                            }
-                            .onEnded() { value in
-                                if value.location.x >= 0 &&
-                                    value.location.y >= 0 &&
-                                    value.location.x < CGFloat(SCREEN_WIDTH) &&
-                                    value.location.y < CGFloat(SCREEN_HEIGHT)
-                                {
-                                    let x = UInt16(Float(value.location.x) / SCREEN_RATIO)
-                                    let y = UInt16(Float(value.location.y) / SCREEN_RATIO)
-                                    emulator?.touchScreen(x, y)
-                                    DispatchQueue.global().async(execute: DispatchWorkItem {
-                                        usleep(200)
-                                        DispatchQueue.main.sync() {
+            VStack(spacing: 0) {
+                Spacer()
+                ZStack {
+                    Image("Rectangle")
+                    VStack {
+                        GameScreenView(image: $topImage)
+                            .frame(
+                                width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
+                                height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
+                            )
+                            .shadow(color: .gray, radius: 1.0, y: 1)
+                            .padding(.top, 50)
+                        GameScreenView(image: $bottomImage)
+                            .frame(
+                                width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
+                                height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
+                            )
+                            .shadow(color: .gray, radius: 1.0, y: 1)
+                            .simultaneousGesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged() { value in
+                                        if value.location.x >= 0 &&
+                                            value.location.y >= 0 &&
+                                            value.location.x < CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO) &&
+                                            value.location.y < CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
+                                        {
+                                            let x = UInt16(Float(value.location.x) / SCREEN_RATIO)
+                                            let y = UInt16(Float(value.location.y) / SCREEN_RATIO)
+                                            emulator?.touchScreen(x, y)
+                                        } else {
                                             emulator?.releaseScreen()
                                         }
-                                    })
-                                } else {
-                                    emulator?.releaseScreen()
-                                }
-                                
-                            }
-                    )
+                                    }
+                                    .onEnded() { value in
+                                        if value.location.x >= 0 &&
+                                            value.location.y >= 0 &&
+                                            value.location.x < CGFloat(SCREEN_WIDTH) &&
+                                            value.location.y < CGFloat(SCREEN_HEIGHT)
+                                        {
+                                            let x = UInt16(Float(value.location.x) / SCREEN_RATIO)
+                                            let y = UInt16(Float(value.location.y) / SCREEN_RATIO)
+                                            emulator?.touchScreen(x, y)
+                                            DispatchQueue.global().async(execute: DispatchWorkItem {
+                                                usleep(200)
+                                                DispatchQueue.main.sync() {
+                                                    emulator?.releaseScreen()
+                                                }
+                                            })
+                                        } else {
+                                            emulator?.releaseScreen()
+                                        }
+                                        
+                                    }
+                            )
+                    }
+                }
                 TouchControlsView(
                     emulator: $emulator,
                     audioManager: $audioManager,

@@ -39,6 +39,9 @@
 		E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E896C28C2CA67FFA008161AA /* AudioManager.swift */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
+		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
+		E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */; };
+		E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +103,9 @@
 		E896C28C2CA67FFA008161AA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
 		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
+		E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = drastic_bios_readme.txt; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_readme.txt"; sourceTree = "<group>"; };
+		E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = drastic_bios_arm9.bin; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_arm9.bin"; sourceTree = "<group>"; };
+		E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = drastic_bios_arm7.bin; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_arm7.bin"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +186,7 @@
 		E806E9F62C97E1B10081D3E8 /* NDS Plus */ = {
 			isa = PBXGroup;
 			children = (
+				E8C245E72CBCAA5000B6DF67 /* bin */,
 				E806EA6E2CA0D7B70081D3E8 /* json */,
 				E806EA672C9E9BA60081D3E8 /* enums */,
 				E806EA662C9E9B880081D3E8 /* input */,
@@ -280,6 +287,16 @@
 				E806EA6F2CA0D8330081D3E8 /* game_db.json */,
 			);
 			path = json;
+			sourceTree = "<group>";
+		};
+		E8C245E72CBCAA5000B6DF67 /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */,
+				E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */,
+				E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */,
+			);
+			path = bin;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -399,8 +416,11 @@
 			files = (
 				E806EA9A2CA1284B0081D3E8 /* .gitignore in Resources */,
 				E806EA702CA0D8330081D3E8 /* game_db.json in Resources */,
+				E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */,
+				E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */,
 				E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */,
 				E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */,
+				E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

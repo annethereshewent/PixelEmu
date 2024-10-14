@@ -47,12 +47,25 @@ struct ContentView: View {
             appropriateFor: nil,
             create: true
         ) {
-        
             switch currentFile {
             case .bios7:
+                print("checking for bios7")
                 if let fileUrl = URL(string: "bios7.bin", relativeTo: applicationUrl) {
+                    print("in here dawg!!!!!!")
                     if let data = try? Data(contentsOf: fileUrl) {
+                        print("wut")
                         _bios7Data = State(initialValue: data)
+                    } else {
+                        print("now here")
+                        let filePath = Bundle.main.path(forResource: "drastic_bios_arm7", ofType: "bin")!
+                        do {
+                            let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
+                            _bios7Data = State(initialValue: data)
+                            
+                            print("found bios7 data!")
+                        } catch {
+                            print(error)
+                        }
                     }
                 }
                 
@@ -60,6 +73,16 @@ struct ContentView: View {
                 if let fileUrl = URL(string: "bios9.bin", relativeTo: applicationUrl) {
                     if let data = try? Data(contentsOf: fileUrl) {
                         _bios9Data = State(initialValue: data)
+                    } else {
+                        let filePath = Bundle.main.path(forResource: "drastic_bios_arm9", ofType: "bin")!
+                        do {
+                            let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
+                            _bios9Data = State(initialValue: data)
+                            
+                            print("found bios9 data!")
+                        } catch {
+                            print(error)
+                        }
                     }
                 }
             case .firmware:
@@ -145,8 +168,6 @@ struct ContentView: View {
                         
                         showRomDialog = true
                     }
-                    .foregroundColor(buttonColor)
-                    .disabled(buttonDisabled)
                     .font(.title)
                 }
             }
@@ -162,7 +183,7 @@ struct ContentView: View {
                         if let data = try? Data(contentsOf: url) {
                             romData = data
                             
-                            if bios7Data != nil && bios9Data != nil && firmwareData != nil {
+                            if bios7Data != nil && bios9Data != nil {
                                 gameUrl = url
                                 path.append("GameView")
                             }

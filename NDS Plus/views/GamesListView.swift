@@ -45,8 +45,7 @@ struct GamesListView: View {
                                         romData = data
                                         
                                         if bios7Data != nil &&
-                                            bios9Data != nil &&
-                                            firmwareData != nil
+                                            bios9Data != nil
                                         {
                                             emulator = nil
                                             workItem?.cancel()

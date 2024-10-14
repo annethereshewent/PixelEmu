@@ -99,10 +99,9 @@ struct TouchControlsView: View {
 
     var body: some View {
         VStack {
-            Spacer()
             HStack {
                 Spacer()
-                Image("L Button")
+                Image("L Button New")
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged() { result in
@@ -118,9 +117,9 @@ struct TouchControlsView: View {
                             }
                     )
                 Spacer()
+                Image("Volume Button")
                 Spacer()
-                Spacer()
-                Image("R Button")
+                Image("R Button New")
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged() { result in
@@ -140,8 +139,8 @@ struct TouchControlsView: View {
             Spacer()
             HStack {
                 Spacer()
-                Image("Control Pad")
-                    .resizable()
+                Image("Control Pad New")
+                    // .resizable()
                     .background(
                         GeometryReader { geometry in
                             Color.clear
@@ -159,7 +158,7 @@ struct TouchControlsView: View {
                                 }
                         }
                     )
-                    .frame(width: 150, height: 150)
+                    // .frame(width: 150, height: 150)
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged() { result in
@@ -177,10 +176,14 @@ struct TouchControlsView: View {
                             }
                     )
                 Spacer()
+                VStack {
+                    Image("Buttons Misc")
+                    Image("Red Button")
+                }
                 Spacer()
-                Image("Buttons")
-                    .resizable()
-                    .frame(width: 175, height: 175)
+                Image("Buttons New")
+                    // .resizable()
+                    //.frame(width: 175, height: 175)
                     .background(
                         GeometryReader { geometry in
                             Color.clear
@@ -211,61 +214,6 @@ struct TouchControlsView: View {
                             .onEnded() { result in
                                 self.releaseButtons()
                                 self.releaseHapticFeedback()
-                            }
-                    )
-                Spacer()
-            }
-            Spacer()
-            HStack {
-                Spacer()
-                Button {
-                    emulator = nil
-                    isRunning = false
-                    workItem?.cancel()
-                    workItem = nil
-                    
-                    audioManager?.isRunning = false
-                    
-                    presentationMode.wrappedValue.dismiss()
-                } label: {
-                    Image("Home Button")
-                        .resizable()
-                        .frame(width:  40, height: 40)
-                }
-                Spacer()
-                Image("Select")
-                    .resizable()
-                    .frame(width: 72, height: 24)
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged() { result in
-                                if !buttonStarted[ButtonEvent.Select]! {
-                                    feedbackGenerator.impactOccurred()
-                                    buttonStarted[ButtonEvent.Select] = true
-                                }
-                                emulator?.updateInput(ButtonEvent.Select, true)
-                            }
-                            .onEnded() { result in
-                                buttonStarted[ButtonEvent.Select] = false
-                                emulator?.updateInput(ButtonEvent.Select, false)
-                            }
-                    )
-                Spacer()
-                Image("Start")
-                    .resizable()
-                    .frame(width: 72, height: 24)
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged() { result in
-                                if !buttonStarted[ButtonEvent.Start]! {
-                                    feedbackGenerator.impactOccurred()
-                                    buttonStarted[ButtonEvent.Start] = true
-                                }
-                                emulator?.updateInput(ButtonEvent.Start, true)
-                            }
-                            .onEnded() { result in
-                                buttonStarted[ButtonEvent.Start] = false
-                                emulator?.updateInput(ButtonEvent.Start, false)
                             }
                     )
                 Spacer()
