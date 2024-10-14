@@ -32,7 +32,7 @@ struct StateMenuView: View {
                     goHome()
                 }
                 .foregroundColor(.red)
-                .font(.title2pr)
+                .font(.title2)
                 Spacer()
                 Spacer()
             }
