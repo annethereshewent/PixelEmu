@@ -357,7 +357,6 @@ struct TouchControlsView: View {
                                 }
                                 
                                 if let bios7 = bios7Data, let bios9 = bios9Data, let rom = romData {
-                                    var firmwarePtr: UnsafeBufferPointer<UInt8>? = nil
                                     var bios7Ptr: UnsafeBufferPointer<UInt8>!
                                     var bios9Ptr: UnsafeBufferPointer<UInt8>!
                                     var romPtr: UnsafeBufferPointer<UInt8>!
@@ -384,13 +383,14 @@ struct TouchControlsView: View {
                                     emu.reloadBios(bios7Ptr, bios9Ptr)
                                     
                                     if let firmwareData = firmwareData {
+                                        var firmwarePtr: UnsafeBufferPointer<UInt8>!
                                         let firmwareArr = Array(firmwareData)
                                         
                                         firmwareArr.withUnsafeBufferPointer { ptr in
                                             firmwarePtr = ptr
                                         }
                                         
-                                        emu.reloadFirmware(firmwarePtr!)
+                                        emu.reloadFirmware(firmwarePtr)
                                     } else {
                                         emu.hleFirmware()
                                     }
