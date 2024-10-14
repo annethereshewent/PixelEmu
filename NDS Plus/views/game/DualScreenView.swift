@@ -16,11 +16,19 @@ struct DualScreenView: View {
     @Binding var buttonStarted: [ButtonEvent:Bool]
     @Binding var audioManager: AudioManager?
     @Binding var gameController: GameController
+    
+    private var screenRatio: Float {
+        if gameController.controller?.extendedGamepad == nil {
+            SCREEN_RATIO
+        } else {
+            FULLSCREEN_RATIO
+        }
+    }
   
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
     var padding: CGFloat {
-        if gameController.controller.extendedGamepad == nil {
+        if gameController.controller?.extendedGamepad == nil {
             return 40.0
         }
         
@@ -29,38 +37,36 @@ struct DualScreenView: View {
     
     var body: some View {
         ZStack {
-            if gameController.controller.extendedGamepad == nil {
+            if gameController.controller?.extendedGamepad == nil {
                 Image("Rectangle")
                     .resizable()
                     .frame(width: rectangleImage!.size.width * 1.05, height: rectangleImage!.size.height * 0.9 )
             }
             VStack(spacing: 0) {
                 VStack{
-                    if gameController.controller.extendedGamepad != nil {
+                    if gameController.controller?.extendedGamepad != nil {
                         Spacer()
                     }
                     GameScreenView(image: $topImage)
                         .frame(
-                            width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
-                            height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
+                            width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),
+                            height: CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
                         )
-                        .shadow(color: .gray, radius: 1.0, y: 1)
                     GameScreenView(image: $bottomImage)
                         .frame(
-                            width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
-                            height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
-                        )
-                        .shadow(color: .gray, radius: 1.0, y: 1)
+                            width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),
+                            height: CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
+                        ) 
                         .simultaneousGesture(
                             DragGesture(minimumDistance: 0)
                                 .onChanged() { value in
                                     if value.location.x >= 0 &&
                                         value.location.y >= 0 &&
-                                        value.location.x < CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO) &&
-                                        value.location.y < CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
+                                        value.location.x < CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio) &&
+                                        value.location.y < CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
                                     {
-                                        let x = UInt16(Float(value.location.x) / SCREEN_RATIO)
-                                        let y = UInt16(Float(value.location.y) / SCREEN_RATIO)
+                                        let x = UInt16(Float(value.location.x) / screenRatio)
+                                        let y = UInt16(Float(value.location.y) / screenRatio)
                                         emulator?.touchScreen(x, y)
                                     } else {
                                         emulator?.releaseScreen()
@@ -72,8 +78,8 @@ struct DualScreenView: View {
                                         value.location.x < CGFloat(SCREEN_WIDTH) &&
                                         value.location.y < CGFloat(SCREEN_HEIGHT)
                                     {
-                                        let x = UInt16(Float(value.location.x) / SCREEN_RATIO)
-                                        let y = UInt16(Float(value.location.y) / SCREEN_RATIO)
+                                        let x = UInt16(Float(value.location.x) / screenRatio)
+                                        let y = UInt16(Float(value.location.y) / screenRatio)
                                         emulator?.touchScreen(x, y)
                                         DispatchQueue.global().async(execute: DispatchWorkItem {
                                             usleep(200)
@@ -87,12 +93,12 @@ struct DualScreenView: View {
                                     
                                 }
                         )
-                    if gameController.controller.extendedGamepad != nil {
+                    if gameController.controller?.extendedGamepad != nil {
                         Spacer()
                     }
                 }
                 .padding(.top, padding)
-                if gameController.controller.extendedGamepad == nil {
+                if gameController.controller?.extendedGamepad == nil {
                     VStack(spacing: 0) {
                         HStack {
                             Spacer()

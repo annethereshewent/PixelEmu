@@ -96,7 +96,7 @@ struct GameView: View {
     }
     
     private func handleInput() {
-        if let controller = self.gameController.controller.extendedGamepad {
+        if let controller = self.gameController.controller?.extendedGamepad {
             if let emu = emulator {
                 emu.updateInput(ButtonEvent.ButtonA, controller.buttonB.isPressed)
                 emu.updateInput(ButtonEvent.ButtonB, controller.buttonA.isPressed)
@@ -271,7 +271,7 @@ struct GameView: View {
     
     var body: some View {
         ZStack {
-            if gameController.controller.extendedGamepad == nil {
+            if gameController.controller?.extendedGamepad == nil {
                 Color.cyan
             } else {
                 Color.black
@@ -286,7 +286,7 @@ struct GameView: View {
                     audioManager: $audioManager,
                     gameController: $gameController
                 )
-                if gameController.controller.extendedGamepad == nil {
+                if gameController.controller?.extendedGamepad == nil {
                     TouchControlsView(
                         emulator: $emulator,
                         audioManager: $audioManager,
