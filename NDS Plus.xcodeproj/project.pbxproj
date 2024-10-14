@@ -231,6 +231,7 @@
 		E806EA632C9E9B210081D3E8 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
 				E8C245F22CBCC55500B6DF67 /* settings */,
 				E8C245F12CBCC54F00B6DF67 /* game */,
 			);
@@ -309,7 +310,6 @@
 		E8C245F22CBCC55500B6DF67 /* settings */ = {
 			isa = PBXGroup;
 			children = (
-				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
 				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
 				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
 				E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */,
