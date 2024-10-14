@@ -249,6 +249,8 @@ struct GameView: View {
                 Spacer()
                 ZStack {
                     Image("Rectangle")
+                        .resizable()
+                        .padding(.top, 25)
                     VStack {
                         GameScreenView(image: $topImage)
                             .frame(
@@ -256,7 +258,6 @@ struct GameView: View {
                                 height: CGFloat(SCREEN_HEIGHT) * CGFloat(SCREEN_RATIO)
                             )
                             .shadow(color: .gray, radius: 1.0, y: 1)
-                            //.padding(.top, 75)
                         GameScreenView(image: $bottomImage)
                             .frame(
                                 width: CGFloat(SCREEN_WIDTH) * CGFloat(SCREEN_RATIO),
