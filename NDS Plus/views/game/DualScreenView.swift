@@ -9,16 +9,16 @@ import SwiftUI
 import DSEmulatorMobile
 
 struct DualScreenView: View {
+    @Binding var gameController: GameController?
     private let rectangleImage = UIImage(named: "Rectangle")
     @Binding var topImage: CGImage?
     @Binding var bottomImage: CGImage?
     @Binding var emulator: MobileEmulator?
     @Binding var buttonStarted: [ButtonEvent:Bool]
     @Binding var audioManager: AudioManager?
-    @Binding var gameController: GameController
     
     private var screenRatio: Float {
-        if gameController.controller?.extendedGamepad == nil {
+        if gameController?.controller?.extendedGamepad == nil {
             SCREEN_RATIO
         } else {
             FULLSCREEN_RATIO
@@ -28,7 +28,7 @@ struct DualScreenView: View {
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
     var padding: CGFloat {
-        if gameController.controller?.extendedGamepad == nil {
+        if gameController?.controller?.extendedGamepad == nil {
             return 40.0
         }
         
@@ -37,14 +37,14 @@ struct DualScreenView: View {
     
     var body: some View {
         ZStack {
-            if gameController.controller?.extendedGamepad == nil {
+            if gameController?.controller?.extendedGamepad == nil {
                 Image("Rectangle")
                     .resizable()
                     .frame(width: rectangleImage!.size.width * 1.05, height: rectangleImage!.size.height * 0.9 )
             }
             VStack(spacing: 0) {
                 VStack{
-                    if gameController.controller?.extendedGamepad != nil {
+                    if gameController?.controller?.extendedGamepad != nil {
                         Spacer()
                     }
                     GameScreenView(image: $topImage)
@@ -93,12 +93,12 @@ struct DualScreenView: View {
                                     
                                 }
                         )
-                    if gameController.controller?.extendedGamepad != nil {
+                    if gameController?.controller?.extendedGamepad != nil {
                         Spacer()
                     }
                 }
                 .padding(.top, padding)
-                if gameController.controller?.extendedGamepad == nil {
+                if gameController?.controller?.extendedGamepad == nil {
                     VStack(spacing: 0) {
                         HStack {
                             Spacer()

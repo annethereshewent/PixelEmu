@@ -8,6 +8,7 @@
 import SwiftUI
 import DSEmulatorMobile
 import GoogleSignIn
+import GameController
 
 struct GameView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -17,7 +18,7 @@ struct GameView: View {
     @State private var gameName = ""
     @State private var backupFile: BackupFile? = nil
     @State private var debounceTimer: Timer? = nil
-    @State private var gameController = GameController()
+    @State private var gameController: GameController?
     @State private var audioManager: AudioManager? = nil
     @State private var isRunning = false
     @State private var workItem: DispatchWorkItem? = nil
@@ -52,7 +53,6 @@ struct GameView: View {
         workItem = nil
         
         audioManager?.isRunning = false
-        
         presentationMode.wrappedValue.dismiss()
     }
     
@@ -74,7 +74,7 @@ struct GameView: View {
         if let emu = emulator {
             let ptr = emu.backupPointer();
             let backupLength = Int(emu.backupLength())
-    
+            
             if let cloudService = cloudService {
                 if let url = gameUrl {
                     let buffer = UnsafeBufferPointer(start: ptr, count: backupLength)
@@ -95,38 +95,57 @@ struct GameView: View {
         
     }
     
-    private func handleInput() {
-        if let controller = self.gameController.controller?.extendedGamepad {
-            if let emu = emulator {
-                emu.updateInput(ButtonEvent.ButtonA, controller.buttonB.isPressed)
-                emu.updateInput(ButtonEvent.ButtonB, controller.buttonA.isPressed)
-                emu.updateInput(ButtonEvent.ButtonY, controller.buttonX.isPressed)
-                emu.updateInput(ButtonEvent.ButtonX, controller.buttonY.isPressed)
-                emu.updateInput(ButtonEvent.ButtonL, controller.leftShoulder.isPressed)
-                emu.updateInput(ButtonEvent.ButtonR, controller.rightShoulder.isPressed)
-                emu.updateInput(ButtonEvent.Start, controller.buttonMenu.isPressed)
-                emu.updateInput(
-                    ButtonEvent.Select,
-                    controller.buttonOptions?.isPressed ?? false
-                )
-                emu.updateInput(ButtonEvent.Up, controller.dpad.up.isPressed)
-                emu.updateInput(ButtonEvent.Down, controller.dpad.down.isPressed)
-                emu.updateInput(ButtonEvent.Left, controller.dpad.left.isPressed)
-                emu.updateInput(ButtonEvent.Right, controller.dpad.right.isPressed)
+    private func addControllerEventListeners(gameController: GCController?) {
+        if let emu = emulator, let controller = gameController?.extendedGamepad {
+            controller.buttonB.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.ButtonA, pressed)
             }
-            if controller.buttonHome?.isPressed ?? false && !homePressed {
-                homePressed = true
-                
-                isMenuPresented = !isMenuPresented
-                
-                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
-                    homePressed = false
+            controller.buttonA.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.ButtonB, pressed)
+            }
+            controller.buttonX.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.ButtonY, pressed)
+            }
+            controller.buttonY.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.ButtonX, pressed)
+            }
+            controller.leftShoulder.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.ButtonL, pressed)
+            }
+            controller.rightShoulder.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.ButtonR, pressed)
+            }
+            controller.buttonMenu.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.Start, pressed)
+            }
+            controller.buttonOptions?.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.Select, pressed)
+            }
+            controller.dpad.up.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.Up, pressed)
+            }
+            controller.dpad.down.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.Down, pressed)
+            }
+            controller.dpad.left.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.Left, pressed)
+            }
+            controller.dpad.right.pressedChangedHandler = { (button, value, pressed) in
+                emu.updateInput(ButtonEvent.Right, pressed)
+            }
+            controller.buttonHome?.pressedChangedHandler = { (button, value, pressed) in
+                if pressed && !homePressed {
+                    homePressed = true
+                    
+                    isMenuPresented = !isMenuPresented
+                    
+                    Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                        homePressed = false
+                    }
                 }
             }
-            
         }
     }
-    
     private func run() async {
         let bios7Arr: [UInt8] = Array(bios7Data!)
         let bios9Arr: [UInt8] = Array(bios9Data!)
@@ -254,7 +273,6 @@ struct GameView: View {
                             
                             self.audioManager?.updateBuffer(bufferPtr: bufferPtr)
                             
-                            self.handleInput()
                             self.checkSaves()
                         }
                         
@@ -271,7 +289,7 @@ struct GameView: View {
     
     var body: some View {
         ZStack {
-            if gameController.controller?.extendedGamepad == nil {
+            if gameController?.controller?.extendedGamepad == nil {
                 Color.cyan
             } else {
                 Color.black
@@ -279,14 +297,14 @@ struct GameView: View {
             VStack(spacing: 0) {
                 Spacer()
                 DualScreenView(
+                    gameController: $gameController,
                     topImage: $topImage,
                     bottomImage: $bottomImage,
                     emulator: $emulator,
                     buttonStarted: $buttonStarted,
-                    audioManager: $audioManager,
-                    gameController: $gameController
+                    audioManager: $audioManager
                 )
-                if gameController.controller?.extendedGamepad == nil {
+                if gameController?.controller?.extendedGamepad == nil {
                     TouchControlsView(
                         emulator: $emulator,
                         audioManager: $audioManager,
@@ -324,6 +342,9 @@ struct GameView: View {
             UIApplication.shared.isIdleTimerDisabled = true
             Task {
                 await self.run()
+                gameController = GameController(closure: { gameController in
+                    addControllerEventListeners(gameController: gameController)
+                })
             }
         }
         .onDisappear {

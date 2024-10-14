@@ -7,12 +7,16 @@
 
 import Foundation
 import GameController
+import DSEmulatorMobile
 
 @Observable
 class GameController {
+    let eventListenerClosure: (GCController?) -> Void
+    
     var controller: GCController? = GCController()
     
-    init() {
+    init(closure: @escaping (GCController?) -> Void) {
+        eventListenerClosure = closure
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.handleControllerDidConnect),
@@ -27,18 +31,17 @@ class GameController {
         
         
         if let controller = GCController.controllers().first {
+            print(controller.extendedGamepad!)
             self.controller = controller
             self.controller?.physicalInputProfile.buttons[GCInputButtonHome]?.preferredSystemGestureState = GCControllerElement.SystemGestureState.disabled
+            
+            eventListenerClosure(controller)
         }
         
         
     }
     
     @objc private func handleControllerDidDisconnect(_ notification: Notification) {
-        guard let gameController = notification.object as? GCController else {
-            return
-        }
-        
         self.controller = nil
     }
     
@@ -48,6 +51,8 @@ class GameController {
         }
         
         self.controller = gameController
+        
+        eventListenerClosure(self.controller)
         
         controller?.physicalInputProfile.buttons[GCInputButtonHome]?.preferredSystemGestureState = GCControllerElement.SystemGestureState.disabled
     }
