@@ -48,7 +48,7 @@ struct StateMenuView: View {
                         Image(systemName: "tray.and.arrow.up")
                             .resizable()
                             .frame(width: 35, height: 35)
-                        Text("Save state")
+                        Text("Save states")
                             .font(.callout)
                     }
                 }
@@ -135,10 +135,10 @@ struct StateMenuView: View {
                     }
                 } label: {
                     VStack {
-                        Image(systemName: "tray.and.arrow.down")
+                        Image(systemName: "button.horizontal.top.press.fill")
                             .resizable()
                             .frame(width: 35, height: 35)
-                        Text("Load state")
+                        Text("Hold Button")
                             .font(.callout)
                     }
                     

@@ -87,7 +87,7 @@ struct SaveStateEntriesView: View {
                             ))
                             
                             print("successfully created save state")
-                            isMenuPresented = false
+                            // isMenuPresented = false
                         } catch {
                             print(error)
                         }
@@ -102,7 +102,6 @@ struct SaveStateEntriesView: View {
                 SaveStateWrapperView(game: game)
             }
             Spacer()
-        }
-       
+        }  
     }
 }
