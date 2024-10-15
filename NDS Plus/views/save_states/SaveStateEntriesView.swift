@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import WrappingHStack
 import DSEmulatorMobile
 
 struct SaveStateEntriesView: View {
@@ -88,6 +87,7 @@ struct SaveStateEntriesView: View {
                             ))
                             
                             print("successfully created save state")
+                            isMenuPresented = false
                         } catch {
                             print(error)
                         }
@@ -98,7 +98,7 @@ struct SaveStateEntriesView: View {
                     .padding(.trailing, 25)
                     .padding(.top, 25)
             }
-            WrappingHStack {
+            HStack {
                 if let game = game {
                     ForEach(game.saveStates.sorted(by: { $0.saveName < $1.saveName })) { saveState in
                         SaveStateView(saveState: saveState)

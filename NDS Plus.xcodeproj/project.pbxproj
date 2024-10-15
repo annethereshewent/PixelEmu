@@ -43,7 +43,6 @@
 		E8C245F62CBDBA4500B6DF67 /* StateMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */; };
 		E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F72CBE043B00B6DF67 /* SaveState.swift */; };
 		E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */; };
-		E8C246002CBE07AE00B6DF67 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = E8C245FF2CBE07AE00B6DF67 /* WrappingHStack */; };
 		E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C246012CBE08D600B6DF67 /* SaveStateView.swift */; };
 /* End PBXBuildFile section */
 
@@ -119,7 +118,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */,
-				E8C246002CBE07AE00B6DF67 /* WrappingHStack in Frameworks */,
 				2870F371F32611D7E78586B0 /* Pods_NDS_Plus.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -335,7 +333,6 @@
 			name = "NDS Plus";
 			packageProductDependencies = (
 				E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */,
-				E8C245FF2CBE07AE00B6DF67 /* WrappingHStack */,
 			);
 			productName = "NDS Plus";
 			productReference = E806E9F42C97E1B10081D3E8 /* NDS Plus.app */;
@@ -414,7 +411,6 @@
 			mainGroup = E806E9EB2C97E1B10081D3E8;
 			packageReferences = (
 				E806EA2E2C991CF70081D3E8 /* XCLocalSwiftPackageReference "../../rust-projects/ds-emulator/mobile/DSEmulatorMobile" */,
-				E8C245FE2CBE07AE00B6DF67 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
 			);
 			productRefGroup = E806E9F52C97E1B10081D3E8 /* Products */;
 			projectDirPath = "";
@@ -946,26 +942,10 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		E8C245FE2CBE07AE00B6DF67 /* XCRemoteSwiftPackageReference "WrappingHStack" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/dkk/WrappingHStack";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.2.11;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
 		E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DSEmulatorMobile;
-		};
-		E8C245FF2CBE07AE00B6DF67 /* WrappingHStack */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E8C245FE2CBE07AE00B6DF67 /* XCRemoteSwiftPackageReference "WrappingHStack" */;
-			productName = WrappingHStack;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
