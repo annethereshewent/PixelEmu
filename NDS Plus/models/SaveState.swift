@@ -10,13 +10,13 @@ import SwiftData
 
 @Model
 class SaveState {
-    @Attribute(.unique)
     let saveName: String
     let screenshot: [UInt8]
     let bookmark: Data
-    let game: Game
+    @Attribute(.unique)
+    var game: Game?
     
-    init(saveName: String, screenshot: [UInt8], bookmark: Data, game: Game) {
+    init(saveName: String, screenshot: [UInt8], bookmark: Data, game: Game? = nil) {
         self.saveName = saveName
         self.screenshot = screenshot
         self.bookmark = bookmark

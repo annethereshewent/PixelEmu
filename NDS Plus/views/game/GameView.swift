@@ -36,6 +36,7 @@ struct GameView: View {
     @Binding var user: GIDGoogleUser?
     @Binding var cloudService: CloudService?
     @Binding var game: Game?
+    @Binding var shouldUpdateGame: Bool
     
     @Environment(\.modelContext) private var context
     
@@ -199,6 +200,9 @@ struct GameView: View {
                 iconPtr: emulator!.getGameIconPointer()
             ) {
                 context.insert(game)
+                if shouldUpdateGame {
+                    self.game = game
+                }
             }
             
             let gameCode = emulator?.getGameCode()

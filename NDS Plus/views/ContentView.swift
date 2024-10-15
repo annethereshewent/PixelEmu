@@ -30,6 +30,8 @@ struct ContentView: View {
     @State private var user: GIDGoogleUser? = nil
     @State private var cloudService: CloudService? = nil
     @State private var game: Game? = nil
+    
+    @State private var shouldUpdateGame = false
 
     init() {
         bios7Data = nil
@@ -176,6 +178,7 @@ struct ContentView: View {
                         }
                         if let data = try? Data(contentsOf: url) {
                             romData = data
+                            shouldUpdateGame = true
                             
                             if bios7Data != nil && bios9Data != nil {
                                 gameUrl = url
@@ -197,7 +200,8 @@ struct ContentView: View {
                         gameUrl: $gameUrl,
                         user: $user,
                         cloudService: $cloudService,
-                        game: $game
+                        game: $game,
+                        shouldUpdateGame: $shouldUpdateGame
                     )
                 }
             }

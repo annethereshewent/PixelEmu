@@ -79,14 +79,13 @@ struct SaveStateEntriesView: View {
                                 screenshot.append(contentsOf: Array(bottomBufferPtr))
                             }
                             
-                            context.insert(SaveState(
+                            let saveState = SaveState(
                                 saveName: saveName,
                                 screenshot: screenshot,
-                                bookmark: bookmark,
-                                game: game
-                            ))
+                                bookmark: bookmark
+                            )
+                            game.saveStates.append(saveState)
                             
-                            print("successfully created save state")
                             // isMenuPresented = false
                         } catch {
                             print(error)
@@ -98,9 +97,7 @@ struct SaveStateEntriesView: View {
                     .padding(.trailing, 25)
                     .padding(.top, 25)
             }
-            if let game = game {
-                SaveStateWrapperView(game: game)
-            }
+            SaveStateWrapperView(game: $game)
             Spacer()
         }  
     }
