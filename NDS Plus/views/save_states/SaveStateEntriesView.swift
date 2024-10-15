@@ -54,7 +54,9 @@ struct SaveStateEntriesView: View {
                                 try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
                             }
                             
-                            let saveName = "state_\(game.saveStates.count + 1).save"
+                            let numSaves = game.saveStates.count
+                            
+                            let saveName = "state_\(numSaves + 1).save"
                             
                             location.appendPathComponent(saveName)
                             
@@ -80,13 +82,13 @@ struct SaveStateEntriesView: View {
                             }
                             
                             let saveState = SaveState(
-                                saveName: saveName,
+                                saveName: "Save \(numSaves + 1)",
                                 screenshot: screenshot,
                                 bookmark: bookmark
                             )
                             game.saveStates.append(saveState)
                             
-                            // isMenuPresented = false
+                            isMenuPresented = false
                         } catch {
                             print(error)
                         }

@@ -18,7 +18,7 @@ struct SaveStateWrapperView: View {
         ScrollView {
             if let game = game {
                 LazyVGrid(columns: columns) {
-                    ForEach(game.saveStates.sorted { $0.saveName < $1.saveName }) { saveState in
+                    ForEach(game.saveStates.sorted { $0.compare($1) }) { saveState in
                         SaveStateView(saveState: saveState)
                     }
                 }

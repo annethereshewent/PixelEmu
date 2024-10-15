@@ -23,4 +23,11 @@ class SaveState {
         
         self.game = game
     }
+    
+    func compare(_ rhs: SaveState) -> Bool {
+        let saveNum1 = self.saveName.replacing("Save ", with: "")
+        let saveNum2 = rhs.saveName.replacing("Save ", with: "")
+        
+        return Int(saveNum1)! < Int(saveNum2)!
+    }
 }
