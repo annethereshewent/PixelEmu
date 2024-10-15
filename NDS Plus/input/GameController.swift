@@ -31,7 +31,6 @@ class GameController {
         
         
         if let controller = GCController.controllers().first {
-            print(controller.extendedGamepad!)
             self.controller = controller
             self.controller?.physicalInputProfile.buttons[GCInputButtonHome]?.preferredSystemGestureState = GCControllerElement.SystemGestureState.disabled
             
