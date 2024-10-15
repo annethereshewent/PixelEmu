@@ -44,6 +44,7 @@
 		E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F72CBE043B00B6DF67 /* SaveState.swift */; };
 		E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */; };
 		E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C246012CBE08D600B6DF67 /* SaveStateView.swift */; };
+		E8C246042CBE2A0600B6DF67 /* SaveStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C246032CBE2A0600B6DF67 /* SaveStateWrapperView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +111,7 @@
 		E8C245F72CBE043B00B6DF67 /* SaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveState.swift; sourceTree = "<group>"; };
 		E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateEntriesView.swift; sourceTree = "<group>"; };
 		E8C246012CBE08D600B6DF67 /* SaveStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateView.swift; sourceTree = "<group>"; };
+		E8C246032CBE2A0600B6DF67 /* SaveStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateWrapperView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,6 +311,7 @@
 				E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */,
 				E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */,
 				E8C246012CBE08D600B6DF67 /* SaveStateView.swift */,
+				E8C246032CBE2A0600B6DF67 /* SaveStateWrapperView.swift */,
 			);
 			path = save_states;
 			sourceTree = "<group>";
@@ -568,6 +571,7 @@
 				E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */,
 				E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */,
 				E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */,
+				E8C246042CBE2A0600B6DF67 /* SaveStateWrapperView.swift in Sources */,
 				E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
 				E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */,

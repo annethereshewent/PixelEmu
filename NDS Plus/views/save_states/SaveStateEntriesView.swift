@@ -21,9 +21,9 @@ struct SaveStateEntriesView: View {
         VStack {
             HStack {
                 Spacer()
-                Spacer()
+                // Spacer()
                 Button("+") {
-                    // create a  new save state
+                    // create a new save state
                     if let emu = emulator, let game = game {
                         let dataPtr = emu.createSaveState()
                         let compressedLength = emu.compressedLength()
@@ -98,15 +98,11 @@ struct SaveStateEntriesView: View {
                     .padding(.trailing, 25)
                     .padding(.top, 25)
             }
-            HStack {
-                if let game = game {
-                    ForEach(game.saveStates.sorted(by: { $0.saveName < $1.saveName })) { saveState in
-                        SaveStateView(saveState: saveState)
-                    }
-                }
+            if let game = game {
+                SaveStateWrapperView(game: game)
             }
-            .padding()
             Spacer()
         }
+       
     }
 }
