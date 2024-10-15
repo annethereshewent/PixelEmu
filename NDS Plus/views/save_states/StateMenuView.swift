@@ -20,7 +20,9 @@ struct StateMenuView: View {
     @Binding var firmwareData: Data?
     @Binding var romData: Data?
     @Binding var shouldGoHome: Bool
+    @Binding var game: Game?
     
+    @State var isStateEntriesPresented: Bool = false
     
     private func goHome() {
         shouldGoHome = true
@@ -40,44 +42,7 @@ struct StateMenuView: View {
             HStack {
                 Spacer()
                 Button() {
-                    if let emu = emulator {
-                        let dataPtr = emu.createSaveState()
-                        let compressedLength = emu.compressedLength()
-                        
-                        let unsafeBufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(compressedLength))
-                        
-                        let data = Data(unsafeBufferPtr)
-                        
-                        do {
-                            var location = try FileManager.default.url(
-                                 for: .applicationSupportDirectory,
-                                 in: .userDomainMask,
-                                 appropriateFor: nil,
-                                 create: true
-                             )
-                            
-                            location.appendPathComponent("save_states")
-                            
-                            if !FileManager.default.fileExists(atPath: location.path) {
-                                try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
-                            }
-                            
-                            let gameFolder = gameName.replacing(".nds", with: "")
-                            
-                            location.appendPathComponent(gameFolder)
-                            
-                            if !FileManager.default.fileExists(atPath: location.path) {
-                                try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
-                            }
-                            
-                            location.appendPathComponent("state_1.save")
-                            
-                            try data.write(to: location)
-                        } catch {
-                            print(error)
-                        }
-                        isMenuPresented = false
-                    }
+                    isStateEntriesPresented = true
                 } label: {
                     VStack {
                         Image(systemName: "tray.and.arrow.up")
@@ -199,6 +164,14 @@ struct StateMenuView: View {
                 }
             }
             .presentationDetents([.height(150)])
+        }
+        .sheet(isPresented: $isStateEntriesPresented) {
+            SaveStateEntriesView(
+                emulator: $emulator,
+                gameName: $gameName,
+                isMenuPresented: $isMenuPresented,
+                game: $game
+            )
         }
     }
 }

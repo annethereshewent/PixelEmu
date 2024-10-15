@@ -30,7 +30,7 @@ struct SaveManagementView: View {
     @State private var showErrorAlert = false
     @State private var deleteAction: () -> Void = {}
     
-    @Query var games: [Game]
+    @Query private var games: [Game]
     
     let savType = UTType(filenameExtension: "sav", conformingTo: .data)
     

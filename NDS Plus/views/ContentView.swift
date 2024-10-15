@@ -29,6 +29,7 @@ struct ContentView: View {
     
     @State private var user: GIDGoogleUser? = nil
     @State private var cloudService: CloudService? = nil
+    @State private var game: Game? = nil
 
     init() {
         bios7Data = nil
@@ -148,7 +149,8 @@ struct ContentView: View {
                     workItem: $workItem,
                     emulator: $emulator,
                     gameUrl: $gameUrl,
-                    path: $path
+                    path: $path,
+                    game: $game
                 )
                 HStack {
                     Button("Load Game", systemImage: "square.and.arrow.up.circle") {
@@ -194,7 +196,8 @@ struct ContentView: View {
                         romData: $romData,
                         gameUrl: $gameUrl,
                         user: $user,
-                        cloudService: $cloudService
+                        cloudService: $cloudService,
+                        game: $game
                     )
                 }
             }

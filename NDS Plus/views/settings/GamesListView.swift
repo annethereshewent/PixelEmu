@@ -20,6 +20,7 @@ struct GamesListView: View {
     @Binding var emulator: MobileEmulator?
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
+    @Binding var game: Game?
     @Query private var games: [Game] = []
     
     var body: some View {
@@ -52,6 +53,8 @@ struct GamesListView: View {
                                             isRunning = false
                                             
                                             workItem = nil
+                                            
+                                            self.game = game
                                             
                                             path.append("GameView")
                                         }

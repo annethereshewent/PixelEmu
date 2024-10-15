@@ -34,8 +34,8 @@ struct GameView: View {
     @Binding var romData: Data?
     @Binding var gameUrl: URL?
     @Binding var user: GIDGoogleUser?
-    
     @Binding var cloudService: CloudService?
+    @Binding var game: Game?
     
     @Environment(\.modelContext) private var context
     
@@ -335,7 +335,8 @@ struct GameView: View {
                 bios9Data: $bios9Data,
                 firmwareData: $firmwareData,
                 romData: $romData,
-                shouldGoHome: $shouldGoHome
+                shouldGoHome: $shouldGoHome,
+                game: $game
             )
         }
         .onAppear {

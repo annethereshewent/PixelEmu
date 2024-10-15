@@ -41,6 +41,10 @@
 		E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */; };
 		E8C245EF2CBCC36F00B6DF67 /* DualScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */; };
 		E8C245F62CBDBA4500B6DF67 /* StateMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */; };
+		E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F72CBE043B00B6DF67 /* SaveState.swift */; };
+		E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */; };
+		E8C246002CBE07AE00B6DF67 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = E8C245FF2CBE07AE00B6DF67 /* WrappingHStack */; };
+		E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C246012CBE08D600B6DF67 /* SaveStateView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +108,9 @@
 		E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = drastic_bios_arm7.bin; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_arm7.bin"; sourceTree = "<group>"; };
 		E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DualScreenView.swift; sourceTree = "<group>"; };
 		E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMenuView.swift; sourceTree = "<group>"; };
+		E8C245F72CBE043B00B6DF67 /* SaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveState.swift; sourceTree = "<group>"; };
+		E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateEntriesView.swift; sourceTree = "<group>"; };
+		E8C246012CBE08D600B6DF67 /* SaveStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +119,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */,
+				E8C246002CBE07AE00B6DF67 /* WrappingHStack in Frameworks */,
 				2870F371F32611D7E78586B0 /* Pods_NDS_Plus.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -209,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
+				E8C245F92CBE068700B6DF67 /* save_states */,
 				E8C245F22CBCC55500B6DF67 /* settings */,
 				E8C245F12CBCC54F00B6DF67 /* game */,
 			);
@@ -234,6 +243,7 @@
 				E806EA9B2CA246760081D3E8 /* DriveResponse.swift */,
 				E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */,
 				E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */,
+				E8C245F72CBE043B00B6DF67 /* SaveState.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -280,7 +290,6 @@
 				E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */,
 				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
 				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
-				E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */,
 			);
 			path = game;
 			sourceTree = "<group>";
@@ -294,6 +303,16 @@
 				E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */,
 			);
 			path = settings;
+			sourceTree = "<group>";
+		};
+		E8C245F92CBE068700B6DF67 /* save_states */ = {
+			isa = PBXGroup;
+			children = (
+				E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */,
+				E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */,
+				E8C246012CBE08D600B6DF67 /* SaveStateView.swift */,
+			);
+			path = save_states;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,6 +335,7 @@
 			name = "NDS Plus";
 			packageProductDependencies = (
 				E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */,
+				E8C245FF2CBE07AE00B6DF67 /* WrappingHStack */,
 			);
 			productName = "NDS Plus";
 			productReference = E806E9F42C97E1B10081D3E8 /* NDS Plus.app */;
@@ -394,6 +414,7 @@
 			mainGroup = E806E9EB2C97E1B10081D3E8;
 			packageReferences = (
 				E806EA2E2C991CF70081D3E8 /* XCLocalSwiftPackageReference "../../rust-projects/ds-emulator/mobile/DSEmulatorMobile" */,
+				E8C245FE2CBE07AE00B6DF67 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
 			);
 			productRefGroup = E806E9F52C97E1B10081D3E8 /* Products */;
 			projectDirPath = "";
@@ -560,9 +581,12 @@
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */,
 				E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */,
+				E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
 				E8C245EF2CBCC36F00B6DF67 /* DualScreenView.swift in Sources */,
+				E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */,
 				E806EAA02CA3AD080081D3E8 /* SaveManagement.swift in Sources */,
+				E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
 				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
@@ -922,10 +946,26 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		E8C245FE2CBE07AE00B6DF67 /* XCRemoteSwiftPackageReference "WrappingHStack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dkk/WrappingHStack";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.11;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DSEmulatorMobile;
+		};
+		E8C245FF2CBE07AE00B6DF67 /* WrappingHStack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E8C245FE2CBE07AE00B6DF67 /* XCRemoteSwiftPackageReference "WrappingHStack" */;
+			productName = WrappingHStack;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

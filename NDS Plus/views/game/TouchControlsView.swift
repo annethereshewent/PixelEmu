@@ -30,8 +30,6 @@ struct TouchControlsView: View {
     @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()    
     @State private var buttonsMisc: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
     
-
-    
     private func releaseHapticFeedback() {
         buttonStarted[ButtonEvent.ButtonA] = false
         buttonStarted[ButtonEvent.ButtonB] = false
@@ -114,7 +112,6 @@ struct TouchControlsView: View {
         workItem = nil
         
         audioManager?.isRunning = false
-        
         presentationMode.wrappedValue.dismiss()
     }
     
