@@ -35,7 +35,7 @@ struct SaveStateEntriesView: View {
     
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
-    private func createSaveState() {
+    private func createSaveState(updateState: SaveState? = nil) {
         // create a new save state
         if let emu = emulator, let game = game {
             let dataPtr = emu.createSaveState()
@@ -99,8 +99,16 @@ struct SaveStateEntriesView: View {
                     screenshot: screenshot,
                     bookmark: bookmark
                 )
-                game.saveStates.append(saveState)
-                context.insert(saveState)
+                if let updateState = updateState, let index = game.saveStates.firstIndex(of: updateState) {
+                    updateState.screenshot = saveState.screenshot
+                    updateState.bookmark = saveState.bookmark
+                
+                    game.saveStates[index] = updateState
+                    context.insert(updateState)
+                } else {
+                    game.saveStates.append(saveState)
+                    context.insert(saveState)
+                }
                 
                 isMenuPresented = false
             } catch {
@@ -173,7 +181,9 @@ struct SaveStateEntriesView: View {
     }
     
     private func updateSaveState() {
-        
+        if let currentState = currentState {
+            createSaveState(updateState: currentState)
+        }
     }
     
     private func deleteSaveState() {
@@ -212,7 +222,11 @@ struct SaveStateEntriesView: View {
                 }
             }
             Spacer()
-        } 
+        }
+        .onAppear() {
+            print(game)
+            print(game?.saveStates.count ?? 0)
+        }
         .onChange(of: action) {
             switch action {
             case .delete:

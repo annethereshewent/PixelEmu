@@ -11,8 +11,8 @@ import SwiftData
 @Model
 class SaveState {
     let saveName: String
-    let screenshot: [UInt8]
-    let bookmark: Data
+    var screenshot: [UInt8]
+    var bookmark: Data
     @Attribute(.unique)
     var game: Game?
     
