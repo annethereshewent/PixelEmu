@@ -14,9 +14,6 @@
 		E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806E9F92C97E1B10081D3E8 /* ContentView.swift */; };
 		E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */; };
 		E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E806E9FE2C97E1B20081D3E8 /* Preview Assets.xcassets */; };
-		E806EA092C97E1B20081D3E8 /* NDS_PlusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA082C97E1B20081D3E8 /* NDS_PlusTests.swift */; };
-		E806EA132C97E1B20081D3E8 /* NDS_PlusUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA122C97E1B20081D3E8 /* NDS_PlusUITests.swift */; };
-		E806EA152C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA142C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift */; };
 		E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */; };
 		E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */ = {isa = PBXBuildFile; productRef = E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */; };
 		E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA312C9935D00081D3E8 /* GraphicsParser.swift */; };
@@ -39,6 +36,14 @@
 		E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E896C28C2CA67FFA008161AA /* AudioManager.swift */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
+		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
+		E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */; };
+		E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */; };
+		E8C245EF2CBCC36F00B6DF67 /* DualScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */; };
+		E8C245F62CBDBA4500B6DF67 /* StateMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */; };
+		E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F72CBE043B00B6DF67 /* SaveState.swift */; };
+		E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */; };
+		E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C246012CBE08D600B6DF67 /* SaveStateView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,10 +79,7 @@
 		E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E806E9FE2C97E1B20081D3E8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E806EA042C97E1B20081D3E8 /* NDS PlusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NDS PlusTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E806EA082C97E1B20081D3E8 /* NDS_PlusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusTests.swift; sourceTree = "<group>"; };
 		E806EA0E2C97E1B20081D3E8 /* NDS PlusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NDS PlusUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E806EA122C97E1B20081D3E8 /* NDS_PlusUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusUITests.swift; sourceTree = "<group>"; };
-		E806EA142C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		E806EA2B2C9824A80081D3E8 /* NDS-Plus-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "NDS-Plus-Info.plist"; sourceTree = SOURCE_ROOT; };
 		E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentFile.swift; sourceTree = "<group>"; };
 		E806EA312C9935D00081D3E8 /* GraphicsParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphicsParser.swift; sourceTree = "<group>"; };
@@ -100,6 +102,14 @@
 		E896C28C2CA67FFA008161AA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
 		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
+		E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = drastic_bios_readme.txt; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_readme.txt"; sourceTree = "<group>"; };
+		E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = drastic_bios_arm9.bin; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_arm9.bin"; sourceTree = "<group>"; };
+		E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = drastic_bios_arm7.bin; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_arm7.bin"; sourceTree = "<group>"; };
+		E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DualScreenView.swift; sourceTree = "<group>"; };
+		E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMenuView.swift; sourceTree = "<group>"; };
+		E8C245F72CBE043B00B6DF67 /* SaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveState.swift; sourceTree = "<group>"; };
+		E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateEntriesView.swift; sourceTree = "<group>"; };
+		E8C246012CBE08D600B6DF67 /* SaveStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,8 +169,6 @@
 			children = (
 				E806EA992CA1284B0081D3E8 /* .gitignore */,
 				E806E9F62C97E1B10081D3E8 /* NDS Plus */,
-				E806EA072C97E1B20081D3E8 /* NDS PlusTests */,
-				E806EA112C97E1B20081D3E8 /* NDS PlusUITests */,
 				E806E9F52C97E1B10081D3E8 /* Products */,
 				64BDE64EA0B37E21FEA9C4A6 /* Pods */,
 				19D49655ECDEBBE8636FE769 /* Frameworks */,
@@ -180,6 +188,7 @@
 		E806E9F62C97E1B10081D3E8 /* NDS Plus */ = {
 			isa = PBXGroup;
 			children = (
+				E8C245E72CBCAA5000B6DF67 /* bin */,
 				E806EA6E2CA0D7B70081D3E8 /* json */,
 				E806EA672C9E9BA60081D3E8 /* enums */,
 				E806EA662C9E9B880081D3E8 /* input */,
@@ -202,35 +211,13 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		E806EA072C97E1B20081D3E8 /* NDS PlusTests */ = {
-			isa = PBXGroup;
-			children = (
-				E806EA082C97E1B20081D3E8 /* NDS_PlusTests.swift */,
-			);
-			path = "NDS PlusTests";
-			sourceTree = "<group>";
-		};
-		E806EA112C97E1B20081D3E8 /* NDS PlusUITests */ = {
-			isa = PBXGroup;
-			children = (
-				E806EA122C97E1B20081D3E8 /* NDS_PlusUITests.swift */,
-				E806EA142C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift */,
-			);
-			path = "NDS PlusUITests";
-			sourceTree = "<group>";
-		};
 		E806EA632C9E9B210081D3E8 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
 				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
-				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
-				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
-				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
-				E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */,
-				E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */,
-				E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */,
-				E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */,
+				E8C245F92CBE068700B6DF67 /* save_states */,
+				E8C245F22CBCC55500B6DF67 /* settings */,
+				E8C245F12CBCC54F00B6DF67 /* game */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -254,6 +241,7 @@
 				E806EA9B2CA246760081D3E8 /* DriveResponse.swift */,
 				E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */,
 				E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */,
+				E8C245F72CBE043B00B6DF67 /* SaveState.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -280,6 +268,49 @@
 				E806EA6F2CA0D8330081D3E8 /* game_db.json */,
 			);
 			path = json;
+			sourceTree = "<group>";
+		};
+		E8C245E72CBCAA5000B6DF67 /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */,
+				E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */,
+				E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */,
+			);
+			path = bin;
+			sourceTree = "<group>";
+		};
+		E8C245F12CBCC54F00B6DF67 /* game */ = {
+			isa = PBXGroup;
+			children = (
+				E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */,
+				E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */,
+				E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */,
+				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
+				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
+			);
+			path = game;
+			sourceTree = "<group>";
+		};
+		E8C245F22CBCC55500B6DF67 /* settings */ = {
+			isa = PBXGroup;
+			children = (
+				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
+				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
+				E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */,
+				E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */,
+			);
+			path = settings;
+			sourceTree = "<group>";
+		};
+		E8C245F92CBE068700B6DF67 /* save_states */ = {
+			isa = PBXGroup;
+			children = (
+				E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */,
+				E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */,
+				E8C246012CBE08D600B6DF67 /* SaveStateView.swift */,
+			);
+			path = save_states;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -399,8 +430,11 @@
 			files = (
 				E806EA9A2CA1284B0081D3E8 /* .gitignore in Resources */,
 				E806EA702CA0D8330081D3E8 /* game_db.json in Resources */,
+				E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */,
+				E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */,
 				E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */,
 				E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */,
+				E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -543,11 +577,16 @@
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */,
 				E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */,
+				E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
+				E8C245EF2CBCC36F00B6DF67 /* DualScreenView.swift in Sources */,
+				E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */,
 				E806EAA02CA3AD080081D3E8 /* SaveManagement.swift in Sources */,
+				E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
 				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
+				E8C245F62CBDBA4500B6DF67 /* StateMenuView.swift in Sources */,
 				E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -556,7 +595,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E806EA092C97E1B20081D3E8 /* NDS_PlusTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -564,8 +602,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E806EA152C97E1B20081D3E8 /* NDS_PlusUITestsLaunchTests.swift in Sources */,
-				E806EA132C97E1B20081D3E8 /* NDS_PlusUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

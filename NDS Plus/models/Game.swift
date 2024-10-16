@@ -18,11 +18,13 @@ class Game {
     let gameName: String
     let bookmark: Data
     let gameIcon: [UInt8]
+    var saveStates: [SaveState]
     
-    init(gameName: String, bookmark: Data, gameIcon: [UInt8]) {
+    init(gameName: String, bookmark: Data, gameIcon: [UInt8], saveStates: [SaveState]) {
         self.bookmark = bookmark
         self.gameName = gameName
         self.gameIcon = gameIcon
+        self.saveStates = saveStates
     }
     
     static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>) -> Game? {
@@ -33,7 +35,7 @@ class Game {
         // store bookmark for later use
         if url.startAccessingSecurityScopedResource() {
             if let bookmark = try? url.bookmarkData(options: []) {
-                return Game(gameName: gameName, bookmark: bookmark, gameIcon: pixelsArr)
+                return Game(gameName: gameName, bookmark: bookmark, gameIcon: pixelsArr, saveStates: [])
             }
         }
         

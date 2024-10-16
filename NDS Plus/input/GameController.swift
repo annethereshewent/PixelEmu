@@ -7,19 +7,41 @@
 
 import Foundation
 import GameController
+import DSEmulatorMobile
 
+@Observable
 class GameController {
-    var controller = GCController()
+    let eventListenerClosure: (GCController?) -> Void
     
-    init() {
+    var controller: GCController? = GCController()
+    
+    init(closure: @escaping (GCController?) -> Void) {
+        eventListenerClosure = closure
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.handleControllerDidConnect),
             name: NSNotification.Name.GCControllerDidConnect, object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.handleControllerDidDisconnect),
+            name: NSNotification.Name.GCControllerDidDisconnect,
+            object: nil
+        )
+        
+        
         if let controller = GCController.controllers().first {
             self.controller = controller
+            self.controller?.physicalInputProfile.buttons[GCInputButtonHome]?.preferredSystemGestureState = GCControllerElement.SystemGestureState.disabled
+            
+            eventListenerClosure(controller)
         }
+        
+        
+    }
+    
+    @objc private func handleControllerDidDisconnect(_ notification: Notification) {
+        self.controller = nil
     }
     
     @objc private func handleControllerDidConnect(_ notification: Notification) {
@@ -28,5 +50,9 @@ class GameController {
         }
         
         self.controller = gameController
+        
+        eventListenerClosure(self.controller)
+        
+        controller?.physicalInputProfile.buttons[GCInputButtonHome]?.preferredSystemGestureState = GCControllerElement.SystemGestureState.disabled
     }
 }

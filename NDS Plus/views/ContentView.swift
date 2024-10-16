@@ -29,6 +29,9 @@ struct ContentView: View {
     
     @State private var user: GIDGoogleUser? = nil
     @State private var cloudService: CloudService? = nil
+    @State private var game: Game? = nil
+    
+    @State private var shouldUpdateGame = false
 
     init() {
         bios7Data = nil
@@ -47,12 +50,19 @@ struct ContentView: View {
             appropriateFor: nil,
             create: true
         ) {
-        
             switch currentFile {
             case .bios7:
                 if let fileUrl = URL(string: "bios7.bin", relativeTo: applicationUrl) {
                     if let data = try? Data(contentsOf: fileUrl) {
                         _bios7Data = State(initialValue: data)
+                    } else {
+                        let filePath = Bundle.main.path(forResource: "drastic_bios_arm7", ofType: "bin")!
+                        do {
+                            let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
+                            _bios7Data = State(initialValue: data)
+                        } catch {
+                            print(error)
+                        }
                     }
                 }
                 
@@ -60,6 +70,14 @@ struct ContentView: View {
                 if let fileUrl = URL(string: "bios9.bin", relativeTo: applicationUrl) {
                     if let data = try? Data(contentsOf: fileUrl) {
                         _bios9Data = State(initialValue: data)
+                    } else {
+                        let filePath = Bundle.main.path(forResource: "drastic_bios_arm9", ofType: "bin")!
+                        do {
+                            let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
+                            _bios9Data = State(initialValue: data)
+                        } catch {
+                            print(error)
+                        }
                     }
                 }
             case .firmware:
@@ -133,7 +151,8 @@ struct ContentView: View {
                     workItem: $workItem,
                     emulator: $emulator,
                     gameUrl: $gameUrl,
-                    path: $path
+                    path: $path,
+                    game: $game
                 )
                 HStack {
                     Button("Load Game", systemImage: "square.and.arrow.up.circle") {
@@ -145,8 +164,6 @@ struct ContentView: View {
                         
                         showRomDialog = true
                     }
-                    .foregroundColor(buttonColor)
-                    .disabled(buttonDisabled)
                     .font(.title)
                 }
             }
@@ -161,8 +178,9 @@ struct ContentView: View {
                         }
                         if let data = try? Data(contentsOf: url) {
                             romData = data
+                            shouldUpdateGame = true
                             
-                            if bios7Data != nil && bios9Data != nil && firmwareData != nil {
+                            if bios7Data != nil && bios9Data != nil {
                                 gameUrl = url
                                 path.append("GameView")
                             }
@@ -181,7 +199,9 @@ struct ContentView: View {
                         romData: $romData,
                         gameUrl: $gameUrl,
                         user: $user,
-                        cloudService: $cloudService
+                        cloudService: $cloudService,
+                        game: $game,
+                        shouldUpdateGame: $shouldUpdateGame
                     )
                 }
             }
