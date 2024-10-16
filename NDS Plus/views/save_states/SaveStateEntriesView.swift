@@ -59,6 +59,8 @@ struct SaveStateEntriesView: View {
                     try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
                 }
                 
+                let timestamp = Int(Date().timeIntervalSince1970)
+                
                 let gameFolder = gameName.replacing(".nds", with: "")
                 
                 location.appendPathComponent(gameFolder)
@@ -67,9 +69,7 @@ struct SaveStateEntriesView: View {
                     try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
                 }
                 
-                let numSaves = game.saveStates.count
-                
-                let saveName = "state_\(numSaves + 1).save"
+                let saveName = "state_\(timestamp).save"
                 
                 location.appendPathComponent(saveName)
                 
@@ -94,10 +94,24 @@ struct SaveStateEntriesView: View {
                     screenshot.append(contentsOf: Array(bottomBufferPtr))
                 }
                 
+                let date = Date()
+                let calendar = Calendar.current
+                
+                let hour = calendar.component(.hour, from: date)
+                let minutes = calendar.component(.minute, from: date)
+                let seconds = calendar.component(.second, from: date)
+                
+                let month = calendar.component(.month, from: date)
+                let day = calendar.component(.day, from: date)
+                let year = calendar.component(.year, from: date)
+                
+                let dateString = String(format: "%02d/%02d/%04d %02d:%02d:%02d", month, day, year, hour, minutes, seconds)
+                
                 let saveState = SaveState(
-                    saveName: "Save \(numSaves + 1)",
+                    saveName: "Save on \(dateString)",
                     screenshot: screenshot,
-                    bookmark: bookmark
+                    bookmark: bookmark,
+                    timestamp: timestamp
                 )
                 if let updateState = updateState, let index = game.saveStates.firstIndex(of: updateState) {
                     updateState.screenshot = saveState.screenshot
@@ -222,10 +236,6 @@ struct SaveStateEntriesView: View {
                 }
             }
             Spacer()
-        }
-        .onAppear() {
-            print(game)
-            print(game?.saveStates.count ?? 0)
         }
         .onChange(of: action) {
             switch action {
