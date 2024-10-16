@@ -12,6 +12,7 @@ import GameController
 
 struct GameView: View {
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.scenePhase) var scenePhase
     
     @State private var topImage: CGImage?
     @State private var bottomImage: CGImage?
@@ -26,6 +27,7 @@ struct GameView: View {
     @State private var isMenuPresented = false
     @State private var homePressed = false
     @State private var shouldGoHome = false
+    @State private var isPaused: Bool = false
     
     @Binding var emulator: MobileEmulator?
     @Binding var bios7Data: Data?
@@ -273,9 +275,9 @@ struct GameView: View {
                         
                             let audioBufferPtr = emu.audioBufferPtr()
                             
-                            let bufferPtr = UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength))
+                            let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
                             
-                            self.audioManager?.updateBuffer(bufferPtr: bufferPtr)
+                            self.audioManager?.updateBuffer(samples: audioSamples)
                             
                             self.checkSaves()
                         }
@@ -358,6 +360,28 @@ struct GameView: View {
         .onChange(of: shouldGoHome) {
             if shouldGoHome {
                 goHome()
+            }
+        }
+        .onChange(of: scenePhase) {
+            switch scenePhase {
+            case .active:
+                if isPaused {
+                    if let emu = emulator {
+                        isPaused = false
+                        emu.setPause(false)
+                        audioManager?.resumeAudio()
+                    }
+                }
+                break
+            case .inactive:
+                break
+            case .background:
+                if let emu = emulator {
+                    isPaused = true
+                    emu.setPause(true)
+                    audioManager?.muteAudio()
+                }
+                break
             }
         }
         .navigationBarTitle("")

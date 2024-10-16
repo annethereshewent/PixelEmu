@@ -27,6 +27,8 @@ class AudioManager {
     
     private var converter: AVAudioConverter!
     
+    var playerPaused: Bool = false
+    
     var bufferPtr: UnsafeBufferPointer<Float>? = nil
     
     var isRunning = true
@@ -101,10 +103,8 @@ class AudioManager {
         return bufferPtr
     }
     
-    func updateBuffer(bufferPtr: UnsafeBufferPointer<Float>) {
+    func updateBuffer(samples: [Float]) {
         if audioNode.isPlaying {
-            let samples = Array(bufferPtr)
-            
             nslock.lock()
             buffer.append(contentsOf: samples)
             nslock.unlock()
@@ -113,8 +113,22 @@ class AudioManager {
     
     func toggleAudio() {
         if audioNode.isPlaying {
+            playerPaused = true
             audioNode.pause()
         } else {
+            playerPaused = false
+            audioNode.play()
+        }
+    }
+    
+    func muteAudio() {
+        if audioNode.isPlaying && !playerPaused {
+            audioNode.pause()
+        }
+    }
+    
+    func resumeAudio() {
+        if !audioNode.isPlaying && !playerPaused {
             audioNode.play()
         }
     }
