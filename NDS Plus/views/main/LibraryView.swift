@@ -31,6 +31,7 @@ struct LibraryView: View {
                 Text("All")
                 Spacer()
             }
+            .padding(.top, 10)
             GamesListView(
                 romData: $romData,
                 bios7Data: $bios7Data,

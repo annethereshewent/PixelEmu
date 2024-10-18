@@ -18,7 +18,6 @@ struct ImportGamesView: View {
     @Binding var path: NavigationPath
     @Binding var gameUrl: URL?
     
-    
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
     var body: some View {
         VStack {
@@ -26,10 +25,11 @@ struct ImportGamesView: View {
             HStack {
                 Image("Import Cartridge")
                 Text("Only \".nds\" files allowed")
-                    .frame(width: 200, height: 200)
+                    .frame(width: 200, height: 60)
                     .fixedSize(horizontal: false, vertical: true)
                     .font(.custom("Departure Mono", size: 20))
             }
+            Spacer()
             Spacer()
             HStack {
                 Button {
@@ -48,6 +48,8 @@ struct ImportGamesView: View {
                 }
             }
             Spacer()
+            Spacer()
+            
         }
         .font(.custom("Departure Mono", size: 24))
         .foregroundColor(Color(
@@ -76,6 +78,5 @@ struct ImportGamesView: View {
                 }
             }
         }
-
     }
 }
