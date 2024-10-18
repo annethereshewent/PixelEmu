@@ -27,37 +27,39 @@ struct GamesListView: View {
     
     var body: some View {
         if games.count > 0 {
-            LazyVGrid(columns: columns) {
-                ForEach(games) { game in
-                    GameEntryView(game: game) {
-                        // refresh the url's bookmark
-                        var isStale = false
-                        if let url = try? URL(
-                            resolvingBookmarkData: game.bookmark,
-                            options: [.withoutUI],
-                            relativeTo: nil,
-                            bookmarkDataIsStale: &isStale
-                        ) {
-                            if url.startAccessingSecurityScopedResource() {
-                                gameUrl = url
-                                defer {
-                                    url.stopAccessingSecurityScopedResource()
-                                }
-                                if let data = try? Data(contentsOf: url) {
-                                    romData = data
-                                    
-                                    if bios7Data != nil &&
-                                        bios9Data != nil
-                                    {
-                                        emulator = nil
-                                        workItem?.cancel()
-                                        isRunning = false
+            ScrollView {
+                LazyVGrid(columns: columns) {
+                    ForEach(games) { game in
+                        GameEntryView(game: game) {
+                            // refresh the url's bookmark
+                            var isStale = false
+                            if let url = try? URL(
+                                resolvingBookmarkData: game.bookmark,
+                                options: [.withoutUI],
+                                relativeTo: nil,
+                                bookmarkDataIsStale: &isStale
+                            ) {
+                                if url.startAccessingSecurityScopedResource() {
+                                    gameUrl = url
+                                    defer {
+                                        url.stopAccessingSecurityScopedResource()
+                                    }
+                                    if let data = try? Data(contentsOf: url) {
+                                        romData = data
                                         
-                                        workItem = nil
-                                        
-                                        self.game = game
-                                        
-                                        path.append("GameView")
+                                        if bios7Data != nil &&
+                                            bios9Data != nil
+                                        {
+                                            emulator = nil
+                                            workItem?.cancel()
+                                            isRunning = false
+                                            
+                                            workItem = nil
+                                            
+                                            self.game = game
+                                            
+                                            path.append("GameView")
+                                        }
                                     }
                                 }
                             }
