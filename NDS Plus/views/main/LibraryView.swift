@@ -43,7 +43,6 @@ struct LibraryView: View {
                 path: $path,
                 game: $game
             )
-            Spacer()
         }
         .font(.custom("Departure Mono", size: 24.0))
         .foregroundColor(Color(red: 0x88 / 0xff, green: 0x88 / 0xff, blue: 0x88 / 0xff))

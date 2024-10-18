@@ -130,7 +130,14 @@ struct ContentView: View {
                             game: $game
                         )
                     case .importGames:
-                        ImportGamesView()
+                        ImportGamesView(
+                            romData: $romData,
+                            shouldUpdateGame: $shouldUpdateGame,
+                            bios7Data: $bios7Data,
+                            bios9Data: $bios9Data,
+                            path: $path,
+                            gameUrl: $gameUrl
+                        )
                     case .saveManagement:
                         SaveManagementView(
                             user: $user,
@@ -146,7 +153,24 @@ struct ContentView: View {
                             cloudService: $cloudService
                         )
                     }
+                    Spacer()
                     NavigationBarView(currentView: $currentView)
+                }
+            }
+            .navigationDestination(for: String.self) { view in
+                if view == "GameView" {
+                    GameView(
+                        emulator: $emulator,
+                        bios7Data: $bios7Data,
+                        bios9Data: $bios9Data,
+                        firmwareData: $firmwareData,
+                        romData: $romData,
+                        gameUrl: $gameUrl,
+                        user: $user,
+                        cloudService: $cloudService,
+                        game: $game,
+                        shouldUpdateGame: $shouldUpdateGame
+                    )
                 }
             }
         }
