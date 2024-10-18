@@ -32,6 +32,7 @@ struct ContentView: View {
     @State private var game: Game? = nil
     
     @State private var shouldUpdateGame = false
+    @State private var currentView: CurrentView = .library
 
     init() {
         bios7Data = nil
@@ -110,20 +111,32 @@ struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
         NavigationStack(path: $path) {
-            VStack {
-                HStack {
-                    Spacer()
-                    Button("", systemImage: "gear") {
-                        showSettings.toggle()
-                    }
-                    .font(.title)
-                    .frame(alignment: .trailing)
-                    .foregroundColor(.indigo)
-                    .padding(.trailing)
-                    
-                }
-                .sheet(isPresented: $showSettings) {
-                    VStack {
+            ZStack {
+                Color(red: 0x22/0xff, green: 0x22/0xff, blue: 0x22/0xff)
+                    .ignoresSafeArea()
+                VStack {
+                    switch currentView {
+                    case .library:
+                        LibraryView(
+                            romData: $romData,
+                            bios7Data: $bios7Data,
+                            bios9Data: $bios9Data,
+                            firmwareData: $firmwareData,
+                            isRunning: $isRunning,
+                            workItem: $workItem,
+                            emulator: $emulator,
+                            gameUrl: $gameUrl,
+                            path: $path,
+                            game: $game
+                        )
+                    case .importGames:
+                        ImportGamesView()
+                    case .saveManagement:
+                        SaveManagementView(
+                            user: $user,
+                            cloudService: $cloudService
+                        )
+                    case .settings:
                         SettingsView(
                             bios7Data: $bios7Data,
                             bios9Data: $bios9Data,
@@ -133,95 +146,7 @@ struct ContentView: View {
                             cloudService: $cloudService
                         )
                     }
-                    .background(colorScheme == .dark ? Color.black : Color.white)
-                }
-                HStack {
-                    Text("NDS Plus")
-                        .font(.largeTitle)
-                        .foregroundColor(colorScheme == .dark ? .white : .black)
-                        .frame(alignment: .center)
-                }
-                Spacer()
-                GamesListView(
-                    romData: $romData,
-                    bios7Data: $bios7Data,
-                    bios9Data: $bios9Data,
-                    firmwareData: $firmwareData,
-                    isRunning: $isRunning,
-                    workItem: $workItem,
-                    emulator: $emulator,
-                    gameUrl: $gameUrl,
-                    path: $path,
-                    game: $game
-                )
-                HStack {
-                    Button("Load Game", systemImage: "square.and.arrow.up.circle") {
-                        emulator = nil
-                        workItem?.cancel()
-                        isRunning = false
-                        
-                        workItem = nil
-                        
-                        showRomDialog = true
-                    }
-                    .font(.title)
-                }
-            }
-            .fileImporter(
-                isPresented: $showRomDialog,
-                allowedContentTypes: [ndsType.unsafelyUnwrapped]
-            ) { result in
-                if let url = try? result.get() {
-                    if url.startAccessingSecurityScopedResource() {
-                        defer {
-                            url.stopAccessingSecurityScopedResource()
-                        }
-                        if let data = try? Data(contentsOf: url) {
-                            romData = data
-                            shouldUpdateGame = true
-                            
-                            if bios7Data != nil && bios9Data != nil {
-                                gameUrl = url
-                                path.append("GameView")
-                            }
-                        }
-                    }
-                }
-            }
-            .background(colorScheme == .dark ? Color.black : Color.white )
-            .navigationDestination(for: String.self) { view in
-                if view == "GameView" {
-                    GameView(
-                        emulator: $emulator,
-                        bios7Data: $bios7Data,
-                        bios9Data: $bios9Data,
-                        firmwareData: $firmwareData,
-                        romData: $romData,
-                        gameUrl: $gameUrl,
-                        user: $user,
-                        cloudService: $cloudService,
-                        game: $game,
-                        shouldUpdateGame: $shouldUpdateGame
-                    )
-                }
-            }
-        }
-        .onOpenURL { url in
-            GIDSignIn.sharedInstance.handle(url)
-        }
-        .onAppear {
-            GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
-                if let signedInUser = user {
-                    self.user = signedInUser
-                    
-                    self.user?.refreshTokensIfNeeded { user, error in
-                        guard error == nil else { return }
-                        guard let user = user else { return }
-                        
-                        self.user = user
-                        
-                        self.cloudService = CloudService(user: self.user!)
-                    }
+                    NavigationBarView(currentView: $currentView)
                 }
             }
         }

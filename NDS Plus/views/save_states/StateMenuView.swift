@@ -31,6 +31,8 @@ struct StateMenuView: View {
             return Color.white
         case .light:
             return Color.black
+        @unknown default:
+            return Color.white
         }
     }
     
