@@ -38,6 +38,7 @@ struct ContentView: View {
     @State private var shouldUpdateGame = false
     @State private var currentView: CurrentView = .library
     @State private var isSoundOn: Bool = false
+    @State private var themeColor: Color = Colors.accentColor
 
     init() {
         bios7Data = nil
@@ -160,7 +161,8 @@ struct ContentView: View {
                             cloudService: $cloudService,
                             isSoundOn: $isSoundOn,
                             bios7Loaded: $bios7Loaded,
-                            bios9Loaded: $bios9Loaded
+                            bios9Loaded: $bios9Loaded,
+                            themeColor: $themeColor
                         )
                     }
                     Spacer()
@@ -180,7 +182,8 @@ struct ContentView: View {
                         cloudService: $cloudService,
                         game: $game,
                         shouldUpdateGame: $shouldUpdateGame,
-                        isSoundOn: $isSoundOn
+                        isSoundOn: $isSoundOn,
+                        themeColor: $themeColor
                     )
                 }
             }
@@ -192,6 +195,10 @@ struct ContentView: View {
             let defaults = UserDefaults.standard
             
             isSoundOn = defaults.bool(forKey: "isSoundOn")
+            
+            if let themeColor = defaults.value(forKey: "themeColor") as? Color {
+                self.themeColor = themeColor
+            }
             
             GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
                 if let signedInUser = user {

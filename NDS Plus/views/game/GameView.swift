@@ -40,6 +40,7 @@ struct GameView: View {
     @Binding var game: Game?
     @Binding var shouldUpdateGame: Bool
     @Binding var isSoundOn: Bool
+    @Binding var themeColor: Color
     
     @Environment(\.modelContext) private var context
     
@@ -301,7 +302,7 @@ struct GameView: View {
     var body: some View {
         ZStack {
             if gameController?.controller?.extendedGamepad == nil {
-                Color.cyan
+                themeColor
             } else {
                 Color.black
             }

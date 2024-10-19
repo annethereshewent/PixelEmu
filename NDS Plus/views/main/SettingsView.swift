@@ -24,8 +24,11 @@ struct SettingsView: View {
     @Binding var bios7Loaded: Bool
     @Binding var bios9Loaded: Bool
     
-    @State var isActive = true
+    @Binding var themeColor: Color
     
+    
+    @State var isActive = true
+    @State private var showColorPickerModal = false
     @State private var showFileBrowser = false
     @State private var path = NavigationPath()
     @State private var currentFile: CurrentFile? = nil
@@ -97,6 +100,11 @@ struct SettingsView: View {
                                 .foregroundColor(.green)
                         }
                     }
+      
+                    ColorPicker("Skin Theme Color", selection: $themeColor)
+                    
+                    .padding(.top, 20)
+                    .foregroundColor(Colors.accentColor)
                     
                     Toggle(isOn: $isSoundOn) {
                         Text("Start game with sound")
@@ -104,6 +112,14 @@ struct SettingsView: View {
                     .toggleStyle(.switch)
                     .padding(.top, 20)
                     
+                    Button {
+                        if let url = URL(string: "https://www.github.com/annethereshewent") {
+                            UIApplication.shared.open(url)
+                        }
+                    } label: {
+                        Image("Github")
+                            .padding(.top, 60)
+                    }
                 }
                 .frame(width: 400, height: 600)
                 Spacer()
@@ -147,12 +163,17 @@ struct SettingsView: View {
                 if bios7Data != nil && bios9Data != nil && firmwareData != nil {
                     dismiss()
                 }
-                
             }
             .onChange(of: isSoundOn) {
                 let defaults = UserDefaults.standard
                 
                 defaults.setValue(isSoundOn, forKey: "isSoundOn")
+            }
+            .onChange(of: themeColor) {
+                let defaults = UserDefaults.standard
+                
+                
+                defaults.setValue(themeColor, forKey: "themeColor")
             }
         }
     }
