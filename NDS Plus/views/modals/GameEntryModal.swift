@@ -84,6 +84,9 @@ struct GameEntryModal: View {
                         data: data
                     )
                     showUploadAlert = true
+                    
+                    loading = false
+                    entry = nil
                 }
             }
         } catch {
