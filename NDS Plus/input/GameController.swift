@@ -49,8 +49,6 @@ class GameController {
         
         self.controller = gameController
         
-        print("Controller connected")
-        
         eventListenerClosure(self.controller)
         
         controller?.physicalInputProfile.buttons[GCInputButtonHome]?.preferredSystemGestureState = GCControllerElement.SystemGestureState.disabled

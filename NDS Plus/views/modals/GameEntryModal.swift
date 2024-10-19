@@ -14,15 +14,15 @@ struct GameEntryModal: View {
     @Binding var cloudSaves: [SaveEntry]
     @Binding var cloudService: CloudService?
     @Binding var loading: Bool
-    @Binding var showDeleteDialog: Bool
     @Binding var showDownloadAlert: Bool
     @Binding var showUploadAlert: Bool
     @Binding var showErrorAlert: Bool
     @Binding var showDeleteAlert: Bool
+    @Binding var showDeleteDialog: Bool
+    @Binding var deleteAction: () -> Void
+    let isCloudSave: Bool
     
     @State private var isPresented = false
-    
-    let isCloudSave: Bool
     
     private let savType = UTType(filenameExtension: "sav", conformingTo: .data)
     
@@ -95,39 +95,41 @@ struct GameEntryModal: View {
     }
     
     private func deleteSave() {
-        if !isCloudSave {
-            if BackupFile.deleteSave(saveName: entry!.game.gameName.replacing(".nds", with: ".sav")) {
-                showDeleteAlert = true
-                if let index = localSaves.firstIndex(of: entry!) {
-                    localSaves.remove(at: index)
-                }
-            }
-            print("deleted the local save!")
-            showDeleteDialog = false
-            entry = nil
+        
+        if let entry = entry {
+            let entryCopy = entry.copy()
             showDeleteDialog = true
-        } else {
-            let saveName = entry!.game.gameName.replacing(".nds", with: ".sav")
-            
-            loading = true
-            Task {
-                let success = await cloudService?.deleteSave(saveName: saveName) ?? false
-                
-                loading = false
-                if success {
-                    if let index = cloudSaves.firstIndex(of: entry!) {
-                        cloudSaves.remove(at: index)
+            if !isCloudSave {
+                deleteAction = {
+                    if BackupFile.deleteSave(saveName: entryCopy.game.gameName.replacing(".nds", with: ".sav")) {
+                        showDeleteAlert = true
+                        if let index = localSaves.firstIndex(of: entryCopy) {
+                            localSaves.remove(at: index)
+                        }
                     }
-                
-                    showDeleteAlert = true
                 }
-                showDeleteDialog = false
-                
-                print("deleted the cloud save!")
-                showDeleteDialog = true
-                entry = nil
+            } else {
+                deleteAction = {
+                    let saveName = entryCopy.game.gameName.replacing(".nds", with: ".sav")
+                    
+                    loading = true
+                    Task {
+                        let success = await cloudService?.deleteSave(saveName: saveName) ?? false
+                        
+                        loading = false
+                        if success {
+                            if let index = cloudSaves.firstIndex(of: entryCopy) {
+                                cloudSaves.remove(at: index)
+                            }
+                            
+                            showDeleteAlert = true
+                        }
+                    }
+                }
             }
         }
+
+        entry = nil
     }
     
     var body: some View {

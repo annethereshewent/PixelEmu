@@ -56,8 +56,7 @@ struct GamesListView: View {
                                             workItem = nil
                                             
                                             self.game = game
-                                            
-                                            print("(inside GamesListView) switching to GameView")
+                                
                                             path.append("GameView")
                                         }
                                     }

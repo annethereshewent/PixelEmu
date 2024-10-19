@@ -352,7 +352,6 @@ struct GameView: View {
             )
         }
         .onAppear {
-            print(gameController?.controller?.extendedGamepad == nil)
             UIApplication.shared.isIdleTimerDisabled = true
             Task {
                 await self.run()

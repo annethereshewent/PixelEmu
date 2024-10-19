@@ -19,4 +19,8 @@ class SaveEntry: Equatable {
     init(game: Game) {
         self.game = game
     }
+    
+    func copy() -> SaveEntry {
+        return SaveEntry(game: game)
+    }
 }

@@ -25,6 +25,7 @@ struct SaveManagementView: View {
     @State private var showDeleteAlert = false
     @State private var showUploadAlert = false
     @State private var showErrorAlert = false
+    @State private var deleteAction: () -> Void = {}
     
     @Query private var games: [Game]
     
@@ -146,11 +147,12 @@ struct SaveManagementView: View {
                     cloudSaves: $saveEntries,
                     cloudService: $cloudService,
                     loading: $loading,
-                    showDeleteDialog: $showDeleteDialog,
                     showDownloadAlert: $showDownloadAlert,
                     showUploadAlert: $showUploadAlert,
                     showErrorAlert: $showErrorAlert,
                     showDeleteAlert: $showDeleteAlert,
+                    showDeleteDialog: $showDeleteDialog,
+                    deleteAction: $deleteAction,
                     isCloudSave: true
                 )
             } else if localEntry != nil {
@@ -160,11 +162,12 @@ struct SaveManagementView: View {
                     cloudSaves: $saveEntries,
                     cloudService: $cloudService,
                     loading: $loading,
-                    showDeleteDialog: $showDeleteDialog,
                     showDownloadAlert: $showDownloadAlert,
                     showUploadAlert: $showUploadAlert,
                     showErrorAlert: $showErrorAlert,
                     showDeleteAlert: $showDeleteAlert,
+                    showDeleteDialog: $showDeleteDialog,
+                    deleteAction: $deleteAction,
                     isCloudSave: false
                 )
             } else if showDownloadAlert {
@@ -175,6 +178,11 @@ struct SaveManagementView: View {
                 AlertModal(text: "Successfully deleted save.", showAlert: $showDeleteAlert)
             } else if showErrorAlert {
                 ErrorAlertModal(showAlert: $showErrorAlert)
+            } else if showDeleteDialog {
+                DeleteDialog(
+                    showDialog: $showDeleteDialog,
+                    deleteAction: $deleteAction
+                )
             }
         }
     }
