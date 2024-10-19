@@ -336,7 +336,7 @@ struct GameView: View {
         .sheet(
             isPresented: $isMenuPresented
         ) {
-            StateMenuView(
+            GameMenuView(
                 emulator: $emulator,
                 isRunning: $isRunning,
                 workItem: $workItem,
@@ -352,7 +352,7 @@ struct GameView: View {
             )
         }
         .onAppear {
-            print("i just appeared!")
+            print(gameController?.controller?.extendedGamepad == nil)
             UIApplication.shared.isIdleTimerDisabled = true
             Task {
                 await self.run()
