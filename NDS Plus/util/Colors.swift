@@ -20,4 +20,11 @@ struct Colors {
         green: 0x88 / 0xff,
         blue: 0x88 / 0xff
     )
+    
+    static let backgroundColor = Color(
+        red: 0x38 / 0xff,
+        green: 0x38 / 0xff,
+        blue: 0x38 / 0xff
+    )
 }
+

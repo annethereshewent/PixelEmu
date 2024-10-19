@@ -53,6 +53,8 @@
 		E8EE5D932CC238F500CD77B6 /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */; };
 		E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */; };
 		E8EE5D972CC3491A00CD77B6 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D962CC3491A00CD77B6 /* Colors.swift */; };
+		E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */; };
+		E8EE5DA02CC35FB200CD77B6 /* ErrorAlertModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +130,8 @@
 		E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
 		E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryModal.swift; sourceTree = "<group>"; };
 		E8EE5D962CC3491A00CD77B6 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModal.swift; sourceTree = "<group>"; };
+		E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorAlertModal.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
+				E8EE5D982CC35F6C00CD77B6 /* modals */,
 				E8C245F92CBE068700B6DF67 /* save_states */,
 				E8C245F22CBCC55500B6DF67 /* main */,
 				E8C245F12CBCC54F00B6DF67 /* game */,
@@ -323,7 +328,6 @@
 				E8EE5D872CC2221600CD77B6 /* LibraryView.swift */,
 				E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */,
 				E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */,
-				E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -346,6 +350,16 @@
 				E8EE5D8E2CC224F700CD77B6 /* DepartureMono.woff2 */,
 			);
 			path = fonts;
+			sourceTree = "<group>";
+		};
+		E8EE5D982CC35F6C00CD77B6 /* modals */ = {
+			isa = PBXGroup;
+			children = (
+				E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */,
+				E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */,
+				E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */,
+			);
+			path = modals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -620,6 +634,7 @@
 				E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */,
 				E8EE5D8A2CC2227600CD77B6 /* ImportGamesView.swift in Sources */,
 				E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */,
+				E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */,
 				E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
 				E8C245EF2CBCC36F00B6DF67 /* DualScreenView.swift in Sources */,
@@ -628,6 +643,7 @@
 				E8EE5D972CC3491A00CD77B6 /* Colors.swift in Sources */,
 				E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
+				E8EE5DA02CC35FB200CD77B6 /* ErrorAlertModal.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
 				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
 				E8C245F62CBDBA4500B6DF67 /* StateMenuView.swift in Sources */,

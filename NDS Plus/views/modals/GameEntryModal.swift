@@ -39,10 +39,10 @@ struct GameEntryModal: View {
                     localSaves.append(saveEntry)
                 }
                 showDownloadAlert = true
-                entry = nil
             } else {
                 showErrorAlert = true
             }
+            entry = nil
             loading = false
         }
     }
@@ -54,18 +54,16 @@ struct GameEntryModal: View {
             if let entry = entry {
                 let saveName = entry.game.gameName.replacing(".nds", with: ".sav")
                 if let saveData = BackupFile.getSave(saveName: saveName) {
-                    Task {
-                        await self.cloudService?.uploadSave(saveName: saveName, data: saveData)
-                        loading = false
-                        if cloudSaves.firstIndex(of: entry) == nil {
-                            cloudSaves.insert(SaveEntry(game: entry.game), at: 0)
-                        }
-                        
-                        showUploadAlert = true
-                        
+                    await self.cloudService?.uploadSave(saveName: saveName, data: saveData)
+                    loading = false
+                    if cloudSaves.firstIndex(of: entry) == nil {
+                        cloudSaves.insert(SaveEntry(game: entry.game), at: 0)
                     }
+                    
+                    showUploadAlert = true
                 }
             }
+            entry = nil
         }
     }
     
@@ -121,10 +119,11 @@ struct GameEntryModal: View {
                     showDeleteAlert = true
                 }
                 showDeleteDialog = false
+                
+                print("deleted the cloud save!")
+                showDeleteDialog = true
+                entry = nil
             }
-            print("deleted the cloud save!")
-            showDeleteDialog = true
-            entry = nil
         }
     }
     
@@ -181,11 +180,7 @@ struct GameEntryModal: View {
             .padding()
                 
         }
-        .background(Color(
-            red: 0x38 / 0xff,
-            green: 0x38 / 0xff,
-            blue: 0x38 / 0xff
-        ))
+        .background(Colors.backgroundColor)
         .font(.custom("Departure Mono", size: 20))
         .border(.gray)
         .opacity(0.80)

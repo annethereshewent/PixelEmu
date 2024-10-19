@@ -20,14 +20,11 @@ struct SaveManagementView: View {
     @State private var localEntry: SaveEntry? = nil
     @State private var isPresented = false
     @State private var showDeleteDialog = false
-    // remove this maybe
-    @State private var showLocalDelete = false
     @State private var loading = false
     @State private var showDownloadAlert = false
     @State private var showDeleteAlert = false
     @State private var showUploadAlert = false
     @State private var showErrorAlert = false
-    @State private var deleteAction: () -> Void = {}
     
     @Query private var games: [Game]
     
@@ -78,22 +75,24 @@ struct SaveManagementView: View {
                 }
                 
                 ScrollView {
-                    Text("Cloud Saves")
-                        .foregroundColor(Colors.primaryColor)
-                    LazyVGrid(columns: columns) {
-                        ForEach(saveEntries, id: \.game.gameName) { saveEntry in
-                            GameEntryView(game: saveEntry.game) {
-                                if cloudEntry == saveEntry {
-                                    cloudEntry = nil
-
-                                } else {
-                                    cloudEntry = saveEntry
-                                }
-                            }
+                    if saveEntries.count > 0 {
+                        Text("Cloud saves")
                             .foregroundColor(Colors.primaryColor)
+                        LazyVGrid(columns: columns) {
+                            ForEach(saveEntries, id: \.game.gameName) { saveEntry in
+                                GameEntryView(game: saveEntry.game) {
+                                    if cloudEntry == saveEntry {
+                                        cloudEntry = nil
+                                        
+                                    } else {
+                                        cloudEntry = saveEntry
+                                    }
+                                }
+                                .foregroundColor(Colors.primaryColor)
+                            }
+                            .presentationCompactAdaptation(.popover)
+                            .padding(.leading, 20)
                         }
-                        .presentationCompactAdaptation(.popover)
-                        .padding(.leading, 20)
                     }
                     Text("Local saves")
                         .foregroundColor(Colors.primaryColor)
@@ -129,6 +128,15 @@ struct SaveManagementView: View {
                 localSaves = BackupFile.getLocalSaves(games: games)
             }
             .font(.custom("Departure Mono", size: 20))
+            .onTapGesture {
+                cloudEntry = nil
+                localEntry = nil
+                
+                showDownloadAlert = false
+                showUploadAlert = false
+                showErrorAlert = false
+                showDeleteAlert = false
+            }
             if cloudEntry != nil {
                 GameEntryModal(
                     entry: $cloudEntry,
@@ -157,6 +165,14 @@ struct SaveManagementView: View {
                     showDeleteAlert: $showDeleteAlert,
                     isCloudSave: false
                 )
+            } else if showDownloadAlert {
+                AlertModal(text: "Successfully downloaded game.", showAlert: $showDownloadAlert)
+            } else if showUploadAlert {
+                AlertModal(text: "Successfully uploaded game.", showAlert: $showUploadAlert)
+            } else if showDeleteAlert {
+                AlertModal(text: "Successfully deleted game.", showAlert: $showDeleteAlert)
+            } else if showErrorAlert {
+                ErrorAlertModal(showAlert: $showErrorAlert)
             }
         }
     }
