@@ -134,7 +134,7 @@ class AudioManager {
     }
     
     private func playAudio() {
-        if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.audioFormat!, frameCapacity: AVAudioFrameCount(8192*2)) {
+        if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.audioFormat!, frameCapacity: AVAudioFrameCount(8192)) {
             // we just need one inputBuffer
             if let floatBuffer = outputBuffer.floatChannelData {
                 var left = [Float]()
@@ -172,7 +172,7 @@ class AudioManager {
                 memcpy(floatBuffer[0], leftPtr!, left.count * 4)
                 memcpy(floatBuffer[1], rightPtr!, right.count * 4)
                 
-                let frameLength = AVAudioFrameCount(8192)
+                let frameLength = AVAudioFrameCount(4096)
                 outputBuffer.frameLength = frameLength
             }
                         

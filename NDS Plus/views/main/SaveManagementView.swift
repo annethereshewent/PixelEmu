@@ -94,18 +94,20 @@ struct SaveManagementView: View {
                             .padding(.leading, 20)
                         }
                     }
-                    Text("Local saves")
-                        .foregroundColor(Colors.primaryColor)
-                    LazyVGrid(columns: columns) {
-                        ForEach(localSaves, id: \.game.gameName) { saveEntry in
-                            GameEntryView(game: saveEntry.game) {
-                                if localEntry == saveEntry {
-                                    localEntry = nil
-                                } else {
-                                    localEntry = saveEntry
-                                }
-                            }
+                    if localSaves.count > 0 {
+                        Text("Local saves")
                             .foregroundColor(Colors.primaryColor)
+                        LazyVGrid(columns: columns) {
+                            ForEach(localSaves, id: \.game.gameName) { saveEntry in
+                                GameEntryView(game: saveEntry.game) {
+                                    if localEntry == saveEntry {
+                                        localEntry = nil
+                                    } else {
+                                        localEntry = saveEntry
+                                    }
+                                }
+                                .foregroundColor(Colors.primaryColor)
+                            }
                         }
                     }
                     if loading {
