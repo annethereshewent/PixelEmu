@@ -101,7 +101,7 @@ struct SettingsView: View {
                         }
                     }
       
-                    ColorPicker("Skin Theme Color", selection: $themeColor)
+                    ColorPicker("Skin theme color", selection: $themeColor)
                     
                     .padding(.top, 20)
                     .foregroundColor(Colors.accentColor)
@@ -168,12 +168,6 @@ struct SettingsView: View {
                 let defaults = UserDefaults.standard
                 
                 defaults.setValue(isSoundOn, forKey: "isSoundOn")
-            }
-            .onChange(of: themeColor) {
-                let defaults = UserDefaults.standard
-                
-                
-                defaults.setValue(themeColor, forKey: "themeColor")
             }
         }
     }

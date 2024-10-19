@@ -55,6 +55,7 @@
 		E8EE5D972CC3491A00CD77B6 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D962CC3491A00CD77B6 /* Colors.swift */; };
 		E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */; };
 		E8EE5DA02CC35FB200CD77B6 /* ErrorAlertModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */; };
+		E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +133,7 @@
 		E8EE5D962CC3491A00CD77B6 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModal.swift; sourceTree = "<group>"; };
 		E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorAlertModal.swift; sourceTree = "<group>"; };
+		E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +256,7 @@
 				E806EA7B2CA115FA0081D3E8 /* CloudService.swift */,
 				E896C28C2CA67FFA008161AA /* AudioManager.swift */,
 				E8EE5D962CC3491A00CD77B6 /* Colors.swift */,
+				E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -633,6 +636,7 @@
 				E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */,
 				E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */,
 				E8EE5D8A2CC2227600CD77B6 /* ImportGamesView.swift in Sources */,
+				E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */,
 				E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */,
 				E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */,
 				E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */,

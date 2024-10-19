@@ -38,7 +38,7 @@ struct ContentView: View {
     @State private var shouldUpdateGame = false
     @State private var currentView: CurrentView = .library
     @State private var isSoundOn: Bool = false
-    @State private var themeColor: Color = Colors.accentColor
+    @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
     init() {
         bios7Data = nil
