@@ -18,6 +18,7 @@ class Game {
     let gameName: String
     let bookmark: Data
     let gameIcon: [UInt8]
+    @Relationship(deleteRule: .cascade, inverse: \SaveState.game)
     var saveStates: [SaveState]
     let addedOn: Date
     
