@@ -314,7 +314,8 @@ struct GameView: View {
                     bottomImage: $bottomImage,
                     emulator: $emulator,
                     buttonStarted: $buttonStarted,
-                    audioManager: $audioManager
+                    audioManager: $audioManager,
+                    isSoundOn: $isSoundOn
                 )
                 if gameController?.controller?.extendedGamepad == nil {
                     TouchControlsView(

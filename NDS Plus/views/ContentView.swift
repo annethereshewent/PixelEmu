@@ -194,7 +194,9 @@ struct ContentView: View {
         .onAppear {
             let defaults = UserDefaults.standard
             
-            isSoundOn = defaults.bool(forKey: "isSoundOn")
+            if let isSoundOn = defaults.object(forKey: "isSoundOn") as? Bool {
+                self.isSoundOn = isSoundOn
+            }
             
             bios7Loaded = defaults.bool(forKey: "bios7Loaded")
             bios9Loaded = defaults.bool(forKey: "bios9Loaded")
