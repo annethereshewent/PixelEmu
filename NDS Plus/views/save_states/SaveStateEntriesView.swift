@@ -252,5 +252,7 @@ struct SaveStateEntriesView: View {
                 break
             }
         }
+        .font(.custom("Departure Mono", size: 20))
+        .foregroundColor(Colors.primaryColor)
     }
 }

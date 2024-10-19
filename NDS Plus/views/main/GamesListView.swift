@@ -57,6 +57,7 @@ struct GamesListView: View {
                                             
                                             self.game = game
                                             
+                                            print("(inside GamesListView) switching to GameView")
                                             path.append("GameView")
                                         }
                                     }

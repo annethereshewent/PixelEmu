@@ -352,6 +352,7 @@ struct GameView: View {
             )
         }
         .onAppear {
+            print("i just appeared!")
             UIApplication.shared.isIdleTimerDisabled = true
             Task {
                 await self.run()

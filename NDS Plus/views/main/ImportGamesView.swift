@@ -62,6 +62,8 @@ struct ImportGamesView: View {
                         
                         if bios7Data != nil && bios9Data != nil {
                             gameUrl = url
+                            
+                            print("(inside ImportGamesView) switching to GameView")
                             path.append("GameView")
                         }
                     }
