@@ -30,7 +30,6 @@ struct SettingsView: View {
     @State var isActive = true
     @State private var showColorPickerModal = false
     @State private var showFileBrowser = false
-    @State private var path = NavigationPath()
     @State private var currentFile: CurrentFile? = nil
     
     let binType = UTType(filenameExtension: "bin", conformingTo: .data)
