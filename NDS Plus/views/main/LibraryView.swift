@@ -52,7 +52,7 @@ struct LibraryView: View {
     var body: some View {
        
         VStack {
-            Text("Game Library")
+            Text("Game library")
                 .fontWeight(.bold)
             HStack {
                 Spacer()
@@ -104,6 +104,6 @@ struct LibraryView: View {
             )
         }
         .font(.custom("Departure Mono", size: 24.0))
-        .foregroundColor(Color(red: 0x88 / 0xff, green: 0x88 / 0xff, blue: 0x88 / 0xff))
+        .foregroundColor(Colors.primaryColor)
     }
 }

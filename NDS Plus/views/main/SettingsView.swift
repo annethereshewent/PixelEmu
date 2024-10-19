@@ -19,6 +19,10 @@ struct SettingsView: View {
     @Binding var loggedInCloud: Bool
     @Binding var user: GIDGoogleUser?
     @Binding var cloudService: CloudService?
+    @Binding var isSoundOn: Bool
+    
+    @Binding var bios7Loaded: Bool
+    @Binding var bios9Loaded: Bool
     
     @State var isActive = true
     
@@ -50,64 +54,62 @@ struct SettingsView: View {
         NavigationStack(path: $path) {
             VStack {
                 HStack {
-                    Text("Settings")
-                        .font(.title)
+                    Text("NDS+ Settings")
+                        .font(.custom("Departure Mono", size: 28))
+                        .foregroundColor(Colors.primaryColor)
+                        .fontWeight(.bold)
                         .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                 }
-                List {
-                    Section(header: Text("Required binary files")) {
-                        HStack {
-                            Button("Bios 7") {
-                                showFileBrowser = true
-                                currentFile = CurrentFile.bios7
-                            }
-                            Spacer()
-                            if bios7Data != nil {
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(.green)
-                            }
+                VStack {
+                    Text("Optional binary files")
+                        .padding(.bottom, 20)
+                    HStack {
+                        Button("Bios 7") {
+                            showFileBrowser = true
+                            currentFile = CurrentFile.bios7
                         }
-                        HStack {
-                            Button("Bios 9") {
-                                showFileBrowser = true
-                                currentFile = CurrentFile.bios9
-                            }
-                            Spacer()
-                            if bios9Data != nil {
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(.green)
-                            }
-                        }
-                        
-                        HStack {
-                            Button("Firmware") {
-                                showFileBrowser = true
-                                currentFile = CurrentFile.firmware
-                            }
-                            Spacer()
-                            if firmwareData != nil {
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(.green)
-                            }
+                        Spacer()
+                        if bios7Loaded {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(.green)
                         }
                     }
-                    Section(header: Text("Miscellaneous")) {
-                        NavigationLink {
-                            SaveManagementView(
-                                user: $user,
-                                cloudService: $cloudService
-                            )
-                        } label: {
-                            Text("Save management")
+                    HStack {
+                        Button("Bios 9") {
+                            showFileBrowser = true
+                            currentFile = CurrentFile.bios9
+                        }
+                        Spacer()
+                        if bios9Loaded {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(.green)
                         }
                     }
                     
+                    HStack {
+                        Button("Firmware") {
+                            showFileBrowser = true
+                            currentFile = CurrentFile.firmware
+                        }
+                        Spacer()
+                        if firmwareData != nil {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(.green)
+                        }
+                    }
+                    
+                    Toggle(isOn: $isSoundOn) {
+                        Text("Start game with sound")
+                    }
+                    .toggleStyle(.switch)
+                    .padding(.top, 20)
+                    
                 }
+                .frame(width: 400, height: 600)
                 Spacer()
-                Button("Dismiss") {
-                    dismiss()
-                }
             }
+            .font(.custom("Departure Mono", size: 24))
+            .foregroundColor(Colors.primaryColor)
             .fileImporter(
                 isPresented: $showFileBrowser,
                 allowedContentTypes: [binType.unsafelyUnwrapped]
@@ -146,6 +148,11 @@ struct SettingsView: View {
                     dismiss()
                 }
                 
+            }
+            .onChange(of: isSoundOn) {
+                let defaults = UserDefaults.standard
+                
+                defaults.setValue(isSoundOn, forKey: "isSoundOn")
             }
         }
     }

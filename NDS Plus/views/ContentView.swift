@@ -16,6 +16,10 @@ struct ContentView: View {
 
     @State private var bios7Data: Data?
     @State private var bios9Data: Data?
+    
+    @State private var bios7Loaded: Bool = false
+    @State private var bios9Loaded: Bool = false
+    
     @State private var firmwareData: Data?
     @State private var romData: Data? = nil
     
@@ -33,6 +37,7 @@ struct ContentView: View {
     
     @State private var shouldUpdateGame = false
     @State private var currentView: CurrentView = .library
+    @State private var isSoundOn: Bool = false
 
     init() {
         bios7Data = nil
@@ -56,6 +61,7 @@ struct ContentView: View {
                 if let fileUrl = URL(string: "bios7.bin", relativeTo: applicationUrl) {
                     if let data = try? Data(contentsOf: fileUrl) {
                         _bios7Data = State(initialValue: data)
+                        _bios7Loaded = State(initialValue: true)
                     } else {
                         let filePath = Bundle.main.path(forResource: "drastic_bios_arm7", ofType: "bin")!
                         do {
@@ -71,6 +77,7 @@ struct ContentView: View {
                 if let fileUrl = URL(string: "bios9.bin", relativeTo: applicationUrl) {
                     if let data = try? Data(contentsOf: fileUrl) {
                         _bios9Data = State(initialValue: data)
+                        _bios9Loaded = State(initialValue: true)
                     } else {
                         let filePath = Bundle.main.path(forResource: "drastic_bios_arm9", ofType: "bin")!
                         do {
@@ -112,7 +119,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
-                Color(red: 0x22/0xff, green: 0x22/0xff, blue: 0x22/0xff)
+                Color(Colors.mainBackgroundColor)
                     .ignoresSafeArea()
                 VStack {
                     switch currentView {
@@ -150,7 +157,10 @@ struct ContentView: View {
                             firmwareData: $firmwareData,
                             loggedInCloud: $loggedInCloud,
                             user: $user,
-                            cloudService: $cloudService
+                            cloudService: $cloudService,
+                            isSoundOn: $isSoundOn,
+                            bios7Loaded: $bios7Loaded,
+                            bios9Loaded: $bios9Loaded
                         )
                     }
                     Spacer()
@@ -169,7 +179,8 @@ struct ContentView: View {
                         user: $user,
                         cloudService: $cloudService,
                         game: $game,
-                        shouldUpdateGame: $shouldUpdateGame
+                        shouldUpdateGame: $shouldUpdateGame,
+                        isSoundOn: $isSoundOn
                     )
                 }
             }
@@ -178,6 +189,10 @@ struct ContentView: View {
             GIDSignIn.sharedInstance.handle(url)
         }
         .onAppear {
+            let defaults = UserDefaults.standard
+            
+            isSoundOn = defaults.bool(forKey: "isSoundOn")
+            
             GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
                 if let signedInUser = user {
                     self.user = signedInUser

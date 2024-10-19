@@ -52,7 +52,7 @@ struct SaveManagementView: View {
     var body: some View {
         ZStack {
             VStack {
-                Text("Save Management")
+                Text("Save management")
                     .font(.custom("Departure Mono", size: 24))
                     .fontWeight(.bold)
                     .foregroundColor(Colors.primaryColor)
@@ -64,7 +64,7 @@ struct SaveManagementView: View {
                         .foregroundColor(Colors.accentColor)
                     }
                 } else {
-                    Button("Sign Out of Google") {
+                    Button("Sign out of Google") {
                         GIDSignIn.sharedInstance.signOut()
                         user = nil
                         saveEntries = []
@@ -166,11 +166,11 @@ struct SaveManagementView: View {
                     isCloudSave: false
                 )
             } else if showDownloadAlert {
-                AlertModal(text: "Successfully downloaded game.", showAlert: $showDownloadAlert)
+                AlertModal(text: "Successfully downloaded save.", showAlert: $showDownloadAlert)
             } else if showUploadAlert {
-                AlertModal(text: "Successfully uploaded game.", showAlert: $showUploadAlert)
+                AlertModal(text: "Successfully uploaded save.", showAlert: $showUploadAlert)
             } else if showDeleteAlert {
-                AlertModal(text: "Successfully deleted game.", showAlert: $showDeleteAlert)
+                AlertModal(text: "Successfully deleted save.", showAlert: $showDeleteAlert)
             } else if showErrorAlert {
                 ErrorAlertModal(showAlert: $showErrorAlert)
             }

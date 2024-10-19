@@ -37,13 +37,7 @@ struct ImportGamesView: View {
                 } label: {
                     Image("Browse")
                     Text("Browse files")
-                        .foregroundColor(
-                            Color(
-                                red: 0xf6 / 0xff,
-                                green: 0x96 / 0xff,
-                                blue: 0x31 / 0xff
-                            )
-                        )
+                        .foregroundColor(Colors.accentColor)
                         .font(.custom("Departure Mono", size: 20))
                 }
             }

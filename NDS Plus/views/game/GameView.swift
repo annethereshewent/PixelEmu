@@ -39,6 +39,7 @@ struct GameView: View {
     @Binding var cloudService: CloudService?
     @Binding var game: Game?
     @Binding var shouldUpdateGame: Bool
+    @Binding var isSoundOn: Bool
     
     @Environment(\.modelContext) private var context
     
@@ -234,7 +235,11 @@ struct GameView: View {
             }
             isRunning = true
             
-            self.audioManager = AudioManager()
+            audioManager = AudioManager()
+            
+            if !isSoundOn {
+                audioManager?.muteAudio()
+            }
             
             workItem = DispatchWorkItem {
                 if let emu = emulator {
