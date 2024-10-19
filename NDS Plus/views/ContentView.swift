@@ -196,6 +196,9 @@ struct ContentView: View {
             
             isSoundOn = defaults.bool(forKey: "isSoundOn")
             
+            bios7Loaded = defaults.bool(forKey: "bios7Loaded")
+            bios9Loaded = defaults.bool(forKey: "bios9Loaded")
+            
             if let themeColor = defaults.value(forKey: "themeColor") as? Color {
                 self.themeColor = themeColor
             }

@@ -10,7 +10,6 @@ import UniformTypeIdentifiers
 import GoogleSignIn
 
 struct SettingsView: View {
-    @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     
     @Binding var bios7Data: Data?
@@ -69,10 +68,12 @@ struct SettingsView: View {
                         showFileBrowser = true
                         currentFile = CurrentFile.bios7
                     }
+                    .padding(.leading, 20)
                     Spacer()
                     if bios7Loaded {
                         Image(systemName: "checkmark")
                             .foregroundColor(.green)
+                            .padding(.trailing, 20)
                     }
                 }
                 HStack {
@@ -80,10 +81,12 @@ struct SettingsView: View {
                         showFileBrowser = true
                         currentFile = CurrentFile.bios9
                     }
+                    .padding(.leading, 20)
                     Spacer()
                     if bios9Loaded {
                         Image(systemName: "checkmark")
                             .foregroundColor(.green)
+                            .padding(.trailing, 20)
                     }
                 }
                 
@@ -92,23 +95,29 @@ struct SettingsView: View {
                         showFileBrowser = true
                         currentFile = CurrentFile.firmware
                     }
+                    .padding(.leading, 20)
                     Spacer()
                     if firmwareData != nil {
                         Image(systemName: "checkmark")
                             .foregroundColor(.green)
+                            .padding(.trailing, 20)
                     }
                 }
-  
-                ColorPicker("Skin theme color", selection: $themeColor)
-                
+                HStack {
+                    Spacer()
+                    ColorPicker("Skin theme color", selection: $themeColor)
+                    Spacer()
+                }
                 .padding(.top, 20)
                 .foregroundColor(Colors.accentColor)
-                
-                Toggle(isOn: $isSoundOn) {
-                    Text("Start game with sound")
+                HStack {
+                    Spacer()
+                    Toggle(isOn: $isSoundOn) {
+                        Text("Start game with sound")
+                    }
+                    Spacer()
                 }
                 .toggleStyle(.switch)
-                .padding(.top, 20)
                 
                 Button {
                     if let url = URL(string: "https://www.github.com/annethereshewent") {
@@ -135,12 +144,19 @@ struct SettingsView: View {
                     }
                     if let data = try? Data(contentsOf: url) {
                         if let file = currentFile {
+                            let defaults = UserDefaults.standard
                             switch file {
                                 // store the file in application support
                             case .bios7:
                                 bios7Data = data
+                                bios7Loaded = true
+                                
+                                defaults.set(bios7Loaded, forKey: "bios7Loaded")
                             case .bios9:
                                 bios9Data = data
+                                bios9Loaded = true
+                                
+                                defaults.set(bios9Loaded, forKey: "bios9Loaded")
                             case .firmware:
                                 firmwareData = data
                             }
@@ -157,10 +173,7 @@ struct SettingsView: View {
                 }
                 
             }
-            
-            if bios7Data != nil && bios9Data != nil && firmwareData != nil {
-                dismiss()
-            }
+        
         }
         .onChange(of: isSoundOn) {
             let defaults = UserDefaults.standard
