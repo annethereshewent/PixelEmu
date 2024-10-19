@@ -29,18 +29,33 @@ struct SaveManagementView: View {
     @State private var showUploadAlert = false
     @State private var showErrorAlert = false
     @State private var deleteAction: () -> Void = {}
+    @State private var isPopoverPresented = false
     
     @Query private var games: [Game]
-    
-    private let linkColor = Color(
-        red: 0xf6 / 0xff,
-        green: 0x96 / 0xff,
-        blue: 0x31 / 0xff
-    )
     
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
     let savType = UTType(filenameExtension: "sav", conformingTo: .data)
+    
+    private func downloadCloudSave() {
+        // download save for offline use
+        let saveName = cloudEntry!.game.gameName.replacing(".nds" ,with: ".sav")
+        
+        loading = true
+        Task {
+            if let save = await cloudService?.getSave(saveName: saveName) {
+                BackupFile.saveCloudFile(saveName: saveName, saveFile: save)
+                let saveEntry = SaveEntry(game: cloudEntry!.game)
+                if !localSaves.contains(saveEntry) {
+                    localSaves.append(saveEntry)
+                }
+                showDownloadAlert = true
+            } else {
+                showErrorAlert = true
+            }
+            loading = false
+        }
+    }
     
     private func handleSignInButton() {
         guard let rootViewController = (UIApplication.shared.connectedScenes.first
@@ -62,230 +77,142 @@ struct SaveManagementView: View {
     }
     
     var body: some View {
-        VStack {
-            Text("Save Management")
-                .font(.custom("Departure Mono", size: 24))
-                .fontWeight(.bold)
-            if user == nil {
-                HStack {
-                    Button("Sign in to Google") {
-                        handleSignInButton()
+        ZStack {
+            VStack {
+                Text("Save Management")
+                    .font(.custom("Departure Mono", size: 24))
+                    .fontWeight(.bold)
+                if user == nil {
+                    HStack {
+                        Button("Sign in to Google") {
+                            handleSignInButton()
+                        }
+                        .foregroundColor(Colors.accentColor)
                     }
-                    .foregroundColor(linkColor)
-                }
-            } else {
-                Button("Sign Out of Google") {
-                    GIDSignIn.sharedInstance.signOut()
-                    user = nil
-                    saveEntries = []
-                    cloudService = nil
-                    cloudEntry = nil
-                }
-                .foregroundColor(linkColor)
-            }
-           
-            ScrollView {
-                Text("Cloud Saves")
-                LazyVGrid(columns: columns) {
-                    ForEach(saveEntries, id: \.game.gameName) { saveEntry in
-                        GameEntryView(game: saveEntry.game) {
-                            if cloudEntry == saveEntry {
-                                cloudEntry = nil
-                            } else {
-                                cloudEntry = saveEntry
-                            }
-                        }
-                        if cloudEntry == saveEntry {
-                            Section {
-                                HStack {
-                                    Image(systemName: "square.and.arrow.up")
-                                        .foregroundColor(.green)
-                                    Button("Modify Save") {
-                                        isPresented = true
-                                    }
-                                }
-                                HStack {
-                                    Image(systemName: "arrow.down")
-                                        .foregroundColor(.white)
-                                    Button("Download Save") {
-                                        // download save for offline use
-                                        let saveName = cloudEntry!.game.gameName.replacing(".nds" ,with: ".sav")
-                                        
-                                        loading = true
-                                        Task {
-                                            if let save = await cloudService?.getSave(saveName: saveName) {
-                                                BackupFile.saveCloudFile(saveName: saveName, saveFile: save)
-                                                let saveEntry = SaveEntry(game: cloudEntry!.game)
-                                                if !localSaves.contains(saveEntry) {
-                                                    localSaves.append(saveEntry)
-                                                }
-                                                showDownloadAlert = true
-                                            } else {
-                                                showErrorAlert = true
-                                            }
-                                            loading = false
-                                        }
-                                    }
-                                }
-                                HStack {
-                                    Image(systemName: "minus.circle")
-                                        .foregroundColor(.red)
-                                    Button("Delete Save") {
-                                        deleteAction = {
-                                            let saveName = cloudEntry!.game.gameName.replacing(".nds", with: ".sav")
-                                            
-                                            loading = true
-                                            Task {
-                                                let success = await cloudService?.deleteSave(saveName: saveName) ?? false
-                                                
-                                                loading = false
-                                                if success {
-                                                    if let index = saveEntries.firstIndex(of: cloudEntry!) {
-                                                        saveEntries.remove(at: index)
-                                                    }
-                                                    
-                                                    showDeleteAlert = true
-                                                }
-                                                showDeleteDialog = false
-                                            }
-                                        }
-                                        showDeleteDialog = true
-                                    }
-                                }
-                                
-                            }
-                            .padding(.leading, 20)
-                        }
+                } else {
+                    Button("Sign Out of Google") {
+                        GIDSignIn.sharedInstance.signOut()
+                        user = nil
+                        saveEntries = []
+                        cloudService = nil
+                        cloudEntry = nil
+                        isPopoverPresented = false
                     }
-                }
-                Text("Local saves")
-                LazyVGrid(columns: columns) {
-                    ForEach(localSaves, id: \.game.gameName) { saveEntry in
-                        GameEntryView(game: saveEntry.game) {
-                            if localEntry == saveEntry {
-                                localEntry = nil
-                            } else {
-                                localEntry = saveEntry
-                            }
-                        }
-                        if localEntry == saveEntry {
-                            Section {
-                                HStack {
-                                    Image(systemName: "arrow.up")
-                                        .foregroundColor(.green)
-                                    Button("Upload save") {
-                                        let saveName = localEntry!.game.gameName.replacing(".nds", with: ".sav")
-                                        if let saveData = BackupFile.getSave(saveName: saveName) {
-                                            loading = true
-                                            Task {
-                                                await self.cloudService?.uploadSave(saveName: saveName, data: saveData)
-                                                loading = false
-                                                if saveEntries.firstIndex(of: localEntry!) == nil {
-                                                    saveEntries.insert(SaveEntry(game: localEntry!.game), at: 0)
-                                                }
-                                                
-                                                showUploadAlert = true
-                                                
-                                            }
-                                        }
-                                    }
-                                }
-                                HStack {
-                                    Image(systemName: "minus.circle")
-                                        .foregroundColor(.red)
-                                    Button("Delete save") {
-                                        deleteAction = {
-                                            if BackupFile.deleteSave(saveName: localEntry!.game.gameName.replacing(".nds", with: ".sav")) {
-                                                showDeleteAlert = true
-                                                if let index = localSaves.firstIndex(of: localEntry!) {
-                                                    localSaves.remove(at: index)
-                                                }
-                                            }
-                                            showDeleteDialog = false
-                                            
-                                        }
-                                        showDeleteDialog = true
-                                        
-                                    }
-                                }
-                            }
-                            .padding(.leading, 20)
-                        }
-                    }
-                }
-                if loading {
-                    ProgressView()
+                    .foregroundColor(Colors.accentColor)
                 }
                 
-            }
-        }
-        .fileImporter(isPresented: $isPresented, allowedContentTypes: [savType!]) { result in
-            // upload the result to google cloud
-            do {
-                let url = try result.get()
-                
-                if url.startAccessingSecurityScopedResource() {
-                    defer {
-                        url.stopAccessingSecurityScopedResource()
+                ScrollView {
+                    Text("Cloud Saves")
+                    LazyVGrid(columns: columns) {
+                        ForEach(saveEntries, id: \.game.gameName) { saveEntry in
+                            GameEntryView(game: saveEntry.game) {
+                                if cloudEntry == saveEntry {
+                                    cloudEntry = nil
+                                    isPopoverPresented = false
+                                    print("mama mia im a hiding the popover!")
+                                } else {
+                                    cloudEntry = saveEntry
+                                    isPopoverPresented = true
+                                    print("mamma mia im a presenting the popover!")
+                                }
+                            }
+                        }
+                        .presentationCompactAdaptation(.popover)
+                        .padding(.leading, 20)
+                    }
+                    Text("Local saves")
+                    LazyVGrid(columns: columns) {
+                        ForEach(localSaves, id: \.game.gameName) { saveEntry in
+                            GameEntryView(game: saveEntry.game) {
+                                if localEntry == saveEntry {
+                                    localEntry = nil
+                                } else {
+                                    localEntry = saveEntry
+                                }
+                            }
+                        }
+                    }
+                    if loading {
+                        ProgressView()
                     }
                     
-                    let data = try Data(contentsOf: url)
+                }
+            }
+            .fileImporter(isPresented: $isPresented, allowedContentTypes: [savType!]) { result in
+                // upload the result to google cloud
+                do {
+                    let url = try result.get()
+                    
+                    if url.startAccessingSecurityScopedResource() {
+                        defer {
+                            url.stopAccessingSecurityScopedResource()
+                        }
+                        
+                        let data = try Data(contentsOf: url)
+                        loading = true
+                        Task {
+                            await cloudService?.uploadSave(
+                                saveName: cloudEntry!.game.gameName.replacing(".nds", with: ".sav"),
+                                data: data
+                            )
+                            showUploadAlert = true
+                        }
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+            .onAppear {
+                if user != nil {
                     loading = true
                     Task {
-                        await cloudService?.uploadSave(
-                            saveName: cloudEntry!.game.gameName.replacing(".nds", with: ".sav"),
-                            data: data
-                        )
-                        showUploadAlert = true
+                        if let saveEntries = await cloudService?.getSaves(games: games) {
+                            self.saveEntries = saveEntries
+                        }
+                        loading = false
                     }
                 }
-            } catch {
-                print(error)
+                // get any local saves
+                localSaves = BackupFile.getLocalSaves(games: games)
             }
-        }
-        .onAppear {
-            if user != nil {
-                loading = true
-                Task {
-                    if let saveEntries = await cloudService?.getSaves(games: games) {
-                        self.saveEntries = saveEntries
-                    }
-                    loading = false
+            .confirmationDialog("Confirm delete", isPresented: $showDeleteDialog) {
+                Button("Delete save?", role: .destructive, action: deleteAction)
+            }
+            .font(.custom("Departure Mono", size: 20))
+            .alert("Successfully uploaded save", isPresented: $showUploadAlert) {
+                Button("Ok", role: .cancel) {
+                    showUploadAlert = false
+                    cloudEntry = nil
+                    localEntry = nil
+                    isPopoverPresented = false
                 }
             }
-            // get any local saves
-            localSaves = BackupFile.getLocalSaves(games: games)
-        }
-        .confirmationDialog("Confirm delete", isPresented: $showDeleteDialog) {
-            Button("Delete save?", role: .destructive, action: deleteAction)
-        }
-        .font(.custom("Departure Mono", size: 20))
-        .alert("Successfully uploaded save", isPresented: $showUploadAlert) {
-            Button("Ok", role: .cancel) {
-                showUploadAlert = false
-                cloudEntry = nil
-                localEntry = nil
+            .alert("Successfully deleted save", isPresented: $showDeleteAlert) {
+                Button("Ok", role: .cancel) {
+                    showDeleteAlert = false
+                    cloudEntry = nil
+                    localEntry = nil
+                    isPopoverPresented = false
+                }
             }
-        }
-        .alert("Successfully deleted save", isPresented: $showDeleteAlert) {
-            Button("Ok", role: .cancel) {
-                showDeleteAlert = false
-                cloudEntry = nil
-                localEntry = nil
+            .alert("Save downloaded successfully", isPresented: $showDownloadAlert) {
+                Button("Ok", role: .cancel) {
+                    showDownloadAlert = false
+                    cloudEntry = nil
+                    localEntry = nil
+                    isPopoverPresented = false
+                }
             }
-        }
-        .alert("Save downloaded successfully", isPresented: $showDownloadAlert) {
-            Button("Ok", role: .cancel) {
-                showDownloadAlert = false
-                cloudEntry = nil
-                localEntry = nil
+            .alert("Couldn't download save", isPresented: $showErrorAlert) {
+                Button("Ok", role: .cancel) {
+                    showDownloadAlert = false
+                    cloudEntry = nil
+                    localEntry = nil
+                    isPopoverPresented = false
+                }
             }
-        }
-        .alert("Couldn't download save", isPresented: $showErrorAlert) {
-            Button("Ok", role: .cancel) {
-                showDownloadAlert = false
-                cloudEntry = nil
-                localEntry = nil
+            if cloudEntry != nil {
+                GameEntryModal(entry: $cloudEntry)
             }
         }
     }

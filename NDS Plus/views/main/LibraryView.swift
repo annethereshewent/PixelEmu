@@ -17,29 +17,9 @@ enum LibraryFilter {
 }
 
 struct LibraryView: View {
-    private let chosenColor = Color(
-        red: 0xf6 / 0xff,
-        green: 0x96 / 0xff,
-        blue: 0x31 / 0xff
-    )
     
-    private let defaultColor = Color(
-        red: 0x88 / 0xff,
-        green: 0x88 / 0xff,
-        blue: 0x88 / 0xff
-    )
-    
-    @State private var recentColor = Color(
-        red: 0xf6 / 0xff,
-        green: 0x96 / 0xff,
-        blue: 0x31 / 0xff
-    )
-    
-    @State private var allColor = Color(
-        red: 0x88 / 0xff,
-        green: 0x88 / 0xff,
-        blue: 0x88 / 0xff
-    )
+    @State private var recentColor = Colors.accentColor
+    @State private var allColor = Colors.primaryColor
     @State private var filter = LibraryFilter.recent
     
     @Query private var games: [Game] = []
@@ -78,8 +58,8 @@ struct LibraryView: View {
                 Spacer()
                     
                 Button {
-                    recentColor = chosenColor
-                    allColor = defaultColor
+                    recentColor = Colors.accentColor
+                    allColor = Colors.primaryColor
                     filter = .recent
                 } label: {
                     HStack {
@@ -93,8 +73,8 @@ struct LibraryView: View {
                 
                 Spacer()
                 Button {
-                    allColor = chosenColor
-                    recentColor = defaultColor
+                    allColor = Colors.accentColor
+                    recentColor = Colors.primaryColor
                     filter = .all
                 } label: {
                     HStack {

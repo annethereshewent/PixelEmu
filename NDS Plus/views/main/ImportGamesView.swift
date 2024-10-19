@@ -52,11 +52,7 @@ struct ImportGamesView: View {
             
         }
         .font(.custom("Departure Mono", size: 24))
-        .foregroundColor(Color(
-            red: 0x88 / 0xff,
-            green: 0x88 / 0xff,
-            blue: 0x88 / 0xff
-        ))
+        .foregroundColor(Colors.primaryColor)
         .fileImporter(
             isPresented: $showRomDialog,
             allowedContentTypes: [ndsType.unsafelyUnwrapped]

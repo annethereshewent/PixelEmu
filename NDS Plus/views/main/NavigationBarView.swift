@@ -27,13 +27,13 @@ struct NavigationBarView: View {
                     
                 }
                 if currentView == .importGames {
-                    Image("+ Selected")
+                    Image("Plus Selected")
                         .padding(.trailing, 15)
                 } else {
                     Button {
                         currentView = .importGames
                     } label: {
-                        Image("+")
+                        Image("Plus")
                             .padding(.trailing, 15)
                     }
                 }
