@@ -382,6 +382,8 @@ struct GameView: View {
                     audioManager?.muteAudio()
                 }
                 break
+            default:
+                break
             }
         }
         .navigationBarTitle("")

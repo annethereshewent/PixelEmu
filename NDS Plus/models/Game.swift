@@ -38,7 +38,7 @@ class Game {
         // store bookmark for later use
         if url.startAccessingSecurityScopedResource() {
             if let bookmark = try? url.bookmarkData(options: []) {
-                return Game(gameName: gameName, bookmark: bookmark, gameIcon: pixelsArr, saveStates: [], addedOn: Date())
+                return Game(gameName: gameName, bookmark: bookmark, gameIcon: pixelsArr, saveStates: [], addedOn: Date.now)
             }
         }
         

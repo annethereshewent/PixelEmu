@@ -32,6 +32,14 @@ struct SaveManagementView: View {
     
     @Query private var games: [Game]
     
+    private let linkColor = Color(
+        red: 0xf6 / 0xff,
+        green: 0x96 / 0xff,
+        blue: 0x31 / 0xff
+    )
+    
+    private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+    
     let savType = UTType(filenameExtension: "sav", conformingTo: .data)
     
     private func handleSignInButton() {
@@ -56,15 +64,14 @@ struct SaveManagementView: View {
     var body: some View {
         VStack {
             Text("Save Management")
-                .font(.title)
+                .font(.custom("Departure Mono", size: 24))
+                .fontWeight(.bold)
             if user == nil {
                 HStack {
-                    GoogleSignInButton(
-                        scheme: .dark,
-                        style: .icon,
-                        action: handleSignInButton
-                    )
-                    Text("Sign in")
+                    Button("Sign in to Google") {
+                        handleSignInButton()
+                    }
+                    .foregroundColor(linkColor)
                 }
             } else {
                 Button("Sign Out of Google") {
@@ -74,9 +81,12 @@ struct SaveManagementView: View {
                     cloudService = nil
                     cloudEntry = nil
                 }
+                .foregroundColor(linkColor)
             }
-            List {
-                Section("Cloud Saves") {
+           
+            ScrollView {
+                Text("Cloud Saves")
+                LazyVGrid(columns: columns) {
                     ForEach(saveEntries, id: \.game.gameName) { saveEntry in
                         GameEntryView(game: saveEntry.game) {
                             if cloudEntry == saveEntry {
@@ -133,7 +143,7 @@ struct SaveManagementView: View {
                                                     if let index = saveEntries.firstIndex(of: cloudEntry!) {
                                                         saveEntries.remove(at: index)
                                                     }
-                                                
+                                                    
                                                     showDeleteAlert = true
                                                 }
                                                 showDeleteDialog = false
@@ -142,13 +152,14 @@ struct SaveManagementView: View {
                                         showDeleteDialog = true
                                     }
                                 }
-                               
+                                
                             }
                             .padding(.leading, 20)
                         }
                     }
                 }
-                Section("Local saves") {
+                Text("Local saves")
+                LazyVGrid(columns: columns) {
                     ForEach(localSaves, id: \.game.gameName) { saveEntry in
                         GameEntryView(game: saveEntry.game) {
                             if localEntry == saveEntry {
@@ -202,38 +213,10 @@ struct SaveManagementView: View {
                         }
                     }
                 }
-                    
-            }
-            .alert("Successfully uploaded save", isPresented: $showUploadAlert) {
-                Button("Ok", role: .cancel) {
-                    showUploadAlert = false
-                    cloudEntry = nil
-                    localEntry = nil
+                if loading {
+                    ProgressView()
                 }
-            }
-            .alert("Successfully deleted save", isPresented: $showDeleteAlert) {
-                Button("Ok", role: .cancel) {
-                    showDeleteAlert = false
-                    cloudEntry = nil
-                    localEntry = nil
-                }
-            }
-            .alert("Save downloaded successfully", isPresented: $showDownloadAlert) {
-                Button("Ok", role: .cancel) {
-                    showDownloadAlert = false
-                    cloudEntry = nil
-                    localEntry = nil
-                }
-            }
-            .alert("Couldn't download save", isPresented: $showErrorAlert) {
-                Button("Ok", role: .cancel) {
-                    showDownloadAlert = false
-                    cloudEntry = nil
-                    localEntry = nil
-                }
-            }
-            if loading {
-                ProgressView()
+                
             }
         }
         .fileImporter(isPresented: $isPresented, allowedContentTypes: [savType!]) { result in
@@ -275,6 +258,35 @@ struct SaveManagementView: View {
         }
         .confirmationDialog("Confirm delete", isPresented: $showDeleteDialog) {
             Button("Delete save?", role: .destructive, action: deleteAction)
+        }
+        .font(.custom("Departure Mono", size: 20))
+        .alert("Successfully uploaded save", isPresented: $showUploadAlert) {
+            Button("Ok", role: .cancel) {
+                showUploadAlert = false
+                cloudEntry = nil
+                localEntry = nil
+            }
+        }
+        .alert("Successfully deleted save", isPresented: $showDeleteAlert) {
+            Button("Ok", role: .cancel) {
+                showDeleteAlert = false
+                cloudEntry = nil
+                localEntry = nil
+            }
+        }
+        .alert("Save downloaded successfully", isPresented: $showDownloadAlert) {
+            Button("Ok", role: .cancel) {
+                showDownloadAlert = false
+                cloudEntry = nil
+                localEntry = nil
+            }
+        }
+        .alert("Couldn't download save", isPresented: $showErrorAlert) {
+            Button("Ok", role: .cancel) {
+                showDownloadAlert = false
+                cloudEntry = nil
+                localEntry = nil
+            }
         }
     }
 }

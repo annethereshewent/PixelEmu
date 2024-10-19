@@ -174,7 +174,27 @@ struct ContentView: View {
                 }
             }
         }
+        .onOpenURL { url in
+            GIDSignIn.sharedInstance.handle(url)
+        }
+        .onAppear {
+            GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+                if let signedInUser = user {
+                    self.user = signedInUser
+                    
+                    self.user?.refreshTokensIfNeeded { user, error in
+                        guard error == nil else { return }
+                        guard let user = user else { return }
+                        
+                        self.user = user
+                        
+                        self.cloudService = CloudService(user: self.user!)
+                    }
+                }
+            }
+        }
     }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {

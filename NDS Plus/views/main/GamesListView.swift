@@ -7,7 +7,6 @@
 
 import SwiftUI
 import DSEmulatorMobile
-import SwiftData
 
 struct GamesListView: View {
     @Binding var romData: Data?
@@ -21,7 +20,7 @@ struct GamesListView: View {
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
     @Binding var game: Game?
-    @Query private var games: [Game] = []
+    let games: [Game]
     
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     

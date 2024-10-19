@@ -7,8 +7,43 @@
 
 import SwiftUI
 import DSEmulatorMobile
+import SwiftData
+
+let TWENTYFOUR_HOURS = 60 * 60 * 24
+
+enum LibraryFilter {
+    case recent
+    case all
+}
 
 struct LibraryView: View {
+    private let chosenColor = Color(
+        red: 0xf6 / 0xff,
+        green: 0x96 / 0xff,
+        blue: 0x31 / 0xff
+    )
+    
+    private let defaultColor = Color(
+        red: 0x88 / 0xff,
+        green: 0x88 / 0xff,
+        blue: 0x88 / 0xff
+    )
+    
+    @State private var recentColor = Color(
+        red: 0xf6 / 0xff,
+        green: 0x96 / 0xff,
+        blue: 0x31 / 0xff
+    )
+    
+    @State private var allColor = Color(
+        red: 0x88 / 0xff,
+        green: 0x88 / 0xff,
+        blue: 0x88 / 0xff
+    )
+    @State private var filter = LibraryFilter.recent
+    
+    @Query private var games: [Game] = []
+    
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -20,15 +55,57 @@ struct LibraryView: View {
     @Binding var path: NavigationPath
     @Binding var game: Game?
     
+    private var filteredGames: [Game] {
+        switch filter {
+        case .all:
+            return games
+        case .recent:
+            return games.filter { game in
+                let today = Date.now
+                let diff = today.timeIntervalSince1970 - game.addedOn.timeIntervalSince1970
+                
+                return diff <= Double(TWENTYFOUR_HOURS)
+            }
+        }
+    }
+    
     var body: some View {
        
         VStack {
             Text("Game Library")
+                .fontWeight(.bold)
             HStack {
                 Spacer()
-                Text("Recent")
+                    
+                Button {
+                    recentColor = chosenColor
+                    allColor = defaultColor
+                    filter = .recent
+                } label: {
+                    HStack {
+                        if filter == .recent {
+                            Image("Caret")
+                        }
+                        Text("Recent")
+                            .foregroundColor(recentColor)
+                    }
+                }
+                
                 Spacer()
-                Text("All")
+                Button {
+                    allColor = chosenColor
+                    recentColor = defaultColor
+                    filter = .all
+                } label: {
+                    HStack {
+                        if filter == .all {
+                            Image("Caret")
+                        }
+                        Text("All")
+                            .foregroundColor(allColor)
+                    }
+                }
+               
                 Spacer()
             }
             .padding(.top, 10)
@@ -42,7 +119,8 @@ struct LibraryView: View {
                 emulator: $emulator,
                 gameUrl: $gameUrl,
                 path: $path,
-                game: $game
+                game: $game,
+                games: filteredGames
             )
         }
         .font(.custom("Departure Mono", size: 24.0))
