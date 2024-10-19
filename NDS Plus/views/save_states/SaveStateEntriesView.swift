@@ -222,6 +222,8 @@ struct SaveStateEntriesView: View {
                     .padding(.trailing, 25)
                     .padding(.top, 25)
             }
+            Text("Save States")
+                .font(.custom("Departure Mono", size: 24))
             ScrollView {
                 if let game = game {
                     LazyVGrid(columns: columns) {
