@@ -212,6 +212,7 @@
 		E806E9F62C97E1B10081D3E8 /* NDS Plus */ = {
 			isa = PBXGroup;
 			children = (
+				E8EE5DA52CC429CC00CD77B6 /* serializable */,
 				E8EE5D8B2CC224E600CD77B6 /* fonts */,
 				E8C245E72CBCAA5000B6DF67 /* bin */,
 				E806EA6E2CA0D7B70081D3E8 /* json */,
@@ -265,10 +266,7 @@
 			isa = PBXGroup;
 			children = (
 				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
-				E806EA712CA0DA720081D3E8 /* GameEntry.swift */,
-				E806EA9B2CA246760081D3E8 /* DriveResponse.swift */,
 				E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */,
-				E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */,
 				E8C245F72CBE043B00B6DF67 /* SaveState.swift */,
 			);
 			path = models;
@@ -363,6 +361,16 @@
 				E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */,
 			);
 			path = modals;
+			sourceTree = "<group>";
+		};
+		E8EE5DA52CC429CC00CD77B6 /* serializable */ = {
+			isa = PBXGroup;
+			children = (
+				E806EA712CA0DA720081D3E8 /* GameEntry.swift */,
+				E806EA9B2CA246760081D3E8 /* DriveResponse.swift */,
+				E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */,
+			);
+			path = serializable;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
