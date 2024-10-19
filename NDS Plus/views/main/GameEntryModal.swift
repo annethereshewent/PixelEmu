@@ -14,9 +14,11 @@ struct GameEntryModal: View {
     @Binding var cloudSaves: [SaveEntry]
     @Binding var cloudService: CloudService?
     @Binding var loading: Bool
+    @Binding var showDeleteDialog: Bool
     @Binding var showDownloadAlert: Bool
     @Binding var showUploadAlert: Bool
     @Binding var showErrorAlert: Bool
+    @Binding var showDeleteAlert: Bool
     
     @State private var isPresented = false
     
@@ -37,6 +39,7 @@ struct GameEntryModal: View {
                     localSaves.append(saveEntry)
                 }
                 showDownloadAlert = true
+                entry = nil
             } else {
                 showErrorAlert = true
             }
@@ -44,11 +47,29 @@ struct GameEntryModal: View {
         }
     }
     
-    private func modifyCloudSave() {
-        
+    private func uploadSave() {
+        // upload local entry to cloud
+        loading = true
+        Task {
+            if let entry = entry {
+                let saveName = entry.game.gameName.replacing(".nds", with: ".sav")
+                if let saveData = BackupFile.getSave(saveName: saveName) {
+                    Task {
+                        await self.cloudService?.uploadSave(saveName: saveName, data: saveData)
+                        loading = false
+                        if cloudSaves.firstIndex(of: entry) == nil {
+                            cloudSaves.insert(SaveEntry(game: entry.game), at: 0)
+                        }
+                        
+                        showUploadAlert = true
+                        
+                    }
+                }
+            }
+        }
     }
     
-    private func uploadSave(_ result: Result<URL, any Error>) {
+    private func modifyCloudSave(_ result: Result<URL, any Error>) {
         do {
             let url = try result.get()
             
@@ -73,7 +94,38 @@ struct GameEntryModal: View {
     }
     
     private func deleteSave() {
-        
+        if !isCloudSave {
+            if BackupFile.deleteSave(saveName: entry!.game.gameName.replacing(".nds", with: ".sav")) {
+                showDeleteAlert = true
+                if let index = localSaves.firstIndex(of: entry!) {
+                    localSaves.remove(at: index)
+                }
+            }
+            print("deleted the local save!")
+            showDeleteDialog = false
+            entry = nil
+            showDeleteDialog = true
+        } else {
+            let saveName = entry!.game.gameName.replacing(".nds", with: ".sav")
+            
+            loading = true
+            Task {
+                let success = await cloudService?.deleteSave(saveName: saveName) ?? false
+                
+                loading = false
+                if success {
+                    if let index = cloudSaves.firstIndex(of: entry!) {
+                        cloudSaves.remove(at: index)
+                    }
+                
+                    showDeleteAlert = true
+                }
+                showDeleteDialog = false
+            }
+            print("deleted the cloud save!")
+            showDeleteDialog = true
+            entry = nil
+        }
     }
     
     var body: some View {
@@ -85,7 +137,7 @@ struct GameEntryModal: View {
                 }
                 if isCloudSave {
                     Button {
-                        modifyCloudSave()
+                        isPresented = true
                     } label: {
                         HStack {
                             Image(systemName: "square.and.arrow.up")
@@ -106,12 +158,12 @@ struct GameEntryModal: View {
                     }
                 } else {
                     Button {
-                        isPresented = true
+                        uploadSave()
                     } label: {
                         HStack {
                             Image(systemName: "arrow.up")
                                 .foregroundColor(.green)
-                            Text("Uplaod save")
+                            Text("Upload save")
                         }
                     }
                 }
@@ -139,7 +191,7 @@ struct GameEntryModal: View {
         .opacity(0.80)
         .frame(width: 225, height: 225)
         .fileImporter(isPresented: $isPresented, allowedContentTypes: [savType!]) { result in
-            uploadSave(result)
+            modifyCloudSave(result)
         }
     }
 }

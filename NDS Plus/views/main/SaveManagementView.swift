@@ -136,9 +136,11 @@ struct SaveManagementView: View {
                     cloudSaves: $saveEntries,
                     cloudService: $cloudService,
                     loading: $loading,
+                    showDeleteDialog: $showDeleteDialog,
                     showDownloadAlert: $showDownloadAlert,
                     showUploadAlert: $showUploadAlert,
                     showErrorAlert: $showErrorAlert,
+                    showDeleteAlert: $showDeleteAlert,
                     isCloudSave: true
                 )
             } else if localEntry != nil {
@@ -148,9 +150,11 @@ struct SaveManagementView: View {
                     cloudSaves: $saveEntries,
                     cloudService: $cloudService,
                     loading: $loading,
+                    showDeleteDialog: $showDeleteDialog,
                     showDownloadAlert: $showDownloadAlert,
                     showUploadAlert: $showUploadAlert,
                     showErrorAlert: $showErrorAlert,
+                    showDeleteAlert: $showDeleteAlert,
                     isCloudSave: false
                 )
             }
