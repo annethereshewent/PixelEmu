@@ -44,7 +44,6 @@ Todo:
 ## Screenshots
 
 <img src="https://github.com/user-attachments/assets/9033e4d2-1be2-4210-922e-41cceeaefb0c" width="322" height="699">
-<img src="https://github.com/user-attachments/assets/c2fb4178-ccd1-4242-a1b3-99b5061c7e1b" width="322" height="699">
 <img src="https://github.com/user-attachments/assets/8723f63e-4876-4832-a005-d514c20672d8" width="322" height="699">
 
 ## Special Thanks
