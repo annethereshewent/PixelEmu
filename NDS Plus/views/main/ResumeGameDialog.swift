@@ -1,5 +1,5 @@
 //
-//  DeleteDialog.swift
+//  ResumeGameDialog.swift
 //  NDS Plus
 //
 //  Created by Anne Castrillon on 10/19/24.
@@ -7,26 +7,32 @@
 
 import SwiftUI
 
-struct DeleteDialog: View {
+struct ResumeGameDialog: View {
     @Binding var showDialog: Bool
-    @Binding var deleteAction: () -> Void
+    @Binding var resumeGame: Bool
+    @Binding var settingChanged: Bool
+    
     var body: some View {
         VStack {
-            Text("Confirm delete")
+            Text("Resume game")
                 .foregroundColor(Colors.accentColor)
                 .font(.custom("Departure Mono", size: 24))
-            Text("Are you sure you want to delete this save?")
-            
+            Text("Game is already running. Would you like to resume?")
+                
             HStack {
-                Button("Confirm") {
-                    deleteAction()
+                Button("Resume") {
+                    resumeGame = true
+                    settingChanged = !settingChanged
                     showDialog = false
+                    
                 }
-                .foregroundColor(.red)
+                .foregroundColor(.green)
                 .border(.gray)
                 .cornerRadius(0.3)
                 .padding(.top, 20)
-                Button("Close") {
+                Button("Start new game") {
+                    resumeGame = false
+                    settingChanged = !settingChanged
                     showDialog = false
                 }
                 .foregroundColor(Colors.accentColor)

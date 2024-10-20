@@ -37,6 +37,7 @@ struct SaveStateEntriesView: View {
     
     private func createSaveState(updateState: SaveState? = nil) {
         // create a new save state
+        
         if let emu = emulator, let game = game {
             let dataPtr = emu.createSaveState()
             let compressedLength = emu.compressedLength()

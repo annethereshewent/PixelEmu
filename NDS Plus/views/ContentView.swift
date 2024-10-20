@@ -38,6 +38,14 @@ struct ContentView: View {
     @State private var shouldUpdateGame = false
     @State private var currentView: CurrentView = .library
     @State private var isSoundOn: Bool = true
+    @State var audioManager: AudioManager? = nil
+    
+    @State private var gameController: GameController?
+    @State private var topImage: CGImage?
+    @State private var bottomImage: CGImage?
+    @State private var gameName = ""
+    @State private var backupFile: BackupFile? = nil
+    
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
     init() {
@@ -135,7 +143,8 @@ struct ContentView: View {
                             emulator: $emulator,
                             gameUrl: $gameUrl,
                             path: $path,
-                            game: $game
+                            game: $game,
+                            shouldUpdateGame: $shouldUpdateGame
                         )
                     case .importGames:
                         ImportGamesView(
@@ -144,7 +153,11 @@ struct ContentView: View {
                             bios7Data: $bios7Data,
                             bios9Data: $bios9Data,
                             path: $path,
-                            gameUrl: $gameUrl
+                            gameUrl: $gameUrl,
+                            game: $game,
+                            workItem: $workItem,
+                            isRunning: $isRunning,
+                            emulator: $emulator
                         )
                     case .saveManagement:
                         SaveManagementView(
@@ -183,7 +196,15 @@ struct ContentView: View {
                         game: $game,
                         shouldUpdateGame: $shouldUpdateGame,
                         isSoundOn: $isSoundOn,
-                        themeColor: $themeColor
+                        themeColor: $themeColor,
+                        gameName: $gameName,
+                        backupFile: $backupFile,
+                        gameController: $gameController,
+                        audioManager: $audioManager,
+                        isRunning: $isRunning,
+                        workItem: $workItem,
+                        topImage: $topImage,
+                        bottomImage: $bottomImage
                     )
                 }
             }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import DSEmulatorMobile
 
 struct ImportGamesView: View {
     @State private var showRomDialog = false
@@ -17,6 +18,10 @@ struct ImportGamesView: View {
     @Binding var bios9Data: Data?
     @Binding var path: NavigationPath
     @Binding var gameUrl: URL?
+    @Binding var game: Game?
+    @Binding var workItem: DispatchWorkItem?
+    @Binding var isRunning: Bool
+    @Binding var emulator: MobileEmulator?
     
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
     var body: some View {
@@ -63,6 +68,13 @@ struct ImportGamesView: View {
                         if bios7Data != nil && bios9Data != nil {
                             gameUrl = url
                         
+                            emulator = nil
+                            workItem?.cancel()
+                            isRunning = false
+                            game = nil
+                            
+                            workItem = nil
+                            
                             path.append("GameView")
                         }
                     }

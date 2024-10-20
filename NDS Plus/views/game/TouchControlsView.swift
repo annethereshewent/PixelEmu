@@ -106,12 +106,9 @@ struct TouchControlsView: View {
     }
     
     private func goHome() {
-        emulator = nil
-        isRunning = false
-        workItem?.cancel()
-        workItem = nil
+        emulator?.setPause(true)
+        audioManager?.muteAudio()
         
-        audioManager?.isRunning = false
         presentationMode.wrappedValue.dismiss()
     }
     

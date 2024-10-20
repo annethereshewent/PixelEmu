@@ -35,6 +35,7 @@
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
 		E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E896C28C2CA67FFA008161AA /* AudioManager.swift */; };
 		E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */; };
+		E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
 		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
@@ -114,6 +115,7 @@
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
 		E896C28C2CA67FFA008161AA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDialog.swift; sourceTree = "<group>"; };
+		E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeGameDialog.swift; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
 		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
 		E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = drastic_bios_readme.txt; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_readme.txt"; sourceTree = "<group>"; };
@@ -332,6 +334,7 @@
 				E8EE5D872CC2221600CD77B6 /* LibraryView.swift */,
 				E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */,
 				E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */,
+				E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -635,6 +638,7 @@
 				E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */,
 				E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */,
 				E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */,
+				E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */,
 				E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */,
 				E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,

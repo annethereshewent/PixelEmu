@@ -22,8 +22,6 @@ struct LibraryView: View {
     @State private var allColor = Colors.primaryColor
     @State private var filter = LibraryFilter.recent
     
-    @Query private var games: [Game] = []
-    
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -34,20 +32,7 @@ struct LibraryView: View {
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
     @Binding var game: Game?
-    
-    private var filteredGames: [Game] {
-        switch filter {
-        case .all:
-            return games
-        case .recent:
-            return games.filter { game in
-                let today = Date.now
-                let diff = today.timeIntervalSince1970 - game.addedOn.timeIntervalSince1970
-                
-                return diff <= Double(TWENTYFOUR_HOURS)
-            }
-        }
-    }
+    @Binding var shouldUpdateGame: Bool
     
     var body: some View {
        
@@ -100,7 +85,8 @@ struct LibraryView: View {
                 gameUrl: $gameUrl,
                 path: $path,
                 game: $game,
-                games: filteredGames
+                filter: $filter,
+                shouldUpdateGame: $shouldUpdateGame
             )
         }
         .font(.custom("Departure Mono", size: 24.0))
