@@ -39,9 +39,7 @@ Supported features:
 
 Todo: 
 
-- Save states
 - Debugging tools
-- Design overhaul
 
 ## Screenshots
 
