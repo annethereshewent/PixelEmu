@@ -36,6 +36,9 @@
 		E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E896C28C2CA67FFA008161AA /* AudioManager.swift */; };
 		E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */; };
 		E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */; };
+		E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */; };
+		E8BA68202CC49A3900CE7E54 /* DepartureMono.woff in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */; };
+		E8BA68212CC49A3900CE7E54 /* DepartureMono.otf in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
 		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
@@ -49,9 +52,6 @@
 		E8EE5D862CC2216300CD77B6 /* CurrentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D852CC2216300CD77B6 /* CurrentView.swift */; };
 		E8EE5D882CC2221600CD77B6 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D872CC2221600CD77B6 /* LibraryView.swift */; };
 		E8EE5D8A2CC2227600CD77B6 /* ImportGamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */; };
-		E8EE5D8F2CC224F700CD77B6 /* DepartureMono.woff in Resources */ = {isa = PBXBuildFile; fileRef = E8EE5D8C2CC224F700CD77B6 /* DepartureMono.woff */; };
-		E8EE5D902CC224F700CD77B6 /* DepartureMono.otf in Resources */ = {isa = PBXBuildFile; fileRef = E8EE5D8D2CC224F700CD77B6 /* DepartureMono.otf */; };
-		E8EE5D912CC224F700CD77B6 /* DepartureMono.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = E8EE5D8E2CC224F700CD77B6 /* DepartureMono.woff2 */; };
 		E8EE5D932CC238F500CD77B6 /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */; };
 		E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */; };
 		E8EE5D972CC3491A00CD77B6 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D962CC3491A00CD77B6 /* Colors.swift */; };
@@ -116,6 +116,9 @@
 		E896C28C2CA67FFA008161AA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDialog.swift; sourceTree = "<group>"; };
 		E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeGameDialog.swift; sourceTree = "<group>"; };
+		E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff2; sourceTree = "<group>"; };
+		E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff; sourceTree = "<group>"; };
+		E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.otf; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
 		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
 		E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = drastic_bios_readme.txt; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_readme.txt"; sourceTree = "<group>"; };
@@ -129,9 +132,6 @@
 		E8EE5D852CC2216300CD77B6 /* CurrentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentView.swift; sourceTree = "<group>"; };
 		E8EE5D872CC2221600CD77B6 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportGamesView.swift; sourceTree = "<group>"; };
-		E8EE5D8C2CC224F700CD77B6 /* DepartureMono.woff */ = {isa = PBXFileReference; lastKnownFileType = file; name = DepartureMono.woff; path = "../../../../../Downloads/DepartureMono-1.420/DepartureMono.woff"; sourceTree = "<group>"; };
-		E8EE5D8D2CC224F700CD77B6 /* DepartureMono.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = DepartureMono.otf; path = "../../../../../Downloads/DepartureMono-1.420/DepartureMono.otf"; sourceTree = "<group>"; };
-		E8EE5D8E2CC224F700CD77B6 /* DepartureMono.woff2 */ = {isa = PBXFileReference; lastKnownFileType = file; name = DepartureMono.woff2; path = "../../../../../Downloads/DepartureMono-1.420/DepartureMono.woff2"; sourceTree = "<group>"; };
 		E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
 		E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryModal.swift; sourceTree = "<group>"; };
 		E8EE5D962CC3491A00CD77B6 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
@@ -351,9 +351,9 @@
 		E8EE5D8B2CC224E600CD77B6 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
-				E8EE5D8D2CC224F700CD77B6 /* DepartureMono.otf */,
-				E8EE5D8C2CC224F700CD77B6 /* DepartureMono.woff */,
-				E8EE5D8E2CC224F700CD77B6 /* DepartureMono.woff2 */,
+				E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */,
+				E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */,
+				E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */,
 			);
 			path = fonts;
 			sourceTree = "<group>";
@@ -496,13 +496,13 @@
 			files = (
 				E806EA9A2CA1284B0081D3E8 /* .gitignore in Resources */,
 				E806EA702CA0D8330081D3E8 /* game_db.json in Resources */,
+				E8BA68202CC49A3900CE7E54 /* DepartureMono.woff in Resources */,
+				E8BA68212CC49A3900CE7E54 /* DepartureMono.otf in Resources */,
+				E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */,
 				E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */,
 				E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */,
-				E8EE5D902CC224F700CD77B6 /* DepartureMono.otf in Resources */,
 				E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */,
 				E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */,
-				E8EE5D912CC224F700CD77B6 /* DepartureMono.woff2 in Resources */,
-				E8EE5D8F2CC224F700CD77B6 /* DepartureMono.woff in Resources */,
 				E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
