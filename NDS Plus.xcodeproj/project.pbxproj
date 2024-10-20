@@ -30,20 +30,34 @@
 		E806EA9A2CA1284B0081D3E8 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E806EA992CA1284B0081D3E8 /* .gitignore */; };
 		E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9B2CA246760081D3E8 /* DriveResponse.swift */; };
 		E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */; };
-		E806EAA02CA3AD080081D3E8 /* SaveManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */; };
+		E806EAA02CA3AD080081D3E8 /* SaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */; };
 		E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */; };
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
 		E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E896C28C2CA67FFA008161AA /* AudioManager.swift */; };
+		E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */; };
+		E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */; };
+		E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */; };
+		E8BA68202CC49A3900CE7E54 /* DepartureMono.woff in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */; };
+		E8BA68212CC49A3900CE7E54 /* DepartureMono.otf in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
 		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
 		E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */; };
 		E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */; };
 		E8C245EF2CBCC36F00B6DF67 /* DualScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */; };
-		E8C245F62CBDBA4500B6DF67 /* StateMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */; };
+		E8C245F62CBDBA4500B6DF67 /* GameMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F52CBDBA4500B6DF67 /* GameMenuView.swift */; };
 		E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F72CBE043B00B6DF67 /* SaveState.swift */; };
 		E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */; };
 		E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C246012CBE08D600B6DF67 /* SaveStateView.swift */; };
+		E8EE5D862CC2216300CD77B6 /* CurrentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D852CC2216300CD77B6 /* CurrentView.swift */; };
+		E8EE5D882CC2221600CD77B6 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D872CC2221600CD77B6 /* LibraryView.swift */; };
+		E8EE5D8A2CC2227600CD77B6 /* ImportGamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */; };
+		E8EE5D932CC238F500CD77B6 /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */; };
+		E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */; };
+		E8EE5D972CC3491A00CD77B6 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D962CC3491A00CD77B6 /* Colors.swift */; };
+		E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */; };
+		E8EE5DA02CC35FB200CD77B6 /* ErrorAlertModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */; };
+		E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,20 +110,34 @@
 		E806EA992CA1284B0081D3E8 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		E806EA9B2CA246760081D3E8 /* DriveResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveResponse.swift; sourceTree = "<group>"; };
 		E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileJSON.swift; sourceTree = "<group>"; };
-		E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveManagement.swift; sourceTree = "<group>"; };
+		E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveManagementView.swift; sourceTree = "<group>"; };
 		E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
 		E896C28C2CA67FFA008161AA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDialog.swift; sourceTree = "<group>"; };
+		E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeGameDialog.swift; sourceTree = "<group>"; };
+		E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff2; sourceTree = "<group>"; };
+		E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff; sourceTree = "<group>"; };
+		E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.otf; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
 		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
 		E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = drastic_bios_readme.txt; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_readme.txt"; sourceTree = "<group>"; };
 		E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = drastic_bios_arm9.bin; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_arm9.bin"; sourceTree = "<group>"; };
 		E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = drastic_bios_arm7.bin; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_arm7.bin"; sourceTree = "<group>"; };
 		E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DualScreenView.swift; sourceTree = "<group>"; };
-		E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMenuView.swift; sourceTree = "<group>"; };
+		E8C245F52CBDBA4500B6DF67 /* GameMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMenuView.swift; sourceTree = "<group>"; };
 		E8C245F72CBE043B00B6DF67 /* SaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveState.swift; sourceTree = "<group>"; };
 		E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateEntriesView.swift; sourceTree = "<group>"; };
 		E8C246012CBE08D600B6DF67 /* SaveStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateView.swift; sourceTree = "<group>"; };
+		E8EE5D852CC2216300CD77B6 /* CurrentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentView.swift; sourceTree = "<group>"; };
+		E8EE5D872CC2221600CD77B6 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportGamesView.swift; sourceTree = "<group>"; };
+		E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
+		E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryModal.swift; sourceTree = "<group>"; };
+		E8EE5D962CC3491A00CD77B6 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModal.swift; sourceTree = "<group>"; };
+		E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorAlertModal.swift; sourceTree = "<group>"; };
+		E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +216,8 @@
 		E806E9F62C97E1B10081D3E8 /* NDS Plus */ = {
 			isa = PBXGroup;
 			children = (
+				E8EE5DA52CC429CC00CD77B6 /* serializable */,
+				E8EE5D8B2CC224E600CD77B6 /* fonts */,
 				E8C245E72CBCAA5000B6DF67 /* bin */,
 				E806EA6E2CA0D7B70081D3E8 /* json */,
 				E806EA672C9E9BA60081D3E8 /* enums */,
@@ -215,8 +245,9 @@
 			isa = PBXGroup;
 			children = (
 				E806E9F92C97E1B10081D3E8 /* ContentView.swift */,
+				E8EE5D982CC35F6C00CD77B6 /* modals */,
 				E8C245F92CBE068700B6DF67 /* save_states */,
-				E8C245F22CBCC55500B6DF67 /* settings */,
+				E8C245F22CBCC55500B6DF67 /* main */,
 				E8C245F12CBCC54F00B6DF67 /* game */,
 			);
 			path = views;
@@ -229,6 +260,8 @@
 				E806EA732CA0EE100081D3E8 /* BackupFile.swift */,
 				E806EA7B2CA115FA0081D3E8 /* CloudService.swift */,
 				E896C28C2CA67FFA008161AA /* AudioManager.swift */,
+				E8EE5D962CC3491A00CD77B6 /* Colors.swift */,
+				E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -237,10 +270,7 @@
 			isa = PBXGroup;
 			children = (
 				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
-				E806EA712CA0DA720081D3E8 /* GameEntry.swift */,
-				E806EA9B2CA246760081D3E8 /* DriveResponse.swift */,
 				E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */,
-				E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */,
 				E8C245F72CBE043B00B6DF67 /* SaveState.swift */,
 			);
 			path = models;
@@ -258,6 +288,7 @@
 			isa = PBXGroup;
 			children = (
 				E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */,
+				E8EE5D852CC2216300CD77B6 /* CurrentView.swift */,
 			);
 			path = enums;
 			sourceTree = "<group>";
@@ -283,6 +314,7 @@
 		E8C245F12CBCC54F00B6DF67 /* game */ = {
 			isa = PBXGroup;
 			children = (
+				E8C245F52CBDBA4500B6DF67 /* GameMenuView.swift */,
 				E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */,
 				E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */,
 				E8C245EE2CBCC36F00B6DF67 /* DualScreenView.swift */,
@@ -292,25 +324,59 @@
 			path = game;
 			sourceTree = "<group>";
 		};
-		E8C245F22CBCC55500B6DF67 /* settings */ = {
+		E8C245F22CBCC55500B6DF67 /* main */ = {
 			isa = PBXGroup;
 			children = (
 				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
 				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
-				E806EA9F2CA3AD080081D3E8 /* SaveManagement.swift */,
+				E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */,
 				E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */,
+				E8EE5D872CC2221600CD77B6 /* LibraryView.swift */,
+				E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */,
+				E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */,
+				E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */,
 			);
-			path = settings;
+			path = main;
 			sourceTree = "<group>";
 		};
 		E8C245F92CBE068700B6DF67 /* save_states */ = {
 			isa = PBXGroup;
 			children = (
-				E8C245F52CBDBA4500B6DF67 /* StateMenuView.swift */,
 				E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */,
 				E8C246012CBE08D600B6DF67 /* SaveStateView.swift */,
 			);
 			path = save_states;
+			sourceTree = "<group>";
+		};
+		E8EE5D8B2CC224E600CD77B6 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */,
+				E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */,
+				E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */,
+			);
+			path = fonts;
+			sourceTree = "<group>";
+		};
+		E8EE5D982CC35F6C00CD77B6 /* modals */ = {
+			isa = PBXGroup;
+			children = (
+				E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */,
+				E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */,
+				E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */,
+				E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */,
+			);
+			path = modals;
+			sourceTree = "<group>";
+		};
+		E8EE5DA52CC429CC00CD77B6 /* serializable */ = {
+			isa = PBXGroup;
+			children = (
+				E806EA712CA0DA720081D3E8 /* GameEntry.swift */,
+				E806EA9B2CA246760081D3E8 /* DriveResponse.swift */,
+				E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */,
+			);
+			path = serializable;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -430,6 +496,9 @@
 			files = (
 				E806EA9A2CA1284B0081D3E8 /* .gitignore in Resources */,
 				E806EA702CA0D8330081D3E8 /* game_db.json in Resources */,
+				E8BA68202CC49A3900CE7E54 /* DepartureMono.woff in Resources */,
+				E8BA68212CC49A3900CE7E54 /* DepartureMono.otf in Resources */,
+				E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */,
 				E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */,
 				E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */,
 				E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */,
@@ -562,11 +631,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8EE5D882CC2221600CD77B6 /* LibraryView.swift in Sources */,
 				E806EA782CA1078F0081D3E8 /* TouchControlsView.swift in Sources */,
+				E8EE5D862CC2216300CD77B6 /* CurrentView.swift in Sources */,
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
 				E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */,
 				E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */,
 				E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */,
+				E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */,
 				E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */,
 				E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
@@ -574,19 +646,27 @@
 				E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */,
 				E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */,
 				E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */,
+				E8EE5D932CC238F500CD77B6 /* NavigationBarView.swift in Sources */,
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */,
 				E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */,
+				E8EE5D8A2CC2227600CD77B6 /* ImportGamesView.swift in Sources */,
+				E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */,
 				E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */,
+				E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */,
+				E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
 				E8C245EF2CBCC36F00B6DF67 /* DualScreenView.swift in Sources */,
 				E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */,
-				E806EAA02CA3AD080081D3E8 /* SaveManagement.swift in Sources */,
+				E806EAA02CA3AD080081D3E8 /* SaveManagementView.swift in Sources */,
+				E8EE5D972CC3491A00CD77B6 /* Colors.swift in Sources */,
+				E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */,
 				E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
+				E8EE5DA02CC35FB200CD77B6 /* ErrorAlertModal.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
 				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
-				E8C245F62CBDBA4500B6DF67 /* StateMenuView.swift in Sources */,
+				E8C245F62CBDBA4500B6DF67 /* GameMenuView.swift in Sources */,
 				E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -754,6 +834,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NDS-Plus-Info.plist";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access for recording audio for certain games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -790,6 +871,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NDS-Plus-Info.plist";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access for recording audio for certain games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -864,6 +946,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 72VANXCC9C;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusUITests";
@@ -883,6 +966,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 72VANXCC9C;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusUITests";

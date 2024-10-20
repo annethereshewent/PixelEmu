@@ -36,8 +36,6 @@ class GameController {
             
             eventListenerClosure(controller)
         }
-        
-        
     }
     
     @objc private func handleControllerDidDisconnect(_ notification: Notification) {

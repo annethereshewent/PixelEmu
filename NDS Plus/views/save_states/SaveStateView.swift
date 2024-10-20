@@ -55,7 +55,6 @@ struct SaveStateView: View {
                             .frame(width: 30, height: 30)
                             .foregroundColor(.yellow)
                         Text("Load save state")
-                            .font(.title3)
                     }
                 }
                 Button() {
@@ -68,7 +67,6 @@ struct SaveStateView: View {
                             .frame(width: 30, height: 30)
                             .foregroundColor(.green)
                         Text("Update save state")
-                            .font(.title3)
                         
                     }
                 }
@@ -82,13 +80,13 @@ struct SaveStateView: View {
                             .frame(width: 30, height: 30)
                             .foregroundColor(.red)
                         Text("Delete save state")
-                            .font(.title3)
                     }
                 }
             }
             .presentationCompactAdaptation(.popover)
             .padding()
         }
-        .foregroundColor(color)
+        .foregroundColor(Colors.primaryColor)
+        .font(.custom("Departure Mono", size: 16))
     }
 }

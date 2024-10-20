@@ -16,6 +16,7 @@ struct DualScreenView: View {
     @Binding var emulator: MobileEmulator?
     @Binding var buttonStarted: [ButtonEvent:Bool]
     @Binding var audioManager: AudioManager?
+    @Binding var isSoundOn: Bool
     
     private var screenRatio: Float {
         if gameController?.controller?.extendedGamepad == nil {
@@ -122,6 +123,12 @@ struct DualScreenView: View {
                                 if let manager = audioManager {
                                     feedbackGenerator.impactOccurred()
                                     manager.toggleAudio()
+                                    
+                                    isSoundOn = !manager.playerPaused
+
+                                    let defaults = UserDefaults.standard
+                                    
+                                    defaults.setValue(isSoundOn, forKey: "isSoundOn")
                                 }
                             } label: {
                                 Image("Volume Button")

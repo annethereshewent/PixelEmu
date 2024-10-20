@@ -1,5 +1,5 @@
 //
-//  StateMenuView.swift
+//  GameMenuView.swift
 //  NDS Plus
 //
 //  Created by Anne Castrillon on 10/14/24.
@@ -8,7 +8,7 @@
 import SwiftUI
 import DSEmulatorMobile
 
-struct StateMenuView: View {
+struct GameMenuView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Binding var emulator: MobileEmulator?
     @Binding var isRunning: Bool
@@ -31,6 +31,8 @@ struct StateMenuView: View {
             return Color.white
         case .light:
             return Color.black
+        @unknown default:
+            return Color.white
         }
     }
     
@@ -44,7 +46,7 @@ struct StateMenuView: View {
                     goHome()
                 }
                 .foregroundColor(.red)
-                .font(.title2)
+                .font(.custom("Departure Mono", size: 24))
                 Spacer()
                 Spacer()
             }
@@ -59,7 +61,6 @@ struct StateMenuView: View {
                             .resizable()
                             .frame(width: 35, height: 35)
                         Text("Save states")
-                            .font(.callout)
                     }
                 }
                 Spacer()
@@ -71,7 +72,6 @@ struct StateMenuView: View {
                             .resizable()
                             .frame(width: 35, height: 35)
                         Text("Hold Button")
-                            .font(.callout)
                     }
                     
                 }
@@ -84,7 +84,6 @@ struct StateMenuView: View {
                             .resizable()
                             .frame(width: 35, height: 35)
                         Text("Resume game")
-                            .font(.callout)
                     }
                 }
                 
@@ -97,6 +96,8 @@ struct StateMenuView: View {
             }
             .presentationDetents([.height(150)])
         }
+        .foregroundColor(Colors.primaryColor)
+        .font(.custom("Departure Mono", size: 16))
         .foregroundColor(color)
         .sheet(isPresented: $isStateEntriesPresented) {
             SaveStateEntriesView(

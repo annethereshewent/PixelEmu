@@ -14,15 +14,8 @@ struct GameView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.scenePhase) var scenePhase
     
-    @State private var topImage: CGImage?
-    @State private var bottomImage: CGImage?
-    @State private var gameName = ""
-    @State private var backupFile: BackupFile? = nil
     @State private var debounceTimer: Timer? = nil
-    @State private var gameController: GameController?
-    @State private var audioManager: AudioManager? = nil
-    @State private var isRunning = false
-    @State private var workItem: DispatchWorkItem? = nil
+    
     @State private var loading = false
     @State private var isMenuPresented = false
     @State private var homePressed = false
@@ -39,6 +32,20 @@ struct GameView: View {
     @Binding var cloudService: CloudService?
     @Binding var game: Game?
     @Binding var shouldUpdateGame: Bool
+    @Binding var isSoundOn: Bool
+    @Binding var themeColor: Color
+    
+    @Binding var gameName: String
+    @Binding var backupFile: BackupFile?
+    @Binding var gameController: GameController?
+    
+    @Binding var audioManager: AudioManager?
+    @Binding var isRunning: Bool
+    @Binding var workItem: DispatchWorkItem?
+    @Binding var topImage: CGImage?
+    @Binding var bottomImage: CGImage?
+    
+    
     
     @Environment(\.modelContext) private var context
     
@@ -48,14 +55,9 @@ struct GameView: View {
     private let graphicsParser = GraphicsParser()
 
     private func goHome() {
-        isMenuPresented = false
-        
-        emulator = nil
-        isRunning = false
-        workItem?.cancel()
-        workItem = nil
-        
-        audioManager?.isRunning = false
+        emulator?.setPause(true)
+        audioManager?.muteAudio()
+
         presentationMode.wrappedValue.dismiss()
     }
     
@@ -234,7 +236,11 @@ struct GameView: View {
             }
             isRunning = true
             
-            self.audioManager = AudioManager()
+            audioManager = AudioManager()
+            
+            if !isSoundOn {
+                audioManager?.muteAudio()
+            }
             
             workItem = DispatchWorkItem {
                 if let emu = emulator {
@@ -296,7 +302,7 @@ struct GameView: View {
     var body: some View {
         ZStack {
             if gameController?.controller?.extendedGamepad == nil {
-                Color.cyan
+                themeColor
             } else {
                 Color.black
             }
@@ -308,7 +314,8 @@ struct GameView: View {
                     bottomImage: $bottomImage,
                     emulator: $emulator,
                     buttonStarted: $buttonStarted,
-                    audioManager: $audioManager
+                    audioManager: $audioManager,
+                    isSoundOn: $isSoundOn
                 )
                 if gameController?.controller?.extendedGamepad == nil {
                     TouchControlsView(
@@ -330,7 +337,7 @@ struct GameView: View {
         .sheet(
             isPresented: $isMenuPresented
         ) {
-            StateMenuView(
+            GameMenuView(
                 emulator: $emulator,
                 isRunning: $isRunning,
                 workItem: $workItem,
@@ -348,10 +355,16 @@ struct GameView: View {
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
             Task {
-                await self.run()
-                gameController = GameController(closure: { gameController in
-                    addControllerEventListeners(gameController: gameController)
-                })
+                if !isRunning {
+                    await self.run()
+                    gameController = GameController(closure: { gameController in
+                        addControllerEventListeners(gameController: gameController)
+                    })
+                } else {
+                    if isSoundOn {
+                        audioManager?.resumeAudio()
+                    }
+                }
             }
         }
         .onDisappear {
@@ -381,6 +394,8 @@ struct GameView: View {
                     emu.setPause(true)
                     audioManager?.muteAudio()
                 }
+                break
+            default:
                 break
             }
         }
