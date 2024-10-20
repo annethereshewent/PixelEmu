@@ -87,7 +87,7 @@
 		A447CA76E79FFDEE37BE12B7 /* Pods-NDS Plus-NDS PlusUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NDS Plus-NDS PlusUITests.release.xcconfig"; path = "Target Support Files/Pods-NDS Plus-NDS PlusUITests/Pods-NDS Plus-NDS PlusUITests.release.xcconfig"; sourceTree = "<group>"; };
 		B8308C38ED1B56D07188F0E7 /* Pods_NDS_Plus_NDS_PlusUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NDS_Plus_NDS_PlusUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7DABE8183A6D6C1636DBB3F /* Pods_NDS_PlusTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NDS_PlusTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E806E9F42C97E1B10081D3E8 /* NDS Plus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NDS Plus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E806E9F42C97E1B10081D3E8 /* NDS+.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NDS+.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E806E9F72C97E1B10081D3E8 /* NDS_PlusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusApp.swift; sourceTree = "<group>"; };
 		E806E9F92C97E1B10081D3E8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -206,7 +206,7 @@
 		E806E9F52C97E1B10081D3E8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E806E9F42C97E1B10081D3E8 /* NDS Plus.app */,
+				E806E9F42C97E1B10081D3E8 /* NDS+.app */,
 				E806EA042C97E1B20081D3E8 /* NDS PlusTests.xctest */,
 				E806EA0E2C97E1B20081D3E8 /* NDS PlusUITests.xctest */,
 			);
@@ -401,7 +401,7 @@
 				E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */,
 			);
 			productName = "NDS Plus";
-			productReference = E806E9F42C97E1B10081D3E8 /* NDS Plus.app */;
+			productReference = E806E9F42C97E1B10081D3E8 /* NDS+.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E806EA032C97E1B20081D3E8 /* NDS PlusTests */ = {
@@ -846,7 +846,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-Plus";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "NDS+";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -883,7 +883,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-Plus";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "NDS+";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
