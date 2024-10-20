@@ -39,6 +39,7 @@
 		E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */; };
 		E8BA68202CC49A3900CE7E54 /* DepartureMono.woff in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */; };
 		E8BA68212CC49A3900CE7E54 /* DepartureMono.otf in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */; };
+		E8BA68232CC4AB9900CE7E54 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8BA68222CC4AB9900CE7E54 /* Launch Screen.storyboard */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
 		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
@@ -119,6 +120,7 @@
 		E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff2; sourceTree = "<group>"; };
 		E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff; sourceTree = "<group>"; };
 		E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.otf; sourceTree = "<group>"; };
+		E8BA68222CC4AB9900CE7E54 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
 		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
 		E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = drastic_bios_readme.txt; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_readme.txt"; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				E806EA2B2C9824A80081D3E8 /* NDS-Plus-Info.plist */,
 				E806E9F72C97E1B10081D3E8 /* NDS_PlusApp.swift */,
 				E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */,
+				E8BA68222CC4AB9900CE7E54 /* Launch Screen.storyboard */,
 				E806E9FD2C97E1B20081D3E8 /* Preview Content */,
 			);
 			path = "NDS Plus";
@@ -500,6 +503,7 @@
 				E8BA68212CC49A3900CE7E54 /* DepartureMono.otf in Resources */,
 				E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */,
 				E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */,
+				E8BA68232CC4AB9900CE7E54 /* Launch Screen.storyboard in Resources */,
 				E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */,
 				E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */,
 				E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */,
@@ -837,7 +841,7 @@
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access for recording audio for certain games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -874,7 +878,7 @@
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access for recording audio for certain games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
