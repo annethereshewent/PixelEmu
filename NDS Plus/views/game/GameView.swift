@@ -383,7 +383,9 @@ struct GameView: View {
                         if let emu = emulator {
                             isPaused = false
                             emu.setPause(false)
-                            audioManager?.resumeAudio()
+                            if isSoundOn {
+                                audioManager?.resumeAudio()
+                            }
                         }
                     }
                     break
