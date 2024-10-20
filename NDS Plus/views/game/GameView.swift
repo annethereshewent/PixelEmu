@@ -300,109 +300,126 @@ struct GameView: View {
     }
     
     var body: some View {
-        ZStack {
-            if gameController?.controller?.extendedGamepad == nil {
-                themeColor
-            } else {
-                Color.black
-            }
-            VStack(spacing: 0) {
-                Spacer()
-                DualScreenView(
-                    gameController: $gameController,
-                    topImage: $topImage,
-                    bottomImage: $bottomImage,
-                    emulator: $emulator,
-                    buttonStarted: $buttonStarted,
-                    audioManager: $audioManager,
-                    isSoundOn: $isSoundOn
-                )
+        if !loading {
+            ZStack {
                 if gameController?.controller?.extendedGamepad == nil {
-                    TouchControlsView(
-                        emulator: $emulator,
-                        audioManager: $audioManager,
-                        workItem: $workItem,
-                        isRunning: $isRunning,
-                        buttonStarted: $buttonStarted,
-                        bios7Data: $bios7Data,
-                        bios9Data: $bios9Data,
-                        firmwareData: $firmwareData,
-                        romData: $romData,
-                        gameName: $gameName,
-                        isMenuPresented: $isMenuPresented
-                    )
-                }
-            }
-        }
-        .sheet(
-            isPresented: $isMenuPresented
-        ) {
-            GameMenuView(
-                emulator: $emulator,
-                isRunning: $isRunning,
-                workItem: $workItem,
-                audioManager: $audioManager,
-                isMenuPresented: $isMenuPresented,
-                gameName: $gameName,
-                bios7Data: $bios7Data,
-                bios9Data: $bios9Data,
-                firmwareData: $firmwareData,
-                romData: $romData,
-                shouldGoHome: $shouldGoHome,
-                game: $game
-            )
-        }
-        .onAppear {
-            UIApplication.shared.isIdleTimerDisabled = true
-            Task {
-                if !isRunning {
-                    await self.run()
-                    gameController = GameController(closure: { gameController in
-                        addControllerEventListeners(gameController: gameController)
-                    })
+                    themeColor
                 } else {
-                    if isSoundOn {
-                        audioManager?.resumeAudio()
+                    Color.black
+                }
+                VStack(spacing: 0) {
+                    Spacer()
+                    DualScreenView(
+                        gameController: $gameController,
+                        topImage: $topImage,
+                        bottomImage: $bottomImage,
+                        emulator: $emulator,
+                        buttonStarted: $buttonStarted,
+                        audioManager: $audioManager,
+                        isSoundOn: $isSoundOn
+                    )
+                    if gameController?.controller?.extendedGamepad == nil {
+                        TouchControlsView(
+                            emulator: $emulator,
+                            audioManager: $audioManager,
+                            workItem: $workItem,
+                            isRunning: $isRunning,
+                            buttonStarted: $buttonStarted,
+                            bios7Data: $bios7Data,
+                            bios9Data: $bios9Data,
+                            firmwareData: $firmwareData,
+                            romData: $romData,
+                            gameName: $gameName,
+                            isMenuPresented: $isMenuPresented
+                        )
                     }
                 }
             }
-        }
-        .onDisappear {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
-        .onChange(of: shouldGoHome) {
-            if shouldGoHome {
-                goHome()
+            .sheet(
+                isPresented: $isMenuPresented
+            ) {
+                GameMenuView(
+                    emulator: $emulator,
+                    isRunning: $isRunning,
+                    workItem: $workItem,
+                    audioManager: $audioManager,
+                    isMenuPresented: $isMenuPresented,
+                    gameName: $gameName,
+                    bios7Data: $bios7Data,
+                    bios9Data: $bios9Data,
+                    firmwareData: $firmwareData,
+                    romData: $romData,
+                    shouldGoHome: $shouldGoHome,
+                    game: $game
+                )
             }
-        }
-        .onChange(of: scenePhase) {
-            switch scenePhase {
-            case .active:
-                if isPaused {
+            .onAppear {
+                UIApplication.shared.isIdleTimerDisabled = true
+                Task {
+                    if !isRunning {
+                        await self.run()
+                        gameController = GameController(closure: { gameController in
+                            addControllerEventListeners(gameController: gameController)
+                        })
+                    } else {
+                        if isSoundOn {
+                            audioManager?.resumeAudio()
+                        }
+                    }
+                }
+            }
+            .onDisappear {
+                UIApplication.shared.isIdleTimerDisabled = false
+            }
+            .onChange(of: shouldGoHome) {
+                if shouldGoHome {
+                    goHome()
+                }
+            }
+            .onChange(of: scenePhase) {
+                switch scenePhase {
+                case .active:
+                    if isPaused {
+                        if let emu = emulator {
+                            isPaused = false
+                            emu.setPause(false)
+                            audioManager?.resumeAudio()
+                        }
+                    }
+                    break
+                case .inactive:
+                    break
+                case .background:
                     if let emu = emulator {
-                        isPaused = false
-                        emu.setPause(false)
-                        audioManager?.resumeAudio()
+                        isPaused = true
+                        emu.setPause(true)
+                        audioManager?.muteAudio()
                     }
+                    break
+                default:
+                    break
                 }
-                break
-            case .inactive:
-                break
-            case .background:
-                if let emu = emulator {
-                    isPaused = true
-                    emu.setPause(true)
-                    audioManager?.muteAudio()
-                }
-                break
-            default:
-                break
             }
+            .navigationBarTitle("")
+            .navigationBarHidden(true)
+            .ignoresSafeArea(.all)
+            .edgesIgnoringSafeArea(.all)
+            .statusBarHidden()
+        } else {
+            ZStack {
+                themeColor
+                VStack {
+                    Image("Launch Screen Logo")
+                        .resizable()
+                        .frame(maxWidth: 342, maxHeight: 272)
+                    ProgressView()
+                }
+            }
+            .navigationBarTitle("")
+            .navigationBarHidden(true)
+            .ignoresSafeArea(.all)
+            .edgesIgnoringSafeArea(.all)
+            .statusBarHidden()
         }
-        .navigationBarTitle("")
-        .navigationBarHidden(true)
-        .ignoresSafeArea(.all)
-        .edgesIgnoringSafeArea(.all)
-        .statusBarHidden()
     }
 }
