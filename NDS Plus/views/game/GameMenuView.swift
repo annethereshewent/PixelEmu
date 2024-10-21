@@ -37,6 +37,7 @@ struct GameMenuView: View {
     }
     
     private func goHome() {
+        isMenuPresented = false
         shouldGoHome = true
     }
     var body: some View {
