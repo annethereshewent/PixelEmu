@@ -134,13 +134,15 @@ struct GamesListView: View {
                     )
                 } else if showDeleteSuccess {
                     AlertModal(
+                        alertTitle: "Success!",
                         text: "Successfully removed game from library.",
                         showAlert: $showDeleteSuccess
                     )
                 } else if showDeleteError {
-                    ErrorAlertModal(
-                        showAlert: $showDeleteError,
-                        errorMessage: "There was an error removing the game."
+                    AlertModal(
+                        alertTitle: "Oops!",
+                        text: "There was an error removing the game.",
+                        showAlert: $showDeleteError
                     )
                 }
             }

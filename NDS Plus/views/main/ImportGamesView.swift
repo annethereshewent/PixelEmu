@@ -142,9 +142,10 @@ struct ImportGamesView: View {
                 }
             }
             if showErrorMessage {
-                ErrorAlertModal(
-                    showAlert: $showErrorMessage,
-                    errorMessage: "There was an error importing the game(s)."
+                AlertModal(
+                    alertTitle: "Oops!",
+                    text: "There was an error importing the game(s).",
+                    showAlert: $showErrorMessage
                 )
             }
         }

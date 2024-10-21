@@ -60,7 +60,6 @@
 		E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */; };
 		E8EE5D972CC3491A00CD77B6 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D962CC3491A00CD77B6 /* Colors.swift */; };
 		E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */; };
-		E8EE5DA02CC35FB200CD77B6 /* ErrorAlertModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */; };
 		E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */; };
 /* End PBXBuildFile section */
 
@@ -144,7 +143,6 @@
 		E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryModal.swift; sourceTree = "<group>"; };
 		E8EE5D962CC3491A00CD77B6 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModal.swift; sourceTree = "<group>"; };
-		E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorAlertModal.swift; sourceTree = "<group>"; };
 		E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -375,7 +373,6 @@
 			children = (
 				E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */,
 				E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */,
-				E8EE5D9F2CC35FB200CD77B6 /* ErrorAlertModal.swift */,
 				E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */,
 			);
 			path = modals;
@@ -679,7 +676,6 @@
 				E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */,
 				E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
-				E8EE5DA02CC35FB200CD77B6 /* ErrorAlertModal.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
 				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
 				E8C245F62CBDBA4500B6DF67 /* GameMenuView.swift in Sources */,
