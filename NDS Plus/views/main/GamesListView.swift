@@ -76,13 +76,12 @@ struct GamesListView: View {
                 ScrollView {
                     LazyVGrid(columns: columns) {
                         ForEach(filteredGames) { game in
-                            GameEntryView(
+                            GameEntryViewWrapper(
                                 showDeleteConfirmation: $showDeleteConfirmation,
                                 showDeleteSuccess: $showDeleteSuccess,
                                 deleteAction: $deleteAction,
                                 gameToDelete: $gameToDelete,
-                                game: game,
-                                showContextMenu: true
+                                game: game
                             ) {
                                 // refresh the url's bookmark
                                 var isStale = false

@@ -50,6 +50,7 @@
 		E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F72CBE043B00B6DF67 /* SaveState.swift */; };
 		E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */; };
 		E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C246012CBE08D600B6DF67 /* SaveStateView.swift */; };
+		E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */; };
 		E8EE5D862CC2216300CD77B6 /* CurrentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D852CC2216300CD77B6 /* CurrentView.swift */; };
 		E8EE5D882CC2221600CD77B6 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D872CC2221600CD77B6 /* LibraryView.swift */; };
 		E8EE5D8A2CC2227600CD77B6 /* ImportGamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */; };
@@ -131,6 +132,7 @@
 		E8C245F72CBE043B00B6DF67 /* SaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveState.swift; sourceTree = "<group>"; };
 		E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateEntriesView.swift; sourceTree = "<group>"; };
 		E8C246012CBE08D600B6DF67 /* SaveStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateView.swift; sourceTree = "<group>"; };
+		E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryViewWrapper.swift; sourceTree = "<group>"; };
 		E8EE5D852CC2216300CD77B6 /* CurrentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentView.swift; sourceTree = "<group>"; };
 		E8EE5D872CC2221600CD77B6 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportGamesView.swift; sourceTree = "<group>"; };
@@ -338,6 +340,7 @@
 				E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */,
 				E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */,
 				E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */,
+				E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -648,6 +651,7 @@
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
 				E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */,
 				E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */,
+				E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */,
 				E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */,
 				E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */,
 				E8EE5D932CC238F500CD77B6 /* NavigationBarView.swift in Sources */,
