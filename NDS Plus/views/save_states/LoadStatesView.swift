@@ -22,7 +22,6 @@ struct LoadStatesView: View {
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
     @Binding var gameUrl: URL?
-    
     @State private var currentState: SaveState? = nil
     
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
@@ -126,9 +125,6 @@ struct LoadStatesView: View {
                 }
             }
             Spacer()
-        }
-        .onAppear() {
-            print("uhhhh wut?????")
         }
         .onChange(of: currentState) {
             var bios7Ptr: UnsafeBufferPointer<UInt8>!

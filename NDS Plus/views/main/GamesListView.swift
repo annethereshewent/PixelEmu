@@ -34,6 +34,8 @@ struct GamesListView: View {
     @State private var deleteAction: () -> Void = {}
     @State private var gameToDelete: Game?
     
+    @State private var isLoadStatesPresented = false
+    @State private var selectedGame: Game?
     @Query private var games: [Game]
     
     private var filteredGames: [Game] {
@@ -81,16 +83,8 @@ struct GamesListView: View {
                                 showDeleteSuccess: $showDeleteSuccess,
                                 deleteAction: $deleteAction,
                                 gameToDelete: $gameToDelete,
-                                emulator: $emulator,
-                                romData: $romData,
-                                bios7Data: $bios7Data,
-                                bios9Data: $bios9Data,
-                                firmwareData: $firmwareData,
-                                path: $path,
-                                runningGame: $game,
-                                isRunning: $isRunning,
-                                workItem: $workItem,
-                                gameUrl: $gameUrl,
+                                isLoadStatesPresented: $isLoadStatesPresented,
+                                selectedGame: $selectedGame,
                                 game: game
                             ) {
                                 // refresh the url's bookmark
@@ -155,11 +149,26 @@ struct GamesListView: View {
             .onChange(of: gameToDelete) {
                 deleteAction = {
                     if let game = gameToDelete {
-                        print("deleting the game!")
                         context.delete(game)
                         showDeleteSuccess = true
                     }
                 }
+            }
+            .sheet(isPresented: $isLoadStatesPresented) {
+                LoadStatesView(
+                    emulator: $emulator,
+                    selectedGame: $selectedGame,
+                    game: $game,
+                    isPresented: $isLoadStatesPresented,
+                    romData: $romData,
+                    bios7Data: $bios7Data,
+                    bios9Data: $bios9Data,
+                    firmwareData: $firmwareData,
+                    path: $path,
+                    isRunning: $isRunning,
+                    workItem: $workItem,
+                    gameUrl: $gameUrl
+                )
             }
         } else {
             Spacer()
