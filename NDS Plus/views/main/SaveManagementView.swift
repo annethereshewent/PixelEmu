@@ -26,10 +26,6 @@ struct SaveManagementView: View {
     @State private var showUploadAlert = false
     @State private var showErrorAlert = false
     @State private var deleteAction: () -> Void = {}
-    
-    @State private var showDeleteConfirmation = false
-    @State private var showDeleteSuccess = false
-    @State private var gameToDelete: Game? = nil
 
     @Query private var games: [Game]
     
