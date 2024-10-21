@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct AlertModal: View {
-    var text: String
+    let alertTitle: String
+    let text: String
+
     @Binding var showAlert: Bool
     
     var body: some View {
         VStack {
-            Text("Success!")
+            Text(alertTitle)
                 .foregroundColor(Colors.accentColor)
                 .font(.custom("Departure Mono", size: 24))
             Text(text)

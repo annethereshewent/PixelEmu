@@ -26,9 +26,11 @@ struct SaveManagementView: View {
     @State private var showUploadAlert = false
     @State private var showErrorAlert = false
     @State private var deleteAction: () -> Void = {}
-    
+
     @Query private var games: [Game]
-    
+
+    private let successTitle = "Success!"
+
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
     private func handleSignInButton() {
@@ -171,17 +173,22 @@ struct SaveManagementView: View {
                     isCloudSave: false
                 )
             } else if showDownloadAlert {
-                AlertModal(text: "Successfully downloaded save.", showAlert: $showDownloadAlert)
+                AlertModal(alertTitle: successTitle, text: "Successfully downloaded save.", showAlert: $showDownloadAlert)
             } else if showUploadAlert {
-                AlertModal(text: "Successfully uploaded save.", showAlert: $showUploadAlert)
+                AlertModal(alertTitle: successTitle, text: "Successfully uploaded save.", showAlert: $showUploadAlert)
             } else if showDeleteAlert {
-                AlertModal(text: "Successfully deleted save.", showAlert: $showDeleteAlert)
+                AlertModal(alertTitle: successTitle, text: "Successfully deleted save.", showAlert: $showDeleteAlert)
             } else if showErrorAlert {
-                ErrorAlertModal(showAlert: $showErrorAlert)
+                AlertModal(
+                    alertTitle: "Oops!",
+                    text: "There was an error performing the action.",
+                    showAlert: $showErrorAlert
+                )
             } else if showDeleteDialog {
                 DeleteDialog(
                     showDialog: $showDeleteDialog,
-                    deleteAction: $deleteAction
+                    deleteAction: $deleteAction,
+                    deleteMessage: "Are you sure you want to delete this save?"
                 )
             }
         }

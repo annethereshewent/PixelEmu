@@ -34,8 +34,7 @@ struct ContentView: View {
     @State private var user: GIDGoogleUser? = nil
     @State private var cloudService: CloudService? = nil
     @State private var game: Game? = nil
-    
-    @State private var shouldUpdateGame = false
+
     @State private var currentView: CurrentView = .library
     @State private var isSoundOn: Bool = true
     @State var audioManager: AudioManager? = nil
@@ -143,21 +142,20 @@ struct ContentView: View {
                             emulator: $emulator,
                             gameUrl: $gameUrl,
                             path: $path,
-                            game: $game,
-                            shouldUpdateGame: $shouldUpdateGame
+                            game: $game
                         )
                     case .importGames:
                         ImportGamesView(
                             romData: $romData,
-                            shouldUpdateGame: $shouldUpdateGame,
                             bios7Data: $bios7Data,
                             bios9Data: $bios9Data,
                             path: $path,
                             gameUrl: $gameUrl,
-                            game: $game,
                             workItem: $workItem,
                             isRunning: $isRunning,
-                            emulator: $emulator
+                            emulator: $emulator,
+                            gameName: $gameName,
+                            currentView: $currentView
                         )
                     case .saveManagement:
                         SaveManagementView(
@@ -194,7 +192,6 @@ struct ContentView: View {
                         user: $user,
                         cloudService: $cloudService,
                         game: $game,
-                        shouldUpdateGame: $shouldUpdateGame,
                         isSoundOn: $isSoundOn,
                         themeColor: $themeColor,
                         gameName: $gameName,
