@@ -31,6 +31,7 @@ struct GamesListView: View {
     
     @State private var showDeleteConfirmation = false
     @State private var showDeleteSuccess = false
+    @State private var showDeleteError = false
     @State private var deleteAction: () -> Void = {}
     @State private var gameToDelete: Game?
     
@@ -136,6 +137,11 @@ struct GamesListView: View {
                         text: "Successfully removed game from library.",
                         showAlert: $showDeleteSuccess
                     )
+                } else if showDeleteError {
+                    ErrorAlertModal(
+                        showAlert: $showDeleteError,
+                        errorMessage: "There was an error removing the game."
+                    )
                 }
             }
             .onChange(of: settingChanged) {
@@ -151,6 +157,8 @@ struct GamesListView: View {
                     if let game = gameToDelete {
                         context.delete(game)
                         showDeleteSuccess = true
+                    } else {
+                        showDeleteError = true
                     }
                 }
             }
