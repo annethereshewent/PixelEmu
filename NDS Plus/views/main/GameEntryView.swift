@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GameEntryView: View {    
+struct GameEntryView: View {
     let game: Game
     let callback: () -> Void
     
