@@ -86,7 +86,7 @@ struct LoadStatesView: View {
                             workItem = nil
                             
                             var isStale = false
-                            let url = try URL(resolvingBookmarkData: game!.bookmark, bookmarkDataIsStale: &isStale)
+                            let url = try URL(resolvingBookmarkData: selectedGame!.bookmark, bookmarkDataIsStale: &isStale)
                             
                             gameUrl = url
                             
