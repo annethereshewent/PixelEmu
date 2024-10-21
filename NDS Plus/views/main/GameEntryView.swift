@@ -8,7 +8,13 @@
 import SwiftUI
 
 struct GameEntryView: View {
+    @Binding var showDeleteConfirmation: Bool
+    @Binding var showDeleteSuccess: Bool
+    @Binding var deleteAction: () -> Void
+    @Binding var gameToDelete: Game?
+    
     let game: Game
+    let showContextMenu: Bool
     let callback: () -> Void
     
     private let graphicsParser = GraphicsParser()
@@ -31,6 +37,18 @@ struct GameEntryView: View {
                         }
                     }
                     Spacer()
+                }
+            }
+            .contextMenu {
+                if showContextMenu {
+                    Button("Remove game from library") {
+                        showDeleteSuccess = false
+                        showDeleteConfirmation = true
+                        gameToDelete = game
+                    }
+                    Button("Load save state") {
+                        
+                    }
                 }
             }
             Text(game.gameName.replacing(".nds", with: ""))

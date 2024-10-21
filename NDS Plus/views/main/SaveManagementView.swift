@@ -27,6 +27,10 @@ struct SaveManagementView: View {
     @State private var showErrorAlert = false
     @State private var deleteAction: () -> Void = {}
     
+    @State private var showDeleteConfirmation = false
+    @State private var showDeleteSuccess = false
+    @State private var gameToDelete: Game? = nil
+
     @Query private var games: [Game]
     
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
@@ -81,7 +85,14 @@ struct SaveManagementView: View {
                             .foregroundColor(Colors.primaryColor)
                         LazyVGrid(columns: columns) {
                             ForEach(saveEntries, id: \.game.gameName) { saveEntry in
-                                GameEntryView(game: saveEntry.game) {
+                                GameEntryView(
+                                    showDeleteConfirmation: $showDeleteConfirmation,
+                                    showDeleteSuccess: $showDeleteSuccess,
+                                    deleteAction: $deleteAction,
+                                    gameToDelete: $gameToDelete,
+                                    game: saveEntry.game,
+                                    showContextMenu: false
+                                ) {
                                     if cloudEntry == saveEntry {
                                         cloudEntry = nil
                                         
@@ -100,7 +111,14 @@ struct SaveManagementView: View {
                             .foregroundColor(Colors.primaryColor)
                         LazyVGrid(columns: columns) {
                             ForEach(localSaves, id: \.game.gameName) { saveEntry in
-                                GameEntryView(game: saveEntry.game) {
+                                GameEntryView(
+                                    showDeleteConfirmation: $showDeleteConfirmation,
+                                    showDeleteSuccess: $showDeleteSuccess,
+                                    deleteAction: $deleteAction,
+                                    gameToDelete: $gameToDelete,
+                                    game: saveEntry.game,
+                                    showContextMenu: false
+                                ) {
                                     if localEntry == saveEntry {
                                         localEntry = nil
                                     } else {
@@ -184,7 +202,8 @@ struct SaveManagementView: View {
             } else if showDeleteDialog {
                 DeleteDialog(
                     showDialog: $showDeleteDialog,
-                    deleteAction: $deleteAction
+                    deleteAction: $deleteAction,
+                    deleteMessage: "Are you sure you want to delete this save?"
                 )
             }
         }

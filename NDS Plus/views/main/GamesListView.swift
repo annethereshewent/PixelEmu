@@ -10,6 +10,8 @@ import DSEmulatorMobile
 import SwiftData
 
 struct GamesListView: View {
+    @Environment(\.modelContext) private var context
+    
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -26,6 +28,11 @@ struct GamesListView: View {
     @State private var showResumeDialog = false
     @State private var resumeGame = false
     @State private var settingChanged = false
+    
+    @State private var showDeleteConfirmation = false
+    @State private var showDeleteSuccess = false
+    @State private var deleteAction: () -> Void = {}
+    @State private var gameToDelete: Game?
     
     @Query private var games: [Game]
     
@@ -69,7 +76,14 @@ struct GamesListView: View {
                 ScrollView {
                     LazyVGrid(columns: columns) {
                         ForEach(filteredGames) { game in
-                            GameEntryView(game: game) {
+                            GameEntryView(
+                                showDeleteConfirmation: $showDeleteConfirmation,
+                                showDeleteSuccess: $showDeleteSuccess,
+                                deleteAction: $deleteAction,
+                                gameToDelete: $gameToDelete,
+                                game: game,
+                                showContextMenu: true
+                            ) {
                                 // refresh the url's bookmark
                                 var isStale = false
                                 if let url = try? URL(
@@ -108,6 +122,17 @@ struct GamesListView: View {
                         resumeGame: $resumeGame,
                         settingChanged: $settingChanged
                     )
+                } else if showDeleteConfirmation {
+                    DeleteDialog(
+                        showDialog: $showDeleteConfirmation,
+                        deleteAction: $deleteAction,
+                        deleteMessage: "Are you sure you want to remove this game from your library?"
+                    )
+                } else if showDeleteSuccess {
+                    AlertModal(
+                        text: "Successfully removed game from library.",
+                        showAlert: $showDeleteSuccess
+                    )
                 }
             }
             .onChange(of: settingChanged) {
@@ -116,6 +141,15 @@ struct GamesListView: View {
                     path.append("GameView")
                 } else {
                     startNewGame()
+                }
+            }
+            .onChange(of: gameToDelete) {
+                deleteAction = {
+                    if let game = gameToDelete {
+                        print("deleting the game!")
+                        context.delete(game)
+                        showDeleteSuccess = true
+                    }
                 }
             }
         } else {

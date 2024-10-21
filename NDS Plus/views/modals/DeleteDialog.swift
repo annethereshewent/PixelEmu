@@ -10,12 +10,14 @@ import SwiftUI
 struct DeleteDialog: View {
     @Binding var showDialog: Bool
     @Binding var deleteAction: () -> Void
+    let deleteMessage: String
+    
     var body: some View {
         VStack {
             Text("Confirm delete")
                 .foregroundColor(Colors.accentColor)
                 .font(.custom("Departure Mono", size: 24))
-            Text("Are you sure you want to delete this save?")
+            Text(deleteMessage)
             
             HStack {
                 Button("Confirm") {
