@@ -15,7 +15,7 @@ let ICON_HEIGHT = 32
 @Model
 class Game {
     @Attribute(.unique)
-    let gameName: String
+    var gameName: String
     let bookmark: Data
     let gameIcon: [UInt8]
     @Relationship(deleteRule: .cascade, inverse: \SaveState.game)

@@ -81,6 +81,12 @@ struct GamesListView: View {
                                 showDeleteSuccess: $showDeleteSuccess,
                                 deleteAction: $deleteAction,
                                 gameToDelete: $gameToDelete,
+                                emulator: $emulator,
+                                romData: $romData,
+                                bios7Data: $bios7Data,
+                                bios9Data: $bios9Data,
+                                firmwareData: $firmwareData,
+                                path: $path,
                                 game: game
                             ) {
                                 // refresh the url's bookmark
