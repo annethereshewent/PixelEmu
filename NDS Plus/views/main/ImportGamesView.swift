@@ -76,6 +76,8 @@ struct ImportGamesView: View {
                             bios9Bytes = ptr
                         }
                         
+                        // firmware is unnecessary for this as we are just
+                        // using the emulator to get the game icon.
                         [].withUnsafeBufferPointer { ptr in
                             firmwareBytes = ptr
                         }
