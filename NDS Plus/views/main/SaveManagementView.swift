@@ -177,7 +177,10 @@ struct SaveManagementView: View {
             } else if showDeleteAlert {
                 AlertModal(text: "Successfully deleted save.", showAlert: $showDeleteAlert)
             } else if showErrorAlert {
-                ErrorAlertModal(showAlert: $showErrorAlert)
+                ErrorAlertModal(
+                    showAlert: $showErrorAlert,
+                    errorMessage: "There was an error performing the action."
+                )
             } else if showDeleteDialog {
                 DeleteDialog(
                     showDialog: $showDeleteDialog,

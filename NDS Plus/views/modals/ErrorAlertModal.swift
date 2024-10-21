@@ -9,12 +9,13 @@ import SwiftUI
 
 struct ErrorAlertModal: View {
     @Binding var showAlert: Bool
+    let errorMessage: String
     var body: some View {
         VStack {
-            Text("Error!")
+            Text("Oops!")
                 .foregroundColor(Colors.accentColor)
                 .font(.custom("Departure Mono", size: 24))
-            Text("There was an error performing the action.")
+            Text(errorMessage)
             Button("Close") {
                 showAlert = false
             }
@@ -23,6 +24,7 @@ struct ErrorAlertModal: View {
             .cornerRadius(0.3)
             .padding(.top, 20)
         }
+        .padding()
         .background(Colors.backgroundColor)
         .frame(width: 300, height: 300)
         .opacity(0.9)

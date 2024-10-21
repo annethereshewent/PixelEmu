@@ -9,8 +9,11 @@ import SwiftUI
 import UniformTypeIdentifiers
 import DSEmulatorMobile
 
+extension String: Error {}
+
 struct ImportGamesView: View {
     @State private var showRomDialog = false
+    @State private var showErrorMessage = false
     
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
@@ -27,115 +30,120 @@ struct ImportGamesView: View {
     
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
     var body: some View {
-        VStack {
-            Text("Import Games")
-            HStack {
-                Image("Import Cartridge")
-                Text("Only \".nds\" files allowed")
-                    .frame(width: 200, height: 60)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .font(.custom("Departure Mono", size: 20))
-            }
-            Spacer()
-            Spacer()
-            HStack {
-                Button {
-                    showRomDialog = true
-                } label: {
-                    Image("Browse")
-                    Text("Browse files")
-                        .foregroundColor(Colors.accentColor)
+        ZStack {
+            VStack {
+                Text("Import Games")
+                HStack {
+                    Image("Import Cartridge")
+                    Text("Only \".nds\" files allowed")
+                        .frame(width: 200, height: 60)
+                        .fixedSize(horizontal: false, vertical: true)
                         .font(.custom("Departure Mono", size: 20))
                 }
+                Spacer()
+                Spacer()
+                HStack {
+                    Button {
+                        showRomDialog = true
+                    } label: {
+                        Image("Browse")
+                        Text("Browse files")
+                            .foregroundColor(Colors.accentColor)
+                            .font(.custom("Departure Mono", size: 20))
+                    }
+                }
+                Spacer()
+                Spacer()
+                
             }
-            Spacer()
-            Spacer()
-            
-        }
-        .font(.custom("Departure Mono", size: 24))
-        .foregroundColor(Colors.primaryColor)
-        .fileImporter(
-            isPresented: $showRomDialog,
-            allowedContentTypes: [ndsType.unsafelyUnwrapped],
-            allowsMultipleSelection: true
-        ) { result in
-            do {
-                if let bios7Data = bios7Data, let bios9Data = bios9Data {
-                    var bios7Bytes: UnsafeBufferPointer<UInt8>!
-                    var bios9Bytes: UnsafeBufferPointer<UInt8>!
-                    var firmwareBytes: UnsafeBufferPointer<UInt8>!
-                    var romBytes: UnsafeBufferPointer<UInt8>!
-                    
-                    Array(bios7Data).withUnsafeBufferPointer { ptr in
-                        bios7Bytes = ptr
-                    }
-                    Array(bios9Data).withUnsafeBufferPointer { ptr in
-                        bios9Bytes = ptr
-                    }
-                    
-                    [].withUnsafeBufferPointer { ptr in
-                        firmwareBytes = ptr
-                    }
-                    
-                    
-                    [].withUnsafeBufferPointer { ptr in
-                        romBytes = ptr
-                    }
-                    
-                    var emu: MobileEmulator!
-                    
-                    let urls = try result.get()
-                    for url in urls {
+            .font(.custom("Departure Mono", size: 24))
+            .foregroundColor(Colors.primaryColor)
+            .fileImporter(
+                isPresented: $showRomDialog,
+                allowedContentTypes: [ndsType.unsafelyUnwrapped],
+                allowsMultipleSelection: true
+            ) { result in
+                do {
+                    if let bios7Data = bios7Data, let bios9Data = bios9Data {
+                        var bios7Bytes: UnsafeBufferPointer<UInt8>!
+                        var bios9Bytes: UnsafeBufferPointer<UInt8>!
+                        var firmwareBytes: UnsafeBufferPointer<UInt8>!
+                        
+                        Array(bios7Data).withUnsafeBufferPointer { ptr in
+                            bios7Bytes = ptr
+                        }
+                        Array(bios9Data).withUnsafeBufferPointer { ptr in
+                            bios9Bytes = ptr
+                        }
+                        
+                        [].withUnsafeBufferPointer { ptr in
+                            firmwareBytes = ptr
+                        }
+                        
+                        var emu: MobileEmulator!
+                        
+                        let urls = try result.get()
+                        for url in urls {
 
-                        if url.startAccessingSecurityScopedResource() {
-                            defer {
-                                url.stopAccessingSecurityScopedResource()
-                            }
-                            let data = try Data(contentsOf: url)
-                            
-                            var romPtr: UnsafeBufferPointer<UInt8>!
-                            
-                            let dataArr = Array(data)
-                            
-                            dataArr.withUnsafeBufferPointer { ptr in
-                                romPtr = ptr
-                            }
-                            
-                            if emu == nil {
-                                emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr)
-                            } else {
-                                emu.reloadRom(romPtr)
-                            }
-                            
-                            emu.loadIcon()
-                            
-                            romData = data
-                            
-                            gameName = String(url
-                                .relativeString
-                                .split(separator: "/")
-                                .last
+                            if url.startAccessingSecurityScopedResource() {
+                                defer {
+                                    url.stopAccessingSecurityScopedResource()
+                                }
+                                let data = try Data(contentsOf: url)
+                                
+                                var romPtr: UnsafeBufferPointer<UInt8>!
+                                
+                                let dataArr = Array(data)
+                                
+                                dataArr.withUnsafeBufferPointer { ptr in
+                                    romPtr = ptr
+                                }
+                                
+                                if emu == nil {
+                                    emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr)
+                                } else {
+                                    emu.reloadRom(romPtr)
+                                }
+                                
+                                emu.loadIcon()
+                                
+                                romData = data
+                                
+                                gameName = String(url
+                                    .relativeString
+                                    .split(separator: "/")
+                                    .last
+                                    .unsafelyUnwrapped
+                                )
+                                .removingPercentEncoding
                                 .unsafelyUnwrapped
-                            )
-                            .removingPercentEncoding
-                            .unsafelyUnwrapped
-                            
-                            if let game = Game.storeGame(
-                                gameName: gameName,
-                                data: romData!,
-                                url: url,
-                                iconPtr: emu.getGameIconPointer()
-                            ) {
-                                context.insert(game)
+                                
+                                if let game = Game.storeGame(
+                                    gameName: gameName,
+                                    data: romData!,
+                                    url: url,
+                                    iconPtr: emu.getGameIconPointer()
+                                ) {
+                                    context.insert(game)
+                                }
                             }
                         }
+                        // once done processing all games, return back to library view
+                        currentView = .library
+                        emu = nil
+                    } else {
+                        showErrorMessage = true
                     }
-                    // once done processing all games, return back to library view
-                    currentView = .library
-                    emu = nil
+                } catch {
+                    showErrorMessage = true
+                    print(error)
                 }
-            } catch {
-                print(error)
+            }
+            if showErrorMessage {
+                ErrorAlertModal(
+                    showAlert: $showErrorMessage,
+                    errorMessage: "There was an error importing the game(s)."
+                )
             }
         }
     }
