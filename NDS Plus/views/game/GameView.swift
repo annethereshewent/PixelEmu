@@ -31,7 +31,6 @@ struct GameView: View {
     @Binding var user: GIDGoogleUser?
     @Binding var cloudService: CloudService?
     @Binding var game: Game?
-    @Binding var shouldUpdateGame: Bool
     @Binding var isSoundOn: Bool
     @Binding var themeColor: Color
     
@@ -44,10 +43,6 @@ struct GameView: View {
     @Binding var workItem: DispatchWorkItem?
     @Binding var topImage: CGImage?
     @Binding var bottomImage: CGImage?
-    
-    
-    
-    @Environment(\.modelContext) private var context
     
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
@@ -187,28 +182,7 @@ struct GameView: View {
             romPtr!
         )
         
-        if let url = gameUrl {
-            gameName = String(url
-                .relativeString
-                .split(separator: "/")
-                .last
-                .unsafelyUnwrapped
-            )
-                .removingPercentEncoding
-                .unsafelyUnwrapped
-            
-            if let game = Game.storeGame(
-                gameName: gameName,
-                data: romData!,
-                url: url,
-                iconPtr: emulator!.getGameIconPointer()
-            ) {
-                context.insert(game)
-                if shouldUpdateGame {
-                    self.game = game
-                }
-            }
-            
+        if let game = game {
             let gameCode = emulator?.getGameCode()
             
             if let entries = GameEntry.decodeGameDb() {
@@ -227,9 +201,15 @@ struct GameView: View {
                             loading = false
                         }
                     } else {
-                        backupFile = BackupFile(entry: entries[0], gameUrl: url)
-                        if let data = backupFile!.createBackupFile() {
-                            emulator?.setBackup(entries[0].saveType, entries[0].ramCapacity, data)
+                        var isStale = false
+                        do {
+                            let url = try URL(resolvingBookmarkData: game.bookmark, bookmarkDataIsStale: &isStale)
+                            backupFile = BackupFile(entry: entries[0], gameUrl: url)
+                            if let data = backupFile!.createBackupFile() {
+                                emulator?.setBackup(entries[0].saveType, entries[0].ramCapacity, data)
+                            }
+                        } catch {
+                            print(error)
                         }
                     }
                 }

@@ -64,6 +64,10 @@ class BackupFile {
             )
             location.appendPathComponent("saves")
             
+            if !FileManager.default.fileExists(atPath: location.path) {
+                try? FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
+            }
+            
             location.appendPathComponent(saveName)
             
             return location
@@ -135,6 +139,10 @@ class BackupFile {
                 create: true
             )
             location.appendPathComponent("saves")
+            
+            if !FileManager.default.fileExists(atPath: location.path) {
+                try? FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
+            }
                 
             let items = try FileManager.default.contentsOfDirectory(atPath: location.path)
             

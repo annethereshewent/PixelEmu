@@ -22,7 +22,6 @@ struct GamesListView: View {
     @Binding var path: NavigationPath
     @Binding var game: Game?
     @Binding var filter: LibraryFilter
-    @Binding var shouldUpdateGame: Bool
     
     @State private var showResumeDialog = false
     @State private var resumeGame = false
@@ -33,13 +32,17 @@ struct GamesListView: View {
     private var filteredGames: [Game] {
         switch filter {
         case .all:
-            return games
+            return games.sorted {
+                $0.addedOn > $1.addedOn
+            }
         case .recent:
             return games.filter { game in
                 let today = Date.now
                 let diff = today.timeIntervalSince1970 - game.addedOn.timeIntervalSince1970
                 
                 return diff <= Double(TWENTYFOUR_HOURS)
+            }.sorted {
+                $0.addedOn > $1.addedOn
             }
         }
     }
@@ -55,7 +58,6 @@ struct GamesListView: View {
         
         if let game = game {
             self.game = game
-            shouldUpdateGame = false
         }
         
         path.append("GameView")

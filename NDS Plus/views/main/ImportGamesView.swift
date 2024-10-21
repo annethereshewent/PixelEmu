@@ -13,15 +13,17 @@ struct ImportGamesView: View {
     @State private var showRomDialog = false
     
     @Binding var romData: Data?
-    @Binding var shouldUpdateGame: Bool
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var path: NavigationPath
     @Binding var gameUrl: URL?
-    @Binding var game: Game?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
     @Binding var emulator: MobileEmulator?
+    @Binding var gameName: String
+    @Binding var currentView: CurrentView
+    
+    @Environment(\.modelContext) private var context
     
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
     var body: some View {
@@ -54,31 +56,86 @@ struct ImportGamesView: View {
         .foregroundColor(Colors.primaryColor)
         .fileImporter(
             isPresented: $showRomDialog,
-            allowedContentTypes: [ndsType.unsafelyUnwrapped]
+            allowedContentTypes: [ndsType.unsafelyUnwrapped],
+            allowsMultipleSelection: true
         ) { result in
-            if let url = try? result.get() {
-                if url.startAccessingSecurityScopedResource() {
-                    defer {
-                        url.stopAccessingSecurityScopedResource()
+            do {
+                if let bios7Data = bios7Data, let bios9Data = bios9Data {
+                    var bios7Bytes: UnsafeBufferPointer<UInt8>!
+                    var bios9Bytes: UnsafeBufferPointer<UInt8>!
+                    var firmwareBytes: UnsafeBufferPointer<UInt8>!
+                    var romBytes: UnsafeBufferPointer<UInt8>!
+                    
+                    Array(bios7Data).withUnsafeBufferPointer { ptr in
+                        bios7Bytes = ptr
                     }
-                    if let data = try? Data(contentsOf: url) {
-                        romData = data
-                        shouldUpdateGame = true
-                        
-                        if bios7Data != nil && bios9Data != nil {
-                            gameUrl = url
-                        
-                            emulator = nil
-                            workItem?.cancel()
-                            isRunning = false
-                            game = nil
+                    Array(bios9Data).withUnsafeBufferPointer { ptr in
+                        bios9Bytes = ptr
+                    }
+                    
+                    [].withUnsafeBufferPointer { ptr in
+                        firmwareBytes = ptr
+                    }
+                    
+                    
+                    [].withUnsafeBufferPointer { ptr in
+                        romBytes = ptr
+                    }
+                    
+                    var emu: MobileEmulator!
+                    
+                    let urls = try result.get()
+                    for url in urls {
+
+                        if url.startAccessingSecurityScopedResource() {
+                            defer {
+                                url.stopAccessingSecurityScopedResource()
+                            }
+                            let data = try Data(contentsOf: url)
                             
-                            workItem = nil
+                            var romPtr: UnsafeBufferPointer<UInt8>!
                             
-                            path.append("GameView")
+                            let dataArr = Array(data)
+                            
+                            dataArr.withUnsafeBufferPointer { ptr in
+                                romPtr = ptr
+                            }
+                            
+                            if emu == nil {
+                                emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr)
+                            } else {
+                                emu.reloadRom(romPtr)
+                            }
+                            
+                            emu.loadIcon()
+                            
+                            romData = data
+                            
+                            gameName = String(url
+                                .relativeString
+                                .split(separator: "/")
+                                .last
+                                .unsafelyUnwrapped
+                            )
+                            .removingPercentEncoding
+                            .unsafelyUnwrapped
+                            
+                            if let game = Game.storeGame(
+                                gameName: gameName,
+                                data: romData!,
+                                url: url,
+                                iconPtr: emu.getGameIconPointer()
+                            ) {
+                                context.insert(game)
+                            }
                         }
                     }
+                    // once done processing all games, return back to library view
+                    currentView = .library
+                    emu = nil
                 }
+            } catch {
+                print(error)
             }
         }
     }

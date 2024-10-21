@@ -32,7 +32,6 @@ struct LibraryView: View {
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
     @Binding var game: Game?
-    @Binding var shouldUpdateGame: Bool
     
     var body: some View {
        
@@ -85,8 +84,7 @@ struct LibraryView: View {
                 gameUrl: $gameUrl,
                 path: $path,
                 game: $game,
-                filter: $filter,
-                shouldUpdateGame: $shouldUpdateGame
+                filter: $filter
             )
         }
         .font(.custom("Departure Mono", size: 24.0))
