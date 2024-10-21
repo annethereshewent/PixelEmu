@@ -87,6 +87,10 @@ struct GamesListView: View {
                                 bios9Data: $bios9Data,
                                 firmwareData: $firmwareData,
                                 path: $path,
+                                runningGame: $game,
+                                isRunning: $isRunning,
+                                workItem: $workItem,
+                                gameUrl: $gameUrl,
                                 game: game
                             ) {
                                 // refresh the url's bookmark

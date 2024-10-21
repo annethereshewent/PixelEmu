@@ -10,6 +10,7 @@ import DSEmulatorMobile
 
 struct LoadStatesView: View {
     @Binding var emulator: MobileEmulator?
+    @Binding var selectedGame: Game?
     @Binding var game: Game?
     @Binding var isPresented: Bool
     
@@ -18,6 +19,9 @@ struct LoadStatesView: View {
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
     @Binding var path: NavigationPath
+    @Binding var isRunning: Bool
+    @Binding var workItem: DispatchWorkItem?
+    @Binding var gameUrl: URL?
     
     @State private var currentState: SaveState? = nil
     
@@ -73,10 +77,26 @@ struct LoadStatesView: View {
                             } else {
                                 emu.hleFirmware()
                             }
-                            print("reloaded rom")
+                            
                             emu.reloadRom(romPtr)
                             isPresented = false
+                            
+                            workItem?.cancel()
+                            isRunning = false
+                            
+                            workItem = nil
+                            
+                            var isStale = false
+                            let url = try URL(resolvingBookmarkData: game!.bookmark, bookmarkDataIsStale: &isStale)
+                            
+                            gameUrl = url
+                            
+                            isPresented = false
+                            
+                            game = selectedGame
+                            
                             path.append("GameView")
+                            
                         } else {
                             isPresented = false
                         }
@@ -97,15 +117,18 @@ struct LoadStatesView: View {
             Text("Save States")
                 .font(.custom("Departure Mono", size: 24))
             ScrollView {
-                if let game = game {
+                if let selectedGame = selectedGame {
                     LazyVGrid(columns: columns) {
-                        ForEach(game.saveStates.sorted { $0.compare($1) }) { saveState in
+                        ForEach(selectedGame.saveStates.sorted { $0.compare($1) }) { saveState in
                             LoadStateEntryView(saveState: saveState, currentState: $currentState)
                         }
                     }
                 }
             }
             Spacer()
+        }
+        .onAppear() {
+            print("uhhhh wut?????")
         }
         .onChange(of: currentState) {
             var bios7Ptr: UnsafeBufferPointer<UInt8>!
@@ -131,9 +154,9 @@ struct LoadStatesView: View {
                     }
                 }
                 var isStale = false
-                if let game = game {
+                if let selectedGame = selectedGame {
                     do {
-                        let url = try URL(resolvingBookmarkData: game.bookmark, bookmarkDataIsStale: &isStale)
+                        let url = try URL(resolvingBookmarkData: selectedGame.bookmark, bookmarkDataIsStale: &isStale)
                         let data = try Data(contentsOf: url)
                         
                         romData = data
@@ -148,12 +171,6 @@ struct LoadStatesView: View {
                         print(error)
                     }
                 }
-                
-                
-            } else {
-                print(bios7Data)
-                print(bios9Data)
-                print(romData)
             }
         }
     }

@@ -175,12 +175,14 @@ struct GameView: View {
         romArr.withUnsafeBufferPointer() { ptr in
             romPtr = ptr
         }
-        emulator = MobileEmulator(
-            bios7Ptr!,
-            bios9Ptr!,
-            firmwarePtr!,
-            romPtr!
-        )
+        if emulator == nil {
+            emulator = MobileEmulator(
+                bios7Ptr!,
+                bios9Ptr!,
+                firmwarePtr!,
+                romPtr!
+            )
+        }
         
         if let game = game {
             let gameCode = emulator?.getGameCode()

@@ -20,9 +20,14 @@ struct GameEntryViewWrapper: View {
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
     @Binding var path: NavigationPath
+    @Binding var runningGame: Game?
+    @Binding var isRunning: Bool
+    @Binding var workItem: DispatchWorkItem?
+    @Binding var gameUrl: URL?
     
     @State private var isLoadStatesPresented = false
     @State private var selectedGame: Game?
+   
     
     let game: Game
     
@@ -33,26 +38,39 @@ struct GameEntryViewWrapper: View {
             callback()
         }
         .contextMenu {
-            Button("Remove game from library") {
+            Button("Load save state") {
+                print("isLoadStatesPresented before change = \(isLoadStatesPresented)")
+                isLoadStatesPresented = true
+                print(isLoadStatesPresented)
+                self.selectedGame = game
+                print("setting game to \(self.selectedGame!.gameName)")
+            }
+            Button (role: .destructive){
                 showDeleteSuccess = false
                 showDeleteConfirmation = true
                 gameToDelete = game
+            } label: {
+                HStack {
+                    Text("Remove game from library")
+                    Image(systemName: "trash")
+                }
             }
-            Button("Load save state") {
-                isLoadStatesPresented = true
-                selectedGame = game
-            }
+            
         }
         .sheet(isPresented: $isLoadStatesPresented) {
             LoadStatesView(
                 emulator: $emulator,
-                game: $selectedGame,
+                selectedGame: $selectedGame,
+                game: $runningGame,
                 isPresented: $isLoadStatesPresented,
                 romData: $romData,
                 bios7Data: $bios7Data,
                 bios9Data: $bios9Data,
                 firmwareData: $firmwareData,
-                path: $path
+                path: $path,
+                isRunning: $isRunning,
+                workItem: $workItem,
+                gameUrl: $gameUrl
             )
         }
     }
