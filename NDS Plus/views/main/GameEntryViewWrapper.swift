@@ -10,10 +10,8 @@ import DSEmulatorMobile
 
 struct GameEntryViewWrapper: View {
     @Binding var showDeleteConfirmation: Bool
-    @Binding var showDeleteSuccess: Bool
     @Binding var deleteAction: () -> Void
     @Binding var gameToDelete: Game?
-    
     @Binding var isLoadStatesPresented: Bool
     @Binding var selectedGame: Game?
    
@@ -32,7 +30,6 @@ struct GameEntryViewWrapper: View {
                 self.selectedGame = game
             }
             Button (role: .destructive){
-                showDeleteSuccess = false
                 showDeleteConfirmation = true
                 gameToDelete = game
             } label: {

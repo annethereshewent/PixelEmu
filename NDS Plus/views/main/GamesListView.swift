@@ -30,7 +30,6 @@ struct GamesListView: View {
     @State private var settingChanged = false
     
     @State private var showDeleteConfirmation = false
-    @State private var showDeleteSuccess = false
     @State private var showDeleteError = false
     @State private var deleteAction: () -> Void = {}
     @State private var gameToDelete: Game?
@@ -81,7 +80,6 @@ struct GamesListView: View {
                         ForEach(filteredGames) { game in
                             GameEntryViewWrapper(
                                 showDeleteConfirmation: $showDeleteConfirmation,
-                                showDeleteSuccess: $showDeleteSuccess,
                                 deleteAction: $deleteAction,
                                 gameToDelete: $gameToDelete,
                                 isLoadStatesPresented: $isLoadStatesPresented,
@@ -132,12 +130,6 @@ struct GamesListView: View {
                         deleteAction: $deleteAction,
                         deleteMessage: "Are you sure you want to remove this game from your library?"
                     )
-                } else if showDeleteSuccess {
-                    AlertModal(
-                        alertTitle: "Success!",
-                        text: "Successfully removed game from library.",
-                        showAlert: $showDeleteSuccess
-                    )
                 } else if showDeleteError {
                     AlertModal(
                         alertTitle: "Oops!",
@@ -158,7 +150,6 @@ struct GamesListView: View {
                 deleteAction = {
                     if let game = gameToDelete {
                         context.delete(game)
-                        showDeleteSuccess = true
                     } else {
                         showDeleteError = true
                     }
