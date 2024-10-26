@@ -9,7 +9,7 @@ import SwiftUI
 import DSEmulatorMobile
 import SwiftData
 
-let TWENTYFOUR_HOURS = 60 * 60 * 24
+let TWELVE_HOURS = 60 * 60 * 12
 
 enum LibraryFilter {
     case recent

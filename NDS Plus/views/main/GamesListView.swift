@@ -33,7 +33,8 @@ struct GamesListView: View {
     @State private var showDeleteError = false
     @State private var deleteAction: () -> Void = {}
     @State private var gameToDelete: Game?
-    
+    @State private var showGameError = false
+
     @State private var isLoadStatesPresented = false
     @State private var selectedGame: Game?
     @Query private var games: [Game]
@@ -42,16 +43,16 @@ struct GamesListView: View {
         switch filter {
         case .all:
             return games.sorted {
-                $0.addedOn > $1.addedOn
+                $0.lastPlayed > $1.lastPlayed
             }
         case .recent:
             return games.filter { game in
                 let today = Date.now
-                let diff = today.timeIntervalSince1970 - game.addedOn.timeIntervalSince1970
-                
-                return diff <= Double(TWENTYFOUR_HOURS)
+                let diff = today.timeIntervalSince1970 - game.lastPlayed.timeIntervalSince1970
+
+                return diff <= Double(TWELVE_HOURS)
             }.sorted {
-                $0.addedOn > $1.addedOn
+                $0.lastPlayed > $1.lastPlayed
             }
         }
     }
@@ -67,11 +68,19 @@ struct GamesListView: View {
         
         if let game = game {
             self.game = game
+            game.lastPlayed = Date.now
+            path.append("GameView")
+        } else {
+            showGameError = true
         }
-        
-        path.append("GameView")
     }
-    
+
+    private func updateLastPlayed() {
+        if let game = game {
+            game.lastPlayed = Date.now
+        }
+    }
+
     var body: some View {
         if games.count > 0 {
             ZStack {
@@ -106,6 +115,7 @@ struct GamesListView: View {
                                                 bios9Data != nil
                                             {
                                                 if self.game != nil && self.game! == game {
+                                                    updateLastPlayed()
                                                     showResumeDialog = true
                                                 } else {
                                                     startNewGame(game)
@@ -135,6 +145,12 @@ struct GamesListView: View {
                         alertTitle: "Oops!",
                         text: "There was an error removing the game.",
                         showAlert: $showDeleteError
+                    )
+                } else if showGameError {
+                    AlertModal(
+                        alertTitle: "Oops!",
+                        text: "There was an error loading the specified game.",
+                        showAlert: $showGameError
                     )
                 }
             }
