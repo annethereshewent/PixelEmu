@@ -18,6 +18,7 @@ struct DualScreenView: View {
     @Binding var audioManager: AudioManager?
     @Binding var isSoundOn: Bool
     @Binding var isHoldButtonsPresented: Bool
+    @Binding var heldButtons: [ButtonEvent]
 
     private var screenRatio: Float {
         if gameController?.controller?.extendedGamepad == nil {
@@ -28,8 +29,44 @@ struct DualScreenView: View {
     }
   
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
-    
-    var padding: CGFloat {
+
+    private var currentHoldButtons: String {
+        var buttons: [String] = []
+        for button in heldButtons {
+            switch button {
+            case .ButtonA:
+                buttons.append("A")
+            case .ButtonB:
+                buttons.append("B")
+            case .ButtonL:
+                buttons.append("L")
+            case .ButtonR:
+                buttons.append("R")
+            case .ButtonX:
+                buttons.append("X")
+            case .ButtonY:
+                buttons.append("Y")
+            case .Down:
+                buttons.append("Down")
+            case .Left:
+                buttons.append("Left")
+            case .Right:
+                buttons.append("Right")
+            case .Up:
+                buttons.append("Up")
+            case .Select:
+                buttons.append("Select")
+            case .Start:
+                buttons.append("Start")
+            default:
+                break
+            }
+        }
+
+        return "Current: \(buttons.joined(separator: ","))"
+    }
+
+    private var padding: CGFloat {
         if gameController?.controller?.extendedGamepad == nil {
             return 40.0
         }
@@ -62,6 +99,8 @@ struct DualScreenView: View {
                                     .font(.custom("Departure Mono", size: 24))
                                 Text("Press buttons to hold down, then press confirm")
                                     .foregroundColor(Colors.primaryColor)
+                                Text(currentHoldButtons)
+                                    .foregroundColor(Colors.accentColor)
                                 Button("Confirm") {
                                     isHoldButtonsPresented = false
                                     if let emu = emulator {

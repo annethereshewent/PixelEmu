@@ -210,6 +210,7 @@ struct ContentView: View {
             GIDSignIn.sharedInstance.handle(url)
         }
         .onAppear {
+            // UIApplication.shared.isIdleTimerDisabled = false
             let defaults = UserDefaults.standard
             
             if let isSoundOn = defaults.object(forKey: "isSoundOn") as? Bool {

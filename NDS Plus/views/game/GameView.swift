@@ -25,6 +25,7 @@ struct GameView: View {
     @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
 
     @State private var isHoldButtonsPresented = false
+    @State private var heldButtons: [ButtonEvent] = []
 
     @Binding var emulator: MobileEmulator?
     @Binding var bios7Data: Data?
@@ -303,7 +304,8 @@ struct GameView: View {
                         buttonStarted: $buttonStarted,
                         audioManager: $audioManager,
                         isSoundOn: $isSoundOn,
-                        isHoldButtonsPresented: $isHoldButtonsPresented
+                        isHoldButtonsPresented: $isHoldButtonsPresented,
+                        heldButtons: $heldButtons
                     )
                     if gameController?.controller?.extendedGamepad == nil {
                         TouchControlsView(
@@ -317,7 +319,9 @@ struct GameView: View {
                             firmwareData: $firmwareData,
                             romData: $romData,
                             gameName: $gameName,
-                            isMenuPresented: $isMenuPresented
+                            isMenuPresented: $isMenuPresented,
+                            isHoldButtonsPresented: $isHoldButtonsPresented,
+                            heldButtons: $heldButtons
                         )
                     }
                 }
@@ -342,7 +346,7 @@ struct GameView: View {
                 )
             }
             .onAppear {
-                UIApplication.shared.isIdleTimerDisabled = true
+                // UIApplication.shared.isIdleTimerDisabled = true
                 Task {
                     if !isRunning {
                         await self.run()
@@ -357,7 +361,7 @@ struct GameView: View {
                 }
             }
             .onDisappear {
-                UIApplication.shared.isIdleTimerDisabled = false
+                // UIApplication.shared.isIdleTimerDisabled = false
             }
             .onChange(of: shouldGoHome) {
                 if shouldGoHome {

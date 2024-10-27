@@ -23,7 +23,9 @@ struct TouchControlsView: View {
     @Binding var romData: Data?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
-    
+    @Binding var isHoldButtonsPresented: Bool
+    @Binding var heldButtons: [ButtonEvent]
+
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
     @State private var buttons: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
@@ -75,7 +77,15 @@ struct TouchControlsView: View {
         if let emu = emulator {
             for entry in entries {
                 if entry.value.contains(point) {
-                    emu.updateInput(entry.key, true)
+                    if isHoldButtonsPresented {
+                        if let index = heldButtons.firstIndex(of: entry.key) {
+                            heldButtons.remove(at: index)
+                        } else {
+                            heldButtons.append(entry.key)
+                        }
+                    } else {
+                        emu.updateInput(entry.key, true)
+                    }
                 } else {
                     emu.updateInput(entry.key, false)
                 }
