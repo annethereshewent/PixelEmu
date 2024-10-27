@@ -22,7 +22,8 @@ struct GameMenuView: View {
     @Binding var romData: Data?
     @Binding var shouldGoHome: Bool
     @Binding var game: Game?
-    
+    @Binding var isHoldButtonsPresented: Bool
+
     @State var isStateEntriesPresented: Bool = false
     
     private var color: Color {
@@ -66,7 +67,8 @@ struct GameMenuView: View {
                 }
                 Spacer()
                 Button() {
-                    
+                    isHoldButtonsPresented = true
+                    isMenuPresented = false
                 } label: {
                     VStack {
                         Image(systemName: "button.horizontal.top.press.fill")
@@ -91,8 +93,10 @@ struct GameMenuView: View {
                 Spacer()
             }
             .onDisappear() {
-                if let emu = emulator {
-                    emu.setPause(false)
+                if !isHoldButtonsPresented {
+                    if let emu = emulator {
+                        emu.setPause(false)
+                    }
                 }
             }
             .presentationDetents([.height(150)])

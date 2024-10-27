@@ -9,8 +9,6 @@ import SwiftUI
 import UniformTypeIdentifiers
 import DSEmulatorMobile
 
-extension String: Error {}
-
 struct ImportGamesView: View {
     @State private var showRomDialog = false
     @State private var showErrorMessage = false

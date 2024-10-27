@@ -17,7 +17,8 @@ struct DualScreenView: View {
     @Binding var buttonStarted: [ButtonEvent:Bool]
     @Binding var audioManager: AudioManager?
     @Binding var isSoundOn: Bool
-    
+    @Binding var isHoldButtonsPresented: Bool
+
     private var screenRatio: Float {
         if gameController?.controller?.extendedGamepad == nil {
             SCREEN_RATIO
@@ -48,11 +49,35 @@ struct DualScreenView: View {
                     if gameController?.controller?.extendedGamepad != nil {
                         Spacer()
                     }
-                    GameScreenView(image: $topImage)
-                        .frame(
-                            width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),
-                            height: CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
-                        )
+                    ZStack {
+                        GameScreenView(image: $topImage)
+                            .frame(
+                                width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),
+                                height: CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
+                            )
+                        if isHoldButtonsPresented {
+                            VStack {
+                                Text("Hold buttons")
+                                    .foregroundColor(Colors.accentColor)
+                                    .font(.custom("Departure Mono", size: 24))
+                                Text("Press buttons to hold down, then press confirm")
+                                    .foregroundColor(Colors.primaryColor)
+                                Button("Confirm") {
+                                    isHoldButtonsPresented = false
+                                    if let emu = emulator {
+                                        emu.setPause(false)
+                                    }
+                                }
+                                .foregroundColor(Colors.accentColor)
+                                .border(.gray)
+                                .cornerRadius(0.3)
+                                .padding(.top, 20)
+                            }
+                            .background(Colors.backgroundColor)
+                            .font(.custom("Departure Mono", size: 16))
+                            .opacity(0.9)
+                        }
+                    }
                     GameScreenView(image: $bottomImage)
                         .frame(
                             width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),

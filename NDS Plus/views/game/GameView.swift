@@ -21,7 +21,11 @@ struct GameView: View {
     @State private var homePressed = false
     @State private var shouldGoHome = false
     @State private var isPaused: Bool = false
-    
+
+    @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
+
+    @State private var isHoldButtonsPresented = false
+
     @Binding var emulator: MobileEmulator?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -43,9 +47,9 @@ struct GameView: View {
     @Binding var workItem: DispatchWorkItem?
     @Binding var topImage: CGImage?
     @Binding var bottomImage: CGImage?
-    
+
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
-    @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
+
     
     private let graphicsParser = GraphicsParser()
 
@@ -298,7 +302,8 @@ struct GameView: View {
                         emulator: $emulator,
                         buttonStarted: $buttonStarted,
                         audioManager: $audioManager,
-                        isSoundOn: $isSoundOn
+                        isSoundOn: $isSoundOn,
+                        isHoldButtonsPresented: $isHoldButtonsPresented
                     )
                     if gameController?.controller?.extendedGamepad == nil {
                         TouchControlsView(
@@ -332,7 +337,8 @@ struct GameView: View {
                     firmwareData: $firmwareData,
                     romData: $romData,
                     shouldGoHome: $shouldGoHome,
-                    game: $game
+                    game: $game,
+                    isHoldButtonsPresented: $isHoldButtonsPresented
                 )
             }
             .onAppear {
