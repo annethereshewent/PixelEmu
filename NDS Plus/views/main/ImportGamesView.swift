@@ -31,7 +31,7 @@ struct ImportGamesView: View {
     var body: some View {
         ZStack {
             VStack {
-                Text("Import Games")
+                Text("Import games")
                 HStack {
                     Image("Import Cartridge")
                         .foregroundColor(themeColor)
@@ -40,7 +40,6 @@ struct ImportGamesView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.custom("Departure Mono", size: 20))
                 }
-                Spacer()
                 Spacer()
                 HStack {
                     Button {
