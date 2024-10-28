@@ -13,7 +13,7 @@ import GameController
 struct GameView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.scenePhase) var scenePhase
-    
+
     @State private var debounceTimer: Timer? = nil
     
     @State private var loading = false
@@ -296,7 +296,7 @@ struct GameView: View {
                 }
                 VStack(spacing: 0) {
                     Spacer()
-                    DualScreenView(
+                    DualScreenViewWrapper(
                         gameController: $gameController,
                         topImage: $topImage,
                         bottomImage: $bottomImage,
