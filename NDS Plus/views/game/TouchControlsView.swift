@@ -179,6 +179,7 @@ struct TouchControlsView: View {
             HStack {
                 Spacer()
                 Image("Control Pad")
+                    .resizable()
                     .background(
                         GeometryReader { geometry in
                             Color.clear
@@ -212,9 +213,11 @@ struct TouchControlsView: View {
                                 releaseControlPad()
                             }
                     )
+                    .frame(width: 156, height: 156)
                 Spacer()
                 VStack {
                     Image("Buttons Misc")
+                        .resizable()
                         .padding(.bottom, 10)
                         .simultaneousGesture(
                             DragGesture(minimumDistance: 0)
@@ -254,6 +257,7 @@ struct TouchControlsView: View {
                                     }
                             }
                         )
+                        .frame(width: 75.4, height: 80.6)
                     Button() {
                         isMenuPresented = !isMenuPresented
                         if let emu = emulator {
@@ -261,19 +265,22 @@ struct TouchControlsView: View {
                         }
                     } label: {
                         Image("Red Button")
+                            .resizable()
+                            .frame(width: 36.4, height: 28.6)
                     }
                 }
                 Spacer()
                 Image("Buttons")
+                    .resizable()
                     .background(
                         GeometryReader { geometry in
                             Color.clear
                                 .onAppear {
                                     let frame = geometry.frame(in: .local)
 
-                                    let width = frame.maxY * 0.32
-                                    let height = frame.maxY * 0.32
-                                    
+                                    let width = frame.maxY * 0.35
+                                    let height = frame.maxY * 0.35
+
                                     let xButton = CGRect(x: frame.maxX * 0.35, y: frame.minY, width: width, height: height)
                                     let yButton  = CGRect(x: frame.minX, y: frame.maxY * 0.35, width: width, height: height)
                                     let aButton = CGRect(x: frame.maxY * 0.69, y: frame.maxY * 0.35, width: width, height: height)
@@ -297,6 +304,7 @@ struct TouchControlsView: View {
                                 releaseHapticFeedback()
                             }
                     )
+                    .frame(width: 156, height: 156)
                 Spacer()
             }
             Spacer()

@@ -168,6 +168,7 @@ struct DualScreenView: View {
                         HStack {
                             Spacer()
                             Image("L Button")
+                                .resizable()
                                 .simultaneousGesture(
                                     DragGesture(minimumDistance: 0)
                                         .onChanged() { result in
@@ -182,6 +183,7 @@ struct DualScreenView: View {
                                             emulator?.updateInput(ButtonEvent.ButtonL, false)
                                         }
                                 )
+                                .frame(width: 110, height: 38.5)
                             Spacer()
                             Button {
                                 if let manager = audioManager {
@@ -196,9 +198,12 @@ struct DualScreenView: View {
                                 }
                             } label: {
                                 Image("Volume Button")
+                                    .resizable()
+                                    .frame(width: 55, height: 33)
                             }
                             Spacer()
                             Image("R Button")
+                                .resizable()
                                 .simultaneousGesture(
                                     DragGesture(minimumDistance: 0)
                                         .onChanged() { result in
@@ -213,6 +218,7 @@ struct DualScreenView: View {
                                             emulator?.updateInput(ButtonEvent.ButtonR, false)
                                         }
                                 )
+                                .frame(width: 110, height: 38.5)
                             Spacer()
                         }
                     }
