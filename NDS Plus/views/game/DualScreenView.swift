@@ -8,6 +8,8 @@
 import SwiftUI
 import DSEmulatorMobile
 
+private let BUTTON_SCALE = 1.1
+
 struct DualScreenView: View {
     @Binding var gameController: GameController?
     @Binding var topImage: CGImage?
@@ -27,8 +29,11 @@ struct DualScreenView: View {
         }
     }
   
+    // these are to access image width/height easily, and scale them proportionately
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     private let rectangleImage = UIImage(named: "Rectangle")
+    private let shoulderButton = UIImage(named: "L Button")
+    private let volumeButton = UIImage(named: "Volume Button")
 
     private var currentHoldButtons: String {
         var buttons: [String] = []
@@ -183,7 +188,7 @@ struct DualScreenView: View {
                                             emulator?.updateInput(ButtonEvent.ButtonL, false)
                                         }
                                 )
-                                .frame(width: 110, height: 38.5)
+                                .frame(width: shoulderButton!.size.width * BUTTON_SCALE, height: shoulderButton!.size.height * BUTTON_SCALE)
                             Spacer()
                             Button {
                                 if let manager = audioManager {
@@ -199,7 +204,7 @@ struct DualScreenView: View {
                             } label: {
                                 Image("Volume Button")
                                     .resizable()
-                                    .frame(width: 55, height: 33)
+                                    .frame(width: volumeButton!.size.width * BUTTON_SCALE, height: volumeButton!.size.height * BUTTON_SCALE)
                             }
                             Spacer()
                             Image("R Button")
@@ -218,7 +223,7 @@ struct DualScreenView: View {
                                             emulator?.updateInput(ButtonEvent.ButtonR, false)
                                         }
                                 )
-                                .frame(width: 110, height: 38.5)
+                                .frame(width: shoulderButton!.size.width * BUTTON_SCALE, height: shoulderButton!.size.height * BUTTON_SCALE)
                             Spacer()
                         }
                     }
