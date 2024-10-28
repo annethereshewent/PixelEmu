@@ -25,7 +25,7 @@ struct GameView: View {
     @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
 
     @State private var isHoldButtonsPresented = false
-    @State private var heldButtons: [ButtonEvent] = []
+    @State private var heldButtons: Set<ButtonEvent> = []
 
     @Binding var emulator: MobileEmulator?
     @Binding var bios7Data: Data?
@@ -346,7 +346,7 @@ struct GameView: View {
                 )
             }
             .onAppear {
-                // UIApplication.shared.isIdleTimerDisabled = true
+                UIApplication.shared.isIdleTimerDisabled = true
                 Task {
                     if !isRunning {
                         await self.run()
@@ -361,7 +361,7 @@ struct GameView: View {
                 }
             }
             .onDisappear {
-                // UIApplication.shared.isIdleTimerDisabled = false
+                UIApplication.shared.isIdleTimerDisabled = false
             }
             .onChange(of: shouldGoHome) {
                 if shouldGoHome {

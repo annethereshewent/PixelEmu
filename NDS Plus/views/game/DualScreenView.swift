@@ -18,7 +18,7 @@ struct DualScreenView: View {
     @Binding var audioManager: AudioManager?
     @Binding var isSoundOn: Bool
     @Binding var isHoldButtonsPresented: Bool
-    @Binding var heldButtons: [ButtonEvent]
+    @Binding var heldButtons: Set<ButtonEvent>
 
     private var screenRatio: Float {
         if gameController?.controller?.extendedGamepad == nil {

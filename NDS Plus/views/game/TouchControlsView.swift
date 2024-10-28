@@ -24,14 +24,29 @@ struct TouchControlsView: View {
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
     @Binding var isHoldButtonsPresented: Bool
-    @Binding var heldButtons: [ButtonEvent]
+    @Binding var heldButtons: Set<ButtonEvent>
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
     @State private var buttons: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
     @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()    
     @State private var buttonsMisc: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
-    
+
+    private let allButtons: Set<ButtonEvent> = [
+        ButtonEvent.ButtonA,
+        ButtonEvent.ButtonB,
+        ButtonEvent.ButtonL,
+        ButtonEvent.ButtonR,
+        ButtonEvent.ButtonX,
+        ButtonEvent.ButtonY,
+        ButtonEvent.Down,
+        ButtonEvent.Left,
+        ButtonEvent.Right,
+        ButtonEvent.Down,
+        ButtonEvent.Select,
+        ButtonEvent.Start
+    ]
+
     private func releaseHapticFeedback() {
         buttonStarted[ButtonEvent.ButtonA] = false
         buttonStarted[ButtonEvent.ButtonB] = false
@@ -78,15 +93,23 @@ struct TouchControlsView: View {
             for entry in entries {
                 if entry.value.contains(point) {
                     if isHoldButtonsPresented {
-                        if let index = heldButtons.firstIndex(of: entry.key) {
-                            heldButtons.remove(at: index)
+                        if heldButtons.contains(entry.key) {
+                            heldButtons.remove(entry.key)
                         } else {
-                            heldButtons.append(entry.key)
+                            heldButtons.insert(entry.key)
                         }
                     } else {
-                        emu.updateInput(entry.key, true)
+                        if heldButtons.contains(entry.key) {
+                            emu.updateInput(entry.key, false)
+                            // exactly one frame delay
+                            Timer.scheduledTimer(withTimeInterval: 1 / 60, repeats: false) { _ in
+                                emu.updateInput(entry.key, true)
+                            }
+                        } else {
+                            emu.updateInput(entry.key, true)
+                        }
                     }
-                } else {
+                } else if !heldButtons.contains(entry.key) {
                     emu.updateInput(entry.key, false)
                 }
             }
@@ -107,11 +130,13 @@ struct TouchControlsView: View {
     }
     
     private func releaseButtons() {
+        let buttons = [ButtonEvent.ButtonA, ButtonEvent.ButtonB, ButtonEvent.ButtonY, ButtonEvent.ButtonX]
         if let emu = emulator {
-            emu.updateInput(ButtonEvent.ButtonA, false)
-            emu.updateInput(ButtonEvent.ButtonB, false)
-            emu.updateInput(ButtonEvent.ButtonY, false)
-            emu.updateInput(ButtonEvent.ButtonX, false)
+            for button in buttons {
+                if !heldButtons.contains(button) {
+                    emu.updateInput(button, false)
+                }
+            }
         }
     }
     
@@ -275,6 +300,19 @@ struct TouchControlsView: View {
                 Spacer()
             }
             Spacer()
+        }
+        .onChange(of: heldButtons) {
+            if let emu = emulator {
+                for button in heldButtons {
+                    emu.updateInput(button, true)
+                }
+
+                let difference = allButtons.subtracting(heldButtons)
+
+                for button in difference {
+                    emu.updateInput(button, false)
+                }
+            }
         }
         .onAppear {
             initButtonState()
