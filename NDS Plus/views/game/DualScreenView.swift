@@ -10,7 +10,6 @@ import DSEmulatorMobile
 
 struct DualScreenView: View {
     @Binding var gameController: GameController?
-    private let rectangleImage = UIImage(named: "Rectangle")
     @Binding var topImage: CGImage?
     @Binding var bottomImage: CGImage?
     @Binding var emulator: MobileEmulator?
@@ -29,6 +28,7 @@ struct DualScreenView: View {
     }
   
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    private let rectangleImage = UIImage(named: "Rectangle")
 
     private var currentHoldButtons: String {
         var buttons: [String] = []
