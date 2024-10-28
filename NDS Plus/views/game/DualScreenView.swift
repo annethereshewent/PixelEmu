@@ -8,8 +8,6 @@
 import SwiftUI
 import DSEmulatorMobile
 
-private let BUTTON_SCALE = 1.1
-
 struct DualScreenView: View {
     @Binding var gameController: GameController?
     @Binding var topImage: CGImage?
@@ -35,6 +33,16 @@ struct DualScreenView: View {
     private let rectangleImage = UIImage(named: "Rectangle")
     private let shoulderButton = UIImage(named: "L Button")
     private let volumeButton = UIImage(named: "Volume Button")
+
+    private var buttonScale: CGFloat {
+        let rect = UIScreen.main.bounds
+
+        if rect.height > 852.0 {
+            return 1.1
+        } else {
+            return 1.05
+        }
+    }
 
     private var currentHoldButtons: String {
         var buttons: [String] = []
@@ -189,7 +197,7 @@ struct DualScreenView: View {
                                             emulator?.updateInput(ButtonEvent.ButtonL, false)
                                         }
                                 )
-                                .frame(width: shoulderButton!.size.width * BUTTON_SCALE, height: shoulderButton!.size.height * BUTTON_SCALE)
+                                .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)
                             Spacer()
                             Button {
                                 if let manager = audioManager {
@@ -205,7 +213,7 @@ struct DualScreenView: View {
                             } label: {
                                 Image("Volume Button")
                                     .resizable()
-                                    .frame(width: volumeButton!.size.width * BUTTON_SCALE, height: volumeButton!.size.height * BUTTON_SCALE)
+                                    .frame(width: volumeButton!.size.width * buttonScale, height: volumeButton!.size.height * buttonScale)
                             }
                             Spacer()
                             Image("R Button")
@@ -224,7 +232,7 @@ struct DualScreenView: View {
                                             emulator?.updateInput(ButtonEvent.ButtonR, false)
                                         }
                                 )
-                                .frame(width: shoulderButton!.size.width * BUTTON_SCALE, height: shoulderButton!.size.height * BUTTON_SCALE)
+                                .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)
                             Spacer()
                         }
                     }

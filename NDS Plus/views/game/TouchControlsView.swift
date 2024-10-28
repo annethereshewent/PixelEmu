@@ -8,8 +8,6 @@
 import SwiftUI
 import DSEmulatorMobile
 
-private let BUTTON_SCALE = 1.3
-
 struct TouchControlsView: View {
     
     @Environment(\.presentationMode) var presentationMode
@@ -54,6 +52,16 @@ struct TouchControlsView: View {
         ButtonEvent.Select,
         ButtonEvent.Start
     ]
+
+    private var buttonScale: CGFloat {
+        let rect = UIScreen.main.bounds
+
+        if rect.height > 852.0 {
+            return 1.3
+        } else {
+            return 1.05
+        }
+    }
 
     private func releaseHapticFeedback() {
         buttonStarted[ButtonEvent.ButtonA] = false
@@ -221,7 +229,7 @@ struct TouchControlsView: View {
                                 releaseControlPad()
                             }
                     )
-                    .frame(width: controlPadImage!.size.width * BUTTON_SCALE, height: controlPadImage!.size.height * BUTTON_SCALE)
+                    .frame(width: controlPadImage!.size.width * buttonScale, height: controlPadImage!.size.height * buttonScale)
                 Spacer()
                 VStack {
                     Image("Buttons Misc")
@@ -265,7 +273,7 @@ struct TouchControlsView: View {
                                     }
                             }
                         )
-                        .frame(width: miscButtons!.size.width * BUTTON_SCALE, height: miscButtons!.size.height * BUTTON_SCALE)
+                        .frame(width: miscButtons!.size.width * buttonScale, height: miscButtons!.size.height * buttonScale)
                     Button() {
                         isMenuPresented = !isMenuPresented
                         if let emu = emulator {
@@ -274,7 +282,7 @@ struct TouchControlsView: View {
                     } label: {
                         Image("Red Button")
                             .resizable()
-                            .frame(width: redButton!.size.width * BUTTON_SCALE, height: redButton!.size.height * BUTTON_SCALE)
+                            .frame(width: redButton!.size.width * buttonScale, height: redButton!.size.height * buttonScale)
                     }
                 }
                 Spacer()
@@ -312,7 +320,7 @@ struct TouchControlsView: View {
                                 releaseHapticFeedback()
                             }
                     )
-                    .frame(width: buttonImage!.size.width * BUTTON_SCALE, height: buttonImage!.size.height * BUTTON_SCALE)
+                    .frame(width: buttonImage!.size.width * buttonScale, height: buttonImage!.size.height * buttonScale)
                 Spacer()
             }
             Spacer()
