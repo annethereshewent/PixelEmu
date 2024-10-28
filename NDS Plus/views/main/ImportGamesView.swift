@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import UniformTypeIdentifiers
 import DSEmulatorMobile
 
@@ -24,6 +25,10 @@ struct ImportGamesView: View {
     @Binding var gameName: String
     @Binding var currentView: CurrentView
     @Binding var themeColor: Color
+
+    @State private var gameNamesSet: Set<String> = []
+
+    @Query private var games: [Game]
 
     @Environment(\.modelContext) private var context
     
@@ -126,7 +131,10 @@ struct ImportGamesView: View {
                                     url: url,
                                     iconPtr: emu.getGameIconPointer()
                                 ) {
-                                    context.insert(game)
+                                    if !gameNamesSet.contains(gameName) {
+                                        context.insert(game)
+                                        gameNamesSet.insert(gameName)
+                                    }
                                 }
                             }
                         }
@@ -139,6 +147,11 @@ struct ImportGamesView: View {
                 } catch {
                     showErrorMessage = true
                     print(error)
+                }
+            }
+            .onAppear() {
+                for game in games {
+                    gameNamesSet.insert(game.gameName)
                 }
             }
             if showErrorMessage {
