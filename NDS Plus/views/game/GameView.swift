@@ -305,7 +305,8 @@ struct GameView: View {
                         audioManager: $audioManager,
                         isSoundOn: $isSoundOn,
                         isHoldButtonsPresented: $isHoldButtonsPresented,
-                        heldButtons: $heldButtons
+                        heldButtons: $heldButtons,
+                        themeColor: $themeColor
                     )
                     if gameController?.controller?.extendedGamepad == nil {
                         TouchControlsView(

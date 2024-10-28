@@ -20,6 +20,7 @@ struct DualScreenView: View {
     @Binding var isSoundOn: Bool
     @Binding var isHoldButtonsPresented: Bool
     @Binding var heldButtons: Set<ButtonEvent>
+    @Binding var themeColor: Color
 
     private var screenRatio: Float {
         if gameController?.controller?.extendedGamepad == nil {
@@ -100,19 +101,19 @@ struct DualScreenView: View {
                         if isHoldButtonsPresented {
                             VStack {
                                 Text("Hold buttons")
-                                    .foregroundColor(Colors.accentColor)
+                                    .foregroundColor(themeColor)
                                     .font(.custom("Departure Mono", size: 24))
                                 Text("Press buttons to hold down, then press confirm")
                                     .foregroundColor(Colors.primaryColor)
                                 Text(currentHoldButtons)
-                                    .foregroundColor(Colors.accentColor)
+                                    .foregroundColor(themeColor)
                                 Button("Confirm") {
                                     isHoldButtonsPresented = false
                                     if let emu = emulator {
                                         emu.setPause(false)
                                     }
                                 }
-                                .foregroundColor(Colors.accentColor)
+                                .foregroundColor(themeColor)
                                 .border(.gray)
                                 .cornerRadius(0.3)
                                 .padding(.top, 20)
@@ -228,6 +229,13 @@ struct DualScreenView: View {
                         }
                     }
                 }
+            }
+        }
+        .onAppear() {
+            let defaults = UserDefaults.standard
+
+            if let themeColor = defaults.value(forKey: "themeColor") as? Color {
+                self.themeColor = themeColor
             }
         }
     }

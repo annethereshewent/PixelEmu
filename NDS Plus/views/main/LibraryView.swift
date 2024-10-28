@@ -21,7 +21,7 @@ struct LibraryView: View {
     @State private var recentColor = Colors.accentColor
     @State private var allColor = Colors.primaryColor
     @State private var filter = LibraryFilter.recent
-    
+
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -32,7 +32,8 @@ struct LibraryView: View {
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
     @Binding var game: Game?
-    
+    @Binding var themeColor: Color
+
     var body: some View {
        
         VStack {
@@ -42,13 +43,14 @@ struct LibraryView: View {
                 Spacer()
                     
                 Button {
-                    recentColor = Colors.accentColor
+                    recentColor = themeColor
                     allColor = Colors.primaryColor
                     filter = .recent
                 } label: {
                     HStack {
                         if filter == .recent {
                             Image("Caret")
+                                .foregroundColor(themeColor)
                         }
                         Text("Recent")
                             .foregroundColor(recentColor)
@@ -57,13 +59,14 @@ struct LibraryView: View {
                 
                 Spacer()
                 Button {
-                    allColor = Colors.accentColor
+                    allColor = themeColor
                     recentColor = Colors.primaryColor
                     filter = .all
                 } label: {
                     HStack {
                         if filter == .all {
                             Image("Caret")
+                                .foregroundColor(themeColor)
                         }
                         Text("All")
                             .foregroundColor(allColor)
@@ -84,8 +87,12 @@ struct LibraryView: View {
                 gameUrl: $gameUrl,
                 path: $path,
                 game: $game,
-                filter: $filter
+                filter: $filter,
+                themeColor: $themeColor
             )
+        }
+        .onAppear() {
+            recentColor = themeColor
         }
         .font(.custom("Departure Mono", size: 24.0))
         .foregroundColor(Colors.primaryColor)

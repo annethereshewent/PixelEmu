@@ -105,11 +105,11 @@ struct SettingsView: View {
                 }
                 HStack {
                     Spacer()
-                    ColorPicker("Skin theme color", selection: $themeColor)
+                    ColorPicker("Change theme color", selection: $themeColor)
                     Spacer()
                 }
                 .padding(.top, 20)
-                .foregroundColor(Colors.accentColor)
+                .foregroundColor(themeColor)
                 HStack {
                     Spacer()
                     Toggle(isOn: $isSoundOn) {
@@ -126,6 +126,7 @@ struct SettingsView: View {
                 } label: {
                     Image("Github")
                         .padding(.top, 60)
+                        .foregroundColor(themeColor)
                 }
             }
             .frame(width: 400, height: 600)

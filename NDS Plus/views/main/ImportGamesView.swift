@@ -23,7 +23,8 @@ struct ImportGamesView: View {
     @Binding var emulator: MobileEmulator?
     @Binding var gameName: String
     @Binding var currentView: CurrentView
-    
+    @Binding var themeColor: Color
+
     @Environment(\.modelContext) private var context
     
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
@@ -33,6 +34,7 @@ struct ImportGamesView: View {
                 Text("Import Games")
                 HStack {
                     Image("Import Cartridge")
+                        .foregroundColor(themeColor)
                     Text("Only \".nds\" files allowed")
                         .frame(width: 200, height: 60)
                         .fixedSize(horizontal: false, vertical: true)
@@ -45,8 +47,9 @@ struct ImportGamesView: View {
                         showRomDialog = true
                     } label: {
                         Image("Browse")
+                            .foregroundColor(themeColor)
                         Text("Browse files")
-                            .foregroundColor(Colors.accentColor)
+                            .foregroundColor(themeColor)
                             .font(.custom("Departure Mono", size: 20))
                     }
                 }
@@ -143,7 +146,8 @@ struct ImportGamesView: View {
                 AlertModal(
                     alertTitle: "Oops!",
                     text: "There was an error importing the game(s).",
-                    showAlert: $showErrorMessage
+                    showAlert: $showErrorMessage,
+                    themeColor: $themeColor
                 )
             }
         }

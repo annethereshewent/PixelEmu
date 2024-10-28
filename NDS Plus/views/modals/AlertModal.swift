@@ -12,17 +12,18 @@ struct AlertModal: View {
     let text: String
 
     @Binding var showAlert: Bool
-    
+    @Binding var themeColor: Color
+
     var body: some View {
         VStack {
             Text(alertTitle)
-                .foregroundColor(Colors.accentColor)
+                .foregroundColor(themeColor)
                 .font(.custom("Departure Mono", size: 24))
             Text(text)
             Button("Close") {
                 showAlert = false
             }
-            .foregroundColor(Colors.accentColor)
+            .foregroundColor(themeColor)
             .border(.gray)
             .cornerRadius(0.3)
             .padding(.top, 20)
@@ -32,5 +33,12 @@ struct AlertModal: View {
         .padding()
         .opacity(0.8)
         .font(.custom("Departure Mono", size: 20))
+        .onAppear() {
+            let defaults = UserDefaults.standard
+
+            if let themeColor = defaults.value(forKey: "themeColor") as? Color {
+                self.themeColor = themeColor
+            }
+        }
     }
 }

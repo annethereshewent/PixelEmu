@@ -10,12 +10,14 @@ import SwiftUI
 struct DeleteDialog: View {
     @Binding var showDialog: Bool
     @Binding var deleteAction: () -> Void
+    @Binding var themeColor: Color
+
     let deleteMessage: String
-    
+
     var body: some View {
         VStack {
             Text("Confirm delete")
-                .foregroundColor(Colors.accentColor)
+                .foregroundColor(themeColor)
                 .font(.custom("Departure Mono", size: 24))
             Text(deleteMessage)
             
@@ -31,10 +33,17 @@ struct DeleteDialog: View {
                 Button("Close") {
                     showDialog = false
                 }
-                .foregroundColor(Colors.accentColor)
+                .foregroundColor(themeColor)
                 .border(.gray)
                 .cornerRadius(0.3)
                 .padding(.top, 20)
+            }
+        }
+        .onAppear() {
+            let defaults = UserDefaults.standard
+
+            if let themeColor = defaults.value(forKey: "themeColor") as? Color {
+                self.themeColor = themeColor
             }
         }
         .background(Colors.backgroundColor)
