@@ -71,6 +71,9 @@ struct GamesListView: View {
             self.game = game
             game.lastPlayed = Date.now
             path.append("GameView")
+        } else if let game = self.game {
+            game.lastPlayed = Date.now
+            path.append("GameView")
         } else {
             showGameError = true
         }
