@@ -143,9 +143,10 @@ struct GameView: View {
             controller.buttonHome?.pressedChangedHandler = { (button, value, pressed) in
                 if pressed && !homePressed {
                     homePressed = true
-                    
+
                     isMenuPresented = !isMenuPresented
-                    
+                    emu.setPause(isMenuPresented)
+
                     Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
                         homePressed = false
                     }

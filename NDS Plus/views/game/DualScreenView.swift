@@ -32,7 +32,7 @@ struct DualScreenView: View {
                 return LANDSCAPE_RATIO
             }
 
-            return FULLSCREEN_RATIO
+            return LANDSCAPE_FULLSCREEN_RATIO
         }
 
     }
