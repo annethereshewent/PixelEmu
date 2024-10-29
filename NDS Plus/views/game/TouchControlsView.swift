@@ -23,13 +23,52 @@ struct TouchControlsView: View {
     @Binding var romData: Data?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
-    
+    @Binding var isHoldButtonsPresented: Bool
+    @Binding var heldButtons: Set<ButtonEvent>
+
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     
     @State private var buttons: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
     @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()    
     @State private var buttonsMisc: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
-    
+
+    @EnvironmentObject var orientationInfo: OrientationInfo
+
+    // for resizing images proportionately
+    private let buttonImage = UIImage(named: "Buttons")
+    private let controlPadImage = UIImage(named: "Control Pad")
+    private let miscButtons = UIImage(named: "Buttons Misc")
+    private let redButton = UIImage(named: "Red Button")
+
+    private let allButtons: Set<ButtonEvent> = [
+        ButtonEvent.ButtonA,
+        ButtonEvent.ButtonB,
+        ButtonEvent.ButtonL,
+        ButtonEvent.ButtonR,
+        ButtonEvent.ButtonX,
+        ButtonEvent.ButtonY,
+        ButtonEvent.Down,
+        ButtonEvent.Left,
+        ButtonEvent.Right,
+        ButtonEvent.Down,
+        ButtonEvent.Select,
+        ButtonEvent.Start
+    ]
+
+    private var buttonScale: CGFloat {
+        if orientationInfo.orientation == .landscape {
+            return 0.90
+        }
+        
+        let rect = UIScreen.main.bounds
+
+        if rect.height > 852.0 {
+            return 1.3
+        } else {
+            return 1.05
+        }
+    }
+
     private func releaseHapticFeedback() {
         buttonStarted[ButtonEvent.ButtonA] = false
         buttonStarted[ButtonEvent.ButtonB] = false
@@ -75,8 +114,24 @@ struct TouchControlsView: View {
         if let emu = emulator {
             for entry in entries {
                 if entry.value.contains(point) {
-                    emu.updateInput(entry.key, true)
-                } else {
+                    if isHoldButtonsPresented {
+                        if heldButtons.contains(entry.key) {
+                            heldButtons.remove(entry.key)
+                        } else {
+                            heldButtons.insert(entry.key)
+                        }
+                    } else {
+                        if heldButtons.contains(entry.key) {
+                            emu.updateInput(entry.key, false)
+                            // exactly one frame delay
+                            Timer.scheduledTimer(withTimeInterval: 1 / 60, repeats: false) { _ in
+                                emu.updateInput(entry.key, true)
+                            }
+                        } else {
+                            emu.updateInput(entry.key, true)
+                        }
+                    }
+                } else if !heldButtons.contains(entry.key) {
                     emu.updateInput(entry.key, false)
                 }
             }
@@ -97,11 +152,13 @@ struct TouchControlsView: View {
     }
     
     private func releaseButtons() {
+        let buttons = [ButtonEvent.ButtonA, ButtonEvent.ButtonB, ButtonEvent.ButtonY, ButtonEvent.ButtonX]
         if let emu = emulator {
-            emu.updateInput(ButtonEvent.ButtonA, false)
-            emu.updateInput(ButtonEvent.ButtonB, false)
-            emu.updateInput(ButtonEvent.ButtonY, false)
-            emu.updateInput(ButtonEvent.ButtonX, false)
+            for button in buttons {
+                if !heldButtons.contains(button) {
+                    emu.updateInput(button, false)
+                }
+            }
         }
     }
     
@@ -144,6 +201,7 @@ struct TouchControlsView: View {
             HStack {
                 Spacer()
                 Image("Control Pad")
+                    .resizable()
                     .background(
                         GeometryReader { geometry in
                             Color.clear
@@ -177,9 +235,11 @@ struct TouchControlsView: View {
                                 releaseControlPad()
                             }
                     )
+                    .frame(width: controlPadImage!.size.width * buttonScale, height: controlPadImage!.size.height * buttonScale)
                 Spacer()
                 VStack {
                     Image("Buttons Misc")
+                        .resizable()
                         .padding(.bottom, 10)
                         .simultaneousGesture(
                             DragGesture(minimumDistance: 0)
@@ -219,6 +279,7 @@ struct TouchControlsView: View {
                                     }
                             }
                         )
+                        .frame(width: miscButtons!.size.width * buttonScale, height: miscButtons!.size.height * buttonScale)
                     Button() {
                         isMenuPresented = !isMenuPresented
                         if let emu = emulator {
@@ -226,19 +287,22 @@ struct TouchControlsView: View {
                         }
                     } label: {
                         Image("Red Button")
+                            .resizable()
+                            .frame(width: redButton!.size.width * buttonScale, height: redButton!.size.height * buttonScale)
                     }
                 }
                 Spacer()
                 Image("Buttons")
+                    .resizable()
                     .background(
                         GeometryReader { geometry in
                             Color.clear
                                 .onAppear {
                                     let frame = geometry.frame(in: .local)
 
-                                    let width = frame.maxY * 0.32
-                                    let height = frame.maxY * 0.32
-                                    
+                                    let width = frame.maxY * 0.35
+                                    let height = frame.maxY * 0.35
+
                                     let xButton = CGRect(x: frame.maxX * 0.35, y: frame.minY, width: width, height: height)
                                     let yButton  = CGRect(x: frame.minX, y: frame.maxY * 0.35, width: width, height: height)
                                     let aButton = CGRect(x: frame.maxY * 0.69, y: frame.maxY * 0.35, width: width, height: height)
@@ -262,9 +326,23 @@ struct TouchControlsView: View {
                                 releaseHapticFeedback()
                             }
                     )
+                    .frame(width: buttonImage!.size.width * buttonScale, height: buttonImage!.size.height * buttonScale)
                 Spacer()
             }
             Spacer()
+        }
+        .onChange(of: heldButtons) {
+            if let emu = emulator {
+                for button in heldButtons {
+                    emu.updateInput(button, true)
+                }
+
+                let difference = allButtons.subtracting(heldButtons)
+
+                for button in difference {
+                    emu.updateInput(button, false)
+                }
+            }
         }
         .onAppear {
             initButtonState()

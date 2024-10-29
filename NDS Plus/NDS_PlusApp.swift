@@ -13,6 +13,7 @@ struct NDS_PlusApp: App {
         WindowGroup {
             ContentView()
                 .modelContainer(for: [Game.self, SaveState.self])
+                .environmentObject(OrientationInfo())
         }
     }
 }

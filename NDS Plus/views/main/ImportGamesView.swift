@@ -6,10 +6,9 @@
 //
 
 import SwiftUI
+import SwiftData
 import UniformTypeIdentifiers
 import DSEmulatorMobile
-
-extension String: Error {}
 
 struct ImportGamesView: View {
     @State private var showRomDialog = false
@@ -25,30 +24,36 @@ struct ImportGamesView: View {
     @Binding var emulator: MobileEmulator?
     @Binding var gameName: String
     @Binding var currentView: CurrentView
-    
+    @Binding var themeColor: Color
+
+    @State private var gameNamesSet: Set<String> = []
+
+    @Query private var games: [Game]
+
     @Environment(\.modelContext) private var context
     
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
     var body: some View {
         ZStack {
             VStack {
-                Text("Import Games")
+                Text("Import games")
                 HStack {
                     Image("Import Cartridge")
+                        .foregroundColor(themeColor)
                     Text("Only \".nds\" files allowed")
                         .frame(width: 200, height: 60)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.custom("Departure Mono", size: 20))
                 }
                 Spacer()
-                Spacer()
                 HStack {
                     Button {
                         showRomDialog = true
                     } label: {
                         Image("Browse")
+                            .foregroundColor(themeColor)
                         Text("Browse files")
-                            .foregroundColor(Colors.accentColor)
+                            .foregroundColor(themeColor)
                             .font(.custom("Departure Mono", size: 20))
                     }
                 }
@@ -126,7 +131,10 @@ struct ImportGamesView: View {
                                     url: url,
                                     iconPtr: emu.getGameIconPointer()
                                 ) {
-                                    context.insert(game)
+                                    if !gameNamesSet.contains(gameName) {
+                                        context.insert(game)
+                                        gameNamesSet.insert(gameName)
+                                    }
                                 }
                             }
                         }
@@ -141,11 +149,17 @@ struct ImportGamesView: View {
                     print(error)
                 }
             }
+            .onAppear() {
+                for game in games {
+                    gameNamesSet.insert(game.gameName)
+                }
+            }
             if showErrorMessage {
                 AlertModal(
                     alertTitle: "Oops!",
                     text: "There was an error importing the game(s).",
-                    showAlert: $showErrorMessage
+                    showAlert: $showErrorMessage,
+                    themeColor: $themeColor
                 )
             }
         }

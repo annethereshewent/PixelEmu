@@ -20,6 +20,9 @@ struct GameEntryModal: View {
     @Binding var showDeleteAlert: Bool
     @Binding var showDeleteDialog: Bool
     @Binding var deleteAction: () -> Void
+
+    @Binding var themeColor: Color
+
     let isCloudSave: Bool
     
     @State private var isPresented = false
@@ -137,7 +140,7 @@ struct GameEntryModal: View {
             VStack(alignment: .leading) {
                 if let entry = entry {
                     Text("Modify save for \(entry.game.gameName)")
-                        .foregroundColor(Colors.accentColor)
+                        .foregroundColor(themeColor)
                 }
                 if isCloudSave {
                     Button {

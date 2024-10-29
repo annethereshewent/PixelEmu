@@ -13,7 +13,9 @@ import GameController
 struct GameView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.scenePhase) var scenePhase
-    
+
+    @EnvironmentObject var orientationInfo: OrientationInfo
+
     @State private var debounceTimer: Timer? = nil
     
     @State private var loading = false
@@ -21,7 +23,12 @@ struct GameView: View {
     @State private var homePressed = false
     @State private var shouldGoHome = false
     @State private var isPaused: Bool = false
-    
+
+    @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
+
+    @State private var isHoldButtonsPresented = false
+    @State private var heldButtons: Set<ButtonEvent> = []
+
     @Binding var emulator: MobileEmulator?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -43,9 +50,9 @@ struct GameView: View {
     @Binding var workItem: DispatchWorkItem?
     @Binding var topImage: CGImage?
     @Binding var bottomImage: CGImage?
-    
+
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
-    @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
+
     
     private let graphicsParser = GraphicsParser()
 
@@ -136,9 +143,10 @@ struct GameView: View {
             controller.buttonHome?.pressedChangedHandler = { (button, value, pressed) in
                 if pressed && !homePressed {
                     homePressed = true
-                    
+
                     isMenuPresented = !isMenuPresented
-                    
+                    emu.setPause(isMenuPresented)
+
                     Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
                         homePressed = false
                     }
@@ -290,15 +298,20 @@ struct GameView: View {
                     Color.black
                 }
                 VStack(spacing: 0) {
-                    Spacer()
-                    DualScreenView(
+                    if orientationInfo.orientation == .portrait {
+                        Spacer()
+                    }
+                    DualScreenViewWrapper(
                         gameController: $gameController,
                         topImage: $topImage,
                         bottomImage: $bottomImage,
                         emulator: $emulator,
                         buttonStarted: $buttonStarted,
                         audioManager: $audioManager,
-                        isSoundOn: $isSoundOn
+                        isSoundOn: $isSoundOn,
+                        isHoldButtonsPresented: $isHoldButtonsPresented,
+                        heldButtons: $heldButtons,
+                        themeColor: $themeColor
                     )
                     if gameController?.controller?.extendedGamepad == nil {
                         TouchControlsView(
@@ -312,7 +325,9 @@ struct GameView: View {
                             firmwareData: $firmwareData,
                             romData: $romData,
                             gameName: $gameName,
-                            isMenuPresented: $isMenuPresented
+                            isMenuPresented: $isMenuPresented,
+                            isHoldButtonsPresented: $isHoldButtonsPresented,
+                            heldButtons: $heldButtons
                         )
                     }
                 }
@@ -332,7 +347,8 @@ struct GameView: View {
                     firmwareData: $firmwareData,
                     romData: $romData,
                     shouldGoHome: $shouldGoHome,
-                    game: $game
+                    game: $game,
+                    isHoldButtonsPresented: $isHoldButtonsPresented
                 )
             }
             .onAppear {

@@ -10,8 +10,6 @@ import UniformTypeIdentifiers
 import GoogleSignIn
 
 struct SettingsView: View {
-    @Environment(\.colorScheme) var colorScheme
-    
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
@@ -53,14 +51,10 @@ struct SettingsView: View {
 
     var body: some View {
         VStack {
-            HStack {
-                Text("NDS+ Settings")
-                    .font(.custom("Departure Mono", size: 28))
-                    .foregroundColor(Colors.primaryColor)
-                    .fontWeight(.bold)
-                    .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
-            }
-            VStack {
+            Text("NDS+ Settings")
+                .font(.custom("Departure Mono", size: 24))
+                .foregroundColor(Colors.primaryColor)
+            ScrollView {
                 Text("Optional binary files")
                     .padding(.bottom, 20)
                 HStack {
@@ -89,7 +83,7 @@ struct SettingsView: View {
                             .padding(.trailing, 20)
                     }
                 }
-                
+
                 HStack {
                     Button("Firmware") {
                         showFileBrowser = true
@@ -105,11 +99,11 @@ struct SettingsView: View {
                 }
                 HStack {
                     Spacer()
-                    ColorPicker("Skin theme color", selection: $themeColor)
+                    ColorPicker("Change theme color", selection: $themeColor)
                     Spacer()
                 }
                 .padding(.top, 20)
-                .foregroundColor(Colors.accentColor)
+                .foregroundColor(themeColor)
                 HStack {
                     Spacer()
                     Toggle(isOn: $isSoundOn) {
@@ -118,7 +112,7 @@ struct SettingsView: View {
                     Spacer()
                 }
                 .toggleStyle(.switch)
-                
+
                 Button {
                     if let url = URL(string: "https://www.github.com/annethereshewent") {
                         UIApplication.shared.open(url)
@@ -126,12 +120,12 @@ struct SettingsView: View {
                 } label: {
                     Image("Github")
                         .padding(.top, 60)
+                        .foregroundColor(themeColor)
                 }
             }
-            .frame(width: 400, height: 600)
             Spacer()
         }
-        .font(.custom("Departure Mono", size: 24))
+        .font(.custom("Departure Mono", size: 20))
         .foregroundColor(Colors.primaryColor)
         .fileImporter(
             isPresented: $showFileBrowser,

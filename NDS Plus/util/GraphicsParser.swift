@@ -11,8 +11,11 @@ import UIKit
 
 let SCREEN_WIDTH = 256
 let SCREEN_HEIGHT = 192
+
 let SCREEN_RATIO: Float = 1.4
 let FULLSCREEN_RATIO: Float = 1.6
+let LANDSCAPE_RATIO: Float = 1.20
+let LANDSCAPE_FULLSCREEN_RATIO: Float = 1.70
 
 class GraphicsParser {
     func fromPointer(ptr: UnsafePointer<UInt8>) -> CGImage? {

@@ -24,7 +24,8 @@ struct GamesListView: View {
     @Binding var path: NavigationPath
     @Binding var game: Game?
     @Binding var filter: LibraryFilter
-    
+    @Binding var themeColor: Color
+
     @State private var showResumeDialog = false
     @State private var resumeGame = false
     @State private var settingChanged = false
@@ -68,6 +69,9 @@ struct GamesListView: View {
         
         if let game = game {
             self.game = game
+            game.lastPlayed = Date.now
+            path.append("GameView")
+        } else if let game = self.game {
             game.lastPlayed = Date.now
             path.append("GameView")
         } else {
@@ -132,25 +136,29 @@ struct GamesListView: View {
                     ResumeGameDialog(
                         showDialog: $showResumeDialog,
                         resumeGame: $resumeGame,
-                        settingChanged: $settingChanged
+                        settingChanged: $settingChanged,
+                        themeColor: $themeColor
                     )
                 } else if showDeleteConfirmation {
                     DeleteDialog(
                         showDialog: $showDeleteConfirmation,
                         deleteAction: $deleteAction,
+                        themeColor: $themeColor,
                         deleteMessage: "Are you sure you want to remove this game from your library?"
                     )
                 } else if showDeleteError {
                     AlertModal(
                         alertTitle: "Oops!",
                         text: "There was an error removing the game.",
-                        showAlert: $showDeleteError
+                        showAlert: $showDeleteError,
+                        themeColor: $themeColor
                     )
                 } else if showGameError {
                     AlertModal(
                         alertTitle: "Oops!",
                         text: "There was an error loading the specified game.",
-                        showAlert: $showGameError
+                        showAlert: $showGameError,
+                        themeColor: $themeColor
                     )
                 }
             }

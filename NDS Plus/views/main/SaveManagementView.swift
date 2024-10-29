@@ -13,7 +13,8 @@ import SwiftData
 struct SaveManagementView: View {
     @Binding var user: GIDGoogleUser?
     @Binding var cloudService: CloudService?
-    
+    @Binding var themeColor: Color
+
     @State private var saveEntries: [SaveEntry] = []
     @State private var localSaves: [SaveEntry] = []
     @State private var cloudEntry: SaveEntry? = nil
@@ -64,7 +65,7 @@ struct SaveManagementView: View {
                         Button("Sign in to Google") {
                             handleSignInButton()
                         }
-                        .foregroundColor(Colors.accentColor)
+                        .foregroundColor(themeColor)
                     }
                 } else {
                     Button("Sign out of Google") {
@@ -74,7 +75,7 @@ struct SaveManagementView: View {
                         cloudService = nil
                         cloudEntry = nil
                     }
-                    .foregroundColor(Colors.accentColor)
+                    .foregroundColor(themeColor)
                 }
                 
                 ScrollView {
@@ -155,6 +156,7 @@ struct SaveManagementView: View {
                     showDeleteAlert: $showDeleteAlert,
                     showDeleteDialog: $showDeleteDialog,
                     deleteAction: $deleteAction,
+                    themeColor: $themeColor,
                     isCloudSave: true
                 )
             } else if localEntry != nil {
@@ -170,24 +172,42 @@ struct SaveManagementView: View {
                     showDeleteAlert: $showDeleteAlert,
                     showDeleteDialog: $showDeleteDialog,
                     deleteAction: $deleteAction,
+                    themeColor: $themeColor,
                     isCloudSave: false
                 )
             } else if showDownloadAlert {
-                AlertModal(alertTitle: successTitle, text: "Successfully downloaded save.", showAlert: $showDownloadAlert)
+                AlertModal(
+                    alertTitle: successTitle,
+                    text: "Successfully downloaded save.", 
+                    showAlert: $showDownloadAlert, 
+                    themeColor: $themeColor
+                )
             } else if showUploadAlert {
-                AlertModal(alertTitle: successTitle, text: "Successfully uploaded save.", showAlert: $showUploadAlert)
+                AlertModal(
+                    alertTitle: successTitle,
+                    text: "Successfully uploaded save.",
+                    showAlert: $showUploadAlert,
+                    themeColor: $themeColor
+                )
             } else if showDeleteAlert {
-                AlertModal(alertTitle: successTitle, text: "Successfully deleted save.", showAlert: $showDeleteAlert)
+                AlertModal(
+                    alertTitle: successTitle,
+                    text: "Successfully deleted save.",
+                    showAlert: $showDeleteAlert,
+                    themeColor: $themeColor
+                )
             } else if showErrorAlert {
                 AlertModal(
                     alertTitle: "Oops!",
                     text: "There was an error performing the action.",
-                    showAlert: $showErrorAlert
+                    showAlert: $showErrorAlert,
+                    themeColor: $themeColor
                 )
             } else if showDeleteDialog {
                 DeleteDialog(
                     showDialog: $showDeleteDialog,
                     deleteAction: $deleteAction,
+                    themeColor: $themeColor,
                     deleteMessage: "Are you sure you want to delete this save?"
                 )
             }

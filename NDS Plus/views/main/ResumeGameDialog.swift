@@ -11,11 +11,12 @@ struct ResumeGameDialog: View {
     @Binding var showDialog: Bool
     @Binding var resumeGame: Bool
     @Binding var settingChanged: Bool
-    
+    @Binding var themeColor: Color
+
     var body: some View {
         VStack {
             Text("Resume game")
-                .foregroundColor(Colors.accentColor)
+                .foregroundColor(themeColor)
                 .font(.custom("Departure Mono", size: 24))
             Text("Game is already running. Would you like to resume?")
                 
@@ -35,7 +36,7 @@ struct ResumeGameDialog: View {
                     settingChanged = !settingChanged
                     showDialog = false
                 }
-                .foregroundColor(Colors.accentColor)
+                .foregroundColor(themeColor)
                 .border(.gray)
                 .cornerRadius(0.3)
                 .padding(.top, 20)

@@ -108,21 +108,6 @@ struct ContentView: View {
         
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
     
-    var buttonDisabled: Bool {
-        return bios7Data == nil || bios9Data == nil || firmwareData == nil
-    }
-    
-    var buttonColor: Color {
-        switch colorScheme {
-        case .dark:
-            return buttonDisabled ? Color.secondary : Color.white
-        case .light:
-            return buttonDisabled ? Color.gray : Color.cyan
-        default:
-            return buttonDisabled ? Color.gray : Color.cyan
-        }
-    }
-    
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
         NavigationStack(path: $path) {
@@ -142,7 +127,8 @@ struct ContentView: View {
                             emulator: $emulator,
                             gameUrl: $gameUrl,
                             path: $path,
-                            game: $game
+                            game: $game,
+                            themeColor: $themeColor
                         )
                     case .importGames:
                         ImportGamesView(
@@ -155,12 +141,14 @@ struct ContentView: View {
                             isRunning: $isRunning,
                             emulator: $emulator,
                             gameName: $gameName,
-                            currentView: $currentView
+                            currentView: $currentView,
+                            themeColor: $themeColor
                         )
                     case .saveManagement:
                         SaveManagementView(
                             user: $user,
-                            cloudService: $cloudService
+                            cloudService: $cloudService,
+                            themeColor: $themeColor
                         )
                     case .settings:
                         SettingsView(
@@ -177,7 +165,7 @@ struct ContentView: View {
                         )
                     }
                     Spacer()
-                    NavigationBarView(currentView: $currentView)
+                    NavigationBarView(currentView: $currentView, themeColor: $themeColor)
                 }
             }
             .navigationDestination(for: String.self) { view in
@@ -210,6 +198,7 @@ struct ContentView: View {
             GIDSignIn.sharedInstance.handle(url)
         }
         .onAppear {
+            UIApplication.shared.isIdleTimerDisabled = false
             let defaults = UserDefaults.standard
             
             if let isSoundOn = defaults.object(forKey: "isSoundOn") as? Bool {
