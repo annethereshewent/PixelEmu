@@ -31,7 +31,7 @@ struct DualScreenViewWrapper: View {
 
     private var buttonScale: CGFloat {
         if orientationInfo.orientation == .landscape {
-            return 1.0
+            return 0.90
         }
         
         let rect = UIScreen.main.bounds
@@ -62,7 +62,7 @@ struct DualScreenViewWrapper: View {
     private var rectangleWidth: CGFloat {
         switch orientationInfo.orientation {
         case .landscape:
-            return rectangleImage!.size.height * 1.05
+            return rectangleImage!.size.height * 1.02
         case .portrait:
             return rectangleImage!.size.width * 1.05
 

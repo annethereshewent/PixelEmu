@@ -57,7 +57,7 @@ struct TouchControlsView: View {
 
     private var buttonScale: CGFloat {
         if orientationInfo.orientation == .landscape {
-            return 1.0
+            return 0.90
         }
         
         let rect = UIScreen.main.bounds
