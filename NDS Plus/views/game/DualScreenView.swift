@@ -17,14 +17,24 @@ struct DualScreenView: View {
     @Binding var emulator: MobileEmulator?
     @Binding var heldButtons: Set<ButtonEvent>
 
-    let isPortrait: Bool
+    @EnvironmentObject var orientationInfo: OrientationInfo
 
     private var screenRatio: Float {
-        if gameController?.controller?.extendedGamepad == nil {
-            SCREEN_RATIO
-        } else {
-            FULLSCREEN_RATIO
+        switch orientationInfo.orientation {
+        case .portrait:
+            if gameController?.controller?.extendedGamepad == nil {
+                return SCREEN_RATIO
+            }
+
+            return FULLSCREEN_RATIO
+        case .landscape:
+            if gameController?.controller?.extendedGamepad == nil {
+                return LANDSCAPE_RATIO
+            }
+
+            return FULLSCREEN_RATIO
         }
+
     }
 
     private var currentHoldButtons: String {

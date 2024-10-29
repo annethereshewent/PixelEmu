@@ -21,14 +21,19 @@ struct DualScreenViewWrapper: View {
     @Binding var themeColor: Color
 
     @EnvironmentObject var orientationInfo: OrientationInfo
-  
-    // these are to access image width/height easily, and scale them proportionately
+
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+
+    // these are to access image width/height easily, and scale them proportionately
     private let rectangleImage = UIImage(named: "Rectangle")
     private let shoulderButton = UIImage(named: "L Button")
     private let volumeButton = UIImage(named: "Volume Button")
 
     private var buttonScale: CGFloat {
+        if orientationInfo.orientation == .landscape {
+            return 1.0
+        }
+        
         let rect = UIScreen.main.bounds
 
         if rect.height > 852.0 {
@@ -45,13 +50,40 @@ struct DualScreenViewWrapper: View {
         
         return 0.0
     }
-    
+
+    private var landscapePadding: CGFloat {
+        if gameController?.controller?.extendedGamepad == nil {
+            return 30.0
+        }
+
+        return 0.0
+    }
+
+    private var rectangleWidth: CGFloat {
+        switch orientationInfo.orientation {
+        case .landscape:
+            return rectangleImage!.size.height * 1.05
+        case .portrait:
+            return rectangleImage!.size.width * 1.05
+
+        }
+    }
+
+    private var rectangleHeight: CGFloat {
+        switch orientationInfo.orientation {
+        case .landscape:
+            return rectangleImage!.size.width * 0.70
+        case .portrait:
+            return rectangleImage!.size.height * 0.9
+        }
+    }
+
     var body: some View {
         ZStack {
             if gameController?.controller?.extendedGamepad == nil {
                 Image("Rectangle")
                     .resizable()
-                    .frame(width: rectangleImage!.size.width * 1.05, height: rectangleImage!.size.height * 0.9 )
+                    .frame(width: rectangleWidth, height: rectangleHeight )
             }
             VStack(spacing: 0) {
                 if orientationInfo.orientation == .portrait {
@@ -63,8 +95,7 @@ struct DualScreenViewWrapper: View {
                             isHoldButtonsPresented: $isHoldButtonsPresented,
                             themeColor: $themeColor,
                             emulator: $emulator,
-                            heldButtons: $heldButtons,
-                            isPortrait: true
+                            heldButtons: $heldButtons
                         )
                     }
                     .padding(.top, padding)
@@ -77,10 +108,10 @@ struct DualScreenViewWrapper: View {
                             isHoldButtonsPresented: $isHoldButtonsPresented,
                             themeColor: $themeColor,
                             emulator: $emulator,
-                            heldButtons: $heldButtons,
-                            isPortrait: false
+                            heldButtons: $heldButtons
                         )
                     }
+                    .padding(.top, landscapePadding)
                 }
                 if gameController?.controller?.extendedGamepad == nil {
                     VStack(spacing: 0) {

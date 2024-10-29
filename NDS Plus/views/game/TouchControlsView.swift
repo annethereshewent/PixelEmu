@@ -32,6 +32,8 @@ struct TouchControlsView: View {
     @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()    
     @State private var buttonsMisc: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
 
+    @EnvironmentObject var orientationInfo: OrientationInfo
+
     // for resizing images proportionately
     private let buttonImage = UIImage(named: "Buttons")
     private let controlPadImage = UIImage(named: "Control Pad")
@@ -54,6 +56,10 @@ struct TouchControlsView: View {
     ]
 
     private var buttonScale: CGFloat {
+        if orientationInfo.orientation == .landscape {
+            return 1.0
+        }
+        
         let rect = UIScreen.main.bounds
 
         if rect.height > 852.0 {
