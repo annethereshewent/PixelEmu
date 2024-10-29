@@ -14,6 +14,8 @@ struct GameView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.scenePhase) var scenePhase
 
+    @EnvironmentObject var orientationInfo: OrientationInfo
+
     @State private var debounceTimer: Timer? = nil
     
     @State private var loading = false
@@ -295,7 +297,9 @@ struct GameView: View {
                     Color.black
                 }
                 VStack(spacing: 0) {
-                    Spacer()
+                    if orientationInfo.orientation == .portrait {
+                        Spacer()
+                    }
                     DualScreenViewWrapper(
                         gameController: $gameController,
                         topImage: $topImage,

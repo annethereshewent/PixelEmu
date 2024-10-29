@@ -99,8 +99,8 @@ struct GameMenuView: View {
                     }
                 }
             }
-            .presentationDetents([.height(150)])
         }
+        .presentationDetents([.height(150)])
         .foregroundColor(Colors.primaryColor)
         .font(.custom("Departure Mono", size: 16))
         .foregroundColor(color)
