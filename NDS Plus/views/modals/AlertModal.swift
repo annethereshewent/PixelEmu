@@ -33,12 +33,5 @@ struct AlertModal: View {
         .padding()
         .opacity(0.8)
         .font(.custom("Departure Mono", size: 20))
-        .onAppear() {
-            let defaults = UserDefaults.standard
-
-            if let themeColor = defaults.value(forKey: "themeColor") as? Color {
-                self.themeColor = themeColor
-            }
-        }
     }
 }

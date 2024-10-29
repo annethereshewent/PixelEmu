@@ -175,12 +175,5 @@ struct DualScreenViewWrapper: View {
                 }
             }
         }
-        .onAppear() {
-            let defaults = UserDefaults.standard
-
-            if let themeColor = defaults.value(forKey: "themeColor") as? Color {
-                self.themeColor = themeColor
-            }
-        }
     }
 }

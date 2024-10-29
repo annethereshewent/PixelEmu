@@ -39,13 +39,6 @@ struct DeleteDialog: View {
                 .padding(.top, 20)
             }
         }
-        .onAppear() {
-            let defaults = UserDefaults.standard
-
-            if let themeColor = defaults.value(forKey: "themeColor") as? Color {
-                self.themeColor = themeColor
-            }
-        }
         .background(Colors.backgroundColor)
         .frame(width: 300, height: 300)
         .opacity(0.9)

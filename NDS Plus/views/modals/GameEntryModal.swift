@@ -188,13 +188,6 @@ struct GameEntryModal: View {
             .padding()
                 
         }
-        .onAppear() {
-            let defaults = UserDefaults.standard
-            
-            if let themeColor = defaults.value(forKey: "themeColor") as? Color {
-                self.themeColor = themeColor
-            }
-        }
         .background(Colors.backgroundColor)
         .font(.custom("Departure Mono", size: 20))
         .border(.gray)
