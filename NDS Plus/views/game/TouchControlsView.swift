@@ -195,6 +195,54 @@ struct TouchControlsView: View {
             emu.updateInput(ButtonEvent.Select, false)
         }
     }
+
+    private func recalculateButtonCoordinates() {
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { _ in
+            recalculateControlPad()
+            recalculateButtons()
+        }
+    }
+
+    private func recalculateControlPad() {
+
+        let width = controlPadImage!.size.width * buttonScale
+        let height = controlPadImage!.size.height * buttonScale
+
+        /*
+         let up = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: frame.height / 3)
+         let down = CGRect(x: frame.minX, y: (frame.maxY / 3) * 2, width: frame.width, height: frame.height / 3)
+         let right = CGRect(x: (frame.maxX / 3) * 2, y: frame.minY, width: frame.width / 3, height: frame.height)
+         let left = CGRect(x: frame.minX, y: frame.minY, width: frame.width / 3, height: frame.height)
+         */
+
+        let up = CGRect(x: 0, y: 0, width: width, height: height / 3)
+        let down = CGRect(x: 0, y: (height / 3) * 2, width: width, height: height / 3)
+        let right = CGRect(x: (width / 3) * 2, y: 0, width: width / 3, height: height)
+        let left = CGRect(x: 0, y: 0, width: width / 3, height: height)
+
+        controlPad[ButtonEvent.Up] = up
+        controlPad[ButtonEvent.Down] = down
+        controlPad[ButtonEvent.Left] = left
+        controlPad[ButtonEvent.Right] = right
+    }
+
+    private func recalculateButtons() {
+        let imageWidth = buttonImage!.size.width * buttonScale
+        let imageHeight = buttonImage!.size.height * buttonScale
+        let width = imageHeight * 0.35
+        let height = imageHeight * 0.35
+
+        let xButton = CGRect(x: imageWidth * 0.35, y: 0, width: width, height: height)
+        let yButton  = CGRect(x: 0, y: imageHeight * 0.35, width: width, height: height)
+        let aButton = CGRect(x: imageHeight * 0.69, y: imageHeight * 0.35, width: width, height: height)
+        let bButton = CGRect(x: imageWidth * 0.35, y: imageHeight * 0.69, width: width, height: height)
+
+        buttons[ButtonEvent.ButtonA] = aButton
+        buttons[ButtonEvent.ButtonX] = xButton
+        buttons[ButtonEvent.ButtonY] = yButton
+        buttons[ButtonEvent.ButtonB] = bButton
+    }
+
     var body: some View {
         VStack {
             Spacer()
@@ -239,7 +287,6 @@ struct TouchControlsView: View {
                 Spacer()
                 VStack {
                     Image("Buttons Misc")
-                        .resizable()
                         .padding(.bottom, 10)
                         .simultaneousGesture(
                             DragGesture(minimumDistance: 0)
@@ -279,7 +326,6 @@ struct TouchControlsView: View {
                                     }
                             }
                         )
-                        .frame(width: miscButtons!.size.width * buttonScale, height: miscButtons!.size.height * buttonScale)
                     Button() {
                         isMenuPresented = !isMenuPresented
                         if let emu = emulator {
@@ -288,7 +334,7 @@ struct TouchControlsView: View {
                     } label: {
                         Image("Red Button")
                             .resizable()
-                            .frame(width: redButton!.size.width * buttonScale, height: redButton!.size.height * buttonScale)
+                            .frame(width: redButton!.size.width, height: redButton!.size.height)
                     }
                 }
                 Spacer()
@@ -343,6 +389,9 @@ struct TouchControlsView: View {
                     emu.updateInput(button, false)
                 }
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+            recalculateButtonCoordinates()
         }
         .onAppear {
             initButtonState()
