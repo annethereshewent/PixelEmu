@@ -76,7 +76,7 @@
       </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -97,7 +97,6 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Debug"
-      customArchiveName = "NDS+"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
