@@ -195,6 +195,69 @@ struct TouchControlsView: View {
             emu.updateInput(ButtonEvent.Select, false)
         }
     }
+
+    private func recalculateButtonCoordinates() {
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { _ in
+            recalculateControlPad()
+            recalculateButtons()
+        }
+    }
+
+    private func recalculateControlPad() {
+
+        let width = controlPadImage!.size.width * buttonScale
+        let height = controlPadImage!.size.height * buttonScale
+
+        let up = CGRect(x: 0, y: 0, width: width, height: height / 3)
+        let down = CGRect(x: 0, y: (height / 3) * 2, width: width, height: height / 3)
+        let right = CGRect(x: (width / 3) * 2, y: 0, width: width / 3, height: height)
+        let left = CGRect(x: 0, y: 0, width: width / 3, height: height)
+
+        controlPad[ButtonEvent.Up] = up
+        controlPad[ButtonEvent.Down] = down
+        controlPad[ButtonEvent.Left] = left
+        controlPad[ButtonEvent.Right] = right
+    }
+
+    private func calculateMiscButtons() {
+        let frameWidth = miscButtons!.size.width
+        let frameHeight = miscButtons!.size.height
+
+        // below numbers were gotten by dividing the heights of
+        // buttons with the height of the entire button's image
+        let width = frameWidth
+        let height = frameHeight * (16.0 / 71.33333333333)
+
+        let selectY = frameHeight * (28 / 71.33333333333333)
+        let homeY = frameHeight * (54.0 / 71.33333333333333)
+
+        let startButton = CGRect(x: 0, y: 0, width: width, height: height)
+        let selectButton = CGRect(x: 0, y: selectY, width: width, height: height)
+        let homeButton = CGRect(x:0, y: homeY, width: width, height: height)
+
+        buttonsMisc[ButtonEvent.Start] = startButton
+        buttonsMisc[ButtonEvent.Select] = selectButton
+        buttonsMisc[ButtonEvent.ButtonHome] = homeButton
+
+    }
+
+    private func recalculateButtons() {
+        let imageWidth = buttonImage!.size.width * buttonScale
+        let imageHeight = buttonImage!.size.height * buttonScale
+        let width = imageHeight * 0.35
+        let height = imageHeight * 0.35
+
+        let xButton = CGRect(x: imageWidth * 0.35, y: 0, width: width, height: height)
+        let yButton  = CGRect(x: 0, y: imageHeight * 0.35, width: width, height: height)
+        let aButton = CGRect(x: imageHeight * 0.69, y: imageHeight * 0.35, width: width, height: height)
+        let bButton = CGRect(x: imageWidth * 0.35, y: imageHeight * 0.69, width: width, height: height)
+
+        buttons[ButtonEvent.ButtonA] = aButton
+        buttons[ButtonEvent.ButtonX] = xButton
+        buttons[ButtonEvent.ButtonY] = yButton
+        buttons[ButtonEvent.ButtonB] = bButton
+    }
+
     var body: some View {
         VStack {
             Spacer()
@@ -239,7 +302,6 @@ struct TouchControlsView: View {
                 Spacer()
                 VStack {
                     Image("Buttons Misc")
-                        .resizable()
                         .padding(.bottom, 10)
                         .simultaneousGesture(
                             DragGesture(minimumDistance: 0)
@@ -255,31 +317,6 @@ struct TouchControlsView: View {
                                     releaseMiscButtons()
                                 }
                         )
-                        .background(
-                            GeometryReader { geometry in
-                                Color.clear
-                                    .onAppear {
-                                        let frame = geometry.frame(in: .local)
-                                        
-                                        // below numbers were gotten by dividing the heights of
-                                        // buttons with the height of the entire button's image
-                                        let width = frame.width
-                                        let height = frame.height * (16.0 / 71.33333333333)
-                                        
-                                        let selectY = frame.maxY * (28 / 71.33333333333333)
-                                        let homeY = frame.maxY * (54.0 / 71.33333333333333)
-                                    
-                                        let startButton = CGRect(x: 0, y: 0, width: width, height: height)
-                                        let selectButton = CGRect(x: 0, y: selectY, width: width, height: height)
-                                        let homeButton = CGRect(x:0, y: homeY, width: width, height: height)
-                                        
-                                        buttonsMisc[ButtonEvent.Start] = startButton
-                                        buttonsMisc[ButtonEvent.Select] = selectButton
-                                        buttonsMisc[ButtonEvent.ButtonHome] = homeButton
-                                    }
-                            }
-                        )
-                        .frame(width: miscButtons!.size.width * buttonScale, height: miscButtons!.size.height * buttonScale)
                     Button() {
                         isMenuPresented = !isMenuPresented
                         if let emu = emulator {
@@ -288,33 +325,12 @@ struct TouchControlsView: View {
                     } label: {
                         Image("Red Button")
                             .resizable()
-                            .frame(width: redButton!.size.width * buttonScale, height: redButton!.size.height * buttonScale)
+                            .frame(width: redButton!.size.width, height: redButton!.size.height)
                     }
                 }
                 Spacer()
                 Image("Buttons")
                     .resizable()
-                    .background(
-                        GeometryReader { geometry in
-                            Color.clear
-                                .onAppear {
-                                    let frame = geometry.frame(in: .local)
-
-                                    let width = frame.maxY * 0.35
-                                    let height = frame.maxY * 0.35
-
-                                    let xButton = CGRect(x: frame.maxX * 0.35, y: frame.minY, width: width, height: height)
-                                    let yButton  = CGRect(x: frame.minX, y: frame.maxY * 0.35, width: width, height: height)
-                                    let aButton = CGRect(x: frame.maxY * 0.69, y: frame.maxY * 0.35, width: width, height: height)
-                                    let bButton = CGRect(x: frame.maxX * 0.35, y: frame.maxY * 0.69, width: width, height: height)
-                                    
-                                    buttons[ButtonEvent.ButtonA] = aButton
-                                    buttons[ButtonEvent.ButtonX] = xButton
-                                    buttons[ButtonEvent.ButtonY] = yButton
-                                    buttons[ButtonEvent.ButtonB] = bButton
-                                }
-                        }
-                    )
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged() { result in
@@ -344,7 +360,12 @@ struct TouchControlsView: View {
                 }
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+            recalculateButtonCoordinates()
+        }
         .onAppear {
+            calculateMiscButtons()
+            recalculateButtonCoordinates()
             initButtonState()
         }
     }
