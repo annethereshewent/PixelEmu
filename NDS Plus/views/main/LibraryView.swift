@@ -93,6 +93,8 @@ struct LibraryView: View {
         }
         .onAppear() {
             recentColor = themeColor
+            filter = LibraryFilter.recent
+            allColor = Colors.primaryColor
         }
         .font(.custom("Departure Mono", size: 24.0))
         .foregroundColor(Colors.primaryColor)
