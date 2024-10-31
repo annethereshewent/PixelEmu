@@ -224,11 +224,13 @@ struct TouchControlsView: View {
 
         // below numbers were gotten by dividing the heights of
         // buttons with the height of the entire button's image
-        let width = frameWidth
-        let height = frameHeight * (16.0 / 71.33333333333)
+        let divisor: CGFloat = 214.0 / 3.0
 
-        let selectY = frameHeight * (28 / 71.33333333333333)
-        let homeY = frameHeight * (54.0 / 71.33333333333333)
+        let width = frameWidth
+        let height = frameHeight * (16.0 / divisor)
+
+        let selectY = frameHeight * (28.0 / divisor)
+        let homeY = frameHeight * (54.0 / divisor)
 
         let startButton = CGRect(x: 0, y: 0, width: width, height: height)
         let selectButton = CGRect(x: 0, y: selectY, width: width, height: height)
