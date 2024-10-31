@@ -186,7 +186,6 @@ struct TouchControlsView: View {
                 }
             }
         }
-        self.handleInput(point: point, entries: buttonsMisc)
     }
 
     private func releaseMiscButtons() {
