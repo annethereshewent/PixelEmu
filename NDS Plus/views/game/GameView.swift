@@ -33,6 +33,9 @@ struct GameView: View {
 
     @State private var stateManager: StateManager?
 
+    @State private var useControlStick = false
+    @State private var thumbstickPressed = false
+
     @Binding var emulator: MobileEmulator?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -141,19 +144,16 @@ struct GameView: View {
 
                         if (nextInterval - startInterval > 0.5) && !homePressed {
                             homePressed = true
-                            print("displaying menu")
                             isMenuPresented = !isMenuPresented
 
                             emu.setPause(isMenuPresented)
 
                             DispatchQueue.main.async {
                                 Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
-                                    print("homePressed is now false")
                                     homePressed = false
 
                                 }
                             }
-                            print("timer isnt firing :/")
                         }
                     }
                 }
@@ -218,6 +218,34 @@ struct GameView: View {
 
                     Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
                         triggerPressed = false
+                    }
+                }
+            }
+
+            controller.leftThumbstick.valueChangedHandler = { (controller, x, y) in
+                if useControlStick {
+                    if let emu = emulator {
+                        emu.touchScreenController(x, -y)
+                    }
+                }
+            }
+
+            controller.rightThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
+                if pressed && !thumbstickPressed {
+                    thumbstickPressed = true
+
+                    useControlStick = !useControlStick
+
+                    if let emu = emulator {
+                        if useControlStick {
+                            emu.pressScreen()
+                        } else {
+                            emu.releaseScreen()
+                        }
+                    }
+
+                    Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
+                        thumbstickPressed = false
                     }
                 }
             }
