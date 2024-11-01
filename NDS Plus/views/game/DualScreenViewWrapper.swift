@@ -112,6 +112,7 @@ struct DualScreenViewWrapper: View {
                         )
                     }
                     .padding(.top, landscapePadding)
+                    .padding(.leading, 40)
                 }
                 if gameController?.controller?.extendedGamepad == nil {
                     VStack(spacing: 0) {

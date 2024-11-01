@@ -13,6 +13,7 @@ import GameController
 struct GameView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.scenePhase) var scenePhase
+    @Environment(\.modelContext) var context
 
     @EnvironmentObject var orientationInfo: OrientationInfo
 
@@ -21,6 +22,7 @@ struct GameView: View {
     @State private var loading = false
     @State private var isMenuPresented = false
     @State private var homePressed = false
+    @State private var triggerPressed = false
     @State private var shouldGoHome = false
     @State private var isPaused: Bool = false
 
@@ -28,6 +30,8 @@ struct GameView: View {
 
     @State private var isHoldButtonsPresented = false
     @State private var heldButtons: Set<ButtonEvent> = []
+
+    @State private var stateManager: StateManager?
 
     @Binding var emulator: MobileEmulator?
     @Binding var bios7Data: Data?
@@ -127,6 +131,32 @@ struct GameView: View {
             }
             controller.buttonOptions?.pressedChangedHandler = { (button, value, pressed) in
                 emu.updateInput(ButtonEvent.Select, pressed)
+
+                let startInterval = Date.now.timeIntervalSince1970
+                var nextInterval = Date.now.timeIntervalSince1970
+
+                DispatchQueue.global().async {
+                    while (button.isPressed) {
+                        nextInterval = Date.now.timeIntervalSince1970
+
+                        if (nextInterval - startInterval > 0.5) && !homePressed {
+                            homePressed = true
+                            print("displaying menu")
+                            isMenuPresented = !isMenuPresented
+
+                            emu.setPause(isMenuPresented)
+
+                            DispatchQueue.main.async {
+                                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                                    print("homePressed is now false")
+                                    homePressed = false
+
+                                }
+                            }
+                            print("timer isnt firing :/")
+                        }
+                    }
+                }
             }
             controller.dpad.up.pressedChangedHandler = { (button, value, pressed) in
                 emu.updateInput(ButtonEvent.Up, pressed)
@@ -149,6 +179,45 @@ struct GameView: View {
 
                     Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
                         homePressed = false
+                    }
+                }
+            }
+            controller.leftTrigger.pressedChangedHandler = { (button, value, pressed) in
+                if pressed && !triggerPressed {
+                    triggerPressed = true
+
+                    if let emu = emulator {
+                        let dataPtr = emu.createSaveState()
+                        let dataSize = emu.compressedLength()
+
+                        let bufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(dataSize))
+                        let data = Data(bufferPtr)
+
+                        do {
+                            try stateManager?.createSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
+                        } catch {
+                            print(error)
+                        }
+
+                        Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
+                            triggerPressed = false
+                        }
+                    }
+                }
+            }
+
+            controller.rightTrigger.pressedChangedHandler = { (button, value, pressed) in
+                if pressed && !triggerPressed {
+                    triggerPressed = true
+
+                    do {
+                        try stateManager?.loadSaveState(currentState: nil, isQuickSave: true)
+                    } catch {
+                        print(error)
+                    }
+
+                    Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
+                        triggerPressed = false
                     }
                 }
             }
@@ -353,6 +422,19 @@ struct GameView: View {
             }
             .onAppear {
                 UIApplication.shared.isIdleTimerDisabled = true
+
+                if let emu = emulator, let bios7Data = bios7Data, let bios9Data = bios9Data, let romData = romData, let game = game {
+                    stateManager = StateManager(
+                        emu: emu,
+                        game: game,
+                        context: context,
+                        bios7Data: bios7Data,
+                        bios9Data: bios9Data,
+                        romData: romData,
+                        firmwareData: firmwareData
+                    )
+                }
+
                 Task {
                     if !isRunning {
                         await self.run()

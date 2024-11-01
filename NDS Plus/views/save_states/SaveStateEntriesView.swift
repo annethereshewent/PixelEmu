@@ -32,164 +32,43 @@ struct SaveStateEntriesView: View {
     @Binding var romData: Data?
 
     @State private var action: SaveStateAction = .none
-    
+
+    @State private var stateManager: StateManager!
+
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
     private func createSaveState(updateState: SaveState? = nil) {
         // create a new save state
         
-        if let emu = emulator, let game = game {
+        if let emu = emulator {
             let dataPtr = emu.createSaveState()
             let compressedLength = emu.compressedLength()
-            
+
             let unsafeBufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(compressedLength))
-            
+
             let data = Data(unsafeBufferPtr)
-            
+
+            let timestamp = Int(Date().timeIntervalSince1970)
+            let saveName = "state_\(timestamp).save"
+
             do {
-                var location = try FileManager.default.url(
-                     for: .applicationSupportDirectory,
-                     in: .userDomainMask,
-                     appropriateFor: nil,
-                     create: true
-                 )
-                
-                location.appendPathComponent("save_states")
-                
-                if !FileManager.default.fileExists(atPath: location.path) {
-                    try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
-                }
-                
-                let timestamp = Int(Date().timeIntervalSince1970)
-                
-                let gameFolder = gameName.replacing(".nds", with: "")
-                
-                location.appendPathComponent(gameFolder)
-                
-                if !FileManager.default.fileExists(atPath: location.path) {
-                    try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
-                }
-                
-                let saveName = "state_\(timestamp).save"
-                
-                location.appendPathComponent(saveName)
-                
-                try data.write(to: location)
-                let bookmark = try location.bookmarkData(options: [])
-                
-                var screenshot: [UInt8]!
-                
-                if emu.isTopA() {
-                    let topBufferPtr = UnsafeBufferPointer(start: emu.getEngineAPicturePointer(), count: SCREEN_WIDTH * SCREEN_HEIGHT * 4)
-                    screenshot = Array(topBufferPtr)
-                    
-                    let bottomBufferPtr = UnsafeBufferPointer(start: emu.getEngineBPicturePointer(), count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
-                    
-                    screenshot.append(contentsOf: Array(bottomBufferPtr))
-                } else {
-                    let topBufferPtr = UnsafeBufferPointer(start: emu.getEngineBPicturePointer(), count: SCREEN_WIDTH * SCREEN_HEIGHT * 4)
-                    screenshot = Array(topBufferPtr)
-                    
-                    let bottomBufferPtr = UnsafeBufferPointer(start: emu.getEngineAPicturePointer(), count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
-                    
-                    screenshot.append(contentsOf: Array(bottomBufferPtr))
-                }
-                
-                let date = Date()
-                let calendar = Calendar.current
-                
-                let hour = calendar.component(.hour, from: date)
-                let minutes = calendar.component(.minute, from: date)
-                let seconds = calendar.component(.second, from: date)
-                
-                let month = calendar.component(.month, from: date)
-                let day = calendar.component(.day, from: date)
-                let year = calendar.component(.year, from: date)
-                
-                let dateString = String(format: "%02d/%02d/%04d %02d:%02d:%02d", month, day, year, hour, minutes, seconds)
-                
-                let saveState = SaveState(
-                    saveName: "Save on \(dateString)",
-                    screenshot: screenshot,
-                    bookmark: bookmark,
-                    timestamp: timestamp
+                try stateManager.createSaveState(
+                    data: data,
+                    saveName: saveName,
+                    timestamp: timestamp,
+                    updateState: updateState
                 )
-                if let updateState = updateState, let index = game.saveStates.firstIndex(of: updateState) {
-                    updateState.screenshot = saveState.screenshot
-                    updateState.bookmark = saveState.bookmark
-                
-                    game.saveStates[index] = updateState
-                    context.insert(updateState)
-                } else {
-                    game.saveStates.append(saveState)
-                    context.insert(saveState)
-                }
-                
-                isMenuPresented = false
             } catch {
                 print(error)
             }
+
+            isMenuPresented = false
         }
     }
     
     private func loadSaveState() {
         do {
-            if let saveState = currentState {
-                var isStale = false
-                let url = try URL(resolvingBookmarkData: saveState.bookmark, bookmarkDataIsStale: &isStale)
-                if let data = try? Array(Data(contentsOf: url)) {
-                    if let emu = emulator {
-                        var dataPtr: UnsafeBufferPointer<UInt8>!
-                        data.withUnsafeBufferPointer { ptr in
-                            dataPtr = ptr
-                        }
-                        
-                        if let bios7 = bios7Data, let bios9 = bios9Data, let rom = romData {
-                            var bios7Ptr: UnsafeBufferPointer<UInt8>!
-                            var bios9Ptr: UnsafeBufferPointer<UInt8>!
-                            var romPtr: UnsafeBufferPointer<UInt8>!
-                            
-                            let bios7Arr = Array(bios7)
-                            
-                            bios7Arr.withUnsafeBufferPointer { ptr in
-                                bios7Ptr = ptr
-                            }
-                            
-                            let bios9Arr = Array(bios9)
-                            
-                            bios9Arr.withUnsafeBufferPointer { ptr in
-                                bios9Ptr = ptr
-                            }
-                            
-                            let romArr = Array(rom)
-                            
-                            romArr.withUnsafeBufferPointer { ptr in
-                                romPtr = ptr
-                            }
-                            
-                            emu.loadSaveState(dataPtr)
-                            emu.reloadBios(bios7Ptr, bios9Ptr)
-                            
-                            if let firmwareData = firmwareData {
-                                var firmwarePtr: UnsafeBufferPointer<UInt8>!
-                                let firmwareArr = Array(firmwareData)
-                                
-                                firmwareArr.withUnsafeBufferPointer { ptr in
-                                    firmwarePtr = ptr
-                                }
-                                
-                                emu.reloadFirmware(firmwarePtr)
-                            } else {
-                                emu.hleFirmware()
-                            }
-                            emu.reloadRom(romPtr)
-                        }
-                        isMenuPresented = false
-                    }
-                } else {
-                    isMenuPresented = false
-                }
-            }
+            try stateManager.loadSaveState(currentState: currentState)
         } catch {
             print(error)
         }
@@ -240,16 +119,32 @@ struct SaveStateEntriesView: View {
             }
             Spacer()
         }
+        .onAppear() {
+            if let emu = emulator, let game = game, let bios7Data = bios7Data, let bios9Data = bios9Data, let romData = romData {
+                stateManager = StateManager(
+                    emu: emu,
+                    game: game,
+                    context: context,
+                    bios7Data: bios7Data,
+                    bios9Data: bios9Data,
+                    romData: romData,
+                    firmwareData: firmwareData
+                )
+            }
+        }
         .onChange(of: action) {
             switch action {
             case .delete:
                 deleteSaveState()
+                action = .none
                 break
             case .load:
                 loadSaveState()
+                action = .none
                 break
             case .update:
                 updateSaveState()
+                action = .none
                 break
             case .none:
                 break
