@@ -22,13 +22,15 @@ struct SettingsView: View {
     @Binding var bios9Loaded: Bool
     
     @Binding var themeColor: Color
-    
-    
-    @State var isActive = true
+
+    @Binding var gameController: GameController?
+
+    @State private var isActive = true
     @State private var showColorPickerModal = false
     @State private var showFileBrowser = false
     @State private var currentFile: CurrentFile? = nil
-    
+    @State private var isMappingsPresented = false
+
     let binType = UTType(filenameExtension: "bin", conformingTo: .data)
 
     private func storeFile(location: URL, data: Data, currentFile: CurrentFile) {
@@ -113,6 +115,17 @@ struct SettingsView: View {
                 }
                 .toggleStyle(.switch)
 
+                if gameController?.controller?.extendedGamepad != nil {
+                    Button {
+                        isMappingsPresented = true
+                    } label: {
+                        Text("Change controller mappings")
+                            .padding(.leading, 9)
+                        Spacer()
+                        Spacer()
+                    }
+                }
+
                 Button {
                     if let url = URL(string: "https://www.github.com/annethereshewent") {
                         UIApplication.shared.open(url)
@@ -168,6 +181,9 @@ struct SettingsView: View {
                 
             }
         
+        }
+        .sheet(isPresented: $isMappingsPresented) {
+            ControllerMappingsView(themeColor: $themeColor)
         }
         .onChange(of: isSoundOn) {
             let defaults = UserDefaults.standard

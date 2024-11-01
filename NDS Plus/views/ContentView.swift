@@ -39,7 +39,7 @@ struct ContentView: View {
     @State private var isSoundOn: Bool = true
     @State var audioManager: AudioManager? = nil
     
-    @State private var gameController: GameController?
+    @State private var gameController: GameController? = GameController(closure:  { _ in })
     @State private var topImage: CGImage?
     @State private var bottomImage: CGImage?
     @State private var gameName = ""
@@ -161,7 +161,8 @@ struct ContentView: View {
                             isSoundOn: $isSoundOn,
                             bios7Loaded: $bios7Loaded,
                             bios9Loaded: $bios9Loaded,
-                            themeColor: $themeColor
+                            themeColor: $themeColor,
+                            gameController: $gameController
                         )
                     }
                     Spacer()
