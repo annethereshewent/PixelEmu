@@ -8,6 +8,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
 import GoogleSignIn
+import DSEmulatorMobile
 
 struct SettingsView: View {
     @Binding var bios7Data: Data?
@@ -24,6 +25,7 @@ struct SettingsView: View {
     @Binding var themeColor: Color
 
     @Binding var gameController: GameController?
+    @Binding var buttonMappings: [ButtonEvent:String]
 
     @State private var isActive = true
     @State private var showColorPickerModal = false
@@ -185,7 +187,9 @@ struct SettingsView: View {
         .sheet(isPresented: $isMappingsPresented) {
             ControllerMappingsView(
                 themeColor: $themeColor,
-                isPresented: $isMappingsPresented
+                isPresented: $isMappingsPresented,
+                gameController: $gameController,
+                buttonMappings: $buttonMappings
             )
         }
         .onChange(of: isSoundOn) {

@@ -44,7 +44,9 @@ struct ContentView: View {
     @State private var bottomImage: CGImage?
     @State private var gameName = ""
     @State private var backupFile: BackupFile? = nil
-    
+
+    @State private var buttonMappings: [ButtonEvent:String] = [:]
+
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
     init() {
@@ -162,7 +164,8 @@ struct ContentView: View {
                             bios7Loaded: $bios7Loaded,
                             bios9Loaded: $bios9Loaded,
                             themeColor: $themeColor,
-                            gameController: $gameController
+                            gameController: $gameController,
+                            buttonMappings: $buttonMappings
                         )
                     }
                     Spacer()
