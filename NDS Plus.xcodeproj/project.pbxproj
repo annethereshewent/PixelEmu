@@ -33,6 +33,7 @@
 		E806EAA02CA3AD080081D3E8 /* SaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */; };
 		E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */; };
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
+		E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681A62CD440CF00F7A316 /* StateManager.swift */; };
 		E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E896C28C2CA67FFA008161AA /* AudioManager.swift */; };
 		E8A214ED2CD052B700173E06 /* OrientationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A214EC2CD052B700173E06 /* OrientationInfo.swift */; };
 		E8A214EF2CD0553800173E06 /* DualScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A214EE2CD0553800173E06 /* DualScreenView.swift */; };
@@ -118,6 +119,7 @@
 		E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveManagementView.swift; sourceTree = "<group>"; };
 		E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
+		E89681A62CD440CF00F7A316 /* StateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManager.swift; sourceTree = "<group>"; };
 		E896C28C2CA67FFA008161AA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		E8A214EC2CD052B700173E06 /* OrientationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationInfo.swift; sourceTree = "<group>"; };
 		E8A214EE2CD0553800173E06 /* DualScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DualScreenView.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 				E8EE5D962CC3491A00CD77B6 /* Colors.swift */,
 				E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */,
 				E8A214EC2CD052B700173E06 /* OrientationInfo.swift */,
+				E89681A62CD440CF00F7A316 /* StateManager.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -650,6 +653,7 @@
 				E8EE5D882CC2221600CD77B6 /* LibraryView.swift in Sources */,
 				E806EA782CA1078F0081D3E8 /* TouchControlsView.swift in Sources */,
 				E8EE5D862CC2216300CD77B6 /* CurrentView.swift in Sources */,
+				E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */,
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
 				E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */,
 				E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */,
