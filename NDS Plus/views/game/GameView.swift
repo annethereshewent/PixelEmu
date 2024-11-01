@@ -182,9 +182,9 @@ struct GameView: View {
                     }
                 }
             }
-            controller.leftTrigger.pressedChangedHandler = { (button, value, pressed) in
-                if pressed && !triggerPressed {
-                    triggerPressed = true
+            controller.leftThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
+                if pressed && !thumbstickPressed {
+                    thumbstickPressed = true
 
                     if let emu = emulator {
                         let dataPtr = emu.createSaveState()
@@ -200,15 +200,15 @@ struct GameView: View {
                         }
 
                         Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
-                            triggerPressed = false
+                            thumbstickPressed = false
                         }
                     }
                 }
             }
 
-            controller.rightTrigger.pressedChangedHandler = { (button, value, pressed) in
-                if pressed && !triggerPressed {
-                    triggerPressed = true
+            controller.rightThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
+                if pressed && !thumbstickPressed {
+                    thumbstickPressed = true
 
                     do {
                         try stateManager?.loadSaveState(currentState: nil, isQuickSave: true)
@@ -217,7 +217,7 @@ struct GameView: View {
                     }
 
                     Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
-                        triggerPressed = false
+                        thumbstickPressed = false
                     }
                 }
             }
@@ -230,9 +230,9 @@ struct GameView: View {
                 }
             }
 
-            controller.rightThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
-                if pressed && !thumbstickPressed {
-                    thumbstickPressed = true
+            controller.leftTrigger.pressedChangedHandler = { (button, value, pressed) in
+                if pressed && !triggerPressed {
+                    triggerPressed = true
 
                     useControlStick = !useControlStick
 
@@ -245,7 +245,7 @@ struct GameView: View {
                     }
 
                     Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
-                        thumbstickPressed = false
+                        triggerPressed = false
                     }
                 }
             }
