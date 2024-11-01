@@ -183,7 +183,10 @@ struct SettingsView: View {
         
         }
         .sheet(isPresented: $isMappingsPresented) {
-            ControllerMappingsView(themeColor: $themeColor)
+            ControllerMappingsView(
+                themeColor: $themeColor,
+                isPresented: $isMappingsPresented
+            )
         }
         .onChange(of: isSoundOn) {
             let defaults = UserDefaults.standard
