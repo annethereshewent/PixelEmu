@@ -52,7 +52,7 @@ class Game {
 
     static func migrateSaveStates(games: [Game]) {
         for game in games {
-            if game.saveStatesV2.count == 0  && game.saveStates.count > 0 {
+            if game.saveStatesV2.count == 0 {
                 for state in game.saveStates {
                     // saveName: String, screenshot: [UInt8], bookmark: Data, timestamp: Int, game: Game? = ni
                     game.saveStatesV2.append(SaveStateV2(
