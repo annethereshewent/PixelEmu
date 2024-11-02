@@ -505,7 +505,7 @@ struct ControllerMappingsView: View {
                         }
                     } label: {
                         HStack {
-                            Text("Main menu (hold for 5 seconds)")
+                            Text("Main menu (hold for 0.5 seconds to bring up)")
                             if awaitingInput[.MainMenu] ?? false {
                                 Spacer()
                                 ProgressView()

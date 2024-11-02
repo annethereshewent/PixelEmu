@@ -20,7 +20,7 @@ struct GameView: View {
     @State private var debounceTimer: Timer? = nil
     
     @State private var loading = false
-    @State private var isMenuPresented = false
+
     @State private var homePressed = false
     @State private var controlStickKeyPressed = false
     @State private var shouldGoHome = false
@@ -36,6 +36,7 @@ struct GameView: View {
     @State private var useControlStick = false
     @State private var quickSaveLoadKeyPressed = false
 
+    @Binding var isMenuPresented: Bool
     @Binding var emulator: MobileEmulator?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -121,6 +122,14 @@ struct GameView: View {
                             if (nextInterval - startInterval > 0.5) && !homePressed {
                                 homePressed = true
                                 isMenuPresented = !isMenuPresented
+
+                                print(isMenuPresented)
+
+                                if isMenuPresented {
+                                    audioManager?.muteAudio()
+                                } else if isSoundOn {
+                                    audioManager?.resumeAudio()
+                                }
 
                                 emulator?.setPause(isMenuPresented)
 
@@ -467,10 +476,11 @@ struct GameView: View {
                             let audioBufferLength = emu.audioBufferLength()
                         
                             let audioBufferPtr = emu.audioBufferPtr()
-                            
-                            let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
-                            
-                            self.audioManager?.updateBuffer(samples: audioSamples)
+
+                            if audioManager?.isRunning ?? false {
+                                let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
+                                self.audioManager?.updateBuffer(samples: audioSamples)
+                            }
                             
                             self.checkSaves()
                         }

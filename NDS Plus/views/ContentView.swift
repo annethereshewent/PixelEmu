@@ -47,6 +47,8 @@ struct ContentView: View {
 
     @State private var buttonEventDict: [ButtonMapping:[ButtonEvent]] = getDefaultMappings()
 
+    @State private var isMenuPresented = false
+
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
     init() {
@@ -196,6 +198,7 @@ struct ContentView: View {
             .navigationDestination(for: String.self) { view in
                 if view == "GameView" {
                     GameView(
+                        isMenuPresented: $isMenuPresented,
                         emulator: $emulator,
                         bios7Data: $bios7Data,
                         bios9Data: $bios9Data,
