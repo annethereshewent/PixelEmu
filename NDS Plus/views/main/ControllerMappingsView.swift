@@ -127,7 +127,7 @@ struct ControllerMappingsView: View {
     @Binding var themeColor: Color
     @Binding var isPresented: Bool
     @Binding var gameController: GameController?
-    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
+    @Binding var buttonEventDict: [ButtonMapping:[ButtonEvent]]
     @State private var buttonMappings: [ButtonEvent:ButtonMapping] = [:]
 
     @State private var awaitingInput: [ButtonEvent:Bool] = [:]
@@ -602,20 +602,30 @@ struct ControllerMappingsView: View {
         .foregroundColor(themeColor)
         .onAppear() {
             for (key, value) in buttonEventDict {
-                buttonMappings[value] = key
+                for newKey in value {
+                    buttonMappings[newKey] = key
+                }
             }
         }
         .onChange(of: buttonMappings) {
             do {
                 let defaults = UserDefaults.standard
 
-
+                var keyCount: [ButtonMapping:Int] = [:]
 
                 for (key, value) in buttonMappings {
-                    buttonEventDict[value] = key
+                    if keyCount[value] == nil {
+                        keyCount[value] = 1
+                        buttonEventDict[value] = [key]
+                    } else {
+                        keyCount[value]! += 1
+                        buttonEventDict[value]?.append(key)
+                    }
                 }
 
-                let buttonMappingsEncoded = try JSONEncoder().encode(Dictionary(uniqueKeysWithValues: buttonEventDict.map{ key, value in (key, value.description) }))
+                let toEncode = buttonEventDict.map{ key, values in (key, values.map{ $0.description }) }
+
+                let buttonMappingsEncoded = try JSONEncoder().encode(Dictionary(uniqueKeysWithValues: toEncode))
 
                 defaults.set(buttonMappingsEncoded, forKey: "buttonMappings")
             } catch {

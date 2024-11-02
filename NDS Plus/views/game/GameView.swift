@@ -58,7 +58,7 @@ struct GameView: View {
     @Binding var topImage: CGImage?
     @Binding var bottomImage: CGImage?
 
-    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
+    @Binding var buttonEventDict: [ButtonMapping:[ButtonEvent]]
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
@@ -74,27 +74,29 @@ struct GameView: View {
 
     private var homeButtonPressed: Bool {
         if let joypad = gameController?.controller?.extendedGamepad {
-            for (key, value) in buttonEventDict {
-                if value == .MainMenu {
-                    switch key {
-                    case .a: return joypad.buttonA.isPressed
-                    case .b: return joypad.buttonB.isPressed
-                    case .x: return joypad.buttonX.isPressed
-                    case .y: return joypad.buttonY.isPressed
-                    case .menu: return joypad.buttonMenu.isPressed
-                    case .options: return joypad.buttonOptions?.isPressed ?? false
-                    case .home: return joypad.buttonHome?.isPressed ?? false
-                    case .left: return joypad.dpad.left.isPressed
-                    case .right: return joypad.dpad.right.isPressed
-                    case .down: return joypad.dpad.down.isPressed
-                    case .up: return joypad.dpad.up.isPressed
-                    case .leftShoulder: return joypad.leftShoulder.isPressed
-                    case .rightShoulder: return joypad.rightShoulder.isPressed
-                    case .leftTrigger: return joypad.leftTrigger.isPressed
-                    case .rightTrigger: return joypad.rightTrigger.isPressed
-                    case .leftThumbstick: return joypad.leftThumbstickButton?.isPressed ?? false
-                    case .rightThumbstick: return joypad.rightThumbstickButton?.isPressed ?? false
-                    case .noButton: return false
+            for (key, values) in buttonEventDict {
+                for value in values {
+                    if value == .MainMenu {
+                        switch key {
+                        case .a: return joypad.buttonA.isPressed
+                        case .b: return joypad.buttonB.isPressed
+                        case .x: return joypad.buttonX.isPressed
+                        case .y: return joypad.buttonY.isPressed
+                        case .menu: return joypad.buttonMenu.isPressed
+                        case .options: return joypad.buttonOptions?.isPressed ?? false
+                        case .home: return joypad.buttonHome?.isPressed ?? false
+                        case .left: return joypad.dpad.left.isPressed
+                        case .right: return joypad.dpad.right.isPressed
+                        case .down: return joypad.dpad.down.isPressed
+                        case .up: return joypad.dpad.up.isPressed
+                        case .leftShoulder: return joypad.leftShoulder.isPressed
+                        case .rightShoulder: return joypad.rightShoulder.isPressed
+                        case .leftTrigger: return joypad.leftTrigger.isPressed
+                        case .rightTrigger: return joypad.rightTrigger.isPressed
+                        case .leftThumbstick: return joypad.leftThumbstickButton?.isPressed ?? false
+                        case .rightThumbstick: return joypad.rightThumbstickButton?.isPressed ?? false
+                        case .noButton: return false
+                        }
                     }
                 }
             }
@@ -105,80 +107,58 @@ struct GameView: View {
 
 
     private func checkIfHotKey(_ mapping: ButtonMapping, _ pressed: Bool) -> Bool {
-        if let value = buttonEventDict[mapping] {
-            switch value {
-            case .MainMenu:
-                let startInterval = Date.now.timeIntervalSince1970
-                var nextInterval = Date.now.timeIntervalSince1970
+        if let values = buttonEventDict[mapping] {
+            for value in values {
+                switch value {
+                case .MainMenu:
+                    let startInterval = Date.now.timeIntervalSince1970
+                    var nextInterval = Date.now.timeIntervalSince1970
 
-                DispatchQueue.global().async {
-                    while (homeButtonPressed) {
-                        nextInterval = Date.now.timeIntervalSince1970
+                    DispatchQueue.global().async {
+                        while (homeButtonPressed) {
+                            nextInterval = Date.now.timeIntervalSince1970
 
-                        if (nextInterval - startInterval > 0.5) && !homePressed {
-                            homePressed = true
-                            isMenuPresented = !isMenuPresented
+                            if (nextInterval - startInterval > 0.5) && !homePressed {
+                                homePressed = true
+                                isMenuPresented = !isMenuPresented
 
-                            emulator?.setPause(isMenuPresented)
+                                emulator?.setPause(isMenuPresented)
 
-                            DispatchQueue.main.async {
-                                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
-                                    homePressed = false
+                                DispatchQueue.main.async {
+                                    Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                                        homePressed = false
 
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                return true
-            case .ControlStick:
-                if pressed && !controlStickKeyPressed {
-                    controlStickKeyPressed = true
+                    return false
+                case .ControlStick:
+                    if pressed && !controlStickKeyPressed {
+                        controlStickKeyPressed = true
 
-                    useControlStick = !useControlStick
+                        useControlStick = !useControlStick
 
-                    if let emu = emulator {
-                        if useControlStick {
-                            emu.pressScreen()
-                        } else {
-                            emu.releaseScreen()
+                        if let emu = emulator {
+                            if useControlStick {
+                                emu.pressScreen()
+                            } else {
+                                emu.releaseScreen()
+                            }
+                        }
+
+                        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
+                            controlStickKeyPressed = false
                         }
                     }
-
-                    Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
-                        controlStickKeyPressed = false
-                    }
-                }
-                return true
-            case .QuickLoad:
-                if pressed && !quickSaveLoadKeyPressed {
-                    quickSaveLoadKeyPressed = true
-
-                    do {
-                        try stateManager?.loadSaveState(currentState: nil, isQuickSave: true)
-                    } catch {
-                        print(error)
-                    }
-
-                    Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
-                        quickSaveLoadKeyPressed = false
-                    }
-                }
-
-                return true
-            case .QuickSave:
-                if pressed && !quickSaveLoadKeyPressed {
-                    quickSaveLoadKeyPressed = true
-
-                    if let emu = emulator {
-                        let dataPtr = emu.createSaveState()
-                        let dataSize = emu.compressedLength()
-
-                        let bufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(dataSize))
-                        let data = Data(bufferPtr)
+                    return true
+                case .QuickLoad:
+                    if pressed && !quickSaveLoadKeyPressed {
+                        quickSaveLoadKeyPressed = true
 
                         do {
-                            try stateManager?.createSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
+                            try stateManager?.loadSaveState(currentState: nil, isQuickSave: true)
                         } catch {
                             print(error)
                         }
@@ -187,9 +167,33 @@ struct GameView: View {
                             quickSaveLoadKeyPressed = false
                         }
                     }
+
+                    return true
+                case .QuickSave:
+                    if pressed && !quickSaveLoadKeyPressed {
+                        quickSaveLoadKeyPressed = true
+
+                        if let emu = emulator {
+                            let dataPtr = emu.createSaveState()
+                            let dataSize = emu.compressedLength()
+
+                            let bufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(dataSize))
+                            let data = Data(bufferPtr)
+
+                            do {
+                                try stateManager?.createSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
+                            } catch {
+                                print(error)
+                            }
+
+                            Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
+                                quickSaveLoadKeyPressed = false
+                            }
+                        }
+                    }
+                    return true
+                default: break
                 }
-                return true
-            default: return false
             }
         }
 
@@ -233,83 +237,95 @@ struct GameView: View {
         }
         
     }
-    
+
+    private func updateEmuInput(_ mapping: ButtonMapping, _ defaultButton: ButtonEvent, _ pressed: Bool) {
+        if let emu = emulator {
+            if let values = buttonEventDict[mapping] {
+                for value in values {
+                    emu.updateInput(value, pressed)
+                }
+            } else {
+                emu.updateInput(defaultButton, pressed)
+            }
+        }
+    }
+
     private func addControllerEventListeners(gameController: GCController?) {
-        if let emu = emulator, let controller = gameController?.extendedGamepad {
+        if let controller = gameController?.extendedGamepad {
             controller.buttonB.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.b, pressed) {
-                    emu.updateInput(buttonEventDict[.b] ?? .ButtonA, pressed)
+                    updateEmuInput(.b, .ButtonA, pressed)
                 }
             }
             controller.buttonA.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.a, pressed) {
-                    emu.updateInput(buttonEventDict[.a] ?? .ButtonB, pressed)
+                    updateEmuInput(.a, .ButtonB, pressed)
                 }
             }
             controller.buttonX.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.x, pressed) {
-                    emu.updateInput(buttonEventDict[.x] ?? .ButtonY, pressed)
+                    updateEmuInput(.x, .ButtonY, pressed)
                 }
             }
             controller.buttonY.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.y, pressed) {
-                    emu.updateInput(buttonEventDict[.y] ?? .ButtonX, pressed)
+                    updateEmuInput(.y, .ButtonX, pressed)
                 }
             }
             controller.leftShoulder.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.leftShoulder, pressed) {
-                    emu.updateInput(buttonEventDict[.leftShoulder] ?? ButtonEvent.ButtonL, pressed)
+                    updateEmuInput(.leftShoulder, .ButtonL, pressed)
                 }
             }
             controller.rightShoulder.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.rightShoulder, pressed) {
-                    emu.updateInput(buttonEventDict[.rightShoulder] ?? ButtonEvent.ButtonR, pressed)
+                    updateEmuInput(.rightShoulder, .ButtonR, pressed)
                 }
             }
             controller.buttonMenu.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.menu, pressed) {
-                    emu.updateInput(buttonEventDict[.menu] ?? ButtonEvent.Start, pressed)
+                    updateEmuInput(.menu, .Start, pressed)
                 }
             }
             controller.buttonOptions?.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.options, pressed) {
-                    emu.updateInput(buttonEventDict[.options] ?? ButtonEvent.Select, pressed)
+                    updateEmuInput(.options, .Select, pressed)
                 }
             }
             controller.dpad.up.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.up, pressed) {
-                    emu.updateInput(buttonEventDict[.up] ?? ButtonEvent.Up, pressed)
+                    updateEmuInput(.up, .Up, pressed)
                 }
             }
             controller.dpad.down.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.down, pressed) {
-                    emu.updateInput(buttonEventDict[.down] ?? ButtonEvent.Down, pressed)
+                    updateEmuInput(.down, .Down, pressed)
                 }
             }
             controller.dpad.left.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.left, pressed) {
-                    emu.updateInput(buttonEventDict[.left] ?? ButtonEvent.Left, pressed)
+                    updateEmuInput(.left, .Left, pressed)
                 }
             }
             controller.dpad.right.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.right, pressed) {
-                    emu.updateInput(buttonEventDict[.right] ?? ButtonEvent.Right, pressed)
+                    updateEmuInput(.right, .Right, pressed)
                 }
             }
             controller.buttonHome?.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.home, pressed) {
-                    emu.updateInput(buttonEventDict[.home] ?? ButtonEvent.ButtonHome, pressed)
+                    updateEmuInput(.home, .MainMenu, pressed)
                 }
             }
             controller.leftThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.leftThumbstick, pressed) {
-                    emu.updateInput(buttonEventDict[.leftThumbstick] ?? ButtonEvent.QuickSave, pressed)
+                    updateEmuInput(.leftThumbstick, .QuickSave, pressed)
                 }
             }
 
             controller.rightThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.rightThumbstick, pressed) {
-                    emu.updateInput(buttonEventDict[.rightThumbstick] ?? ButtonEvent.QuickLoad, pressed)
+                    updateEmuInput(.rightThumbstick, .QuickLoad, pressed)
                 }
             }
 
@@ -323,13 +339,13 @@ struct GameView: View {
 
             controller.leftTrigger.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.leftTrigger, pressed) {
-                    emu.updateInput(buttonEventDict[.leftTrigger] ?? ButtonEvent.ControlStick, pressed)
+                    updateEmuInput(.leftTrigger, .ControlStick, pressed)
                 }
             }
 
             controller.rightTrigger.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.rightTrigger, pressed) {
-                    emu.updateInput(buttonEventDict[.rightTrigger] ?? ButtonEvent.ControlStick, pressed)
+                    updateEmuInput(.rightTrigger, .ControlStick, pressed)
                 }
             }
         }
