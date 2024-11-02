@@ -75,7 +75,7 @@ struct GameView: View {
     private var homeButtonPressed: Bool {
         if let joypad = gameController?.controller?.extendedGamepad {
             for (key, value) in buttonEventDict {
-                if value == .ButtonHome {
+                if value == .MainMenu {
                     switch key {
                     case .a: return joypad.buttonA.isPressed
                     case .b: return joypad.buttonB.isPressed
@@ -107,7 +107,7 @@ struct GameView: View {
     private func checkIfHotKey(_ mapping: ButtonMapping, _ pressed: Bool) -> Bool {
         if let value = buttonEventDict[mapping] {
             switch value {
-            case .ButtonHome:
+            case .MainMenu:
                 let startInterval = Date.now.timeIntervalSince1970
                 var nextInterval = Date.now.timeIntervalSince1970
 
