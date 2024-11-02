@@ -39,12 +39,16 @@ struct ContentView: View {
     @State private var isSoundOn: Bool = true
     @State var audioManager: AudioManager? = nil
     
-    @State private var gameController: GameController?
+    @State private var gameController: GameController? = GameController(closure:  { _ in })
     @State private var topImage: CGImage?
     @State private var bottomImage: CGImage?
     @State private var gameName = ""
     @State private var backupFile: BackupFile? = nil
-    
+
+    @State private var buttonEventDict: [ButtonMapping:[ButtonEvent]] = getDefaultMappings()
+
+    @State private var isMenuPresented = false
+
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
     init() {
@@ -56,7 +60,28 @@ struct ContentView: View {
         self.checkForBinaries(currentFile: CurrentFile.bios9)
         self.checkForBinaries(currentFile: CurrentFile.firmware)
     }
-    
+
+    static func getDefaultMappings() -> [ButtonMapping:[ButtonEvent]] {
+        return [
+            .a: [.ButtonB],
+            .b: [.ButtonA],
+            .x: [.ButtonY],
+            .y: [.ButtonX],
+            .leftShoulder: [.ButtonL],
+            .rightShoulder: [.ButtonR],
+            .menu: [.Start],
+            .options: [.Select],
+            .up: [.Up],
+            .down: [.Down],
+            .left: [.Left],
+            .right: [.Right],
+            .leftThumbstick: [.QuickSave],
+            .rightThumbstick: [.QuickLoad],
+            .home: [.MainMenu],
+            .leftTrigger: [.ControlStick]
+        ]
+    }
+
     mutating func checkForBinaries(currentFile: CurrentFile) {
         if let applicationUrl = try? FileManager.default.url(
             for: .applicationSupportDirectory,
@@ -161,7 +186,9 @@ struct ContentView: View {
                             isSoundOn: $isSoundOn,
                             bios7Loaded: $bios7Loaded,
                             bios9Loaded: $bios9Loaded,
-                            themeColor: $themeColor
+                            themeColor: $themeColor,
+                            gameController: $gameController,
+                            buttonEventDict: $buttonEventDict
                         )
                     }
                     Spacer()
@@ -171,6 +198,7 @@ struct ContentView: View {
             .navigationDestination(for: String.self) { view in
                 if view == "GameView" {
                     GameView(
+                        isMenuPresented: $isMenuPresented,
                         emulator: $emulator,
                         bios7Data: $bios7Data,
                         bios9Data: $bios9Data,
@@ -189,7 +217,8 @@ struct ContentView: View {
                         isRunning: $isRunning,
                         workItem: $workItem,
                         topImage: $topImage,
-                        bottomImage: $bottomImage
+                        bottomImage: $bottomImage,
+                        buttonEventDict: $buttonEventDict
                     )
                 }
             }
@@ -211,7 +240,22 @@ struct ContentView: View {
             if let themeColor = defaults.value(forKey: "themeColor") as? Color {
                 self.themeColor = themeColor
             }
-            
+
+            do {
+                if let data = defaults.object(forKey: "buttonMappings") as? Data {
+                    let decodedButtonMappings = try JSONDecoder()
+                        .decode([ButtonMapping:[String]].self, from: data)
+
+                    buttonEventDict = Dictionary(
+                        uniqueKeysWithValues: decodedButtonMappings.map{ key, values in
+                            (key, values.map{ ButtonEvent.descriptionToEnum($0) })
+                        }
+                    )
+                }
+            } catch {
+                print(error)
+            }
+
             GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
                 if let signedInUser = user {
                     self.user = signedInUser

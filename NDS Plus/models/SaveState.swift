@@ -10,7 +10,7 @@ import SwiftData
 
 @Model
 class SaveState {
-    let saveName: String
+    var saveName: String
     var screenshot: [UInt8]
     var bookmark: Data
     @Attribute(.unique)
