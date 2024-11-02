@@ -240,7 +240,7 @@ struct ControllerMappingsView: View {
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Home",
-                        buttonText: "Main menu (hold for 0.5 seconds to bring up)"
+                        buttonText: "Main menu"
                     )
                     ControllerMappingButtonView(
                         event: .ControlStick,
@@ -287,6 +287,8 @@ struct ControllerMappingsView: View {
                 let defaults = UserDefaults.standard
 
                 var keyCount: [ButtonMapping:Int] = [:]
+
+                buttonEventDict = [:]
 
                 for (key, value) in buttonMappings {
                     if keyCount[value] == nil {
