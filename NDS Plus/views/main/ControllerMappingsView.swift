@@ -127,7 +127,8 @@ struct ControllerMappingsView: View {
     @Binding var themeColor: Color
     @Binding var isPresented: Bool
     @Binding var gameController: GameController?
-    @Binding var buttonMappings: [ButtonEvent:ButtonMapping]
+    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
+    @State private var buttonMappings: [ButtonEvent:ButtonMapping] = [:]
 
     @State private var awaitingInput: [ButtonEvent:Bool] = [:]
 
@@ -540,31 +541,6 @@ struct ControllerMappingsView: View {
                             }
                         }
                     }
-                    Button() {
-                        awaitingInput[.QuickLoad] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.QuickLoad] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.QuickLoad] = button
-                                    }
-                                    awaitingInput[.QuickLoad] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Quick load")
-                            if awaitingInput[.QuickLoad] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.QuickLoad]?.description ?? "L3")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-                        }
-                    }
                     Button {
                         awaitingInput[.QuickSave] = true
                         DispatchQueue.global().async {
@@ -590,6 +566,31 @@ struct ControllerMappingsView: View {
                             }
                         }
                     }
+                    Button() {
+                        awaitingInput[.QuickLoad] = true
+                        DispatchQueue.global().async {
+                            while awaitingInput[.QuickLoad] ?? false {
+                                if let button = detectButtonPressed() {
+                                    if button != .noButton {
+                                        buttonMappings[.QuickLoad] = button
+                                    }
+                                    awaitingInput[.QuickLoad] = false
+                                }
+                            }
+                        }
+                    } label: {
+                        HStack {
+                            Text("Quick load")
+                            if awaitingInput[.QuickLoad] ?? false {
+                                Spacer()
+                                ProgressView()
+                            } else {
+                                Spacer()
+                                Text(buttonMappings[.QuickLoad]?.description ?? "L3")
+                                    .foregroundColor(Colors.primaryColor)
+                            }
+                        }
+                    }
                 }
 
             }
@@ -599,11 +600,22 @@ struct ControllerMappingsView: View {
         }
         .font(.custom("Departure Mono", size: 18))
         .foregroundColor(themeColor)
+        .onAppear() {
+            for (key, value) in buttonEventDict {
+                buttonMappings[value] = key
+            }
+        }
         .onChange(of: buttonMappings) {
             do {
                 let defaults = UserDefaults.standard
 
-                let buttonMappingsEncoded = try JSONEncoder().encode(Dictionary(uniqueKeysWithValues: buttonMappings.map{ key, value in (key.description, value) }))
+
+
+                for (key, value) in buttonMappings {
+                    buttonEventDict[value] = key
+                }
+
+                let buttonMappingsEncoded = try JSONEncoder().encode(Dictionary(uniqueKeysWithValues: buttonEventDict.map{ key, value in (key, value.description) }))
 
                 defaults.set(buttonMappingsEncoded, forKey: "buttonMappings")
             } catch {

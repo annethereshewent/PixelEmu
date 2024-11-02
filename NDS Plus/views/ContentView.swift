@@ -45,7 +45,7 @@ struct ContentView: View {
     @State private var gameName = ""
     @State private var backupFile: BackupFile? = nil
 
-    @State private var buttonMappings: [ButtonEvent:ButtonMapping] = getDefaultMappings()
+    @State private var buttonEventDict: [ButtonMapping:ButtonEvent] = getDefaultMappings()
 
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
@@ -59,24 +59,24 @@ struct ContentView: View {
         self.checkForBinaries(currentFile: CurrentFile.firmware)
     }
 
-    static func getDefaultMappings() -> [ButtonEvent:ButtonMapping] {
+    static func getDefaultMappings() -> [ButtonMapping:ButtonEvent] {
         return [
-            .ButtonA: .b,
-            .ButtonB: .a,
-            .ButtonY: .x,
-            .ButtonX: .y,
-            .ButtonL: .leftShoulder,
-            .ButtonR: .rightShoulder,
-            .Start: .menu,
-            .Select: .options,
-            .Up: .up,
-            .Down: .down,
-            .Left: .left,
-            .Right: .right,
-            .QuickSave: .leftThumbstick,
-            .QuickLoad: .rightThumbstick,
-            .ButtonHome: .home,
-            .ControlStick: .leftTrigger
+            .a: .ButtonA,
+            .b: .ButtonB,
+            .x: .ButtonY,
+            .y: .ButtonX,
+            .leftShoulder: .ButtonL,
+            .rightShoulder: .ButtonR,
+            .menu: .Start,
+            .options: .Select,
+            .up: .Up,
+            .down: .Down,
+            .left: .Left,
+            .right: .Right,
+            .leftThumbstick: .QuickSave,
+            .rightThumbstick: .QuickLoad,
+            .home: .ButtonHome,
+            .leftTrigger: .ControlStick
         ]
     }
 
@@ -186,7 +186,7 @@ struct ContentView: View {
                             bios9Loaded: $bios9Loaded,
                             themeColor: $themeColor,
                             gameController: $gameController,
-                            buttonMappings: $buttonMappings
+                            buttonEventDict: $buttonEventDict
                         )
                     }
                     Spacer()
@@ -214,7 +214,8 @@ struct ContentView: View {
                         isRunning: $isRunning,
                         workItem: $workItem,
                         topImage: $topImage,
-                        bottomImage: $bottomImage
+                        bottomImage: $bottomImage,
+                        buttonEventDict: $buttonEventDict
                     )
                 }
             }
@@ -240,11 +241,11 @@ struct ContentView: View {
             do {
                 if let data = defaults.object(forKey: "buttonMappings") as? Data {
                     let decodedButtonMappings = try JSONDecoder()
-                        .decode([String:ButtonMapping].self, from: data)
+                        .decode([ButtonMapping:String].self, from: data)
 
-                    buttonMappings = Dictionary(
+                    buttonEventDict = Dictionary(
                         uniqueKeysWithValues: decodedButtonMappings.map{ key, value in
-                            (ButtonEvent.descriptionToEnum(key), value)
+                            (key, ButtonEvent.descriptionToEnum(value))
                         }
                     )
                 }

@@ -25,7 +25,7 @@ struct SettingsView: View {
     @Binding var themeColor: Color
 
     @Binding var gameController: GameController?
-    @Binding var buttonMappings: [ButtonEvent:ButtonMapping]
+    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
 
     @State private var isActive = true
     @State private var showColorPickerModal = false
@@ -189,7 +189,7 @@ struct SettingsView: View {
                 themeColor: $themeColor,
                 isPresented: $isMappingsPresented,
                 gameController: $gameController,
-                buttonMappings: $buttonMappings
+                buttonEventDict: $buttonEventDict
             )
         }
         .onChange(of: isSoundOn) {
