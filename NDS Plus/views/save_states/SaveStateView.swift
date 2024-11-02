@@ -10,12 +10,12 @@ import DSEmulatorMobile
 
 struct SaveStateView: View {
     @Environment(\.colorScheme) private var colorScheme
-    let saveState: SaveState
+    let saveState: SaveStateV2
     @State private var screenshot = UIImage()
     @State private var isPopoverPresented = false
     
     @Binding var action: SaveStateAction
-    @Binding var currentState: SaveState?
+    @Binding var currentState: SaveStateV2?
     
     let graphicsParser = GraphicsParser()
     
@@ -39,7 +39,7 @@ struct SaveStateView: View {
             }
         }
         .onAppear() {
-            if let image = graphicsParser.fromBytes(bytes: saveState.deleteMe, width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 2) {
+            if let image = graphicsParser.fromBytes(bytes: saveState.screenshot.bytes, width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 2) {
                 screenshot = UIImage(cgImage: image)
             }
         }

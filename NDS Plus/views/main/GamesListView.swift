@@ -162,6 +162,9 @@ struct GamesListView: View {
                     )
                 }
             }
+            .onAppear {
+                Game.migrateSaveStates(games: games)
+            }
             .onChange(of: settingChanged) {
                 if resumeGame {
                     emulator?.setPause(false)
