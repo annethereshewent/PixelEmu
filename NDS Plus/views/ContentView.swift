@@ -77,7 +77,7 @@ struct ContentView: View {
             .right: [.Right],
             .leftThumbstick: [.QuickSave],
             .rightThumbstick: [.QuickLoad],
-            .home: [.ButtonHome],
+            .home: [.MainMenu],
             .leftTrigger: [.ControlStick]
         ]
     }
