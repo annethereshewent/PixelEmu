@@ -38,7 +38,7 @@ class StateManager {
         self.firmwareData = firmwareData
     }
 
-    func loadSaveState(currentState: SaveStateV2?, isQuickSave: Bool = false) throws {
+    func loadSaveState(currentState: SaveState?, isQuickSave: Bool = false) throws {
         var url: URL!
         if let saveState = currentState {
             var isStale = false
@@ -116,7 +116,7 @@ class StateManager {
         }
     }
 
-    func createSaveState(data: Data, saveName: String, timestamp: Int, updateState: SaveStateV2? = nil) throws {
+    func createSaveState(data: Data, saveName: String, timestamp: Int, updateState: SaveState? = nil) throws {
         var location = try FileManager.default.url(
              for: .applicationSupportDirectory,
              in: .userDomainMask,
@@ -173,16 +173,16 @@ class StateManager {
         let year = calendar.component(.year, from: date)
 
         let dateString = String(format: "%02d/%02d/%04d %02d:%02d:%02d", month, day, year, hour, minutes, seconds)
-        var saveState: SaveStateV2!
+        var saveState: SaveState!
         if (saveName == "quick_save.save") {
-            saveState = SaveStateV2(
+            saveState = SaveState(
                 saveName: "Quick save",
                 screenshot: screenshot,
                 bookmark: bookmark,
                 timestamp: timestamp
             )
         } else {
-            saveState = SaveStateV2(
+            saveState = SaveState(
                 saveName: "Save on \(dateString)",
                 screenshot: screenshot,
                 bookmark: bookmark,
@@ -193,20 +193,20 @@ class StateManager {
         var index: Int?
 
         if let updateState = updateState {
-            index = game.saveStatesV2.firstIndex(of: updateState)
+            index = game.saveStates.firstIndex(of: updateState)
         } else if saveName == "quick_save.save" {
-            index = game.saveStatesV2.map({ $0.saveName }).firstIndex(of: "Quick save")
+            index = game.saveStates.map({ $0.saveName }).firstIndex(of: "Quick save")
         }
 
         if let index = index {
-            let currState = game.saveStatesV2[index]
+            let currState = game.saveStates[index]
 
-            currState.screenshot = saveState.screenshot
+            currState.deleteMe = saveState.deleteMe
             currState.bookmark = saveState.bookmark
 
             context.insert(currState)
         } else {
-            game.saveStatesV2.append(saveState)
+            game.saveStates.append(saveState)
             context.insert(saveState)
         }
     }
