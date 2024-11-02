@@ -143,6 +143,7 @@ struct GameView: View {
                         if let emu = emulator {
                             if useControlStick {
                                 emu.pressScreen()
+                                emu.touchScreenController(0, 0)
                             } else {
                                 emu.releaseScreen()
                             }
