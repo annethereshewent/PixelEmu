@@ -39,7 +39,7 @@ struct SaveStateView: View {
             }
         }
         .onAppear() {
-            if let image = graphicsParser.fromBytes(bytes: saveState.deleteMe, width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 2) {
+            if let image = graphicsParser.fromBytes(bytes: saveState.screenshot, width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 2) {
                 screenshot = UIImage(cgImage: image)
             }
         }
