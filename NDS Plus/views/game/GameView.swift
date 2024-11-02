@@ -140,6 +140,7 @@ struct GameView: View {
                             }
                         }
                     }
+                    // return false to allow for main menu button to function as a normal button as well.
                     return false
                 case .ControlStick:
                     if pressed && !controlStickKeyPressed {
@@ -250,7 +251,9 @@ struct GameView: View {
         if let emu = emulator {
             if let values = buttonEventDict[mapping] {
                 for value in values {
-                    emu.updateInput(value, pressed)
+                    if value != .MainMenu {
+                        emu.updateInput(value, pressed)
+                    }
                 }
             } else {
                 emu.updateInput(defaultButton, pressed)
