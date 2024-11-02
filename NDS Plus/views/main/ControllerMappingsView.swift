@@ -132,465 +132,140 @@ struct ControllerMappingsView: View {
 
     @State private var awaitingInput: [ButtonEvent:Bool] = [:]
 
-    private func detectButtonPressed() -> ButtonMapping? {
-        if let gamepad = gameController?.controller?.extendedGamepad {
-            if gamepad.buttonA.isPressed {
-                return .a
-            } else if gamepad.buttonB.isPressed {
-                return .b
-            } else if gamepad.buttonX.isPressed {
-                return .x
-            } else if gamepad.buttonY.isPressed {
-                return .y
-            } else if gamepad.buttonMenu.isPressed {
-                return .menu
-            } else if gamepad.buttonOptions?.isPressed ?? false {
-                return .options
-            } else if gamepad.buttonHome?.isPressed ?? false {
-                return .home
-            } else if gamepad.leftShoulder.isPressed {
-                return .leftShoulder
-            } else if gamepad.rightShoulder.isPressed {
-                return .rightShoulder
-            } else if gamepad.leftTrigger.isPressed {
-                return .leftTrigger
-            } else if gamepad.rightTrigger.isPressed {
-                return .rightTrigger
-            } else if gamepad.leftThumbstickButton?.isPressed ?? false {
-                return .leftThumbstick
-            } else if gamepad.rightThumbstickButton?.isPressed ?? false {
-                return .rightThumbstick
-            } else if gamepad.dpad.up.isPressed {
-                return .up
-            } else if gamepad.dpad.down.isPressed {
-                return .down
-            } else if gamepad.dpad.left.isPressed {
-                return .left
-            } else if gamepad.dpad.right.isPressed {
-                return .right
-            }
-
-            return nil
-        } else {
-            return .noButton
-        }
-    }
-
     var body: some View {
         VStack {
             List {
                 Section(header: Text("Joypad mappings").foregroundColor(Colors.primaryColor)) {
-                    Button {
-                        awaitingInput[.Up] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.Up] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.Up] = button
-                                    }
-                                    awaitingInput[.Up] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Up")
-                            if awaitingInput[.Up] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.Up]?.description ?? "Up")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-
-                        }
-                    }
-                    Button {
-                        awaitingInput[.Down] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.Down] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.Down] = button
-                                    }
-                                    awaitingInput[.Down] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Down")
-                            if awaitingInput[.Down] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.Down]?.description ?? "Down")
-                                    .foregroundColor(Colors.primaryColor)
-
-                            }
-
-                        }
-                    }
-                    Button {
-                        awaitingInput[.Left] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.Left] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.Left] = button
-                                    }
-                                    awaitingInput[.Left] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Left")
-                            if awaitingInput[.Left] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.Left]?.description ?? "Left")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-
-
-                        }
-                    }
-                    Button {
-                        awaitingInput[.Right] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.Right] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.Right] = button
-                                    }
-                                    awaitingInput[.Right] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Right")
-                            if awaitingInput[.Right] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.Right]?.description ?? "Right")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-
-                        }
-                    }
-                    Button {
-                        awaitingInput[.ButtonA] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.ButtonA] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.ButtonA] = button
-                                    }
-                                    awaitingInput[.ButtonA] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("A button")
-                            if awaitingInput[.ButtonA] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.ButtonA]?.description ?? "B")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-
-                        }
-                    }
-                    Button {
-                        awaitingInput[.ButtonB] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.ButtonB] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.ButtonB] = button
-                                    }
-                                    awaitingInput[.ButtonB] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("B button")
-                            if awaitingInput[.ButtonB] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.ButtonB]?.description ?? "A")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-                        }
-                    }
-                    Button{
-                        awaitingInput[.ButtonY] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.ButtonY] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.ButtonY] = button
-                                    }
-                                    awaitingInput[.ButtonY] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Y button")
-                            if awaitingInput[.ButtonY] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.ButtonY]?.description ?? "X")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-
-                        }
-                    }
-                    Button {
-                        awaitingInput[.ButtonX] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.ButtonX] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.ButtonX] = button
-                                    }
-                                    awaitingInput[.ButtonX] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("X button")
-                            if awaitingInput[.ButtonX] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.ButtonX]?.description ?? "Y")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-                        }
-                    }
-                    Button {
-                        awaitingInput[.ButtonL] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.ButtonL] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.ButtonL] = button
-                                    }
-                                    awaitingInput[.ButtonL] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("L button")
-                            if awaitingInput[.ButtonL] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.ButtonL]?.description ?? "Left shoulder")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-
-                        }
-                    }
-                    Button {
-                        awaitingInput[.ButtonR] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.ButtonR] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.ButtonR] = button
-                                    }
-                                    awaitingInput[.ButtonR] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("R button")
-                            if awaitingInput[.ButtonR] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.ButtonR]?.description ?? "Right shoulder")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-                        }
-                    }
-                    Button {
-                        awaitingInput[.Start] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.Start] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.Start] = button
-                                    }
-                                    awaitingInput[.Start] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Start")
-                            if awaitingInput[.Start] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.Start]?.description ?? "Menu")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-                        }
-                    }
-                    Button {
-                        awaitingInput[.Select] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.Select] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.Select] = button
-                                    }
-                                    awaitingInput[.Select] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Select")
-                            if awaitingInput[.Select] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.Select]?.description ?? "Options")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-                        }
-                    }
+                    ControllerMappingButtonView(
+                        event: .Up,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Up",
+                        buttonText: "Up"
+                    )
+                    ControllerMappingButtonView(
+                        event: .Down,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Down",
+                        buttonText: "Down"
+                    )
+                    ControllerMappingButtonView(
+                        event: .Left,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Left",
+                        buttonText: "Left"
+                    )
+                    ControllerMappingButtonView(
+                        event: .Right,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Right",
+                        buttonText: "Right"
+                    )
+                    ControllerMappingButtonView(
+                        event: .ButtonA,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "B",
+                        buttonText: "A button"
+                    )
+                    ControllerMappingButtonView(
+                        event: .ButtonB,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "A",
+                        buttonText: "B button"
+                    )
+                    ControllerMappingButtonView(
+                        event: .ButtonY,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "X",
+                        buttonText: "Y button"
+                    )
+                    ControllerMappingButtonView(
+                        event: .ButtonX,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Y",
+                        buttonText: "X button"
+                    )
+                    ControllerMappingButtonView(
+                        event: .ButtonL,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Left shoulder",
+                        buttonText: "L button"
+                    )
+                    ControllerMappingButtonView(
+                        event: .ButtonR,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Right shoulder",
+                        buttonText: "R button"
+                    )
+                    ControllerMappingButtonView(
+                        event: .Start,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Menu",
+                        buttonText: "Start"
+                    )
+                    ControllerMappingButtonView(
+                        event: .Select,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Options",
+                        buttonText: "Select"
+                    )
                 }
                 Section(header: Text("Hotkey mappings").foregroundColor(Colors.primaryColor)) {
-                    Button {
-                        awaitingInput[.MainMenu] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.MainMenu] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.MainMenu] = button
-                                    }
-                                    awaitingInput[.MainMenu] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Main menu (hold for 0.5 seconds to bring up)")
-                            if awaitingInput[.MainMenu] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.MainMenu]?.description ?? "Home")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-                        }
-                    }
-                    Button {
-                        awaitingInput[.ControlStick] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.ControlStick] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.ControlStick] = button
-                                    }
-                                    awaitingInput[.ControlStick] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Control stick mode (SM64 DS only)")
-                            if awaitingInput[.ControlStick] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.ControlStick]?.description ?? "L2")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-                        }
-                    }
-                    Button {
-                        awaitingInput[.QuickSave] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.QuickSave] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.QuickSave] = button
-                                    }
-                                    awaitingInput[.QuickSave] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Quick save")
-                            if awaitingInput[.QuickSave] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.QuickSave]?.description ?? "R3")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-                        }
-                    }
-                    Button() {
-                        awaitingInput[.QuickLoad] = true
-                        DispatchQueue.global().async {
-                            while awaitingInput[.QuickLoad] ?? false {
-                                if let button = detectButtonPressed() {
-                                    if button != .noButton {
-                                        buttonMappings[.QuickLoad] = button
-                                    }
-                                    awaitingInput[.QuickLoad] = false
-                                }
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text("Quick load")
-                            if awaitingInput[.QuickLoad] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[.QuickLoad]?.description ?? "L3")
-                                    .foregroundColor(Colors.primaryColor)
-                            }
-                        }
-                    }
+                    ControllerMappingButtonView(
+                        event: .MainMenu,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Home",
+                        buttonText: "Main menu (hold for 0.5 seconds to bring up)"
+                    )
+                    ControllerMappingButtonView(
+                        event: .ControlStick,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Left trigger",
+                        buttonText: "Control stick mode (SM64 DS only)"
+                    )
+                    ControllerMappingButtonView(
+                        event: .QuickSave,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Left thumbstick",
+                        buttonText: "Quick save"
+                    )
+                    ControllerMappingButtonView(
+                        event: .QuickLoad,
+                        buttonMappings: $buttonMappings,
+                        awaitingInput: $awaitingInput,
+                        gameController: $gameController,
+                        defaultButton: "Right thumbstick",
+                        buttonText: "Quick load"
+                    )
                 }
 
             }
