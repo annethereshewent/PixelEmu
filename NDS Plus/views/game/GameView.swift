@@ -123,8 +123,6 @@ struct GameView: View {
                                 homePressed = true
                                 isMenuPresented = !isMenuPresented
 
-                                print(isMenuPresented)
-
                                 if isMenuPresented {
                                     audioManager?.muteAudio()
                                 } else if isSoundOn {
