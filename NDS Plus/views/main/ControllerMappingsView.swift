@@ -8,77 +8,170 @@
 import SwiftUI
 import DSEmulatorMobile
 
-enum ButtonMapping {
-    case A
-    case B
-    case X
-    case Y
-    case Menu
-    case Options
-    case Home
-    case LeftShoulder
-    case RightShoulder
-    case RightTrigger
-    case LeftThumbstick
-    case RightThumbstick
-    case Up
-    case Down
-    case Left
-    case Right
-    case Thumbstick
-    case Load
-    case Save
+enum ButtonMapping: Codable {
+    case a
+    case b
+    case x
+    case y
+    case menu
+    case options
+    case home
+    case leftShoulder
+    case rightShoulder
+    case leftTrigger
+    case rightTrigger
+    case leftThumbstick
+    case rightThumbstick
+    case up
+    case down
+    case left
+    case right
+    case noButton
+
+    var description: String {
+        switch self {
+        case .a: return "A"
+        case .b: return "B"
+        case .x: return "X"
+        case .y: return "Y"
+        case .menu: return "Menu"
+        case .options: return "Options"
+        case .home: return "Home"
+        case .leftShoulder: return "Left shoulder"
+        case .rightShoulder: return "Right shoulder"
+        case .leftTrigger: return "Left trigger"
+        case .rightTrigger: return "Right trigger"
+        case .rightThumbstick: return "Right thumbstick"
+        case .leftThumbstick: return "Left thumbstick"
+        case .down: return "Down"
+        case .left: return "Left"
+        case .right: return "Right"
+        case .up: return "Up"
+        case .noButton: return "Default"
+        }
+    }
+
+    static func descriptionToEnum(_ description: String) -> Self {
+        switch description {
+        case "A": return .a
+        case "B": return .b
+        case "X": return .x
+        case "Y": return .y
+        case "Menu": return .menu
+        case "Options": return .options
+        case "Home": return .home
+        case "Left shoulder": return .leftShoulder
+        case "Right shoulder": return .rightShoulder
+        case "Left trigger": return .leftTrigger
+        case "Right trigger": return .rightTrigger
+        case "Right thumbstick": return .rightThumbstick
+        case "Left thumbstick": return .leftThumbstick
+        case "Down": return .down
+        case "Left": return .left
+        case "Right": return .right
+        case "Up": return .up
+        case "Default": return .noButton
+        default: return .noButton
+        }
+    }
+}
+
+extension ButtonEvent {
+    var description: String {
+        switch self {
+        case .ButtonA: return "A"
+        case .ButtonB: return "B"
+        case .ButtonX: return "X"
+        case .ButtonY: return "Y"
+        case .ButtonHome: return "Home"
+        case .ButtonL: return "L"
+        case .ButtonR: return "R"
+        case .Up: return "Up"
+        case .Down: return "Down"
+        case .Left: return "Left"
+        case .Right: return "Right"
+        case .QuickLoad: return "Load"
+        case .QuickSave: return "Save"
+        case .ControlStick: return "Control stick"
+        case .Select: return "Select"
+        case .Start: return "Start"
+        case .MainMenu: return "Main menu"
+        }
+    }
+
+    static func descriptionToEnum(_ description: String) -> Self {
+        switch description {
+        case "A": return .ButtonA
+        case "B": return .ButtonB
+        case "X": return .ButtonX
+        case "Y": return .ButtonY
+        case "Home": return .ButtonHome
+        case "L": return .ButtonL
+        case "R": return .ButtonR
+        case "Up": return .Up
+        case "Down": return .Down
+        case "Left": return .Left
+        case "Right": return .Right
+        case "Load": return .QuickLoad
+        case "Save": return .QuickSave
+        case "Control stick": return .ControlStick
+        case "Select": return .Select
+        case "Start": return .Start
+        case "Main menu": return .MainMenu
+        default: return .MainMenu
+        }
+    }
 }
 
 struct ControllerMappingsView: View {
     @Binding var themeColor: Color
     @Binding var isPresented: Bool
     @Binding var gameController: GameController?
-    @Binding var buttonMappings: [ButtonEvent:String]
+    @Binding var buttonMappings: [ButtonEvent:ButtonMapping]
 
-    @State private var awaitingInput: [String:Bool] = [:]
+    @State private var awaitingInput: [ButtonEvent:Bool] = [:]
 
-    private func detectButtonPressed() -> String? {
+    private func detectButtonPressed() -> ButtonMapping? {
         if let gamepad = gameController?.controller?.extendedGamepad {
             if gamepad.buttonA.isPressed {
-                return "A"
+                return .a
             } else if gamepad.buttonB.isPressed {
-                return "B"
+                return .b
             } else if gamepad.buttonX.isPressed {
-                return "X"
+                return .x
             } else if gamepad.buttonY.isPressed {
-                return "Y"
+                return .y
             } else if gamepad.buttonMenu.isPressed {
-                return "Menu"
+                return .menu
             } else if gamepad.buttonOptions?.isPressed ?? false {
-                return "Options"
+                return .options
             } else if gamepad.buttonHome?.isPressed ?? false {
-                return "Home"
+                return .home
             } else if gamepad.leftShoulder.isPressed {
-                return "Left shoulder"
+                return .leftShoulder
             } else if gamepad.rightShoulder.isPressed {
-                return "Right shoulder"
+                return .rightShoulder
             } else if gamepad.leftTrigger.isPressed {
-                return "Left trigger"
+                return .leftTrigger
             } else if gamepad.rightTrigger.isPressed {
-                return "Right trigger"
+                return .rightTrigger
             } else if gamepad.leftThumbstickButton?.isPressed ?? false {
-                return "Left thumbstick"
+                return .leftThumbstick
             } else if gamepad.rightThumbstickButton?.isPressed ?? false {
-                return "Right thumbstick"
+                return .rightThumbstick
             } else if gamepad.dpad.up.isPressed {
-                return "Up"
+                return .up
             } else if gamepad.dpad.down.isPressed {
-                return "Down"
+                return .down
             } else if gamepad.dpad.left.isPressed {
-                return "Left"
+                return .left
             } else if gamepad.dpad.right.isPressed {
-                return "Right"
+                return .right
             }
 
             return nil
         } else {
-            return "Default"
+            return .noButton
         }
     }
 
@@ -87,52 +180,52 @@ struct ControllerMappingsView: View {
             List {
                 Section(header: Text("Joypad mappings").foregroundColor(Colors.primaryColor)) {
                     Button {
-                        awaitingInput["Up"] = true
+                        awaitingInput[.Up] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["Up"] ?? false {
+                            while awaitingInput[.Up] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.Up] = button
+                                    if button != .noButton {
+                                        buttonMappings[.Up] = button
                                     }
-                                    awaitingInput["Up"] = false
+                                    awaitingInput[.Up] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("Up")
-                            if awaitingInput["Up"] ?? false {
+                            if awaitingInput[.Up] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.Up] ?? "Up")
+                                Text(buttonMappings[.Up]?.description ?? "Up")
                                     .foregroundColor(Colors.primaryColor)
                             }
 
                         }
                     }
                     Button {
-                        awaitingInput["Down"] = true
+                        awaitingInput[.Down] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["Down"] ?? false {
+                            while awaitingInput[.Down] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.Down] = button
+                                    if button != .noButton {
+                                        buttonMappings[.Down] = button
                                     }
-                                    awaitingInput["Down"] = false
+                                    awaitingInput[.Down] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("Down")
-                            if awaitingInput["Down"] ?? false {
+                            if awaitingInput[.Down] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.Down] ?? "Down")
+                                Text(buttonMappings[.Down]?.description ?? "Down")
                                     .foregroundColor(Colors.primaryColor)
 
                             }
@@ -140,26 +233,26 @@ struct ControllerMappingsView: View {
                         }
                     }
                     Button {
-                        awaitingInput["Left"] = true
+                        awaitingInput[.Left] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["Left"] ?? false {
+                            while awaitingInput[.Left] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.Left] = button
+                                    if button != .noButton {
+                                        buttonMappings[.Left] = button
                                     }
-                                    awaitingInput["Left"] = false
+                                    awaitingInput[.Left] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("Left")
-                            if awaitingInput["Left"] ?? false {
+                            if awaitingInput[.Left] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.Left] ?? "Left")
+                                Text(buttonMappings[.Left]?.description ?? "Left")
                                     .foregroundColor(Colors.primaryColor)
                             }
 
@@ -167,231 +260,230 @@ struct ControllerMappingsView: View {
                         }
                     }
                     Button {
-                        awaitingInput["Right"] = true
+                        awaitingInput[.Right] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["Right"] ?? false {
+                            while awaitingInput[.Right] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.Right] = button
+                                    if button != .noButton {
+                                        buttonMappings[.Right] = button
                                     }
-                                    awaitingInput["Right"] = false
+                                    awaitingInput[.Right] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("Right")
-                            if awaitingInput["Right"] ?? false {
+                            if awaitingInput[.Right] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.Right] ?? "Right")
+                                Text(buttonMappings[.Right]?.description ?? "Right")
                                     .foregroundColor(Colors.primaryColor)
                             }
 
                         }
                     }
                     Button {
-                        awaitingInput["A"] = true
+                        awaitingInput[.ButtonA] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["A"] ?? false {
+                            while awaitingInput[.ButtonA] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.ButtonA] = button
+                                    if button != .noButton {
+                                        buttonMappings[.ButtonA] = button
                                     }
-                                    awaitingInput["A"] = false
+                                    awaitingInput[.ButtonA] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("A button")
-                            if awaitingInput["A"] ?? false {
+                            if awaitingInput[.ButtonA] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.ButtonA] ?? "A")
+                                Text(buttonMappings[.ButtonA]?.description ?? "B")
                                     .foregroundColor(Colors.primaryColor)
                             }
 
                         }
                     }
                     Button {
-                        awaitingInput["A"] = true
+                        awaitingInput[.ButtonB] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["A"] ?? false {
+                            while awaitingInput[.ButtonB] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.ButtonA] = button
+                                    if button != .noButton {
+                                        buttonMappings[.ButtonB] = button
                                     }
-                                    awaitingInput["A"] = false
+                                    awaitingInput[.ButtonB] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("B button")
-                            if awaitingInput["B"] ?? false {
+                            if awaitingInput[.ButtonB] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.ButtonB] ?? "B")
+                                Text(buttonMappings[.ButtonB]?.description ?? "A")
                                     .foregroundColor(Colors.primaryColor)
                             }
-
                         }
                     }
                     Button{
-                        awaitingInput["Y"] = true
+                        awaitingInput[.ButtonY] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["Y"] ?? false {
+                            while awaitingInput[.ButtonY] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.ButtonY] = button
+                                    if button != .noButton {
+                                        buttonMappings[.ButtonY] = button
                                     }
-                                    awaitingInput["Y"] = false
+                                    awaitingInput[.ButtonY] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("Y button")
-                            if awaitingInput["Y"] ?? false {
+                            if awaitingInput[.ButtonY] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.ButtonY] ?? "X")
+                                Text(buttonMappings[.ButtonY]?.description ?? "X")
                                     .foregroundColor(Colors.primaryColor)
                             }
 
                         }
                     }
                     Button {
-                        awaitingInput["X"] = true
+                        awaitingInput[.ButtonX] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["X"] ?? false {
+                            while awaitingInput[.ButtonX] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.ButtonX] = button
+                                    if button != .noButton {
+                                        buttonMappings[.ButtonX] = button
                                     }
-                                    awaitingInput["X"] = false
+                                    awaitingInput[.ButtonX] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("X button")
-                            if awaitingInput["X"] ?? false {
+                            if awaitingInput[.ButtonX] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.ButtonX] ?? "Y")
+                                Text(buttonMappings[.ButtonX]?.description ?? "Y")
                                     .foregroundColor(Colors.primaryColor)
                             }
                         }
                     }
                     Button {
-                        awaitingInput["L"] = true
+                        awaitingInput[.ButtonL] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["L"] ?? false {
+                            while awaitingInput[.ButtonL] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.ButtonL] = button
+                                    if button != .noButton {
+                                        buttonMappings[.ButtonL] = button
                                     }
-                                    awaitingInput["L"] = false
+                                    awaitingInput[.ButtonL] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("L button")
-                            if awaitingInput["L"] ?? false {
+                            if awaitingInput[.ButtonL] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.ButtonL] ?? "Left shoulder")
+                                Text(buttonMappings[.ButtonL]?.description ?? "Left shoulder")
                                     .foregroundColor(Colors.primaryColor)
                             }
 
                         }
                     }
                     Button {
-                        awaitingInput["R"] = true
+                        awaitingInput[.ButtonR] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["R"] ?? false {
+                            while awaitingInput[.ButtonR] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.ButtonR] = button
+                                    if button != .noButton {
+                                        buttonMappings[.ButtonR] = button
                                     }
-                                    awaitingInput["R"] = false
+                                    awaitingInput[.ButtonR] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("R button")
-                            if awaitingInput["R"] ?? false {
+                            if awaitingInput[.ButtonR] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.ButtonR] ?? "Right shoulder")
+                                Text(buttonMappings[.ButtonR]?.description ?? "Right shoulder")
                                     .foregroundColor(Colors.primaryColor)
                             }
                         }
                     }
                     Button {
-                        awaitingInput["Start"] = true
+                        awaitingInput[.Start] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["Start"] ?? false {
+                            while awaitingInput[.Start] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.Start] = button
+                                    if button != .noButton {
+                                        buttonMappings[.Start] = button
                                     }
-                                    awaitingInput["Start"] = false
+                                    awaitingInput[.Start] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("Start")
-                            if awaitingInput["Start"] ?? false {
+                            if awaitingInput[.Start] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.Start] ?? "Menu")
+                                Text(buttonMappings[.Start]?.description ?? "Menu")
                                     .foregroundColor(Colors.primaryColor)
                             }
                         }
                     }
                     Button {
-                        awaitingInput["Select"] = true
+                        awaitingInput[.Select] = true
                         DispatchQueue.global().async {
-                            while awaitingInput["Select"] ?? false {
+                            while awaitingInput[.Select] ?? false {
                                 if let button = detectButtonPressed() {
-                                    if button != "Default" {
-                                        buttonMappings[ButtonEvent.Select] = button
+                                    if button != .noButton {
+                                        buttonMappings[.Select] = button
                                     }
-                                    awaitingInput["Select"] = false
+                                    awaitingInput[.Select] = false
                                 }
                             }
                         }
                     } label: {
                         HStack {
                             Text("Select")
-                            if awaitingInput["Select"] ?? false {
+                            if awaitingInput[.Select] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.Select] ?? "Options")
+                                Text(buttonMappings[.Select]?.description ?? "Options")
                                     .foregroundColor(Colors.primaryColor)
                             }
                         }
@@ -399,46 +491,101 @@ struct ControllerMappingsView: View {
                 }
                 Section(header: Text("Hotkey mappings").foregroundColor(Colors.primaryColor)) {
                     Button {
-                        
-                    } label: {
-                        HStack {
-                            Text("Control stick mode (SM64 DS only)")
-                            if awaitingInput["Stick"] ?? false {
-                                Spacer()
-                                ProgressView()
-                            } else {
-                                Spacer()
-                                Text(buttonMappings[ButtonEvent.ControlStick] ?? "L2")
-                                    .foregroundColor(Colors.primaryColor)
+                        awaitingInput[.MainMenu] = true
+                        DispatchQueue.global().async {
+                            while awaitingInput[.MainMenu] ?? false {
+                                if let button = detectButtonPressed() {
+                                    if button != .noButton {
+                                        buttonMappings[.MainMenu] = button
+                                    }
+                                    awaitingInput[.MainMenu] = false
+                                }
                             }
                         }
-                    }
-                    Button() {
-
                     } label: {
                         HStack {
-                            Text("Quick load")
-                            if awaitingInput["Load"] ?? false {
+                            Text("Main menu (hold for 5 seconds)")
+                            if awaitingInput[.MainMenu] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.QuickLoad] ?? "L3")
+                                Text(buttonMappings[.MainMenu]?.description ?? "Home")
                                     .foregroundColor(Colors.primaryColor)
                             }
                         }
                     }
                     Button {
-
+                        awaitingInput[.ControlStick] = true
+                        DispatchQueue.global().async {
+                            while awaitingInput[.ControlStick] ?? false {
+                                if let button = detectButtonPressed() {
+                                    if button != .noButton {
+                                        buttonMappings[.ControlStick] = button
+                                    }
+                                    awaitingInput[.ControlStick] = false
+                                }
+                            }
+                        }
                     } label: {
                         HStack {
-                            Text("Quick save")
-                            if awaitingInput["Save"] ?? false {
+                            Text("Control stick mode (SM64 DS only)")
+                            if awaitingInput[.ControlStick] ?? false {
                                 Spacer()
                                 ProgressView()
                             } else {
                                 Spacer()
-                                Text(buttonMappings[ButtonEvent.QuickSave] ?? "R3")
+                                Text(buttonMappings[.ControlStick]?.description ?? "L2")
+                                    .foregroundColor(Colors.primaryColor)
+                            }
+                        }
+                    }
+                    Button() {
+                        awaitingInput[.QuickLoad] = true
+                        DispatchQueue.global().async {
+                            while awaitingInput[.QuickLoad] ?? false {
+                                if let button = detectButtonPressed() {
+                                    if button != .noButton {
+                                        buttonMappings[.QuickLoad] = button
+                                    }
+                                    awaitingInput[.QuickLoad] = false
+                                }
+                            }
+                        }
+                    } label: {
+                        HStack {
+                            Text("Quick load")
+                            if awaitingInput[.QuickLoad] ?? false {
+                                Spacer()
+                                ProgressView()
+                            } else {
+                                Spacer()
+                                Text(buttonMappings[.QuickLoad]?.description ?? "L3")
+                                    .foregroundColor(Colors.primaryColor)
+                            }
+                        }
+                    }
+                    Button {
+                        awaitingInput[.QuickSave] = true
+                        DispatchQueue.global().async {
+                            while awaitingInput[.QuickSave] ?? false {
+                                if let button = detectButtonPressed() {
+                                    if button != .noButton {
+                                        buttonMappings[.QuickSave] = button
+                                    }
+                                    awaitingInput[.QuickSave] = false
+                                }
+                            }
+                        }
+                    } label: {
+                        HStack {
+                            Text("Quick save")
+                            if awaitingInput[.QuickSave] ?? false {
+                                Spacer()
+                                ProgressView()
+                            } else {
+                                Spacer()
+                                Text(buttonMappings[.QuickSave]?.description ?? "R3")
                                     .foregroundColor(Colors.primaryColor)
                             }
                         }
@@ -452,5 +599,16 @@ struct ControllerMappingsView: View {
         }
         .font(.custom("Departure Mono", size: 18))
         .foregroundColor(themeColor)
+        .onChange(of: buttonMappings) {
+            do {
+                let defaults = UserDefaults.standard
+
+                let buttonMappingsEncoded = try JSONEncoder().encode(Dictionary(uniqueKeysWithValues: buttonMappings.map{ key, value in (key.description, value) }))
+
+                defaults.set(buttonMappingsEncoded, forKey: "buttonMappings")
+            } catch {
+                print(error)
+            }
+        }
     }
 }

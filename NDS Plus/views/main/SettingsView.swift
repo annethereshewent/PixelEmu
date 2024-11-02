@@ -25,7 +25,7 @@ struct SettingsView: View {
     @Binding var themeColor: Color
 
     @Binding var gameController: GameController?
-    @Binding var buttonMappings: [ButtonEvent:String]
+    @Binding var buttonMappings: [ButtonEvent:ButtonMapping]
 
     @State private var isActive = true
     @State private var showColorPickerModal = false

@@ -45,7 +45,7 @@ struct ContentView: View {
     @State private var gameName = ""
     @State private var backupFile: BackupFile? = nil
 
-    @State private var buttonMappings: [ButtonEvent:String] = [:]
+    @State private var buttonMappings: [ButtonEvent:ButtonMapping] = getDefaultMappings()
 
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
@@ -58,7 +58,28 @@ struct ContentView: View {
         self.checkForBinaries(currentFile: CurrentFile.bios9)
         self.checkForBinaries(currentFile: CurrentFile.firmware)
     }
-    
+
+    static func getDefaultMappings() -> [ButtonEvent:ButtonMapping] {
+        return [
+            .ButtonA: .b,
+            .ButtonB: .a,
+            .ButtonY: .x,
+            .ButtonX: .y,
+            .ButtonL: .leftShoulder,
+            .ButtonR: .rightShoulder,
+            .Start: .menu,
+            .Select: .options,
+            .Up: .up,
+            .Down: .down,
+            .Left: .left,
+            .Right: .right,
+            .QuickSave: .leftThumbstick,
+            .QuickLoad: .rightThumbstick,
+            .ButtonHome: .home,
+            .ControlStick: .leftTrigger
+        ]
+    }
+
     mutating func checkForBinaries(currentFile: CurrentFile) {
         if let applicationUrl = try? FileManager.default.url(
             for: .applicationSupportDirectory,
@@ -215,7 +236,22 @@ struct ContentView: View {
             if let themeColor = defaults.value(forKey: "themeColor") as? Color {
                 self.themeColor = themeColor
             }
-            
+
+            do {
+                if let data = defaults.object(forKey: "buttonMappings") as? Data {
+                    let decodedButtonMappings = try JSONDecoder()
+                        .decode([String:ButtonMapping].self, from: data)
+
+                    buttonMappings = Dictionary(
+                        uniqueKeysWithValues: decodedButtonMappings.map{ key, value in
+                            (ButtonEvent.descriptionToEnum(key), value)
+                        }
+                    )
+                }
+            } catch {
+                print(error)
+            }
+
             GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
                 if let signedInUser = user {
                     self.user = signedInUser
