@@ -11,7 +11,7 @@ import SwiftData
 @Model
 class SaveState {
     var saveName: String
-    var screenshot: [UInt8]
+    var screenshot: Data
     var bookmark: Data
     @Attribute(.unique)
     var game: Game?
@@ -20,7 +20,7 @@ class SaveState {
     
     init(saveName: String, screenshot: [UInt8], bookmark: Data, timestamp: Int, game: Game? = nil) {
         self.saveName = saveName
-        self.screenshot = screenshot
+        self.screenshot = Data(screenshot)
         self.bookmark = bookmark
         self.timestamp = timestamp
         

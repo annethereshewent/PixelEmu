@@ -20,7 +20,7 @@ struct SaveStateEntriesView: View {
     @Environment(\.modelContext) private var context
     
     @State var currentState: SaveState? = nil
-    
+
     @Binding var emulator: MobileEmulator?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool

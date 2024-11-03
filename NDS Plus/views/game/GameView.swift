@@ -73,75 +73,29 @@ struct GameView: View {
         presentationMode.wrappedValue.dismiss()
     }
 
-    private var homeButtonPressed: Bool {
-        if let joypad = gameController?.controller?.extendedGamepad {
-            for (key, values) in buttonEventDict {
-                for value in values {
-                    if value == .MainMenu {
-                        switch key {
-                        case .a: return joypad.buttonA.isPressed
-                        case .b: return joypad.buttonB.isPressed
-                        case .x: return joypad.buttonX.isPressed
-                        case .y: return joypad.buttonY.isPressed
-                        case .menu: return joypad.buttonMenu.isPressed
-                        case .options: return joypad.buttonOptions?.isPressed ?? false
-                        case .home: return joypad.buttonHome?.isPressed ?? false
-                        case .left: return joypad.dpad.left.isPressed
-                        case .right: return joypad.dpad.right.isPressed
-                        case .down: return joypad.dpad.down.isPressed
-                        case .up: return joypad.dpad.up.isPressed
-                        case .leftShoulder: return joypad.leftShoulder.isPressed
-                        case .rightShoulder: return joypad.rightShoulder.isPressed
-                        case .leftTrigger: return joypad.leftTrigger.isPressed
-                        case .rightTrigger: return joypad.rightTrigger.isPressed
-                        case .leftThumbstick: return joypad.leftThumbstickButton?.isPressed ?? false
-                        case .rightThumbstick: return joypad.rightThumbstickButton?.isPressed ?? false
-                        case .noButton: return false
-                        }
-                    }
-                }
-            }
-        }
-
-        return false
-    }
-
-
     private func checkIfHotKey(_ mapping: ButtonMapping, _ pressed: Bool) -> Bool {
         if let values = buttonEventDict[mapping] {
             for value in values {
                 switch value {
                 case .MainMenu:
-                    let startInterval = Date.now.timeIntervalSince1970
-                    var nextInterval = Date.now.timeIntervalSince1970
+                    if pressed && !homePressed {
+                        homePressed = true
+                        isMenuPresented = !isMenuPresented
 
-                    DispatchQueue.global().async {
-                        while (homeButtonPressed) {
-                            nextInterval = Date.now.timeIntervalSince1970
+                        if isMenuPresented {
+                            audioManager?.muteAudio()
+                        } else if isSoundOn {
+                            audioManager?.resumeAudio()
+                        }
 
-                            if (nextInterval - startInterval > 0.5) && !homePressed {
-                                homePressed = true
-                                isMenuPresented = !isMenuPresented
+                        emulator?.setPause(isMenuPresented)
 
-                                if isMenuPresented {
-                                    audioManager?.muteAudio()
-                                } else if isSoundOn {
-                                    audioManager?.resumeAudio()
-                                }
+                        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
+                            homePressed = false
 
-                                emulator?.setPause(isMenuPresented)
-
-                                DispatchQueue.main.async {
-                                    Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
-                                        homePressed = false
-
-                                    }
-                                }
-                            }
                         }
                     }
-                    // return false to allow for main menu button to function as a normal button as well.
-                    return false
+                    return true
                 case .ControlStick:
                     if pressed && !controlStickKeyPressed {
                         controlStickKeyPressed = true
@@ -478,7 +432,9 @@ struct GameView: View {
                         
                             let audioBufferPtr = emu.audioBufferPtr()
 
-                            if audioManager?.isRunning ?? false {
+                            let playerPaused = audioManager?.playerPaused ?? true
+
+                            if !playerPaused {
                                 let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
                                 self.audioManager?.updateBuffer(samples: audioSamples)
                             }

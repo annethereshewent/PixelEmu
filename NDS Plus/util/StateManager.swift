@@ -201,7 +201,7 @@ class StateManager {
         if let index = index {
             let currState = game.saveStates[index]
 
-            currState.screenshot = saveState.screenshot
+            currState.screenshot = Data(saveState.screenshot)
             currState.bookmark = saveState.bookmark
 
             context.insert(currState)

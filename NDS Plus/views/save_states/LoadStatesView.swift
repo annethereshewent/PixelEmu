@@ -23,7 +23,7 @@ struct LoadStatesView: View {
     @Binding var workItem: DispatchWorkItem?
     @Binding var gameUrl: URL?
     @State private var currentState: SaveState? = nil
-    
+
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
     private func loadSaveState() {

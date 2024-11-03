@@ -9,9 +9,9 @@ import SwiftUI
 
 struct LoadStateEntryView: View {
     let saveState: SaveState
-    
+
     @Binding var currentState: SaveState?
-    
+
     @State private var screenshot = UIImage()
     
     private let graphicsParser = GraphicsParser()
@@ -28,7 +28,7 @@ struct LoadStateEntryView: View {
             }
         }
         .onAppear() {
-            if let image = graphicsParser.fromBytes(bytes: saveState.screenshot, width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 2) {
+            if let image = graphicsParser.fromBytes(bytes: Array(saveState.screenshot), width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 2) {
                 screenshot = UIImage(cgImage: image)
             }
         }
