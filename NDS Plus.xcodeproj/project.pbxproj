@@ -33,7 +33,6 @@
 		E806EAA02CA3AD080081D3E8 /* SaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */; };
 		E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */; };
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
-		E8921C3E2CD6F83F00E160E7 /* SaveStateV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8921C3D2CD6F83F00E160E7 /* SaveStateV2.swift */; };
 		E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681A62CD440CF00F7A316 /* StateManager.swift */; };
 		E89681A92CD561A100F7A316 /* ControllerMappingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */; };
 		E89681AD2CD6D68500F7A316 /* ControllerMappingButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */; };
@@ -122,7 +121,6 @@
 		E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveManagementView.swift; sourceTree = "<group>"; };
 		E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
-		E8921C3D2CD6F83F00E160E7 /* SaveStateV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateV2.swift; sourceTree = "<group>"; };
 		E89681A62CD440CF00F7A316 /* StateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManager.swift; sourceTree = "<group>"; };
 		E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerMappingsView.swift; sourceTree = "<group>"; };
 		E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerMappingButtonView.swift; sourceTree = "<group>"; };
@@ -293,7 +291,6 @@
 				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
 				E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */,
 				E8C245F72CBE043B00B6DF67 /* SaveState.swift */,
-				E8921C3D2CD6F83F00E160E7 /* SaveStateV2.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -691,7 +688,6 @@
 				E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
 				E8C245EF2CBCC36F00B6DF67 /* DualScreenViewWrapper.swift in Sources */,
-				E8921C3E2CD6F83F00E160E7 /* SaveStateV2.swift in Sources */,
 				E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */,
 				E8DF26BE2CC5F99600A88821 /* LoadStatesView.swift in Sources */,
 				E806EAA02CA3AD080081D3E8 /* SaveManagementView.swift in Sources */,

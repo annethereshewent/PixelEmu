@@ -19,7 +19,7 @@ enum SaveStateAction {
 struct SaveStateEntriesView: View {
     @Environment(\.modelContext) private var context
     
-    @State var currentState: SaveStateV2? = nil
+    @State var currentState: SaveState? = nil
 
     @Binding var emulator: MobileEmulator?
     @Binding var gameName: String
@@ -37,7 +37,7 @@ struct SaveStateEntriesView: View {
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
-    private func createSaveState(updateState: SaveStateV2? = nil) {
+    private func createSaveState(updateState: SaveState? = nil) {
         // create a new save state
         
         if let emu = emulator {
@@ -82,8 +82,8 @@ struct SaveStateEntriesView: View {
     
     private func deleteSaveState() {
         if let saveState = currentState, let game = game {
-            if let index = game.saveStatesV2!.firstIndex(of: saveState) {
-                game.saveStatesV2!.remove(at: index)
+            if let index = game.saveStates.firstIndex(of: saveState) {
+                game.saveStates.remove(at: index)
                 context.delete(saveState)
             }
         }
@@ -107,7 +107,7 @@ struct SaveStateEntriesView: View {
             ScrollView {
                 if let game = game {
                     LazyVGrid(columns: columns) {
-                        ForEach(game.saveStatesV2!.sorted { $0.compare($1) }) { saveState in
+                        ForEach(game.saveStates.sorted { $0.compare($1) }) { saveState in
                             SaveStateView(
                                 saveState: saveState,
                                 action: $action,

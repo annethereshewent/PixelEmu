@@ -10,12 +10,12 @@ import DSEmulatorMobile
 
 struct SaveStateView: View {
     @Environment(\.colorScheme) private var colorScheme
-    let saveState: SaveStateV2
+    let saveState: SaveState
     @State private var screenshot = UIImage()
     @State private var isPopoverPresented = false
     
     @Binding var action: SaveStateAction
-    @Binding var currentState: SaveStateV2?
+    @Binding var currentState: SaveState?
 
     let graphicsParser = GraphicsParser()
     

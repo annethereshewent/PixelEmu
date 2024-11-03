@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct LoadStateEntryView: View {
-    let saveState: SaveStateV2
+    let saveState: SaveState
 
-    @Binding var currentState: SaveStateV2?
+    @Binding var currentState: SaveState?
 
     @State private var screenshot = UIImage()
     
