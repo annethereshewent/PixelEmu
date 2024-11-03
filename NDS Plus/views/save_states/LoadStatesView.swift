@@ -22,8 +22,8 @@ struct LoadStatesView: View {
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
     @Binding var gameUrl: URL?
-    @State private var currentState: SaveState? = nil
-    
+    @State private var currentState: SaveStateV2? = nil
+
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
     private func loadSaveState() {
@@ -118,7 +118,7 @@ struct LoadStatesView: View {
             ScrollView {
                 if let selectedGame = selectedGame {
                     LazyVGrid(columns: columns) {
-                        ForEach(selectedGame.saveStates.sorted { $0.compare($1) }) { saveState in
+                        ForEach(selectedGame.saveStatesV2!.sorted { $0.compare($1) }) { saveState in
                             LoadStateEntryView(saveState: saveState, currentState: $currentState)
                         }
                     }
