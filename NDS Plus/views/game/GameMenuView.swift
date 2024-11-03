@@ -94,7 +94,7 @@ struct GameMenuView: View {
                 Spacer()
             }
             .onDisappear() {
-                if !isHoldButtonsPresented {
+                if !isHoldButtonsPresented && !shouldGoHome {
                     emulator?.setPause(false)
                     if isSoundOn {
                         audioManager?.resumeAudio()
