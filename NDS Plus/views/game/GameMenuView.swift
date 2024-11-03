@@ -95,11 +95,9 @@ struct GameMenuView: View {
             }
             .onDisappear() {
                 if !isHoldButtonsPresented {
-                    if let emu = emulator {
-                        emu.setPause(false)
-                        if isSoundOn {
-                            audioManager?.resumeAudio()
-                        }
+                    emulator?.setPause(false)
+                    if isSoundOn {
+                        audioManager?.resumeAudio()
                     }
                 }
             }
