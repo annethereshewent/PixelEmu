@@ -84,8 +84,6 @@ struct GameView: View {
 
                         if isMenuPresented {
                             audioManager?.muteAudio()
-                        } else if isSoundOn {
-                            audioManager?.resumeAudio()
                         }
 
                         emulator?.setPause(isMenuPresented)
@@ -512,7 +510,8 @@ struct GameView: View {
                     romData: $romData,
                     shouldGoHome: $shouldGoHome,
                     game: $game,
-                    isHoldButtonsPresented: $isHoldButtonsPresented
+                    isHoldButtonsPresented: $isHoldButtonsPresented,
+                    isSoundOn: $isSoundOn
                 )
             }
             .onAppear {

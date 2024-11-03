@@ -23,6 +23,7 @@ struct GameMenuView: View {
     @Binding var shouldGoHome: Bool
     @Binding var game: Game?
     @Binding var isHoldButtonsPresented: Bool
+    @Binding var isSoundOn: Bool
 
     @State var isStateEntriesPresented: Bool = false
     
@@ -96,6 +97,9 @@ struct GameMenuView: View {
                 if !isHoldButtonsPresented {
                     if let emu = emulator {
                         emu.setPause(false)
+                        if isSoundOn {
+                            audioManager?.resumeAudio()
+                        }
                     }
                 }
             }

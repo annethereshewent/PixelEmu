@@ -61,7 +61,6 @@ struct SaveStateEntriesView: View {
             } catch {
                 print(error)
             }
-
             isMenuPresented = false
         }
     }
@@ -69,6 +68,7 @@ struct SaveStateEntriesView: View {
     private func loadSaveState() {
         do {
             try stateManager.loadSaveState(currentState: currentState)
+            isMenuPresented = false
         } catch {
             print(error)
         }
