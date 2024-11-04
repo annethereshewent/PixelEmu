@@ -52,8 +52,6 @@
 			<string>ExtendedGamepad</string>
 		</dict>
 	</array>
-	<key>GCSupportsControllerUserInteraction</key>
-	<true/>
 	<key>GIDClientID</key>
 	<string>353451169812-5tsvud264t5bqam96c6ipfso6243p13t.apps.googleusercontent.com</string>
 	<key>UIAppFonts</key>
@@ -61,7 +59,12 @@
 		<string>DepartureMono.otf</string>
 	</array>
 	<key>UILaunchScreen</key>
-	<dict/>
+	<dict>
+		<key>UIColorName</key>
+		<string>Launch Color</string>
+		<key>UIImageName</key>
+		<string>Launch Screen Logo</string>
+	</dict>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>

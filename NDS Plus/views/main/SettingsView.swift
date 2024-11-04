@@ -121,11 +121,17 @@ struct SettingsView: View {
                     Button {
                         isMappingsPresented = true
                     } label: {
-                        Text("Change controller mappings")
-                            .padding(.leading, 9)
-                            .foregroundColor(themeColor)
-                        Spacer()
-                        Spacer()
+                        HStack {
+                            Text("Change controller mappings")
+                                .padding(.leading, 9)
+                            Spacer()
+                            Image(systemName: "gamecontroller.fill")
+                                .resizable()
+                                .foregroundColor(themeColor)
+                                .padding(.trailing, 20)
+                                .scaledToFill()
+                                .frame(width: 50, height: 25)
+                        }
                     }
                 }
 
