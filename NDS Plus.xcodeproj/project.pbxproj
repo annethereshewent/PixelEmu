@@ -354,7 +354,6 @@
 				E8EE5D872CC2221600CD77B6 /* LibraryView.swift */,
 				E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */,
 				E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */,
-				E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */,
 				E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */,
 				E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */,
 				E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */,
@@ -387,6 +386,7 @@
 			isa = PBXGroup;
 			children = (
 				E8EE5D942CC342CA00CD77B6 /* GameEntryModal.swift */,
+				E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */,
 				E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */,
 				E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */,
 			);
