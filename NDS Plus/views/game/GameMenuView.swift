@@ -24,6 +24,7 @@ struct GameMenuView: View {
     @Binding var game: Game?
     @Binding var isHoldButtonsPresented: Bool
     @Binding var isSoundOn: Bool
+    @Binding var gameController: GameController?
 
     @State var isStateEntriesPresented: Bool = false
     
@@ -67,17 +68,49 @@ struct GameMenuView: View {
                     }
                 }
                 Spacer()
-                Button() {
-                    isHoldButtonsPresented = true
-                    isMenuPresented = false
-                } label: {
-                    VStack {
-                        Image(systemName: "button.horizontal.top.press.fill")
-                            .resizable()
-                            .frame(width: 35, height: 35)
-                        Text("Hold Button")
+                if gameController?.controller?.extendedGamepad == nil {
+                    Button() {
+                        isHoldButtonsPresented = true
+                        isMenuPresented = false
+                    } label: {
+                        VStack {
+                            Image(systemName: "button.horizontal.top.press.fill")
+                                .resizable()
+                                .frame(width: 35, height: 35)
+                            Text("Hold button")
+                        }
+
                     }
-                    
+                } else {
+                    Button() {
+                        isSoundOn = !isSoundOn
+
+                        if isSoundOn {
+                            audioManager?.resumeAudio()
+                        } else {
+                            audioManager?.muteAudio()
+                        }
+
+                        let defaults = UserDefaults.standard
+
+                        defaults.setValue(isSoundOn, forKey: "isSoundOn")
+
+                        isMenuPresented = false
+                    } label: {
+                        VStack {
+                            if isSoundOn {
+                                Image(systemName: "speaker.slash")
+                                    .resizable()
+                                    .frame(width: 35, height: 35)
+                                Text("Mute audio")
+                            } else {
+                                Image(systemName: "speaker")
+                                    .resizable()
+                                    .frame(width: 35, height: 35)
+                                Text("Unmute audio")
+                            }
+                        }
+                    }
                 }
                 Spacer()
                 Button() {

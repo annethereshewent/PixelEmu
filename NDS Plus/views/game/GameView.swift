@@ -511,7 +511,8 @@ struct GameView: View {
                     shouldGoHome: $shouldGoHome,
                     game: $game,
                     isHoldButtonsPresented: $isHoldButtonsPresented,
-                    isSoundOn: $isSoundOn
+                    isSoundOn: $isSoundOn,
+                    gameController: $gameController
                 )
             }
             .onAppear {

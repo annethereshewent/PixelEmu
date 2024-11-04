@@ -47,31 +47,17 @@ class AudioManager {
             self.audioEngine.connect(self.audioNode, to: self.audioEngine.outputNode, format: self.audioFormat)
             
             mic = audioEngine.inputNode
+
             let micFormat = mic.inputFormat(forBus: 0)
-            
+
             sourceBuffer = AVAudioPCMBuffer(pcmFormat: micFormat, frameCapacity: 4096)
             
             if let outputFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 44100.0, channels: 1, interleaved: false) {
                 converter = AVAudioConverter(from: micFormat, to: outputFormat)
             }
 
-            mic.installTap(onBus: 0, bufferSize: 2048, format: micFormat) { (buffer, when) in
-                if !self.isRunning {
-                    self.mic.removeTap(onBus: 0)
-                }
-                if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.converter.outputFormat, frameCapacity: buffer.frameCapacity) {
-                    var error: NSError?
-                    
-                    _ = self.converter.convert(to: outputBuffer, error: &error) { [unowned self] numberOfFrames, inputStatus in
-                        inputStatus.pointee = .haveData
-                        return buffer
-                    }
-                    let samples = Array(UnsafeBufferPointer(start: outputBuffer.floatChannelData![0], count: Int(outputBuffer.frameLength)))
-                    
-                    self.micBuffer.append(contentsOf: samples)
-                }
-            }
-            
+            startMicrophone(format: micFormat)
+
             try self.audioEngine.start()
             
             self.audioNode.play()
@@ -83,17 +69,40 @@ class AudioManager {
             print(error)
         }
     }
-    
+
+    func startMicrophone(format: AVAudioFormat) {
+        mic.installTap(onBus: 0, bufferSize: 2048, format: format) { (buffer, when) in
+            if !self.isRunning {
+                self.mic.removeTap(onBus: 0)
+            }
+            if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.converter.outputFormat, frameCapacity: buffer.frameCapacity) {
+                var error: NSError?
+
+                _ = self.converter.convert(to: outputBuffer, error: &error) { [unowned self] numberOfFrames, inputStatus in
+                    inputStatus.pointee = .haveData
+                    return buffer
+                }
+                let samples = Array(UnsafeBufferPointer(start: outputBuffer.floatChannelData![0], count: Int(outputBuffer.frameLength)))
+
+                self.nslock.lock()
+                self.micBuffer.append(contentsOf: samples)
+                self.nslock.unlock()
+            }
+        }
+    }
+
     func getBufferPtr() -> UnsafeBufferPointer<Float>? {
         if sampleIndex + micBuffer.count > samples.count {
             sampleIndex = 0
         }
-        
+
+        nslock.lock()
         while micBuffer.count > 0 && sampleIndex < samples.count {
             samples[sampleIndex] = micBuffer.removeFirst()
             sampleIndex += 1
         }
-        
+        nslock.unlock()
+
         var bufferPtr: UnsafeBufferPointer<Float>!
         
         samples.withUnsafeBufferPointer() { ptr in
