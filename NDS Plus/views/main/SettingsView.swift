@@ -123,6 +123,7 @@ struct SettingsView: View {
                     } label: {
                         Text("Change controller mappings")
                             .padding(.leading, 9)
+                            .foregroundColor(themeColor)
                         Spacer()
                         Spacer()
                     }
