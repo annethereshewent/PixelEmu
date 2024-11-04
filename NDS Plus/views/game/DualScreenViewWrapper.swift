@@ -78,6 +78,14 @@ struct DualScreenViewWrapper: View {
         }
     }
 
+    private var landscapeLeading: CGFloat {
+        if gameController?.controller?.extendedGamepad == nil {
+            return 0
+        } else {
+            return 40
+        }
+    }
+
     var body: some View {
         ZStack {
             if gameController?.controller?.extendedGamepad == nil {
@@ -112,7 +120,7 @@ struct DualScreenViewWrapper: View {
                         )
                     }
                     .padding(.top, landscapePadding)
-                    .padding(.leading, 40)
+                    .padding(.leading, landscapeLeading)
                 }
                 if gameController?.controller?.extendedGamepad == nil {
                     VStack(spacing: 0) {
