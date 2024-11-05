@@ -28,14 +28,13 @@ To get the project up and running locally, you'll need to go through the followi
 10. Select the `DSEmulatorMobile` package from under `Workspace`.
 11. Build/run the project like normal.
 
-This is still very much a work-in-progress and needs a lot of overhaul in its design in particular, but it should work for most games.
-
 Supported features:
 
 - Microphone support
 - Audio support
-- Supports gamepad controllers (need to overhaul interface for this)
+- Supports gamepad controllers 
 - Local and cloud saves
+- Save states
 
 Todo: 
 
