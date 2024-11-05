@@ -139,6 +139,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .Up,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Up",
@@ -147,6 +148,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .Down,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Down",
@@ -155,6 +157,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .Left,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left",
@@ -163,6 +166,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .Right,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Right",
@@ -171,6 +175,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .ButtonA,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "B",
@@ -179,6 +184,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .ButtonB,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "A",
@@ -187,6 +193,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .ButtonY,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "X",
@@ -195,6 +202,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .ButtonX,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Y",
@@ -203,6 +211,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .ButtonL,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left shoulder",
@@ -211,6 +220,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .ButtonR,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Right shoulder",
@@ -219,6 +229,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .Start,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Menu",
@@ -227,6 +238,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .Select,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Options",
@@ -237,6 +249,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .MainMenu,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Home",
@@ -245,6 +258,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .ControlStick,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left trigger",
@@ -253,6 +267,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .QuickSave,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left thumbstick",
@@ -261,6 +276,7 @@ struct ControllerMappingsView: View {
                     ControllerMappingButtonView(
                         event: .QuickLoad,
                         buttonMappings: $buttonMappings,
+                        buttonEventDict: $buttonEventDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Right thumbstick",
