@@ -59,7 +59,7 @@ struct GameView: View {
     @Binding var topImage: CGImage?
     @Binding var bottomImage: CGImage?
 
-    @Binding var buttonEventDict: [ButtonMapping:[ButtonEvent]]
+    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
@@ -74,52 +74,74 @@ struct GameView: View {
     }
 
     private func checkIfHotKey(_ mapping: ButtonMapping, _ pressed: Bool) -> Bool {
-        if let values = buttonEventDict[mapping] {
-            for value in values {
-                switch value {
-                case .MainMenu:
-                    if pressed && !homePressed {
-                        homePressed = true
-                        isMenuPresented = !isMenuPresented
+        if let value = buttonEventDict[mapping] {
+            switch value {
+            case .MainMenu:
+                if pressed && !homePressed {
+                    homePressed = true
+                    isMenuPresented = !isMenuPresented
 
-                        if isMenuPresented {
-                            audioManager?.muteAudio()
-                        }
+                    if isMenuPresented {
+                        audioManager?.muteAudio()
+                    }
 
-                        emulator?.setPause(isMenuPresented)
+                    emulator?.setPause(isMenuPresented)
 
-                        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
-                            homePressed = false
+                    Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
+                        homePressed = false
 
+                    }
+                }
+                return true
+            case .ControlStick:
+                if pressed && !controlStickKeyPressed {
+                    controlStickKeyPressed = true
+
+                    useControlStick = !useControlStick
+
+                    if let emu = emulator {
+                        if useControlStick {
+                            emu.pressScreen()
+                            emu.touchScreenController(0, 0)
+                        } else {
+                            emu.releaseScreen()
                         }
                     }
-                    return true
-                case .ControlStick:
-                    if pressed && !controlStickKeyPressed {
-                        controlStickKeyPressed = true
 
-                        useControlStick = !useControlStick
-
-                        if let emu = emulator {
-                            if useControlStick {
-                                emu.pressScreen()
-                                emu.touchScreenController(0, 0)
-                            } else {
-                                emu.releaseScreen()
-                            }
-                        }
-
-                        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
-                            controlStickKeyPressed = false
-                        }
+                    Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
+                        controlStickKeyPressed = false
                     }
-                    return true
-                case .QuickLoad:
-                    if pressed && !quickSaveLoadKeyPressed {
-                        quickSaveLoadKeyPressed = true
+                }
+                return true
+            case .QuickLoad:
+                if pressed && !quickSaveLoadKeyPressed {
+                    quickSaveLoadKeyPressed = true
+
+                    do {
+                        try stateManager?.loadSaveState(currentState: nil, isQuickSave: true)
+                    } catch {
+                        print(error)
+                    }
+
+                    Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
+                        quickSaveLoadKeyPressed = false
+                    }
+                }
+
+                return true
+            case .QuickSave:
+                if pressed && !quickSaveLoadKeyPressed {
+                    quickSaveLoadKeyPressed = true
+
+                    if let emu = emulator {
+                        let dataPtr = emu.createSaveState()
+                        let dataSize = emu.compressedLength()
+
+                        let bufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(dataSize))
+                        let data = Data(bufferPtr)
 
                         do {
-                            try stateManager?.loadSaveState(currentState: nil, isQuickSave: true)
+                            try stateManager?.createSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
                         } catch {
                             print(error)
                         }
@@ -128,33 +150,9 @@ struct GameView: View {
                             quickSaveLoadKeyPressed = false
                         }
                     }
-
-                    return true
-                case .QuickSave:
-                    if pressed && !quickSaveLoadKeyPressed {
-                        quickSaveLoadKeyPressed = true
-
-                        if let emu = emulator {
-                            let dataPtr = emu.createSaveState()
-                            let dataSize = emu.compressedLength()
-
-                            let bufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(dataSize))
-                            let data = Data(bufferPtr)
-
-                            do {
-                                try stateManager?.createSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
-                            } catch {
-                                print(error)
-                            }
-
-                            Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
-                                quickSaveLoadKeyPressed = false
-                            }
-                        }
-                    }
-                    return true
-                default: break
                 }
+                return true
+            default: break
             }
         }
 
@@ -201,11 +199,9 @@ struct GameView: View {
 
     private func updateEmuInput(_ mapping: ButtonMapping, _ defaultButton: ButtonEvent, _ pressed: Bool) {
         if let emu = emulator {
-            if let values = buttonEventDict[mapping] {
-                for value in values {
-                    if value != .MainMenu {
-                        emu.updateInput(value, pressed)
-                    }
+            if let value = buttonEventDict[mapping] {
+                if value != .MainMenu {
+                    emu.updateInput(value, pressed)
                 }
             } else {
                 emu.updateInput(defaultButton, pressed)

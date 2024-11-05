@@ -11,6 +11,7 @@ import DSEmulatorMobile
 struct ControllerMappingButtonView: View {
     var event: ButtonEvent
     @Binding var buttonMappings: [ButtonEvent:ButtonMapping]
+    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
     @Binding var awaitingInput: [ButtonEvent:Bool]
     @Binding var gameController: GameController?
 
@@ -68,6 +69,9 @@ struct ControllerMappingButtonView: View {
                 while awaitingInput[event] ?? false {
                     if let button = detectButtonPressed() {
                         if button != .noButton {
+                            if let switchEvent = buttonEventDict[button], let oldButton = buttonMappings[event] {
+                                buttonMappings[switchEvent] = oldButton
+                            }
                             buttonMappings[event] = button
                         }
                         awaitingInput[event] = false

@@ -61,7 +61,12 @@
 		<string>DepartureMono.otf</string>
 	</array>
 	<key>UILaunchScreen</key>
-	<dict/>
+	<dict>
+		<key>UIColorName</key>
+		<string>Launch Color</string>
+		<key>UIImageName</key>
+		<string>Launch Screen Logo</string>
+	</dict>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>

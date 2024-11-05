@@ -25,7 +25,7 @@ struct SettingsView: View {
     @Binding var themeColor: Color
 
     @Binding var gameController: GameController?
-    @Binding var buttonEventDict: [ButtonMapping:[ButtonEvent]]
+    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
 
     @State private var isActive = true
     @State private var showColorPickerModal = false
@@ -121,10 +121,17 @@ struct SettingsView: View {
                     Button {
                         isMappingsPresented = true
                     } label: {
-                        Text("Change controller mappings")
-                            .padding(.leading, 9)
-                        Spacer()
-                        Spacer()
+                        HStack {
+                            Text("Change controller mappings")
+                                .padding(.leading, 9)
+                            Spacer()
+                            Image(systemName: "gamecontroller.fill")
+                                .resizable()
+                                .foregroundColor(themeColor)
+                                .padding(.trailing, 20)
+                                .scaledToFill()
+                                .frame(width: 50, height: 25)
+                        }
                     }
                 }
 
