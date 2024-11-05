@@ -52,6 +52,8 @@
 			<string>ExtendedGamepad</string>
 		</dict>
 	</array>
+	<key>GCSupportsControllerUserInteraction</key>
+	<true/>
 	<key>GIDClientID</key>
 	<string>353451169812-5tsvud264t5bqam96c6ipfso6243p13t.apps.googleusercontent.com</string>
 	<key>UIAppFonts</key>
