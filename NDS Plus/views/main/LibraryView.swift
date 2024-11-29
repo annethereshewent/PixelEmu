@@ -16,11 +16,16 @@ enum LibraryFilter {
     case all
 }
 
+enum LibraryType {
+    case nds
+    case gba
+}
+
 struct LibraryView: View {
-    
     @State private var recentColor = Colors.accentColor
     @State private var allColor = Colors.primaryColor
     @State private var filter = LibraryFilter.recent
+    @State private var currentLibrary = LibraryType.nds
 
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
@@ -34,62 +39,44 @@ struct LibraryView: View {
     @Binding var game: Game?
     @Binding var themeColor: Color
 
+    var libraryTypeText: String {
+        switch currentLibrary {
+        case .gba: return "GBA"
+        case .nds: return "NDS"
+        }
+    }
+
     var body: some View {
-       
         VStack {
-            Text("Game library")
-                .fontWeight(.bold)
-            HStack {
-                Spacer()
-                    
-                Button {
-                    recentColor = themeColor
-                    allColor = Colors.primaryColor
-                    filter = .recent
-                } label: {
-                    HStack {
-                        if filter == .recent {
-                            Image("Caret")
-                                .foregroundColor(themeColor)
-                        }
-                        Text("Recent")
-                            .foregroundColor(recentColor)
-                    }
+            Button("\(libraryTypeText) Library") {
+                if currentLibrary == .nds {
+                    currentLibrary = .gba
+                } else {
+                    currentLibrary = .nds
                 }
-                
-                Spacer()
-                Button {
-                    allColor = themeColor
-                    recentColor = Colors.primaryColor
-                    filter = .all
-                } label: {
-                    HStack {
-                        if filter == .all {
-                            Image("Caret")
-                                .foregroundColor(themeColor)
-                        }
-                        Text("All")
-                            .foregroundColor(allColor)
-                    }
-                }
-               
-                Spacer()
             }
-            .padding(.top, 10)
-            GamesListView(
-                romData: $romData,
-                bios7Data: $bios7Data,
-                bios9Data: $bios9Data,
-                firmwareData: $firmwareData,
-                isRunning: $isRunning,
-                workItem: $workItem,
-                emulator: $emulator,
-                gameUrl: $gameUrl,
-                path: $path,
-                game: $game,
-                filter: $filter,
-                themeColor: $themeColor
-            )
+            .fontWeight(.bold)
+            .foregroundColor(themeColor)
+            if currentLibrary == .nds {
+                DSLibraryView(
+                    recentColor: $recentColor,
+                    allColor: $allColor,
+                    filter: $filter,
+                    romData: $romData,
+                    bios7Data: $bios7Data,
+                    bios9Data: $bios9Data,
+                    firmwareData: $firmwareData,
+                    isRunning: $isRunning,
+                    workItem: $workItem,
+                    emulator: $emulator,
+                    gameUrl: $gameUrl,
+                    path: $path,
+                    game: $game,
+                    themeColor: $themeColor
+                )
+            } else {
+                GBALibraryView()
+            }
         }
         .onAppear() {
             recentColor = themeColor

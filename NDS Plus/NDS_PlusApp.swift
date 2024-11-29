@@ -12,7 +12,7 @@ struct NDS_PlusApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .modelContainer(for: [Game.self, SaveState.self])
+                .modelContainer(for: [Game.self, SaveState.self, GBAGame.self])
                 .environmentObject(OrientationInfo())
         }
     }

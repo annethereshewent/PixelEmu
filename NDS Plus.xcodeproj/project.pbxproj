@@ -44,6 +44,9 @@
 		E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */; };
 		E8BA68202CC49A3900CE7E54 /* DepartureMono.woff in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */; };
 		E8BA68212CC49A3900CE7E54 /* DepartureMono.otf in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */; };
+		E8BBBC682CF96AD10065EF4E /* GBAGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC672CF96AD10065EF4E /* GBAGame.swift */; };
+		E8BBBC6A2CF96AEA0065EF4E /* DSLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC692CF96AEA0065EF4E /* DSLibraryView.swift */; };
+		E8BBBC6C2CF96CAB0065EF4E /* GBALibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC6B2CF96CAB0065EF4E /* GBALibraryView.swift */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
 		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
@@ -131,6 +134,9 @@
 		E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff2; sourceTree = "<group>"; };
 		E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff; sourceTree = "<group>"; };
 		E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.otf; sourceTree = "<group>"; };
+		E8BBBC672CF96AD10065EF4E /* GBAGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAGame.swift; sourceTree = "<group>"; };
+		E8BBBC692CF96AEA0065EF4E /* DSLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSLibraryView.swift; sourceTree = "<group>"; };
+		E8BBBC6B2CF96CAB0065EF4E /* GBALibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBALibraryView.swift; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
 		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
 		E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = drastic_bios_readme.txt; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_readme.txt"; sourceTree = "<group>"; };
@@ -285,6 +291,7 @@
 		E806EA652C9E9B340081D3E8 /* models */ = {
 			isa = PBXGroup;
 			children = (
+				E8BBBC672CF96AD10065EF4E /* GBAGame.swift */,
 				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
 				E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */,
 				E8C245F72CBE043B00B6DF67 /* SaveState.swift */,
@@ -344,6 +351,7 @@
 		E8C245F22CBCC55500B6DF67 /* main */ = {
 			isa = PBXGroup;
 			children = (
+				E8BBBC692CF96AEA0065EF4E /* DSLibraryView.swift */,
 				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
 				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
 				E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */,
@@ -354,6 +362,7 @@
 				E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */,
 				E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */,
 				E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */,
+				E8BBBC6B2CF96CAB0065EF4E /* GBALibraryView.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -655,6 +664,7 @@
 				E8EE5D882CC2221600CD77B6 /* LibraryView.swift in Sources */,
 				E806EA782CA1078F0081D3E8 /* TouchControlsView.swift in Sources */,
 				E8EE5D862CC2216300CD77B6 /* CurrentView.swift in Sources */,
+				E8BBBC682CF96AD10065EF4E /* GBAGame.swift in Sources */,
 				E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */,
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
 				E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */,
@@ -664,6 +674,7 @@
 				E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */,
 				E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */,
 				E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */,
+				E8BBBC6A2CF96AEA0065EF4E /* DSLibraryView.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
 				E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */,
 				E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */,
@@ -683,6 +694,7 @@
 				E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */,
 				E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */,
 				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
+				E8BBBC6C2CF96CAB0065EF4E /* GBALibraryView.swift in Sources */,
 				E8C245EF2CBCC36F00B6DF67 /* DualScreenViewWrapper.swift in Sources */,
 				E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */,
 				E8DF26BE2CC5F99600A88821 /* LoadStatesView.swift in Sources */,

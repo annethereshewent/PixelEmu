@@ -23,6 +23,8 @@ class Game {
     @Attribute(originalName: "addedOn")
     var lastPlayed: Date
 
+    var albumArt: Data? = nil
+
 
     init(gameName: String, bookmark: Data, gameIcon: [UInt8], saveStates: [SaveState], lastPlayed: Date) {
         self.bookmark = bookmark

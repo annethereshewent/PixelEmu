@@ -33,6 +33,8 @@ struct ImportGamesView: View {
     @Environment(\.modelContext) private var context
     
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
+    let gbaType = UTType(filenameExtension: "gba", conformingTo: .data)
+
     var body: some View {
         ZStack {
             VStack {
@@ -65,57 +67,52 @@ struct ImportGamesView: View {
             .foregroundColor(Colors.primaryColor)
             .fileImporter(
                 isPresented: $showRomDialog,
-                allowedContentTypes: [ndsType.unsafelyUnwrapped],
+                allowedContentTypes: [ndsType!, gbaType!],
                 allowsMultipleSelection: true
             ) { result in
                 do {
-                    if let bios7Data = bios7Data, let bios9Data = bios9Data {
-                        var bios7Bytes: UnsafeBufferPointer<UInt8>!
-                        var bios9Bytes: UnsafeBufferPointer<UInt8>!
-                        var firmwareBytes: UnsafeBufferPointer<UInt8>!
-                        
-                        Array(bios7Data).withUnsafeBufferPointer { ptr in
-                            bios7Bytes = ptr
-                        }
-                        Array(bios9Data).withUnsafeBufferPointer { ptr in
-                            bios9Bytes = ptr
-                        }
-                        
-                        // firmware is unnecessary for this as we are just
-                        // using the emulator to get the game icon.
-                        [].withUnsafeBufferPointer { ptr in
-                            firmwareBytes = ptr
-                        }
-                        
-                        var emu: MobileEmulator!
-                        
-                        let urls = try result.get()
-                        for url in urls {
+                    var emu: MobileEmulator!
 
-                            if url.startAccessingSecurityScopedResource() {
-                                defer {
-                                    url.stopAccessingSecurityScopedResource()
-                                }
-                                let data = try Data(contentsOf: url)
-                                
+                    let urls = try result.get()
+                    for url in urls {
+                        if url.startAccessingSecurityScopedResource() {
+                            defer {
+                                url.stopAccessingSecurityScopedResource()
+                            }
+                            let data = try Data(contentsOf: url)
+
+                            if url.pathExtension == "nds" {
                                 var romPtr: UnsafeBufferPointer<UInt8>!
-                                
+
                                 let dataArr = Array(data)
-                                
+
                                 dataArr.withUnsafeBufferPointer { ptr in
                                     romPtr = ptr
                                 }
-                                
+
                                 if emu == nil {
-                                    emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr)
+                                    if let bios7Data = bios7Data, let bios9Data = bios9Data {
+                                        var bios7Bytes: UnsafeBufferPointer<UInt8>!
+                                        var bios9Bytes: UnsafeBufferPointer<UInt8>!
+                                        var firmwareBytes: UnsafeBufferPointer<UInt8>!
+
+                                        Array(bios7Data).withUnsafeBufferPointer { ptr in
+                                            bios7Bytes = ptr
+                                        }
+                                        Array(bios9Data).withUnsafeBufferPointer { ptr in
+                                            bios9Bytes = ptr
+                                        }
+
+                                        emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr)
+                                    }
                                 } else {
                                     emu.reloadRom(romPtr)
                                 }
-                                
+
                                 emu.loadIcon()
-                                
+
                                 romData = data
-                                
+
                                 gameName = String(url
                                     .relativeString
                                     .split(separator: "/")
@@ -124,7 +121,7 @@ struct ImportGamesView: View {
                                 )
                                 .removingPercentEncoding
                                 .unsafelyUnwrapped
-                                
+
                                 if let game = Game.storeGame(
                                     gameName: gameName,
                                     data: romData!,
@@ -137,13 +134,22 @@ struct ImportGamesView: View {
                                     }
                                 }
                             }
+                        } else {
+                            if let game = GBAGame.storeGame(
+                                gameName: gameName,
+                                data: romData!,
+                                url: url
+                            ) {
+                                if !gameNamesSet.contains(gameName) {
+                                    context.insert(game)
+                                    gameNamesSet.insert(gameName)
+                                }
+                            }
                         }
-                        // once done processing all games, return back to library view
-                        currentView = .library
-                        emu = nil
-                    } else {
-                        showErrorMessage = true
                     }
+                    // once done processing all games, return back to library view
+                    currentView = .library
+                    emu = nil
                 } catch {
                     showErrorMessage = true
                     print(error)
