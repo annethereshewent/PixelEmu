@@ -26,8 +26,8 @@ struct LibraryView: View {
     @State private var recentColor = Colors.accentColor
     @State private var allColor = Colors.primaryColor
     @State private var filter = LibraryFilter.recent
-    @State private var currentLibrary = LibraryType.nds
 
+    @Binding var currentLibrary: LibraryType
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?

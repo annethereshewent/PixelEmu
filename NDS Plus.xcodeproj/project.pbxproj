@@ -51,6 +51,7 @@
 		E8BBBC802CF9847B0065EF4E /* GBAListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC7F2CF9847B0065EF4E /* GBAListView.swift */; };
 		E8BBBC822CF9870D0065EF4E /* GBAEntryViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC812CF9870D0065EF4E /* GBAEntryViewWrapper.swift */; };
 		E8BBBC842CF987790065EF4E /* GBAEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC832CF987790065EF4E /* GBAEntryView.swift */; };
+		E8BBBC862CFA71A20065EF4E /* ArtworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
 		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
@@ -144,6 +145,7 @@
 		E8BBBC7F2CF9847B0065EF4E /* GBAListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAListView.swift; sourceTree = "<group>"; };
 		E8BBBC812CF9870D0065EF4E /* GBAEntryViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAEntryViewWrapper.swift; sourceTree = "<group>"; };
 		E8BBBC832CF987790065EF4E /* GBAEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAEntryView.swift; sourceTree = "<group>"; };
+		E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtworkService.swift; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
 		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
 		E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = drastic_bios_readme.txt; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_readme.txt"; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 				E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */,
 				E8A214EC2CD052B700173E06 /* OrientationInfo.swift */,
 				E89681A62CD440CF00F7A316 /* StateManager.swift */,
+				E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -694,6 +697,7 @@
 				E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */,
 				E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */,
 				E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */,
+				E8BBBC862CFA71A20065EF4E /* ArtworkService.swift in Sources */,
 				E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */,
 				E8EE5D932CC238F500CD77B6 /* NavigationBarView.swift in Sources */,
 				E8A214EF2CD0553800173E06 /* DualScreenView.swift in Sources */,

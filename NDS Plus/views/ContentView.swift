@@ -48,9 +48,13 @@ struct ContentView: View {
     @State private var gameName = ""
     @State private var backupFile: BackupFile? = nil
 
+    @State private var currentLibrary = LibraryType.nds
+
     @State private var buttonEventDict: [ButtonMapping:ButtonEvent] = getDefaultMappings()
 
     @State private var isMenuPresented = false
+
+    @State private var loading = false
 
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
@@ -146,6 +150,7 @@ struct ContentView: View {
                     switch currentView {
                     case .library:
                         LibraryView(
+                            currentLibrary: $currentLibrary,
                             romData: $romData,
                             bios7Data: $bios7Data,
                             bios9Data: $bios9Data,
@@ -172,7 +177,9 @@ struct ContentView: View {
                             emulator: $emulator,
                             gameName: $gameName,
                             currentView: $currentView,
-                            themeColor: $themeColor
+                            themeColor: $themeColor,
+                            loading: $loading,
+                            currentLibrary: $currentLibrary
                         )
                     case .saveManagement:
                         SaveManagementView(
@@ -195,6 +202,9 @@ struct ContentView: View {
                             gameController: $gameController,
                             buttonEventDict: $buttonEventDict
                         )
+                    }
+                    if loading {
+                        ProgressView()
                     }
                     Spacer()
                     NavigationBarView(currentView: $currentView, themeColor: $themeColor)

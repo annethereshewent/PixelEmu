@@ -18,19 +18,29 @@ struct GameEntryView: View {
             Button {
                 callback()
             } label: {
-                ZStack {
-                    Image("Cartridge")
+                if let artwork = game.albumArt {
+                    let uiImage = UIImage(data: artwork)
+                    Image(uiImage: uiImage!)
                         .resizable()
                         .frame(width: 80, height: 80)
-                    VStack {
-                        if let image = graphicsParser.fromBytes(bytes: Array(game.gameIcon), width: 32, height: 32) {
-                            let uiImage = UIImage(cgImage: image)
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .frame(width: 64, height: 64)
+                        .scaledToFill()
+                } else {
+                    ZStack {
+                        Image("Cartridge")
+                            .resizable()
+                            .frame(width: 80, height: 80)
+                        VStack {
+                            if let image = graphicsParser.fromBytes(bytes: Array(game.gameIcon), width: 32, height: 32) {
+                                let uiImage = UIImage(cgImage: image)
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .frame(width: 64, height: 64)
+                            } else {
+                                Text("NDS")
+                            }
                         }
+                        Spacer()
                     }
-                    Spacer()
                 }
             }
             Text(game.gameName.replacing(".nds", with: ""))

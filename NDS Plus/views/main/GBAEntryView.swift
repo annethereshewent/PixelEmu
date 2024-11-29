@@ -19,16 +19,24 @@ struct GBAEntryView: View {
             Button {
                 callback()
             } label: {
-                ZStack {
-                    Image("Cartridge")
+                if let albumArt = game.albumArt {
+                    let uiImage = UIImage(data: albumArt)
+                    Image(uiImage: uiImage!)
                         .resizable()
                         .frame(width: 80, height: 80)
-                        .background(themeColor)
-                    VStack {
-                       Text("GBA")
-                            .font(.custom("Departure Mono", size: 14))
+                        .scaledToFill()
+                } else {
+                    ZStack {
+                        Image("Cartridge")
+                            .resizable()
+                            .frame(width: 80, height: 80)
+                            .background(themeColor)
+                        VStack {
+                            Text("GBA")
+                                .font(.custom("Departure Mono", size: 14))
+                        }
+                        Spacer()
                     }
-                    Spacer()
                 }
             }
             Text(game.gameName.replacing(".gba", with: ""))
