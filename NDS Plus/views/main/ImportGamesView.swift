@@ -17,6 +17,7 @@ struct ImportGamesView: View {
 
     private let artworkService = ArtworkService()
     @Query private var games: [Game]
+    @Query private var gbaGames: [GBAGame]
 
     @Environment(\.modelContext) private var context
 
@@ -179,6 +180,10 @@ struct ImportGamesView: View {
             }
             .onAppear() {
                 for game in games {
+                    gameNamesSet.insert(game.gameName)
+                }
+
+                for game in gbaGames {
                     gameNamesSet.insert(game.gameName)
                 }
             }
