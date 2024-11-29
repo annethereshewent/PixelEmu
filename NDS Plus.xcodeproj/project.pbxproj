@@ -47,6 +47,7 @@
 		E8BBBC682CF96AD10065EF4E /* GBAGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC672CF96AD10065EF4E /* GBAGame.swift */; };
 		E8BBBC6A2CF96AEA0065EF4E /* DSLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC692CF96AEA0065EF4E /* DSLibraryView.swift */; };
 		E8BBBC6C2CF96CAB0065EF4E /* GBALibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC6B2CF96CAB0065EF4E /* GBALibraryView.swift */; };
+		E8BBBC7E2CF981510065EF4E /* GBAEmulatorMobile in Frameworks */ = {isa = PBXBuildFile; productRef = E8BBBC7D2CF981510065EF4E /* GBAEmulatorMobile */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
 		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
@@ -165,6 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8BBBC7E2CF981510065EF4E /* GBAEmulatorMobile in Frameworks */,
 				E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */,
 				2870F371F32611D7E78586B0 /* Pods_NDS_Plus.framework in Frameworks */,
 			);
@@ -429,6 +431,7 @@
 			name = "NDS Plus";
 			packageProductDependencies = (
 				E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */,
+				E8BBBC7D2CF981510065EF4E /* GBAEmulatorMobile */,
 			);
 			productName = "NDS Plus";
 			productReference = E806E9F42C97E1B10081D3E8 /* NDS+.app */;
@@ -507,6 +510,7 @@
 			mainGroup = E806E9EB2C97E1B10081D3E8;
 			packageReferences = (
 				E806EA2E2C991CF70081D3E8 /* XCLocalSwiftPackageReference "../../rust-projects/ds-emulator/mobile/DSEmulatorMobile" */,
+				E8BBBC7C2CF981510065EF4E /* XCLocalSwiftPackageReference "../../rust-projects/gba-emulator/mobile/GBAEmulatorMobile" */,
 			);
 			productRefGroup = E806E9F52C97E1B10081D3E8 /* Products */;
 			projectDirPath = "";
@@ -1064,12 +1068,20 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../rust-projects/ds-emulator/mobile/DSEmulatorMobile";
 		};
+		E8BBBC7C2CF981510065EF4E /* XCLocalSwiftPackageReference "../../rust-projects/gba-emulator/mobile/GBAEmulatorMobile" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../rust-projects/gba-emulator/mobile/GBAEmulatorMobile";
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DSEmulatorMobile;
+		};
+		E8BBBC7D2CF981510065EF4E /* GBAEmulatorMobile */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GBAEmulatorMobile;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
