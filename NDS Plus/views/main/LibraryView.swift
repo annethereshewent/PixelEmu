@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DSEmulatorMobile
+import GBAEmulatorMobile
 import SwiftData
 
 let TWELVE_HOURS = 60 * 60 * 12
@@ -34,9 +35,11 @@ struct LibraryView: View {
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
     @Binding var emulator: MobileEmulator?
+    @Binding var gbaEmulator: GBAEmulator?
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
     @Binding var game: Game?
+    @Binding var gbaGame: GBAGame?
     @Binding var themeColor: Color
 
     var libraryTypeText: String {
@@ -75,7 +78,20 @@ struct LibraryView: View {
                     themeColor: $themeColor
                 )
             } else {
-                GBALibraryView()
+                GBALibraryView(
+                    recentColor: $recentColor,
+                    allColor: $allColor,
+                    filter: $filter,
+                    romData: $romData,
+                    biosData: $bios7Data,
+                    isRunning: $isRunning,
+                    workItem: $workItem,
+                    emulator: $gbaEmulator,
+                    gameUrl: $gameUrl,
+                    path: $path,
+                    game: $gbaGame,
+                    themeColor: $themeColor
+                )
             }
         }
         .onAppear() {

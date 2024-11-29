@@ -42,7 +42,7 @@ struct ImportGamesView: View {
                 HStack {
                     Image("Import Cartridge")
                         .foregroundColor(themeColor)
-                    Text("Only \".nds\" files allowed")
+                    Text("Only .nds, .gba supported")
                         .frame(width: 200, height: 60)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.custom("Departure Mono", size: 20))
@@ -72,14 +72,25 @@ struct ImportGamesView: View {
             ) { result in
                 do {
                     var emu: MobileEmulator!
-
                     let urls = try result.get()
                     for url in urls {
+                        print(url)
                         if url.startAccessingSecurityScopedResource() {
                             defer {
                                 url.stopAccessingSecurityScopedResource()
                             }
                             let data = try Data(contentsOf: url)
+
+                            romData = data
+
+                            gameName = String(url
+                                .relativeString
+                                .split(separator: "/")
+                                .last
+                                .unsafelyUnwrapped
+                            )
+                            .removingPercentEncoding
+                            .unsafelyUnwrapped
 
                             if url.pathExtension == "nds" {
                                 var romPtr: UnsafeBufferPointer<UInt8>!
@@ -103,6 +114,10 @@ struct ImportGamesView: View {
                                             bios9Bytes = ptr
                                         }
 
+                                        Array([]).withUnsafeBufferPointer { ptr in
+                                            firmwareBytes = ptr
+                                        }
+
                                         emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr)
                                     }
                                 } else {
@@ -110,17 +125,6 @@ struct ImportGamesView: View {
                                 }
 
                                 emu.loadIcon()
-
-                                romData = data
-
-                                gameName = String(url
-                                    .relativeString
-                                    .split(separator: "/")
-                                    .last
-                                    .unsafelyUnwrapped
-                                )
-                                .removingPercentEncoding
-                                .unsafelyUnwrapped
 
                                 if let game = Game.storeGame(
                                     gameName: gameName,
@@ -134,15 +138,16 @@ struct ImportGamesView: View {
                                     }
                                 }
                             }
-                        } else {
-                            if let game = GBAGame.storeGame(
-                                gameName: gameName,
-                                data: romData!,
-                                url: url
-                            ) {
-                                if !gameNamesSet.contains(gameName) {
-                                    context.insert(game)
-                                    gameNamesSet.insert(gameName)
+                            else {
+                                if let game = GBAGame.storeGame(
+                                    gameName: gameName,
+                                    data: data,
+                                    url: url
+                                ) {
+                                    if !gameNamesSet.contains(gameName) {
+                                        context.insert(game)
+                                        gameNamesSet.insert(gameName)
+                                    }
                                 }
                             }
                         }

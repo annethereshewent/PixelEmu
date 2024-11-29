@@ -8,6 +8,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
 import DSEmulatorMobile
+import GBAEmulatorMobile
 import GoogleSignIn
 
 struct ContentView: View {
@@ -29,11 +30,13 @@ struct ContentView: View {
     
     @State private var path = NavigationPath()
     @State private var emulator: MobileEmulator? = nil
+    @State private var gbaEmulator: GBAEmulator? = nil
     @State private var gameUrl: URL? = nil
     
     @State private var user: GIDGoogleUser? = nil
     @State private var cloudService: CloudService? = nil
     @State private var game: Game? = nil
+    @State private var gbaGame: GBAGame? = nil
 
     @State private var currentView: CurrentView = .library
     @State private var isSoundOn: Bool = true
@@ -150,9 +153,11 @@ struct ContentView: View {
                             isRunning: $isRunning,
                             workItem: $workItem,
                             emulator: $emulator,
+                            gbaEmulator: $gbaEmulator,
                             gameUrl: $gameUrl,
                             path: $path,
                             game: $game,
+                            gbaGame: $gbaGame,
                             themeColor: $themeColor
                         )
                     case .importGames:

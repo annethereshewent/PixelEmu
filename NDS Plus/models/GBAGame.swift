@@ -27,6 +27,7 @@ class GBAGame {
         // store bookmark for later use
         if url.startAccessingSecurityScopedResource() {
             if let bookmark = try? url.bookmarkData(options: []) {
+                print(gameName)
                 return GBAGame(gameName: gameName, bookmark: bookmark, lastPlayed: Date.now)
             }
         }
