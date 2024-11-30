@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "gba_buttons@1x.png",
+      "filename" : "gba_buttons_new@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "gba_buttons@2x.png",
+      "filename" : "gba_buttons_new@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "gba_buttons@3x.png",
+      "filename" : "gba_buttons_new@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

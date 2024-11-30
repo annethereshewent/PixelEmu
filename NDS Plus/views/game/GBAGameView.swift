@@ -60,24 +60,6 @@ struct GBAGameView: View {
 
     private let graphicsParser = GraphicsParser()
 
-    private var screenRatio: Float {
-        switch orientationInfo.orientation {
-        case .portrait:
-            if gameController?.controller?.extendedGamepad == nil {
-                return SCREEN_RATIO
-            }
-
-            return FULLSCREEN_RATIO
-        case .landscape:
-            if gameController?.controller?.extendedGamepad == nil {
-                return LANDSCAPE_RATIO
-            }
-
-            return LANDSCAPE_FULLSCREEN_RATIO
-        }
-
-    }
-
     private func goHome() {
         // TODO
         // emulator?.setPause(true)
@@ -243,12 +225,20 @@ struct GBAGameView: View {
                 } else {
                     Color.black
                 }
-                VStack(spacing: 0) {
-                    GameScreenView(image: $image)
-                        .frame(
-                            width: CGFloat(GBA_SCREEN_WIDTH) * CGFloat(screenRatio),
-                            height: CGFloat(GBA_SCREEN_HEIGHT) * CGFloat(screenRatio)
-                        )
+                VStack {
+                    Spacer()
+                    Spacer()
+                    GBAScreenViewWrapper(
+                        gameController: $gameController,
+                        image: $image,
+                        emulator: $emulator,
+                        buttonStarted: $buttonStarted,
+                        audioManager: $audioManager,
+                        isSoundOn: $isSoundOn,
+                        isHoldButtonsPresented: $isHoldButtonsPresented,
+                        heldButtons: $heldButtons,
+                        themeColor: $themeColor
+                    )
                     GBATouchControlsView(
                         emulator: $emulator,
                         audioManager: $audioManager,

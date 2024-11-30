@@ -31,7 +31,7 @@ struct GBATouchControlsView: View {
     @EnvironmentObject var orientationInfo: OrientationInfo
 
     // for resizing images proportionately
-    private let buttonImage = UIImage(named: "Buttons")
+    private let buttonImage = UIImage(named: "GBA Buttons")
     private let controlPadImage = UIImage(named: "Control Pad")
     private let miscButtons = UIImage(named: "Buttons Misc")
     private let redButton = UIImage(named: "Red Button")
@@ -136,7 +136,6 @@ struct GBATouchControlsView: View {
     }
 
     private func handleButtons(point: CGPoint) {
-        print("you pressed \(point)")
         self.handleInput(point: point, entries: buttons)
     }
 
@@ -229,10 +228,10 @@ struct GBATouchControlsView: View {
     private func recalculateButtons() {
         let imageWidth = buttonImage!.size.width * buttonScale
         let imageHeight = buttonImage!.size.height * buttonScale
-        let width = imageHeight * 0.35
-        let height = imageHeight * 0.35
+        let width = imageHeight * 0.61
+        let height = imageHeight * 0.61
 
-        let aButton = CGRect(x: imageHeight * 0.69, y: imageHeight * 0.35, width: width, height: height)
+        let aButton = CGRect(x: imageWidth * 0.55, y: 0, width: width, height: height)
         let bButton = CGRect(x: 0, y: imageHeight * 0.37, width: width, height: height)
 
         buttons[GBAButtonEvent.ButtonA] = aButton

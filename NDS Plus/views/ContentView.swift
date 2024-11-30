@@ -296,7 +296,15 @@ struct ContentView: View {
             
             bios7Loaded = defaults.bool(forKey: "bios7Loaded")
             bios9Loaded = defaults.bool(forKey: "bios9Loaded")
-            
+
+            if let currentLibraryVal = defaults.value(forKey: "currentLibrary") as? Int {
+                if currentLibraryVal == 0 {
+                    currentLibrary = .nds
+                } else if currentLibraryVal == 1 {
+                    currentLibrary = .gba
+                }
+            }
+
             if let themeColor = defaults.value(forKey: "themeColor") as? Color {
                 self.themeColor = themeColor
             }

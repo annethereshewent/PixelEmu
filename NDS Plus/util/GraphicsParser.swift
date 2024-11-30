@@ -20,6 +20,9 @@ let FULLSCREEN_RATIO: Float = 1.6
 let LANDSCAPE_RATIO: Float = 1.20
 let LANDSCAPE_FULLSCREEN_RATIO: Float = 1.70
 
+let GBA_SCREEN_RATIO: Float = 1.6
+let GBA_FULLSCREEN_RATIO: Float = 1.8
+
 class GraphicsParser {
     func fromPointer(ptr: UnsafePointer<UInt8>) -> CGImage? {
         let buffer = UnsafeBufferPointer(start: ptr, count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)

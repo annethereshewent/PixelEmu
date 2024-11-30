@@ -22,6 +22,9 @@ enum LibraryType {
     case gba
 }
 
+let NDS_DEFAULT = 0
+let GBA_DEFAULT = 1
+
 struct LibraryView: View {
     @State private var recentColor = Colors.accentColor
     @State private var allColor = Colors.primaryColor
@@ -53,10 +56,15 @@ struct LibraryView: View {
     var body: some View {
         VStack {
             Button("\(libraryTypeText) Library") {
+                let defaults = UserDefaults.standard
                 if currentLibrary == .nds {
                     currentLibrary = .gba
+
+                    defaults.set(GBA_DEFAULT, forKey: "currentLibrary")
                 } else {
                     currentLibrary = .nds
+
+                    defaults.set(NDS_DEFAULT, forKey: "currentLibrary")
                 }
             }
             .fontWeight(.bold)
