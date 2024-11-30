@@ -68,10 +68,10 @@ struct GBAListView: View {
         if let game = game {
             self.game = game
             game.lastPlayed = Date.now
-            path.append("GameView")
+            path.append("GBAGameView")
         } else if let game = self.game {
             game.lastPlayed = Date.now
-            path.append("GameView")
+            path.append("GBAGameView")
         } else {
             showGameError = true
         }
@@ -98,7 +98,41 @@ struct GBAListView: View {
                                 themeColor: $themeColor,
                                 game: game
                             ) {
-                                // do something
+                                var isStale = false
+                                do {
+                                    let url = try URL(
+                                        resolvingBookmarkData: game.bookmark,
+                                        options: [.withoutUI],
+                                        relativeTo: nil,
+                                        bookmarkDataIsStale: &isStale
+                                    )
+                                    if url.startAccessingSecurityScopedResource() {
+                                        defer {
+                                            url.stopAccessingSecurityScopedResource()
+                                        }
+
+                                        // do some other shit here
+                                        let data = try Data(contentsOf: url)
+
+                                        // now load the rom and bios
+                                        if let biosData = biosData {
+                                            emulator = GBAEmulator()
+
+                                            romData = data
+
+                                            if self.game != nil && self.game! == game {
+                                                updateLastPlayed()
+                                                showResumeDialog = true
+                                            } else {
+                                                startNewGame(game)
+                                            }
+                                        }
+
+
+                                    }
+                                } catch {
+                                    print(error)
+                                }
                             }
                         }
                     }
@@ -137,7 +171,7 @@ struct GBAListView: View {
                 if resumeGame {
                     // TODO:
                     // emulator?.setPause(false)
-                    path.append("GameView")
+                    path.append("GBAGameView")
                 } else {
                     startNewGame()
                 }

@@ -17,10 +17,12 @@ struct ContentView: View {
 
     @State private var bios7Data: Data?
     @State private var bios9Data: Data?
-    
-    @State private var bios7Loaded: Bool = false
-    @State private var bios9Loaded: Bool = false
-    
+    @State private var gbaBiosData: Data?
+
+    @State private var bios7Loaded = false
+    @State private var bios9Loaded = false
+    @State private var gbaBiosLoaded = false
+
     @State private var firmwareData: Data?
     @State private var romData: Data? = nil
     
@@ -40,11 +42,15 @@ struct ContentView: View {
 
     @State private var currentView: CurrentView = .library
     @State private var isSoundOn: Bool = true
-    @State var audioManager: AudioManager? = nil
+    @State private var audioManager: AudioManager? = nil
     
     @State private var gameController: GameController? = GameController(closure:  { _ in })
     @State private var topImage: CGImage?
     @State private var bottomImage: CGImage?
+
+    @State private var gbaImage: CGImage? = nil
+
+
     @State private var gameName = ""
     @State private var backupFile: BackupFile? = nil
 
@@ -63,9 +69,10 @@ struct ContentView: View {
         bios9Data = nil
         firmwareData = nil
         
-        self.checkForBinaries(currentFile: CurrentFile.bios7)
-        self.checkForBinaries(currentFile: CurrentFile.bios9)
-        self.checkForBinaries(currentFile: CurrentFile.firmware)
+        self.checkForBinaries(currentFile: .bios7)
+        self.checkForBinaries(currentFile: .bios9)
+        self.checkForBinaries(currentFile: .firmware)
+        self.checkForBinaries(currentFile: .gba)
     }
 
     static func getDefaultMappings() -> [ButtonMapping:ButtonEvent] {
@@ -134,6 +141,21 @@ struct ContentView: View {
                         _firmwareData = State(initialValue: data)
                     }
                 }
+            case .gba:
+                if let fileUrl = URL(string: "gba_bios.bin", relativeTo: applicationUrl) {
+                    if let data = try? Data(contentsOf: fileUrl) {
+                        _gbaBiosData = State(initialValue: data)
+                        _gbaBiosLoaded = State(initialValue: true)
+                    } else {
+                        let filePath = Bundle.main.path(forResource: "gba_bios", ofType: "bin")!
+                        do {
+                            let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
+                            _gbaBiosData = State(initialValue: data)
+                        } catch {
+                            print(error)
+                        }
+                    }
+                }
             }
         }
     }
@@ -154,6 +176,7 @@ struct ContentView: View {
                             romData: $romData,
                             bios7Data: $bios7Data,
                             bios9Data: $bios9Data,
+                            gbaBiosData: $gbaBiosData,
                             firmwareData: $firmwareData,
                             isRunning: $isRunning,
                             workItem: $workItem,
@@ -192,12 +215,14 @@ struct ContentView: View {
                             bios7Data: $bios7Data,
                             bios9Data: $bios9Data,
                             firmwareData: $firmwareData,
+                            gbaBiosData: $gbaBiosData,
                             loggedInCloud: $loggedInCloud,
                             user: $user,
                             cloudService: $cloudService,
                             isSoundOn: $isSoundOn,
                             bios7Loaded: $bios7Loaded,
                             bios9Loaded: $bios9Loaded,
+                            gbaBiosLoaded: $gbaBiosLoaded,
                             themeColor: $themeColor,
                             gameController: $gameController,
                             buttonEventDict: $buttonEventDict
@@ -234,6 +259,26 @@ struct ContentView: View {
                         topImage: $topImage,
                         bottomImage: $bottomImage,
                         buttonEventDict: $buttonEventDict
+                    )
+                } else if view == "GBAGameView" {
+                    GBAGameView(
+                        isMenuPresented: $isMenuPresented,
+                        emulator: $gbaEmulator,
+                        biosData: $gbaBiosData,
+                        romData: $romData,
+                        gameUrl: $gameUrl,
+                        user: $user,
+                        cloudService: $cloudService,
+                        game: $gbaGame,
+                        isSoundOn: $isSoundOn,
+                        themeColor: $themeColor,
+                        gameName: $gameName,
+                        backupFile: $backupFile,
+                        gameController: $gameController,
+                        audioManager: $audioManager,
+                        isRunning: $isRunning,
+                        workItem: $workItem,
+                        image: $gbaImage
                     )
                 }
             }

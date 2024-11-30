@@ -31,6 +31,7 @@ struct LibraryView: View {
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
+    @Binding var gbaBiosData: Data?
     @Binding var firmwareData: Data?
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
@@ -83,7 +84,7 @@ struct LibraryView: View {
                     allColor: $allColor,
                     filter: $filter,
                     romData: $romData,
-                    biosData: $bios7Data,
+                    biosData: $gbaBiosData,
                     isRunning: $isRunning,
                     workItem: $workItem,
                     emulator: $gbaEmulator,

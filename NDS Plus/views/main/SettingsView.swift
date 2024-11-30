@@ -14,6 +14,7 @@ struct SettingsView: View {
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
+    @Binding var gbaBiosData: Data?
     @Binding var loggedInCloud: Bool
     @Binding var user: GIDGoogleUser?
     @Binding var cloudService: CloudService?
@@ -21,7 +22,8 @@ struct SettingsView: View {
     
     @Binding var bios7Loaded: Bool
     @Binding var bios9Loaded: Bool
-    
+    @Binding var gbaBiosLoaded: Bool
+
     @Binding var themeColor: Color
 
     @Binding var gameController: GameController?
@@ -50,6 +52,10 @@ struct SettingsView: View {
             if let url = URL(string: "firmware.bin", relativeTo: location) {
                 try? data.write(to: url)
             }
+        case .gba:
+            if let url = URL(string: "gba_bios.bin", relativeTo: location) {
+                try? data.write(to: url)
+            }
         }
     }
 
@@ -59,7 +65,7 @@ struct SettingsView: View {
                 .font(.custom("Departure Mono", size: 24))
                 .foregroundColor(Colors.primaryColor)
             ScrollView {
-                Text("Optional binary files")
+                Text("Optional NDS binaries")
                     .padding(.bottom, 20)
                 HStack {
                     Button("Bios 7") {
@@ -101,6 +107,25 @@ struct SettingsView: View {
                             .padding(.trailing, 20)
                     }
                 }
+
+                Text("Optional GBA binary")
+                    .padding(.bottom, 20)
+                    .padding(.top, 20)
+
+                HStack {
+                    Button("Bios") {
+                        showFileBrowser = true
+                        currentFile = .gba
+                    }
+                    .padding(.leading, 20)
+                    Spacer()
+                    if gbaBiosLoaded {
+                        Image(systemName: "checkmark")
+                            .foregroundColor(.green)
+                            .padding(.trailing, 20)
+                    }
+                }
+
                 HStack {
                     Spacer()
                     ColorPicker("Change theme color", selection: $themeColor)
@@ -175,6 +200,11 @@ struct SettingsView: View {
                                 defaults.set(bios9Loaded, forKey: "bios9Loaded")
                             case .firmware:
                                 firmwareData = data
+                            case .gba:
+                                gbaBiosData = data
+                                gbaBiosLoaded = true
+
+                                defaults.set(gbaBiosLoaded, forKey: "gbaBiosLoaded")
                             }
                             if let location = try? FileManager.default.url(
                                 for: .applicationSupportDirectory,

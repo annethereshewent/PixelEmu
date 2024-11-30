@@ -52,6 +52,8 @@
 		E8BBBC822CF9870D0065EF4E /* GBAEntryViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC812CF9870D0065EF4E /* GBAEntryViewWrapper.swift */; };
 		E8BBBC842CF987790065EF4E /* GBAEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC832CF987790065EF4E /* GBAEntryView.swift */; };
 		E8BBBC862CFA71A20065EF4E /* ArtworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */; };
+		E8BBBC882CFA91090065EF4E /* gba_bios.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8BBBC872CFA91090065EF4E /* gba_bios.bin */; };
+		E8BBBC922CFA9A820065EF4E /* GBAGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC912CFA9A820065EF4E /* GBAGameView.swift */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
 		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
@@ -146,6 +148,8 @@
 		E8BBBC812CF9870D0065EF4E /* GBAEntryViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAEntryViewWrapper.swift; sourceTree = "<group>"; };
 		E8BBBC832CF987790065EF4E /* GBAEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAEntryView.swift; sourceTree = "<group>"; };
 		E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtworkService.swift; sourceTree = "<group>"; };
+		E8BBBC872CFA91090065EF4E /* gba_bios.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = gba_bios.bin; sourceTree = "<group>"; };
+		E8BBBC912CFA9A820065EF4E /* GBAGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAGameView.swift; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
 		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
 		E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = drastic_bios_readme.txt; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_readme.txt"; sourceTree = "<group>"; };
@@ -338,6 +342,7 @@
 		E8C245E72CBCAA5000B6DF67 /* bin */ = {
 			isa = PBXGroup;
 			children = (
+				E8BBBC872CFA91090065EF4E /* gba_bios.bin */,
 				E8C245EA2CBCAA7300B6DF67 /* drastic_bios_arm7.bin */,
 				E8C245E92CBCAA7300B6DF67 /* drastic_bios_arm9.bin */,
 				E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */,
@@ -355,6 +360,7 @@
 				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
 				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
 				E8A214EE2CD0553800173E06 /* DualScreenView.swift */,
+				E8BBBC912CFA9A820065EF4E /* GBAGameView.swift */,
 			);
 			path = game;
 			sourceTree = "<group>";
@@ -546,6 +552,7 @@
 				E8BA68212CC49A3900CE7E54 /* DepartureMono.otf in Resources */,
 				E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */,
 				E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */,
+				E8BBBC882CFA91090065EF4E /* gba_bios.bin in Resources */,
 				E8C245ED2CBCAA7300B6DF67 /* drastic_bios_arm7.bin in Resources */,
 				E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */,
 				E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */,
@@ -724,6 +731,7 @@
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
 				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
+				E8BBBC922CFA9A820065EF4E /* GBAGameView.swift in Sources */,
 				E89681AD2CD6D68500F7A316 /* ControllerMappingButtonView.swift in Sources */,
 				E8BBBC802CF9847B0065EF4E /* GBAListView.swift in Sources */,
 				E8C245F62CBDBA4500B6DF67 /* GameMenuView.swift in Sources */,
