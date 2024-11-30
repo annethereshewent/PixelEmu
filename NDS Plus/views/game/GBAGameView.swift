@@ -1,8 +1,8 @@
 //
-//  GameView.swift
+//  GBAGameView.swift
 //  NDS Plus
 //
-//  Created by Anne Castrillon on 9/18/24.
+//  Created by Anne Castrillon on 11/29/24.
 //
 
 import SwiftUI
@@ -249,6 +249,17 @@ struct GBAGameView: View {
                             width: CGFloat(GBA_SCREEN_WIDTH) * CGFloat(screenRatio),
                             height: CGFloat(GBA_SCREEN_HEIGHT) * CGFloat(screenRatio)
                         )
+                    GBATouchControlsView(
+                        emulator: $emulator,
+                        audioManager: $audioManager,
+                        workItem: $workItem,
+                        isRunning: $isRunning,
+                        buttonStarted: $buttonStarted,
+                        gameName: $gameName,
+                        isMenuPresented: $isMenuPresented,
+                        isHoldButtonsPresented: $isHoldButtonsPresented,
+                        heldButtons: $heldButtons
+                    )
                 }
             }
             .sheet(
