@@ -24,7 +24,6 @@ struct GBAGameView: View {
     @State private var homePressed = false
     @State private var controlStickKeyPressed = false
     @State private var shouldGoHome = false
-    @State private var isPaused: Bool = false
 
     @State private var buttonStarted: [GBAButtonEvent:Bool] = [GBAButtonEvent:Bool]()
 
@@ -55,15 +54,18 @@ struct GBAGameView: View {
     @Binding var workItem: DispatchWorkItem?
     @Binding var image: CGImage?
 
-    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    @Binding var isPaused: Bool
 
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
     private let graphicsParser = GraphicsParser()
 
     private func goHome() {
-        // TODO
-        // emulator?.setPause(true)
+        // this isn't working, pause within swift instead of rust for now
+        // emulator?.setPaused(true)
         audioManager?.muteAudio()
+
+        isPaused = true
 
         presentationMode.wrappedValue.dismiss()
     }
@@ -184,27 +186,28 @@ struct GBAGameView: View {
             if let emu = emulator {
                 while true {
                     DispatchQueue.main.sync {
-                        emu.stepFrame()
+                        if !isPaused {
+                            emu.stepFrame()
 
-                        let pixels = emu.getPicturePointer()
+                            let pixels = emu.getPicturePointer()
 
-                        if let image = graphicsParser.fromGBAPointer(ptr: pixels) {
-                            self.image = image
+                            if let image = graphicsParser.fromGBAPointer(ptr: pixels) {
+                                self.image = image
+                            }
+
+                            let audioBufferLength = emu.audioBufferLength()
+
+                            let audioBufferPtr = emu.audioBufferPtr()
+
+                            let playerPaused = audioManager?.playerPaused ?? true
+
+                            if !playerPaused {
+                                let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
+                                self.audioManager?.updateBuffer(samples: audioSamples)
+                            }
+
+                            self.checkSaves()
                         }
-
-
-                        let audioBufferLength = emu.audioBufferLength()
-
-                        let audioBufferPtr = emu.audioBufferPtr()
-
-                        let playerPaused = audioManager?.playerPaused ?? true
-
-                        if !playerPaused {
-                            let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
-                            self.audioManager?.updateBuffer(samples: audioSamples)
-                        }
-
-                        self.checkSaves()
                     }
 
                     if !isRunning {
@@ -226,8 +229,6 @@ struct GBAGameView: View {
                     Color.black
                 }
                 VStack {
-                    Spacer()
-                    Spacer()
                     GBAScreenViewWrapper(
                         gameController: $gameController,
                         image: $image,
@@ -239,6 +240,7 @@ struct GBAGameView: View {
                         heldButtons: $heldButtons,
                         themeColor: $themeColor
                     )
+                    .padding(.top, 120)
                     GBATouchControlsView(
                         emulator: $emulator,
                         audioManager: $audioManager,
@@ -248,8 +250,10 @@ struct GBAGameView: View {
                         gameName: $gameName,
                         isMenuPresented: $isMenuPresented,
                         isHoldButtonsPresented: $isHoldButtonsPresented,
-                        heldButtons: $heldButtons
+                        heldButtons: $heldButtons,
+                        isPaused: $isPaused
                     )
+                    Spacer()
                 }
             }
             .sheet(
@@ -301,8 +305,7 @@ struct GBAGameView: View {
                     if isPaused {
                         if let emu = emulator {
                             isPaused = false
-                            // TODO
-                            // emu.setPause(false)
+                            emu.setPaused(false)
                             if isSoundOn {
                                 audioManager?.resumeAudio()
                             }
@@ -314,8 +317,7 @@ struct GBAGameView: View {
                 case .background:
                     if let emu = emulator {
                         isPaused = true
-                        // TODO
-                        // emu.setPause(true)
+                        emu.setPaused(true)
                         audioManager?.muteAudio()
                     }
                     break

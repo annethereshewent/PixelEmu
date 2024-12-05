@@ -45,6 +45,7 @@ struct LibraryView: View {
     @Binding var game: Game?
     @Binding var gbaGame: GBAGame?
     @Binding var themeColor: Color
+    @Binding var isPaused: Bool
 
     var libraryTypeText: String {
         switch currentLibrary {
@@ -99,7 +100,8 @@ struct LibraryView: View {
                     gameUrl: $gameUrl,
                     path: $path,
                     game: $gbaGame,
-                    themeColor: $themeColor
+                    themeColor: $themeColor,
+                    isPaused: $isPaused
                 )
             }
         }

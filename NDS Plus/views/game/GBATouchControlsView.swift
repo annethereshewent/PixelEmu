@@ -21,6 +21,7 @@ struct GBATouchControlsView: View {
     @Binding var isMenuPresented: Bool
     @Binding var isHoldButtonsPresented: Bool
     @Binding var heldButtons: Set<GBAButtonEvent>
+    @Binding var isPaused: Bool
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
@@ -51,15 +52,15 @@ struct GBATouchControlsView: View {
 
     private var buttonScale: CGFloat {
         if orientationInfo.orientation == .landscape {
-            return 0.90
+            return 1.0
         }
 
         let rect = UIScreen.main.bounds
 
         if rect.height > 852.0 {
-            return 1.3
+            return 1.6
         } else {
-            return 1.05
+            return 1.3
         }
     }
 
@@ -92,6 +93,8 @@ struct GBATouchControlsView: View {
 
         self.buttonStarted[GBAButtonEvent.Start] = false
         self.buttonStarted[GBAButtonEvent.Select] = false
+
+        self.buttonStarted[GBAButtonEvent.ButtonHome] = false
     }
 
     private func handleControlPad(point: CGPoint) {
@@ -151,8 +154,10 @@ struct GBATouchControlsView: View {
     }
 
     private func goHome() {
-        // TODO
-        // emulator?.setPause(true)
+        isPaused = true
+
+        // this isn't working
+        // emulator?.setPaused(true)
         audioManager?.muteAudio()
 
         presentationMode.wrappedValue.dismiss()
@@ -161,7 +166,9 @@ struct GBATouchControlsView: View {
     private func handleMiscButtons(point: CGPoint) {
         for entry in buttonsMisc {
             if entry.value.contains(point) {
-                if let emu = emulator {
+                if entry.key == .ButtonHome {
+                    goHome()
+                } else if let emu = emulator {
                     emu.updateInput(entry.key, true)
                 }
             } else {
@@ -222,6 +229,7 @@ struct GBATouchControlsView: View {
 
         buttonsMisc[GBAButtonEvent.Start] = startButton
         buttonsMisc[GBAButtonEvent.Select] = selectButton
+        buttonsMisc[GBAButtonEvent.ButtonHome] = homeButton
 
     }
 
@@ -298,10 +306,9 @@ struct GBATouchControlsView: View {
                         )
                     Button() {
                         isMenuPresented = !isMenuPresented
-                        // TODO
-//                        if let emu = emulator {
-//                            emu.setPause(isMenuPresented)
-//                        }
+                        if let emu = emulator {
+                            emu.setPaused(isMenuPresented)
+                        }
                     } label: {
                         Image("Red Button")
                             .resizable()

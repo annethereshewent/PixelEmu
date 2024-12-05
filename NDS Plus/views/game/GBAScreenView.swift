@@ -50,6 +50,7 @@ struct GBAScreenView: View {
                 buttons.append("Select")
             case .Start:
                 buttons.append("Start")
+            default: ()
             }
         }
 

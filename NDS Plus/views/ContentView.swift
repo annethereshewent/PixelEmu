@@ -62,6 +62,8 @@ struct ContentView: View {
 
     @State private var loading = false
 
+    @State private var isPaused = false
+
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
     init() {
@@ -186,7 +188,8 @@ struct ContentView: View {
                             path: $path,
                             game: $game,
                             gbaGame: $gbaGame,
-                            themeColor: $themeColor
+                            themeColor: $themeColor,
+                            isPaused: $isPaused
                         )
                     case .importGames:
                         ImportGamesView(
@@ -278,7 +281,8 @@ struct ContentView: View {
                         audioManager: $audioManager,
                         isRunning: $isRunning,
                         workItem: $workItem,
-                        image: $gbaImage
+                        image: $gbaImage,
+                        isPaused: $isPaused
                     )
                 }
             }

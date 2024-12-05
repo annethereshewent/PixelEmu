@@ -23,6 +23,7 @@ struct GBALibraryView: View {
     @Binding var path: NavigationPath
     @Binding var game: GBAGame?
     @Binding var themeColor: Color
+    @Binding var isPaused: Bool
 
     var body: some View {
         VStack {
@@ -73,7 +74,8 @@ struct GBALibraryView: View {
                 path: $path,
                 game: $game,
                 filter: $filter,
-                themeColor: $themeColor
+                themeColor: $themeColor,
+                isPaused: $isPaused
             )
 
         }

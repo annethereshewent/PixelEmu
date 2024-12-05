@@ -23,6 +23,7 @@ struct GBAListView: View {
     @Binding var game: GBAGame?
     @Binding var filter: LibraryFilter
     @Binding var themeColor: Color
+    @Binding var isPaused: Bool
 
     @State private var showResumeDialog = false
     @State private var resumeGame = false
@@ -115,20 +116,16 @@ struct GBAListView: View {
                                         let data = try Data(contentsOf: url)
 
                                         // now load the rom and bios
-                                        if let biosData = biosData {
-                                            emulator = GBAEmulator()
+                                        emulator = GBAEmulator()
 
-                                            romData = data
+                                        romData = data
 
-                                            if self.game != nil && self.game! == game {
-                                                updateLastPlayed()
-                                                showResumeDialog = true
-                                            } else {
-                                                startNewGame(game)
-                                            }
+                                        if self.game != nil && self.game! == game {
+                                            updateLastPlayed()
+                                            showResumeDialog = true
+                                        } else {
+                                            startNewGame(game)
                                         }
-
-
                                     }
                                 } catch {
                                     print(error)
@@ -169,8 +166,10 @@ struct GBAListView: View {
             }
             .onChange(of: settingChanged) {
                 if resumeGame {
-                    // TODO:
-                    // emulator?.setPause(false)
+                    isPaused = false
+
+                    // this isn't working - pause from swift instead of rust for now
+                    // emulator?.setPaused(false)
                     path.append("GBAGameView")
                 } else {
                     startNewGame()
