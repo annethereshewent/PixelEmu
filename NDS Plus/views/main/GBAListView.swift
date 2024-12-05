@@ -64,6 +64,8 @@ struct GBAListView: View {
         workItem?.cancel()
         isRunning = false
 
+        isPaused = false
+
         workItem = nil
 
         if let game = game {
