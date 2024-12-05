@@ -19,16 +19,13 @@ class GBABackupFile {
     }
 
     func saveGame(ptr: UnsafePointer<UInt8>, backupLength: Int) {
-        print("saving da game")
         let buffer = UnsafeBufferPointer(start: ptr, count: backupLength)
 
         let data = Data(buffer)
 
         if let saveUrl = self.saveUrl {
             do {
-                print("saving da game for real")
                 try data.write(to: saveUrl)
-                print("it worked!")
             } catch {
                 print(error)
             }
