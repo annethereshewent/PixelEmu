@@ -46,7 +46,7 @@ struct GBAGameView: View {
     @Binding var themeColor: Color
 
     @Binding var gameName: String
-    @Binding var backupFile: BackupFile?
+    @Binding var backupFile: GBABackupFile?
     @Binding var gameController: GameController?
 
     @Binding var audioManager: AudioManager?
@@ -180,6 +180,13 @@ struct GBAGameView: View {
 
         if !isSoundOn {
             audioManager?.muteAudio()
+        }
+
+        if let emu = emulator, let gameUrl = gameUrl {
+            backupFile = GBABackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupFileSize()))
+            if let ptr = backupFile!.createBackupFile() {
+                emu.loadSave(ptr)
+            }
         }
 
         workItem = DispatchWorkItem {

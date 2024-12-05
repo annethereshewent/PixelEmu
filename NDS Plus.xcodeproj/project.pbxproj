@@ -33,6 +33,7 @@
 		E806EAA02CA3AD080081D3E8 /* SaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */; };
 		E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */; };
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
+		E84B3A8C2D016205003E0061 /* GBABackupFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84B3A8B2D016205003E0061 /* GBABackupFile.swift */; };
 		E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681A62CD440CF00F7A316 /* StateManager.swift */; };
 		E89681A92CD561A100F7A316 /* ControllerMappingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */; };
 		E89681AD2CD6D68500F7A316 /* ControllerMappingButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */; };
@@ -133,6 +134,7 @@
 		E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveManagementView.swift; sourceTree = "<group>"; };
 		E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
+		E84B3A8B2D016205003E0061 /* GBABackupFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBABackupFile.swift; sourceTree = "<group>"; };
 		E89681A62CD440CF00F7A316 /* StateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManager.swift; sourceTree = "<group>"; };
 		E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerMappingsView.swift; sourceTree = "<group>"; };
 		E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerMappingButtonView.swift; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 				E8A214EC2CD052B700173E06 /* OrientationInfo.swift */,
 				E89681A62CD440CF00F7A316 /* StateManager.swift */,
 				E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */,
+				E84B3A8B2D016205003E0061 /* GBABackupFile.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -723,6 +726,7 @@
 				E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */,
 				E8EE5D8A2CC2227600CD77B6 /* ImportGamesView.swift in Sources */,
 				E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */,
+				E84B3A8C2D016205003E0061 /* GBABackupFile.swift in Sources */,
 				E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */,
 				E8A214ED2CD052B700173E06 /* OrientationInfo.swift in Sources */,
 				E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */,

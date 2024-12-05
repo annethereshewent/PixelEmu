@@ -164,7 +164,7 @@ class BackupFile {
         
         return saveEntries
     }
-    
+
     func createBackupFile() -> UnsafeBufferPointer<UInt8>? {
         let saveName = Self.getSaveName(gameUrl: gameUrl)
 

@@ -53,6 +53,7 @@ struct ContentView: View {
 
     @State private var gameName = ""
     @State private var backupFile: BackupFile? = nil
+    @State private var gbaBackupFile: GBABackupFile? = nil
 
     @State private var currentLibrary = LibraryType.nds
 
@@ -276,7 +277,7 @@ struct ContentView: View {
                         isSoundOn: $isSoundOn,
                         themeColor: $themeColor,
                         gameName: $gameName,
-                        backupFile: $backupFile,
+                        backupFile: $gbaBackupFile,
                         gameController: $gameController,
                         audioManager: $audioManager,
                         isRunning: $isRunning,

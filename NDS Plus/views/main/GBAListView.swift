@@ -121,6 +121,7 @@ struct GBAListView: View {
                                         emulator = GBAEmulator()
 
                                         romData = data
+                                        gameUrl = url
 
                                         if self.game != nil && self.game! == game {
                                             updateLastPlayed()
