@@ -13,6 +13,7 @@ struct GBATouchControlsView: View {
     @Environment(\.presentationMode) var presentationMode
 
     @Binding var emulator: GBAEmulator?
+    @Binding var emulatorCopy: GBAEmulator?
     @Binding var audioManager: AudioManager?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
@@ -159,6 +160,15 @@ struct GBATouchControlsView: View {
         // this isn't working
         // emulator?.setPaused(true)
         audioManager?.muteAudio()
+
+        workItem?.cancel()
+        workItem = nil
+
+        // this is a hack, otherwise when resuming game nothing seems to work for some reason
+        // seems like it's related to rust in some way and how it handles things.
+        // TODO: dig into this further
+        emulatorCopy = emulator
+        emulator = nil
 
         presentationMode.wrappedValue.dismiss()
     }

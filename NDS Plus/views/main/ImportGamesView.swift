@@ -137,7 +137,7 @@ struct ImportGamesView: View {
                                     ) {
                                         // check if album artwork exists before inserting game into DB
                                         if !gameNamesSet.contains(gameName) {
-                                            if let artwork = await artworkService.fetchArtwork(for: gameName) {
+                                            if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: DS_ID) {
                                                 game.albumArt = artwork
                                             }
                                             context.insert(game)
@@ -153,7 +153,7 @@ struct ImportGamesView: View {
                                         url: url
                                     ) {
                                         if !gameNamesSet.contains(gameName) {
-                                            if let artwork = await artworkService.fetchArtwork(for: gameName) {
+                                            if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: GBA_ID) {
                                                 game.albumArt = artwork
                                             }
                                             context.insert(game)

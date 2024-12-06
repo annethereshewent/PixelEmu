@@ -33,6 +33,7 @@ struct ContentView: View {
     @State private var path = NavigationPath()
     @State private var emulator: MobileEmulator? = nil
     @State private var gbaEmulator: GBAEmulator? = nil
+    @State private var gbaEmuCopy: GBAEmulator? = nil
     @State private var gameUrl: URL? = nil
     
     @State private var user: GIDGoogleUser? = nil
@@ -268,6 +269,7 @@ struct ContentView: View {
                     GBAGameView(
                         isMenuPresented: $isMenuPresented,
                         emulator: $gbaEmulator,
+                        emulatorCopy: $gbaEmuCopy,
                         biosData: $gbaBiosData,
                         romData: $romData,
                         gameUrl: $gameUrl,

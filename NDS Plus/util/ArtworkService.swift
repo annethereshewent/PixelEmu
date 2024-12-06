@@ -7,6 +7,9 @@
 
 import Foundation
 
+let GBA_ID = 12
+let DS_ID = 15
+
 class GameInfo : Decodable {
     var success: Bool
     var medias: [Media]?
@@ -33,11 +36,12 @@ class Media : Decodable {
 class ArtworkService {
 
     private let jsonDecoder = JSONDecoder()
-    func fetchArtwork(for gameName: String) async -> Data? {
-        let query = URLQueryItem(name: "name", value: gameName)
+    func fetchArtwork(for gameName: String, systemId: Int) async -> Data? {
+        let gameName = URLQueryItem(name: "name", value: gameName)
+        let systemId = URLQueryItem(name: "systemId", value: String(systemId))
 
         var urlComponents = URLComponents(string: "https://nds-plus-service.onrender.com/album-artwork")
-        urlComponents?.queryItems = [query]
+        urlComponents?.queryItems = [gameName, systemId]
 
         let url = urlComponents!.url!
 

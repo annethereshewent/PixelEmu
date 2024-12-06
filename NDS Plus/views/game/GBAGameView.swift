@@ -36,6 +36,7 @@ struct GBAGameView: View {
 
     @Binding var isMenuPresented: Bool
     @Binding var emulator: GBAEmulator?
+    @Binding var emulatorCopy: GBAEmulator?
     @Binding var biosData: Data?
     @Binding var romData: Data?
     @Binding var gameUrl: URL?
@@ -48,7 +49,6 @@ struct GBAGameView: View {
     @Binding var gameName: String
     @Binding var backupFile: GBABackupFile?
     @Binding var gameController: GameController?
-
     @Binding var audioManager: AudioManager?
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
@@ -66,8 +66,10 @@ struct GBAGameView: View {
         audioManager?.muteAudio()
 
         isPaused = true
+        workItem?.cancel()
+        workItem = nil
 
-        presentationMode.wrappedValue.dismiss()
+        // presentationMode.wrappedValue.dismiss()
     }
 
     private func checkSaves() {
@@ -152,7 +154,28 @@ struct GBAGameView: View {
             }
         }
     }
-    private func run() async {
+
+    private func resumeGame() {
+        if let emu = emulatorCopy {
+            isPaused = false
+
+            // this is a hack, otherwise things won't work right when resuming game from home screen.
+            // TODO: figure out why
+            emulator = emu
+            emulatorCopy = nil
+            
+            if isSoundOn {
+                audioManager?.resumeAudio()
+            }
+            workItem = DispatchWorkItem {
+                mainGameLoop()
+            }
+
+            DispatchQueue.global().async(execute: workItem!)
+        }
+    }
+
+    private func run() {
         let biosArr = Array(biosData!)
         let romArr = Array(romData!)
 
@@ -189,42 +212,47 @@ struct GBAGameView: View {
             }
         }
 
+
         workItem = DispatchWorkItem {
-            if let emu = emulator {
-                while true {
-                    DispatchQueue.main.sync {
-                        if !isPaused {
-                            emu.stepFrame()
+            mainGameLoop()
+        }
 
-                            let pixels = emu.getPicturePointer()
+        DispatchQueue.global().async(execute: workItem!)
+    }
 
-                            if let image = graphicsParser.fromGBAPointer(ptr: pixels) {
-                                self.image = image
-                            }
+    private func mainGameLoop() {
+        while true {
+            if !isPaused {
+                DispatchQueue.main.sync {
+                    if let emu = emulator {
+                        emu.stepFrame()
 
-                            let audioBufferLength = emu.audioBufferLength()
+                        let pixels = emu.getPicturePointer()
 
-                            let audioBufferPtr = emu.audioBufferPtr()
-
-                            let playerPaused = audioManager?.playerPaused ?? true
-
-                            if !playerPaused {
-                                let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
-                                self.audioManager?.updateBuffer(samples: audioSamples)
-                            }
-
-                            self.checkSaves()
+                        if let image = graphicsParser.fromGBAPointer(ptr: pixels) {
+                            self.image = image
                         }
-                    }
 
-                    if !isRunning {
-                        break
+                        let audioBufferLength = emu.audioBufferLength()
+
+                        let audioBufferPtr = emu.audioBufferPtr()
+
+                        let playerPaused = audioManager?.playerPaused ?? true
+
+                        if !playerPaused {
+                            let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
+                            self.audioManager?.updateBuffer(samples: audioSamples)
+                        }
+
+                        self.checkSaves()
                     }
                 }
             }
+
+            if !isRunning {
+                break
+            }
         }
-        
-        DispatchQueue.global().async(execute: workItem!)
     }
 
     var body: some View {
@@ -250,6 +278,7 @@ struct GBAGameView: View {
                     .padding(.top, 120)
                     GBATouchControlsView(
                         emulator: $emulator,
+                        emulatorCopy: $emulatorCopy,
                         audioManager: $audioManager,
                         workItem: $workItem,
                         isRunning: $isRunning,
@@ -285,17 +314,13 @@ struct GBAGameView: View {
             .onAppear {
                 UIApplication.shared.isIdleTimerDisabled = true
 
-                Task {
-                    if !isRunning {
-                        await self.run()
-                        gameController = GameController(closure: { gameController in
-                            addControllerEventListeners(gameController: gameController)
-                        })
-                    } else {
-                        if isSoundOn {
-                            audioManager?.resumeAudio()
-                        }
-                    }
+                if !isRunning {
+                    run()
+                    gameController = GameController(closure: { gameController in
+                        addControllerEventListeners(gameController: gameController)
+                    })
+                } else {
+                    resumeGame()
                 }
             }
             .onDisappear {
