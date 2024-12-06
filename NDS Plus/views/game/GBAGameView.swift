@@ -45,7 +45,7 @@ struct GBAGameView: View {
     @Binding var game: GBAGame?
     @Binding var isSoundOn: Bool
     @Binding var themeColor: Color
-
+    
     @Binding var gameName: String
     @Binding var backupFile: GBABackupFile?
     @Binding var gameController: GameController?
@@ -55,6 +55,7 @@ struct GBAGameView: View {
     @Binding var image: CGImage?
 
     @Binding var isPaused: Bool
+    @Binding var buttonEventDict: [ButtonMapping:GBAButtonEvent]
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
@@ -89,7 +90,7 @@ struct GBAGameView: View {
         if let emu = emulator {
             let ptr = emu.backupFilePointer();
             let backupLength = Int(emu.backupFileSize())
-
+            // TODO: implement cloud saves for GBA
 //            if let cloudService = cloudService {
 //                if let url = gameUrl {
 //                    let buffer = UnsafeBufferPointer(start: ptr, count: backupLength)
@@ -111,13 +112,14 @@ struct GBAGameView: View {
     }
 
     private func updateEmuInput(_ mapping: ButtonMapping, _ defaultButton: GBAButtonEvent, _ pressed: Bool) {
-//        if let emu = emulator {
-//            if let value = buttonEventDict[mapping] {
-//                emu.updateInput(value, pressed)
-//            } else {
-//                emu.updateInput(defaultButton, pressed)
-//            }
-//        }
+        // TODO: implement buttonEventDict for GBA emulator
+        if let emu = emulator {
+            if let value = buttonEventDict[mapping] {
+                emu.updateInput(value, pressed)
+            } else {
+                emu.updateInput(defaultButton, pressed)
+            }
+        }
     }
 
     private func addControllerEventListeners(gameController: GCController?) {
@@ -297,6 +299,7 @@ struct GBAGameView: View {
             .sheet(
                 isPresented: $isMenuPresented
             ) {
+                // TODO: impleement save states and hold buttons
 //                GBAGameMenuView(
 //                    emulator: $emulator,
 //                    isRunning: $isRunning,
