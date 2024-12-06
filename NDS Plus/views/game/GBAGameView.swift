@@ -62,9 +62,12 @@ struct GBAGameView: View {
     private let graphicsParser = GraphicsParser()
 
     private var screenPadding: CGFloat {
-        if gameController?.controller?.extendedGamepad == nil {
-            return 120
+        if orientationInfo.orientation == .portrait {
+            if gameController?.controller?.extendedGamepad == nil {
+                return 120
+            }
         }
+
 
         return 0
     }

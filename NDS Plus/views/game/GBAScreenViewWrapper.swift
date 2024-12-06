@@ -43,8 +43,14 @@ struct GBAScreenViewWrapper: View {
     }
 
     private var padding: CGFloat {
+        if orientationInfo.orientation == .portrait {
+            if gameController?.controller?.extendedGamepad == nil {
+                return 40.0
+            }
+        }
+
         if gameController?.controller?.extendedGamepad == nil {
-            return 40.0
+            return 25.0
         }
 
         return 0.0
@@ -59,11 +65,19 @@ struct GBAScreenViewWrapper: View {
     }
 
     private var rectangleWidth: CGFloat {
-        return CGFloat(GBA_SCREEN_WIDTH) * 1.8
+        if orientationInfo.orientation == .portrait {
+            return CGFloat(GBA_SCREEN_WIDTH) * 1.8
+        }
+
+        return CGFloat(GBA_SCREEN_WIDTH) * 1.5
     }
 
     private var rectangleHeight: CGFloat {
-        return CGFloat(GBA_SCREEN_HEIGHT) * 2.0
+        if orientationInfo.orientation == .portrait {
+            return CGFloat(GBA_SCREEN_HEIGHT) * 2.0
+        }
+
+        return CGFloat(GBA_SCREEN_WIDTH) * 1.1
     }
 
     private var landscapeLeading: CGFloat {
