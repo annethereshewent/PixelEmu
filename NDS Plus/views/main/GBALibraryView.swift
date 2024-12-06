@@ -27,6 +27,7 @@ struct GBALibraryView: View {
 
     var body: some View {
         VStack {
+            Text("GBA library")
             HStack {
                 Spacer()
 

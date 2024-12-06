@@ -56,21 +56,7 @@ struct LibraryView: View {
 
     var body: some View {
         VStack {
-            Button("\(libraryTypeText) Library") {
-                let defaults = UserDefaults.standard
-                if currentLibrary == .nds {
-                    currentLibrary = .gba
-
-                    defaults.set(GBA_DEFAULT, forKey: "currentLibrary")
-                } else {
-                    currentLibrary = .nds
-
-                    defaults.set(NDS_DEFAULT, forKey: "currentLibrary")
-                }
-            }
-            .fontWeight(.bold)
-            .foregroundColor(themeColor)
-            if currentLibrary == .nds {
+            TabView {
                 DSLibraryView(
                     recentColor: $recentColor,
                     allColor: $allColor,
@@ -87,7 +73,6 @@ struct LibraryView: View {
                     game: $game,
                     themeColor: $themeColor
                 )
-            } else {
                 GBALibraryView(
                     recentColor: $recentColor,
                     allColor: $allColor,
@@ -103,7 +88,8 @@ struct LibraryView: View {
                     themeColor: $themeColor,
                     isPaused: $isPaused
                 )
-            }
+            }.tabViewStyle(.page)
+
         }
         .onAppear() {
             recentColor = themeColor

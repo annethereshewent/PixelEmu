@@ -311,7 +311,7 @@ struct GBAGameView: View {
             .sheet(
                 isPresented: $isMenuPresented
             ) {
-                // TODO: impleement save states and hold buttons
+                // TODO: implement save states and hold buttons
 //                GBAGameMenuView(
 //                    emulator: $emulator,
 //                    isRunning: $isRunning,
