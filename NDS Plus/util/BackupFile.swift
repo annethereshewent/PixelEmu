@@ -165,6 +165,46 @@ class BackupFile {
         return saveEntries
     }
 
+    static func getLocalGBASaves(games: [GBAGame]) -> [GBASaveEntry] {
+        var saveEntries = [GBASaveEntry]()
+        do {
+            var location = try FileManager.default.url(
+                for: .applicationSupportDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            location.appendPathComponent("saves")
+
+            if !FileManager.default.fileExists(atPath: location.path) {
+                try? FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
+            }
+
+            let items = try FileManager.default.contentsOfDirectory(atPath: location.path)
+
+            var gameDictionary = [String:GBAGame]()
+
+            for game in games {
+                if game.gameName.contains(".GBA") {
+                    gameDictionary[game.gameName.replacing(".GBA", with: ".sav")] = game
+                } else {
+                    gameDictionary[game.gameName.replacing(".gba", with: ".sav")] = game
+                }
+            }
+
+            for item in items {
+                if let game = gameDictionary[item] {
+                    saveEntries.append(GBASaveEntry(game: game))
+                }
+            }
+
+        } catch {
+            print(error)
+        }
+
+        return saveEntries
+    }
+
     func createBackupFile() -> UnsafeBufferPointer<UInt8>? {
         let saveName = Self.getSaveName(gameUrl: gameUrl)
 

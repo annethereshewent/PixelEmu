@@ -43,6 +43,9 @@
 		E8A334022CFABD6600765ABB /* GBATouchControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334012CFABD6600765ABB /* GBATouchControlsView.swift */; };
 		E8A334042CFACF8C00765ABB /* GBAScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334032CFACF8C00765ABB /* GBAScreenView.swift */; };
 		E8A334062CFAD03A00765ABB /* GBAScreenViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334052CFAD03A00765ABB /* GBAScreenViewWrapper.swift */; };
+		E8A5893E2D02C01C009D4337 /* DSSaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A5893D2D02C01C009D4337 /* DSSaveManagementView.swift */; };
+		E8A589402D02C030009D4337 /* GBASaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A5893F2D02C030009D4337 /* GBASaveManagementView.swift */; };
+		E8A589422D02C389009D4337 /* GBASaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589412D02C389009D4337 /* GBASaveEntry.swift */; };
 		E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */; };
 		E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */; };
 		E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */; };
@@ -144,6 +147,9 @@
 		E8A334012CFABD6600765ABB /* GBATouchControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBATouchControlsView.swift; sourceTree = "<group>"; };
 		E8A334032CFACF8C00765ABB /* GBAScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAScreenView.swift; sourceTree = "<group>"; };
 		E8A334052CFAD03A00765ABB /* GBAScreenViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAScreenViewWrapper.swift; sourceTree = "<group>"; };
+		E8A5893D2D02C01C009D4337 /* DSSaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSSaveManagementView.swift; sourceTree = "<group>"; };
+		E8A5893F2D02C030009D4337 /* GBASaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBASaveManagementView.swift; sourceTree = "<group>"; };
+		E8A589412D02C389009D4337 /* GBASaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBASaveEntry.swift; sourceTree = "<group>"; };
 		E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDialog.swift; sourceTree = "<group>"; };
 		E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeGameDialog.swift; sourceTree = "<group>"; };
 		E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff2; sourceTree = "<group>"; };
@@ -319,6 +325,7 @@
 				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
 				E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */,
 				E8C245F72CBE043B00B6DF67 /* SaveState.swift */,
+				E8A589412D02C389009D4337 /* GBASaveEntry.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -395,6 +402,8 @@
 				E8BBBC7F2CF9847B0065EF4E /* GBAListView.swift */,
 				E8BBBC812CF9870D0065EF4E /* GBAEntryViewWrapper.swift */,
 				E8BBBC832CF987790065EF4E /* GBAEntryView.swift */,
+				E8A5893D2D02C01C009D4337 /* DSSaveManagementView.swift */,
+				E8A5893F2D02C030009D4337 /* GBASaveManagementView.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -703,6 +712,7 @@
 				E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */,
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
 				E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */,
+				E8A589402D02C030009D4337 /* GBASaveManagementView.swift in Sources */,
 				E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */,
 				E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */,
 				E89681A92CD561A100F7A316 /* ControllerMappingsView.swift in Sources */,
@@ -716,6 +726,7 @@
 				E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */,
 				E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */,
 				E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */,
+				E8A589422D02C389009D4337 /* GBASaveEntry.swift in Sources */,
 				E8BBBC862CFA71A20065EF4E /* ArtworkService.swift in Sources */,
 				E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */,
 				E8EE5D932CC238F500CD77B6 /* NavigationBarView.swift in Sources */,
@@ -723,6 +734,7 @@
 				E8DF26C02CC5FA5000A88821 /* LoadStateEntryView.swift in Sources */,
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */,
+				E8A5893E2D02C01C009D4337 /* DSSaveManagementView.swift in Sources */,
 				E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */,
 				E8EE5D8A2CC2227600CD77B6 /* ImportGamesView.swift in Sources */,
 				E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */,

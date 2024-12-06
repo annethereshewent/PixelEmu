@@ -15,24 +15,14 @@ struct SaveManagementView: View {
     @Binding var cloudService: CloudService?
     @Binding var themeColor: Color
 
+    @State private var gbaSaveEntries: [GBASaveEntry] = []
+    @State private var gbaCloudEntry: GBASaveEntry? = nil
     @State private var saveEntries: [SaveEntry] = []
-    @State private var localSaves: [SaveEntry] = []
     @State private var cloudEntry: SaveEntry? = nil
-    @State private var localEntry: SaveEntry? = nil
     @State private var isPresented = false
-    @State private var showDeleteDialog = false
     @State private var loading = false
-    @State private var showDownloadAlert = false
-    @State private var showDeleteAlert = false
-    @State private var showUploadAlert = false
-    @State private var showErrorAlert = false
-    @State private var deleteAction: () -> Void = {}
 
     @Query private var games: [Game]
-
-    private let successTitle = "Success!"
-
-    private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
     private func handleSignInButton() {
         guard let rootViewController = (UIApplication.shared.connectedScenes.first
@@ -77,140 +67,26 @@ struct SaveManagementView: View {
                     }
                     .foregroundColor(themeColor)
                 }
-                
-                ScrollView {
-                    if saveEntries.count > 0 {
-                        Text("Cloud saves")
-                            .foregroundColor(Colors.primaryColor)
-                        LazyVGrid(columns: columns) {
-                            ForEach(saveEntries, id: \.game.gameName) { saveEntry in
-                                GameEntryView(game: saveEntry.game) {
-                                    if cloudEntry == saveEntry {
-                                        cloudEntry = nil
-                                        
-                                    } else {
-                                        cloudEntry = saveEntry
-                                    }
-                                }
-                                .foregroundColor(Colors.primaryColor)
-                            }
-                            .presentationCompactAdaptation(.popover)
-                            .padding(.leading, 20)
-                        }
-                    }
-                    if localSaves.count > 0 {
-                        Text("Local saves")
-                            .foregroundColor(Colors.primaryColor)
-                        LazyVGrid(columns: columns) {
-                            ForEach(localSaves, id: \.game.gameName) { saveEntry in
-                                GameEntryView(game: saveEntry.game) {
-                                    if localEntry == saveEntry {
-                                        localEntry = nil
-                                    } else {
-                                        localEntry = saveEntry
-                                    }
-                                }
-                                .foregroundColor(Colors.primaryColor)
-                            }
-                        }
-                    }
-                    if loading {
-                        ProgressView()
-                    }
-                    
-                }
-            }
-            .onAppear {
-                if user != nil {
-                    loading = true
-                    Task {
-                        if let saveEntries = await cloudService?.getSaves(games: games) {
-                            self.saveEntries = saveEntries
-                        }
-                        loading = false
-                    }
-                }
-                // get any local saves
-                localSaves = BackupFile.getLocalSaves(games: games)
+                TabView {
+                    DSSaveManagementView(
+                        saveEntries: $saveEntries,
+                        cloudEntry: $cloudEntry,
+                        user: $user,
+                        loading: $loading,
+                        cloudService: $cloudService,
+                        themeColor: $themeColor
+                    )
+                    GBASaveManagementView(
+                        saveEntries: $gbaSaveEntries,
+                        cloudEntry: $gbaCloudEntry,
+                        user: $user,
+                        loading: $loading,
+                        cloudService: $cloudService,
+                        themeColor: $themeColor
+                    )
+                }.tabViewStyle(.page)
             }
             .font(.custom("Departure Mono", size: 20))
-            .onTapGesture {
-                cloudEntry = nil
-                localEntry = nil
-                
-                showDownloadAlert = false
-                showUploadAlert = false
-                showErrorAlert = false
-                showDeleteAlert = false
-            }
-            if cloudEntry != nil {
-                GameEntryModal(
-                    entry: $cloudEntry,
-                    localSaves: $localSaves,
-                    cloudSaves: $saveEntries,
-                    cloudService: $cloudService,
-                    loading: $loading,
-                    showDownloadAlert: $showDownloadAlert,
-                    showUploadAlert: $showUploadAlert,
-                    showErrorAlert: $showErrorAlert,
-                    showDeleteAlert: $showDeleteAlert,
-                    showDeleteDialog: $showDeleteDialog,
-                    deleteAction: $deleteAction,
-                    themeColor: $themeColor,
-                    isCloudSave: true
-                )
-            } else if localEntry != nil {
-                GameEntryModal(
-                    entry: $localEntry,
-                    localSaves: $localSaves,
-                    cloudSaves: $saveEntries,
-                    cloudService: $cloudService,
-                    loading: $loading,
-                    showDownloadAlert: $showDownloadAlert,
-                    showUploadAlert: $showUploadAlert,
-                    showErrorAlert: $showErrorAlert,
-                    showDeleteAlert: $showDeleteAlert,
-                    showDeleteDialog: $showDeleteDialog,
-                    deleteAction: $deleteAction,
-                    themeColor: $themeColor,
-                    isCloudSave: false
-                )
-            } else if showDownloadAlert {
-                AlertModal(
-                    alertTitle: successTitle,
-                    text: "Successfully downloaded save.", 
-                    showAlert: $showDownloadAlert, 
-                    themeColor: $themeColor
-                )
-            } else if showUploadAlert {
-                AlertModal(
-                    alertTitle: successTitle,
-                    text: "Successfully uploaded save.",
-                    showAlert: $showUploadAlert,
-                    themeColor: $themeColor
-                )
-            } else if showDeleteAlert {
-                AlertModal(
-                    alertTitle: successTitle,
-                    text: "Successfully deleted save.",
-                    showAlert: $showDeleteAlert,
-                    themeColor: $themeColor
-                )
-            } else if showErrorAlert {
-                AlertModal(
-                    alertTitle: "Oops!",
-                    text: "There was an error performing the action.",
-                    showAlert: $showErrorAlert,
-                    themeColor: $themeColor
-                )
-            } else if showDeleteDialog {
-                DeleteDialog(
-                    showDialog: $showDeleteDialog,
-                    deleteAction: $deleteAction,
-                    themeColor: $themeColor,
-                    deleteMessage: "Are you sure you want to delete this save?"
-                )
-            }
         }
     }
 }
