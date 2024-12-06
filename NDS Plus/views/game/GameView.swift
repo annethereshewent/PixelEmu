@@ -382,7 +382,9 @@ struct GameView: View {
             isRunning = true
             
             audioManager = AudioManager()
-            
+
+            audioManager!.startMicrophoneAndAudio()
+
             if !isSoundOn {
                 audioManager?.muteAudio()
             }
@@ -541,6 +543,7 @@ struct GameView: View {
             }
             .onDisappear {
                 UIApplication.shared.isIdleTimerDisabled = false
+                audioManager?.stopMicrophone()
             }
             .onChange(of: shouldGoHome) {
                 if shouldGoHome {

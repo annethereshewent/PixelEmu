@@ -201,6 +201,8 @@ struct GBAGameView: View {
 
         audioManager = AudioManager()
 
+        audioManager!.startAudio()
+
         if !isSoundOn {
             audioManager?.muteAudio()
         }
