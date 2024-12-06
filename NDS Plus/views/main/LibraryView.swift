@@ -17,11 +17,6 @@ enum LibraryFilter {
     case all
 }
 
-enum LibraryType {
-    case nds
-    case gba
-}
-
 let NDS_DEFAULT = 0
 let GBA_DEFAULT = 1
 
@@ -30,7 +25,6 @@ struct LibraryView: View {
     @State private var allColor = Colors.primaryColor
     @State private var filter = LibraryFilter.recent
 
-    @Binding var currentLibrary: LibraryType
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -46,17 +40,11 @@ struct LibraryView: View {
     @Binding var gbaGame: GBAGame?
     @Binding var themeColor: Color
     @Binding var isPaused: Bool
-
-    var libraryTypeText: String {
-        switch currentLibrary {
-        case .gba: return "GBA"
-        case .nds: return "NDS"
-        }
-    }
+    @Binding var currentLibrary: String
 
     var body: some View {
         VStack {
-            TabView {
+            TabView(selection: $currentLibrary) {
                 DSLibraryView(
                     recentColor: $recentColor,
                     allColor: $allColor,
@@ -73,6 +61,7 @@ struct LibraryView: View {
                     game: $game,
                     themeColor: $themeColor
                 )
+                .tag("nds")
                 GBALibraryView(
                     recentColor: $recentColor,
                     allColor: $allColor,
@@ -88,6 +77,7 @@ struct LibraryView: View {
                     themeColor: $themeColor,
                     isPaused: $isPaused
                 )
+                .tag("gba")
             }.tabViewStyle(.page)
 
         }
@@ -95,6 +85,17 @@ struct LibraryView: View {
             recentColor = themeColor
             filter = LibraryFilter.recent
             allColor = Colors.primaryColor
+
+            let defaults = UserDefaults.standard
+
+            if let current = defaults.string(forKey: "currentLibrary") {
+                currentLibrary = current
+            }
+        }
+        .onChange(of: currentLibrary) {
+            let defaults = UserDefaults.standard
+
+            defaults.setValue(currentLibrary, forKey: "currentLibrary")
         }
         .font(.custom("Departure Mono", size: 24.0))
         .foregroundColor(Colors.primaryColor)

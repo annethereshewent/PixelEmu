@@ -56,8 +56,6 @@ struct ContentView: View {
     @State private var backupFile: BackupFile? = nil
     @State private var gbaBackupFile: GBABackupFile? = nil
 
-    @State private var currentLibrary = LibraryType.nds
-
     @State private var buttonEventDict: [ButtonMapping:ButtonEvent] = getDefaultMappings()
     @State private var gbaButtonDict: [ButtonMapping:GBAButtonEvent] = getGBADefaultMappings()
 
@@ -66,6 +64,8 @@ struct ContentView: View {
     @State private var loading = false
 
     @State private var isPaused = false
+
+    @State private var currentLibrary = ""
 
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
@@ -193,7 +193,6 @@ struct ContentView: View {
                     switch currentView {
                     case .library:
                         LibraryView(
-                            currentLibrary: $currentLibrary,
                             romData: $romData,
                             bios7Data: $bios7Data,
                             bios9Data: $bios9Data,
@@ -208,7 +207,8 @@ struct ContentView: View {
                             game: $game,
                             gbaGame: $gbaGame,
                             themeColor: $themeColor,
-                            isPaused: $isPaused
+                            isPaused: $isPaused,
+                            currentLibrary: $currentLibrary
                         )
                     case .importGames:
                         ImportGamesView(
@@ -322,14 +322,6 @@ struct ContentView: View {
             
             bios7Loaded = defaults.bool(forKey: "bios7Loaded")
             bios9Loaded = defaults.bool(forKey: "bios9Loaded")
-
-            if let currentLibraryVal = defaults.value(forKey: "currentLibrary") as? Int {
-                if currentLibraryVal == 0 {
-                    currentLibrary = .nds
-                } else if currentLibraryVal == 1 {
-                    currentLibrary = .gba
-                }
-            }
 
             if let themeColor = defaults.value(forKey: "themeColor") as? Color {
                 self.themeColor = themeColor

@@ -36,7 +36,8 @@ struct ImportGamesView: View {
     @Binding var currentView: CurrentView
     @Binding var themeColor: Color
     @Binding var loading: Bool
-    @Binding var currentLibrary: LibraryType
+
+    @Binding var currentLibrary: String
 
     var body: some View {
         ZStack {
@@ -167,9 +168,9 @@ struct ImportGamesView: View {
                         currentView = .library
                         loading = false
                         if urls[0].pathExtension.lowercased() == "nds" {
-                            currentLibrary = .nds
+                            currentLibrary = "nds"
                         } else {
-                            currentLibrary = .gba
+                            currentLibrary = "gba"
                         }
                         emu = nil
                     }
