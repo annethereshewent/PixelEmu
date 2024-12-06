@@ -44,6 +44,7 @@ struct LibraryView: View {
 
     var body: some View {
         VStack {
+            Text("\(currentLibrary.uppercased()) library")
             TabView(selection: $currentLibrary) {
                 DSLibraryView(
                     recentColor: $recentColor,

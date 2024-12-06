@@ -65,7 +65,7 @@ struct ContentView: View {
 
     @State private var isPaused = false
 
-    @State private var currentLibrary = ""
+    @State private var currentLibrary = "nds"
 
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 

@@ -28,7 +28,6 @@ struct DSLibraryView: View {
 
     var body: some View {
         VStack {
-            Text("NDS library")
             HStack {
                 Spacer()
 

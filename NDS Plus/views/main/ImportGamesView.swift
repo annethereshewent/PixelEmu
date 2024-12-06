@@ -172,6 +172,11 @@ struct ImportGamesView: View {
                         } else {
                             currentLibrary = "gba"
                         }
+
+                        let defaults = UserDefaults.standard
+
+                        defaults.set(currentLibrary, forKey: "currentLibrary")
+
                         emu = nil
                     }
                 } catch {
