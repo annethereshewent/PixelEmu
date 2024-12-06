@@ -61,6 +61,14 @@ struct GBAGameView: View {
 
     private let graphicsParser = GraphicsParser()
 
+    private var screenPadding: CGFloat {
+        if gameController?.controller?.extendedGamepad == nil {
+            return 120
+        }
+
+        return 0
+    }
+
     private func goHome() {
         // this isn't working, pause within swift instead of rust for now
         // emulator?.setPaused(true)
@@ -112,7 +120,6 @@ struct GBAGameView: View {
     }
 
     private func updateEmuInput(_ mapping: ButtonMapping, _ defaultButton: GBAButtonEvent, _ pressed: Bool) {
-        // TODO: implement buttonEventDict for GBA emulator
         if let emu = emulator {
             if let value = buttonEventDict[mapping] {
                 emu.updateInput(value, pressed)
@@ -279,20 +286,22 @@ struct GBAGameView: View {
                         heldButtons: $heldButtons,
                         themeColor: $themeColor
                     )
-                    .padding(.top, 120)
-                    GBATouchControlsView(
-                        emulator: $emulator,
-                        emulatorCopy: $emulatorCopy,
-                        audioManager: $audioManager,
-                        workItem: $workItem,
-                        isRunning: $isRunning,
-                        buttonStarted: $buttonStarted,
-                        gameName: $gameName,
-                        isMenuPresented: $isMenuPresented,
-                        isHoldButtonsPresented: $isHoldButtonsPresented,
-                        heldButtons: $heldButtons,
-                        isPaused: $isPaused
-                    )
+                    .padding(.top, screenPadding)
+                    if gameController?.controller?.extendedGamepad == nil {
+                        GBATouchControlsView(
+                            emulator: $emulator,
+                            emulatorCopy: $emulatorCopy,
+                            audioManager: $audioManager,
+                            workItem: $workItem,
+                            isRunning: $isRunning,
+                            buttonStarted: $buttonStarted,
+                            gameName: $gameName,
+                            isMenuPresented: $isMenuPresented,
+                            isHoldButtonsPresented: $isHoldButtonsPresented,
+                            heldButtons: $heldButtons,
+                            isPaused: $isPaused
+                        )
+                    }
                     Spacer()
                 }
             }

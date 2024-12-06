@@ -19,11 +19,21 @@ struct GBAScreenView: View {
     @EnvironmentObject var orientationInfo: OrientationInfo
 
     private var screenRatio: Float {
-        if gameController?.controller?.extendedGamepad == nil {
-            return GBA_SCREEN_RATIO
+        switch orientationInfo.orientation {
+        case .portrait:
+            if gameController?.controller?.extendedGamepad == nil {
+                return GBA_SCREEN_RATIO
+            }
+
+            return GBA_FULLSCREEN_RATIO
+        case .landscape:
+            if gameController?.controller?.extendedGamepad == nil {
+                return GBA_LANDSCAPE_RATIO
+            }
+
+            return GBA_LANDSCAPE_FULLSCREEN_RATIO
         }
 
-        return GBA_FULLSCREEN_RATIO
     }
 
     private var currentHoldButtons: String {
