@@ -7,11 +7,15 @@
 
 import SwiftUI
 import DSEmulatorMobile
+import GBAEmulatorMobile
 
 struct ControllerMappingButtonView: View {
     var event: ButtonEvent
+    var gbaEvent: GBAButtonEvent?
     @Binding var buttonMappings: [ButtonEvent:ButtonMapping]
+    @Binding var gbaButtonMappings: [GBAButtonEvent:ButtonMapping]
     @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
+    @Binding var gbaButtonDict: [ButtonMapping:GBAButtonEvent]
     @Binding var awaitingInput: [ButtonEvent:Bool]
     @Binding var gameController: GameController?
 
@@ -73,6 +77,13 @@ struct ControllerMappingButtonView: View {
                                 buttonMappings[switchEvent] = oldButton
                             }
                             buttonMappings[event] = button
+                            
+                            if let gbaEvent = gbaEvent {
+                                if let switchEvent = gbaButtonDict[button], let oldButton = gbaButtonMappings[gbaEvent] {
+                                    gbaButtonMappings[switchEvent] = oldButton
+                                }
+                                gbaButtonMappings[gbaEvent] = button
+                            }
                         }
                         awaitingInput[event] = false
                     }

@@ -9,6 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 import GoogleSignIn
 import DSEmulatorMobile
+import GBAEmulatorMobile
 
 struct SettingsView: View {
     @Binding var bios7Data: Data?
@@ -27,7 +28,9 @@ struct SettingsView: View {
     @Binding var themeColor: Color
 
     @Binding var gameController: GameController?
+
     @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
+    @Binding var gbaButtonDict: [ButtonMapping:GBAButtonEvent]
 
     @State private var isActive = true
     @State private var showColorPickerModal = false
@@ -226,7 +229,8 @@ struct SettingsView: View {
                 themeColor: $themeColor,
                 isPresented: $isMappingsPresented,
                 gameController: $gameController,
-                buttonEventDict: $buttonEventDict
+                buttonEventDict: $buttonEventDict,
+                gbaButtonDict: $gbaButtonDict
             )
         }
         .onChange(of: isSoundOn) {

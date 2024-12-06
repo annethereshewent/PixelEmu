@@ -59,6 +59,7 @@ struct ContentView: View {
     @State private var currentLibrary = LibraryType.nds
 
     @State private var buttonEventDict: [ButtonMapping:ButtonEvent] = getDefaultMappings()
+    @State private var gbaButtonDict: [ButtonMapping:GBAButtonEvent] = getGBADefaultMappings()
 
     @State private var isMenuPresented = false
 
@@ -97,6 +98,22 @@ struct ContentView: View {
             .rightThumbstick: .QuickLoad,
             .home: .MainMenu,
             .leftTrigger: .ControlStick
+        ]
+    }
+
+    static func getGBADefaultMappings() -> [ButtonMapping:GBAButtonEvent] {
+        return [
+            .a: .ButtonB,
+            .b: .ButtonA,
+            .leftShoulder: .ButtonL,
+            .rightShoulder: .ButtonR,
+            .menu: .Start,
+            .options: .Select,
+            .up: .Up,
+            .down: .Down,
+            .left: .Left,
+            .right: .Right,
+            .home: .ButtonHome,
         ]
     }
 
@@ -230,7 +247,8 @@ struct ContentView: View {
                             gbaBiosLoaded: $gbaBiosLoaded,
                             themeColor: $themeColor,
                             gameController: $gameController,
-                            buttonEventDict: $buttonEventDict
+                            buttonEventDict: $buttonEventDict,
+                            gbaButtonDict: $gbaButtonDict
                         )
                     }
                     if loading {
@@ -285,7 +303,8 @@ struct ContentView: View {
                         isRunning: $isRunning,
                         workItem: $workItem,
                         image: $gbaImage,
-                        isPaused: $isPaused
+                        isPaused: $isPaused,
+                        buttonEventDict: $gbaButtonDict
                     )
                 }
             }
