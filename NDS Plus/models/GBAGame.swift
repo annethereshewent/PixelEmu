@@ -17,6 +17,9 @@ class GBAGame {
     var albumArt: Data? = nil
     var lastPlayed: Date
 
+    @Relationship(deleteRule: .cascade, inverse: \GBASaveState.game)
+    var saveStates: [GBASaveState]
+
     init(gameName: String, bookmark: Data, lastPlayed: Date) {
         self.gameName = gameName
         self.bookmark = bookmark

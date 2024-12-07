@@ -145,9 +145,7 @@ struct ImportGamesView: View {
                                             gameNamesSet.insert(gameName)
                                         }
                                     }
-                                }
-
-                                else {
+                                } else {
                                     if let game = GBAGame.storeGame(
                                         gameName: gameName,
                                         data: data,

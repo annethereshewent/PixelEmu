@@ -17,9 +17,6 @@ enum LibraryFilter {
     case all
 }
 
-let NDS_DEFAULT = 0
-let GBA_DEFAULT = 1
-
 struct LibraryView: View {
     @State private var recentColor = Colors.accentColor
     @State private var allColor = Colors.primaryColor
