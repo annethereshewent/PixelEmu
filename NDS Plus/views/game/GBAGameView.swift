@@ -241,7 +241,7 @@ struct GBAGameView: View {
                     if let emu = emulator {
                         emu.stepFrame()
 
-                        let pixels = emu.getPicturePointer()
+                        let pixels = emu.getPicturePtr()
 
                         if let image = graphicsParser.fromGBAPointer(ptr: pixels) {
                             self.image = image
@@ -312,21 +312,21 @@ struct GBAGameView: View {
                 isPresented: $isMenuPresented
             ) {
                 // TODO: implement save states and hold buttons
-//                GBAMenuView(
-//                    emulator: $emulator,
-//                    isRunning: $isRunning,
-//                    workItem: $workItem,
-//                    audioManager: $audioManager,
-//                    isMenuPresented: $isMenuPresented,
-//                    gameName: $gameName,
-//                    biosData: $biosData
-//                    romData: $romData,
-//                    shouldGoHome: $shouldGoHome,
-//                    game: $game,
-//                    isHoldButtonsPresented: $isHoldButtonsPresented,
-//                    isSoundOn: $isSoundOn,
-//                    gameController: $gameController
-//                )
+                GBAMenuView(
+                    emulator: $emulator,
+                    isRunning: $isRunning,
+                    workItem: $workItem,
+                    audioManager: $audioManager,
+                    isMenuPresented: $isMenuPresented,
+                    gameName: $gameName,
+                    biosData: $biosData,
+                    romData: $romData,
+                    shouldGoHome: $shouldGoHome,
+                    game: $game,
+                    isHoldButtonsPresented: $isHoldButtonsPresented,
+                    isSoundOn: $isSoundOn,
+                    gameController: $gameController
+                )
             }
             .onAppear {
                 UIApplication.shared.isIdleTimerDisabled = true

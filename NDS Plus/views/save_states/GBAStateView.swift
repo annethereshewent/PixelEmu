@@ -24,12 +24,12 @@ struct GBAStateView: View {
             VStack {
                 Image(uiImage: screenshot)
                     .resizable()
-                    .frame(width: CGFloat(SCREEN_WIDTH) * 0.5, height: CGFloat(SCREEN_HEIGHT))
+                    .frame(width: CGFloat(GBA_SCREEN_WIDTH) * 0.5, height: CGFloat(GBA_SCREEN_HEIGHT) * 0.5)
                 Text(saveState.saveName)
             }
         }
         .onAppear() {
-            if let image = graphicsParser.fromBytes(bytes: Array(saveState.screenshot), width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 2) {
+            if let image = graphicsParser.fromBytes(bytes: Array(saveState.screenshot), width: GBA_SCREEN_WIDTH, height: GBA_SCREEN_HEIGHT) {
                 screenshot = UIImage(cgImage: image)
             }
         }

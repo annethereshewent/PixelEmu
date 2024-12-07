@@ -72,9 +72,17 @@ class GBAStateManager {
             var biosPtr: UnsafeBufferPointer<UInt8>!
             var romPtr: UnsafeBufferPointer<UInt8>!
 
-//            emu.loadSaveState(dataPtr)
-//            emu.reloadBios(biosPtr)
-//            emu.reloadRom(romPtr)
+            Array(romData).withUnsafeBufferPointer { ptr in
+                romPtr = ptr
+            }
+
+            Array(biosData).withUnsafeBufferPointer { ptr in
+                biosPtr = ptr
+            }
+
+            emu.loadSaveState(dataPtr)
+            emu.loadBios(biosPtr)
+            emu.load(romPtr)
         }
     }
 
@@ -107,22 +115,11 @@ class GBAStateManager {
 
         var screenshot: [UInt8]!
 
-//        if emu.isTopA() {
-//            let topBufferPtr = UnsafeBufferPointer(start: emu.getEngineAPicturePointer(), count: SCREEN_WIDTH * SCREEN_HEIGHT * 4)
-//            screenshot = Array(topBufferPtr)
-//
-//            let bottomBufferPtr = UnsafeBufferPointer(start: emu.getEngineBPicturePointer(), count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
-//
-//            screenshot.append(contentsOf: Array(bottomBufferPtr))
-//        } else {
-//            let topBufferPtr = UnsafeBufferPointer(start: emu.getEngineBPicturePointer(), count: SCREEN_WIDTH * SCREEN_HEIGHT * 4)
-//            screenshot = Array(topBufferPtr)
-//
-//            let bottomBufferPtr = UnsafeBufferPointer(start: emu.getEngineAPicturePointer(), count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
-//
-//            screenshot.append(contentsOf: Array(bottomBufferPtr))
-//        }
         let picturePtr = emu.getPicturePtr()
+
+        let bufferPtr = UnsafeBufferPointer(start: picturePtr, count: GBA_SCREEN_WIDTH * GBA_SCREEN_HEIGHT * 4)
+
+        screenshot = Array(bufferPtr)
 
         let date = Date()
         let calendar = Calendar.current
