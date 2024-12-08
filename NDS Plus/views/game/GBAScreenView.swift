@@ -77,6 +77,30 @@ struct GBAScreenView: View {
                     width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),
                     height: CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
                 )
+            if isHoldButtonsPresented {
+                VStack {
+                    Text("Hold buttons")
+                        .foregroundColor(themeColor)
+                        .font(.custom("Departure Mono", size: 24))
+                    Text("Press buttons to hold down, then press confirm")
+                        .foregroundColor(Colors.primaryColor)
+                    Text(currentHoldButtons)
+                        .foregroundColor(themeColor)
+                    Button("Confirm") {
+                        isHoldButtonsPresented = false
+                        if let emu = emulator {
+                            emu.setPaused(false)
+                        }
+                    }
+                    .foregroundColor(themeColor)
+                    .border(.gray)
+                    .cornerRadius(0.3)
+                    .padding(.top, 20)
+                }
+                .background(Colors.backgroundColor)
+                .font(.custom("Departure Mono", size: 16))
+                .opacity(0.9)
+            }
         }
         if gameController?.controller?.extendedGamepad != nil {
             Spacer()
