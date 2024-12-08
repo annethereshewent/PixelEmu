@@ -82,7 +82,7 @@ class GBAStateManager {
 
             emu.loadSaveState(dataPtr)
             emu.loadBios(biosPtr)
-            emu.load(romPtr)
+            emu.reloadRom(romPtr)
         }
     }
 
