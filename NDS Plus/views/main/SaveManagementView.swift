@@ -23,7 +23,8 @@ struct SaveManagementView: View {
     @State private var loading = false
 
     @Query private var games: [Game]
-    
+    @Query private var gbaGames: [GBAGame]
+
     private func handleSignInButton() {
         guard let rootViewController = (UIApplication.shared.connectedScenes.first
                   as? UIWindowScene)?.windows.first?.rootViewController
@@ -38,7 +39,8 @@ struct SaveManagementView: View {
             user = result.user
             cloudService = CloudService(user: user!)
             Task {
-                saveEntries = await cloudService!.getSaves(games: games)
+                saveEntries = await cloudService!.getDsSaves(games: games)
+                gbaSaveEntries = await cloudService!.getGbaSaves(games: gbaGames)
             }
         }
     }

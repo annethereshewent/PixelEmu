@@ -101,24 +101,24 @@ struct GBAGameView: View {
         if let emu = emulator {
             let ptr = emu.backupFilePointer();
             let backupLength = Int(emu.backupFileSize())
-            // TODO: implement cloud saves for GBA
-//            if let cloudService = cloudService {
-//                if let url = gameUrl {
-//                    let buffer = UnsafeBufferPointer(start: ptr, count: backupLength)
-//
-//                    let data = Data(buffer)
-//
-//                    Task {
-//                        await cloudService.uploadSave(
-//                            saveName: BackupFile.getSaveName(gameUrl: url),
-//                            data: data
-//                        )
-//                    }
-//                }
-//            } else {
-//                backupFile?.saveGame(ptr: ptr, backupLength: backupLength)
-//            }
-            backupFile?.saveGame(ptr: ptr, backupLength: backupLength)
+
+            if let cloudService = cloudService {
+                if let url = gameUrl {
+                    let buffer = UnsafeBufferPointer(start: ptr, count: backupLength)
+
+                    let data = Data(buffer)
+
+                    Task {
+                        await cloudService.uploadSave(
+                            saveName: BackupFile.getSaveName(gameUrl: url),
+                            data: data,
+                            saveType: .gba
+                        )
+                    }
+                }
+            } else {
+                backupFile?.saveGame(ptr: ptr, backupLength: backupLength)
+            }
         }
     }
 

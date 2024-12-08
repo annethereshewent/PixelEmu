@@ -79,7 +79,7 @@ struct DSSaveManagementView: View {
             if user != nil {
                 loading = true
                 Task {
-                    if let saveEntries = await cloudService?.getSaves(games: games) {
+                    if let saveEntries = await cloudService?.getDsSaves(games: games) {
                         self.saveEntries = saveEntries
                     }
                     loading = false

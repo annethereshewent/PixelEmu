@@ -71,10 +71,9 @@ struct GBASaveManagementView: View {
             if user != nil {
                 loading = true
                 Task {
-                    // @TODO: implement cloud saves
-//                    if let saveEntries = await cloudService?.getSaves(games: games) {
-//                        self.saveEntries = saveEntries
-//                    }
+                    if let saveEntries = await cloudService?.getGbaSaves(games: games) {
+                        self.saveEntries = saveEntries
+                    }
                     loading = false
                 }
             }

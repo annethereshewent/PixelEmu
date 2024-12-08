@@ -8,9 +8,15 @@
 import Foundation
 import GoogleSignIn
 
+enum SaveType {
+    case nds
+    case gba
+}
+
 class CloudService {
     private var user: GIDGoogleUser
     private var dsFolderId: String? = nil
+    private var gbaFolderId: String? = nil
     private let jsonDecoder = JSONDecoder()
     
     
@@ -25,6 +31,10 @@ class CloudService {
         if let dsFolderId = defaults.string(forKey: "dsFolderId") {
             self.dsFolderId = dsFolderId
         }
+
+        if let gbaFolderId = defaults.string(forKey: "gbaFolderId") {
+            self.gbaFolderId = gbaFolderId
+        }
     }
     
     
@@ -38,7 +48,7 @@ class CloudService {
         }
         
         var request = request
-        
+
         request.setValue("Bearer \(self.user.accessToken.tokenString)", forHTTPHeaderField: "Authorization")
         
         if let headers = headers {
@@ -57,59 +67,80 @@ class CloudService {
         
         return nil
     }
-    
+
+    private func checkForGbaFolder() async -> String? {
+        if let folderId = self.gbaFolderId {
+            return folderId
+        }
+        return await checkForFolder(folderName: "gba-saves")
+    }
+
     private func checkForDsFolder() async -> String? {
         if let folderId = self.dsFolderId {
             return folderId
         }
-        
-        let params = [URLQueryItem(name: "q", value: "mimeType = \"application/vnd.google-apps.folder\" and name=\"ds-saves\"")]
-        
+        return await checkForFolder(folderName: "ds-saves")
+    }
+
+    private func checkForFolder(folderName: String) async -> String? {
+        let params = [URLQueryItem(name: "q", value: "mimeType = \"application/vnd.google-apps.folder\" and name=\"\(folderName)\"")]
+
         let url = buildUrl(params: params)
         
         let request = URLRequest(url: url)
-        
+
         if let data = await self.cloudRequest(request: request) {
             do {
                 let driveResponse = try jsonDecoder.decode(DriveResponse.self, from: data)
                 if driveResponse.files.count > 0 {
-                    self.dsFolderId = driveResponse.files[0].id
-                    
                     let defaults = UserDefaults.standard
-                    
-                    defaults.set(self.dsFolderId, forKey: "dsFolderId")
-                    
+
+                    if folderName == "ds-saves" {
+                        self.dsFolderId = driveResponse.files[0].id
+                        defaults.set(self.dsFolderId, forKey: "dsFolderId")
+                    } else if folderName == "gba-saves" {
+                        self.gbaFolderId = driveResponse.files[0].id
+                        defaults.set(self.gbaFolderId, forKey: "gbaFolderId")
+                    }
+
                     return driveResponse.files[0].id
                 }
             } catch {
                 print(error)
             }
         }
-        
+
         // create the folder
-        let folderParams = [URLQueryItem(name: "uploadType", value: "media")]
+        let folderParams = [URLQueryItem(name: "uploadType", value: "media"), URLQueryItem(name: "fields", value: "id,name")]
         do {
             let url = buildUrl(params: folderParams)
             
             var request = URLRequest(url: url)
+
+            let headers = ["Content-Type": "application/json"]
+
+            request.httpMethod = "POST"
+
             request.httpBody = try JSONEncoder().encode(FileJSON(
-                name: "ds-saves",
+                name: folderName,
                 mimeType: "application/vnd.google-apps.folder"
             ))
-            
-            request.httpMethod = "POST"
-            
-            if let data = await self.cloudRequest(request: request) {
+
+            if let data = await self.cloudRequest(request: request, headers: headers) {
                 do {
-                    let driveResponse = try jsonDecoder.decode(DriveResponse.self, from: data)
-                    if driveResponse.files.count > 0 {
-                        self.dsFolderId = driveResponse.files[0].id
-                        
+                    let fileResponse = try jsonDecoder.decode(File.self, from: data)
+
+                    if fileResponse.name == folderName {
                         let defaults = UserDefaults.standard
-                        
-                        defaults.set(self.dsFolderId, forKey: "dsFolderId")
-                        
-                        return driveResponse.files[0].id
+                        if folderName == "ds-saves" {
+                            self.dsFolderId = fileResponse.id
+                            defaults.set(self.dsFolderId, forKey: "dsFolderId")
+                        } else if folderName == "gba-saves" {
+                            self.gbaFolderId = fileResponse.id
+                            defaults.set(self.gbaFolderId, forKey: "gbaFolderId")
+                        }
+
+                        return fileResponse.id
                     }
                 } catch {
                     print(error)
@@ -122,45 +153,78 @@ class CloudService {
         
         return nil
     }
-    
-    func getSaves(games: [Game]) async -> [SaveEntry] {
-        if let folderId = await self.checkForDsFolder() {
+
+    func getSavesData(saveType: SaveType) async -> DriveResponse? {
+        if let folderId = switch saveType {
+        case .gba: await self.checkForGbaFolder()
+        case .nds: await self.checkForDsFolder()
+        } {
             let params = [URLQueryItem(name: "q", value: "parents in \"" + folderId + "\"")]
-            
+
             let url = buildUrl(params: params)
-            
+
             let request = URLRequest(url: url)
-            
+
             if let data = await self.cloudRequest(request: request) {
                 do {
-                    let driveResponse = try jsonDecoder.decode(DriveResponse.self, from: data)
-                    
-                    var gameDictionary = [String:Game]()
-                    
-                    for game in games {
-                        gameDictionary[game.gameName] = game
-                    }
-                    
-                    var saveEntries = [SaveEntry]()
-                    
-                    for file in driveResponse.files {
-                        let gameName = file.name.replacing(".sav", with: ".nds")
-                        if let game = gameDictionary[gameName] {
-                            saveEntries.append(SaveEntry(game: game))
-                        }
-                    }
-                    
-                    return saveEntries
+                    return try jsonDecoder.decode(DriveResponse.self, from: data)
                 } catch {
                     print(error)
                 }
             }
         }
+
+        return nil
+    }
+
+    func getDsSaves(games: [Game]) async -> [SaveEntry] {
+        if let driveResponse = await getSavesData(saveType: .nds) {
+            var gameDictionary = [String:Game]()
+
+            for game in games {
+                gameDictionary[game.gameName] = game
+            }
+
+            var saveEntries = [SaveEntry]()
+
+            for file in driveResponse.files {
+                let gameName = file.name.replacing(".sav", with: ".nds")
+                if let game = gameDictionary[gameName] {
+                    saveEntries.append(SaveEntry(game: game))
+                }
+            }
+
+            return saveEntries
+        }
         
         
         return []
     }
-    
+
+    func getGbaSaves(games: [GBAGame]) async -> [GBASaveEntry] {
+        if let driveResponse = await getSavesData(saveType: .gba) {
+            var gameDictionary = [String:GBAGame]()
+
+            for game in games {
+                gameDictionary[game.gameName.replacing(".GBA", with: ".gba")] = game
+            }
+
+            var saveEntries = [GBASaveEntry]()
+
+            for file in driveResponse.files {
+                let gameName = file.name.replacing(".sav", with: ".gba")
+                if let game = gameDictionary[gameName] {
+                    saveEntries.append(GBASaveEntry(game: game))
+                }
+            }
+
+            return saveEntries
+        }
+
+
+        return []
+    }
+
     private func getSaveInfo(_ saveName: String, _ folderId: String) async -> DriveResponse? {
         let params = [
             URLQueryItem(name: "q", value: "name = \"\(saveName)\" and parents in \"\(folderId)\""),
@@ -183,8 +247,11 @@ class CloudService {
         return nil
     }
     
-    func getSave(saveName: String) async -> Data? {
-        if let folderId = await self.checkForDsFolder() {
+    func getSave(saveName: String, saveType: SaveType) async -> Data? {
+        if let folderId = switch saveType {
+        case .gba: await self.checkForGbaFolder()
+        case .nds: await self.checkForDsFolder()
+        } {
             if let driveResponse = await self.getSaveInfo(saveName, folderId) {
                 if driveResponse.files.count > 0 {
                     let fileId = driveResponse.files[0].id
@@ -203,8 +270,11 @@ class CloudService {
         return nil
     }
     
-    func deleteSave(saveName: String) async -> Bool{
-        if let folderId = await self.checkForDsFolder() {
+    func deleteSave(saveName: String, saveType: SaveType) async -> Bool{
+        if let folderId = switch saveType {
+        case .gba: await self.checkForGbaFolder()
+        case .nds: await self.checkForDsFolder()
+        } {
             if let driveResponse = await self.getSaveInfo(saveName, folderId) {
                 if driveResponse.files.count > 0 {
                     let fileId = driveResponse.files[0].id
@@ -226,8 +296,11 @@ class CloudService {
         return false
     }
     
-    func uploadSave(saveName: String, data: Data) async {
-        if let folderId = await self.checkForDsFolder() {
+    func uploadSave(saveName: String, data: Data, saveType: SaveType) async {
+        if let folderId = switch saveType {
+        case .gba: await self.checkForGbaFolder()
+        case .nds: await self.checkForDsFolder()
+        } {
             if let driveResponse = await self.getSaveInfo(saveName, folderId) {
                 var headers = [String:String]()
                 
@@ -265,8 +338,11 @@ class CloudService {
                 if let data = await self.cloudRequest(request: request, headers: headers) {
                     do {
                         let fileResponse = try jsonDecoder.decode(File.self, from: data)
-                        // finally move the file to ds-saves folder
-                        let params = [URLQueryItem(name: "uploadType", value: "media"), URLQueryItem(name: "addParents", value: self.dsFolderId)]
+                        // finally move the file to correct saves folder
+                        let params = switch saveType {
+                        case .gba: [URLQueryItem(name: "uploadType", value: "media"), URLQueryItem(name: "addParents", value: self.gbaFolderId)]
+                        case .nds : [URLQueryItem(name: "uploadType", value: "media"), URLQueryItem(name: "addParents", value: self.dsFolderId)]
+                        }
                         
                         let fileId = fileResponse.id
                         let urlStr = "\(drivesUrl)/\(fileId)"
