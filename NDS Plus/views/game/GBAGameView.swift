@@ -314,7 +314,6 @@ struct GBAGameView: View {
                 // TODO: implement save states and hold buttons
                 GBAMenuView(
                     emulator: $emulator,
-                    backupFile: $backupFile,
                     isRunning: $isRunning,
                     workItem: $workItem,
                     audioManager: $audioManager,

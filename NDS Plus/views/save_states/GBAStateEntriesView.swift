@@ -14,7 +14,6 @@ struct GBAStateEntriesView: View {
     @State private var currentState: GBASaveState? = nil
 
     @Binding var emulator: GBAEmulator?
-    @Binding var backupFile: GBABackupFile?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
     @Binding var game: GBAGame?
@@ -59,9 +58,6 @@ struct GBAStateEntriesView: View {
     private func loadSaveState() {
         do {
             try stateManager.loadSaveState(currentState: currentState)
-            if let ptr = backupFile?.createBackupFile() {
-                emulator?.loadSave(ptr)
-            }
         } catch {
             print(error)
         }
