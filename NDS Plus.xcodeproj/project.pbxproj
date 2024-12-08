@@ -51,6 +51,7 @@
 		E8A589462D03EA8D009D4337 /* GBAMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589452D03EA8D009D4337 /* GBAMenuView.swift */; };
 		E8A589482D03ED2E009D4337 /* GBAStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589472D03ED2E009D4337 /* GBAStateEntriesView.swift */; };
 		E8A5894A2D03EEE2009D4337 /* GBAStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589492D03EEE2009D4337 /* GBAStateManager.swift */; };
+		E8AE9BF52D0637A600A834EC /* GBAEntryModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AE9BF42D0637A600A834EC /* GBAEntryModal.swift */; };
 		E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */; };
 		E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */; };
 		E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */; };
@@ -160,6 +161,7 @@
 		E8A589452D03EA8D009D4337 /* GBAMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAMenuView.swift; sourceTree = "<group>"; };
 		E8A589472D03ED2E009D4337 /* GBAStateEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateEntriesView.swift; sourceTree = "<group>"; };
 		E8A589492D03EEE2009D4337 /* GBAStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateManager.swift; sourceTree = "<group>"; };
+		E8AE9BF42D0637A600A834EC /* GBAEntryModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAEntryModal.swift; sourceTree = "<group>"; };
 		E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDialog.swift; sourceTree = "<group>"; };
 		E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeGameDialog.swift; sourceTree = "<group>"; };
 		E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff2; sourceTree = "<group>"; };
@@ -451,6 +453,7 @@
 				E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */,
 				E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */,
 				E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */,
+				E8AE9BF42D0637A600A834EC /* GBAEntryModal.swift */,
 			);
 			path = modals;
 			sourceTree = "<group>";
@@ -751,6 +754,7 @@
 				E8EE5D932CC238F500CD77B6 /* NavigationBarView.swift in Sources */,
 				E8A214EF2CD0553800173E06 /* DualScreenView.swift in Sources */,
 				E8DF26C02CC5FA5000A88821 /* LoadStateEntryView.swift in Sources */,
+				E8AE9BF52D0637A600A834EC /* GBAEntryModal.swift in Sources */,
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */,
 				E8A5893E2D02C01C009D4337 /* DSSaveManagementView.swift in Sources */,

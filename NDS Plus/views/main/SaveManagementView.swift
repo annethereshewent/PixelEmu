@@ -46,49 +46,48 @@ struct SaveManagementView: View {
     }
     
     var body: some View {
-        ZStack {
-            VStack {
-                Text("Save management")
-                    .font(.custom("Departure Mono", size: 24))
-                    .fontWeight(.bold)
-                    .foregroundColor(Colors.primaryColor)
-                if user == nil {
-                    HStack {
-                        Button("Sign in to Google") {
-                            handleSignInButton()
-                        }
-                        .foregroundColor(themeColor)
-                    }
-                } else {
-                    Button("Sign out of Google") {
-                        GIDSignIn.sharedInstance.signOut()
-                        user = nil
-                        saveEntries = []
-                        cloudService = nil
-                        cloudEntry = nil
+        VStack {
+            Text("Save management")
+                .font(.custom("Departure Mono", size: 24))
+                .fontWeight(.bold)
+                .foregroundColor(Colors.primaryColor)
+            if user == nil {
+                HStack {
+                    Button("Sign in to Google") {
+                        handleSignInButton()
                     }
                     .foregroundColor(themeColor)
                 }
-                TabView {
-                    DSSaveManagementView(
-                        saveEntries: $saveEntries,
-                        cloudEntry: $cloudEntry,
-                        user: $user,
-                        loading: $loading,
-                        cloudService: $cloudService,
-                        themeColor: $themeColor
-                    )
-                    GBASaveManagementView(
-                        saveEntries: $gbaSaveEntries,
-                        cloudEntry: $gbaCloudEntry,
-                        user: $user,
-                        loading: $loading,
-                        cloudService: $cloudService,
-                        themeColor: $themeColor
-                    )
-                }.tabViewStyle(.page)
+            } else {
+                Button("Sign out of Google") {
+                    GIDSignIn.sharedInstance.signOut()
+                    user = nil
+                    saveEntries = []
+                    cloudService = nil
+                    cloudEntry = nil
+                }
+                .foregroundColor(themeColor)
             }
-            .font(.custom("Departure Mono", size: 20))
+            TabView {
+                DSSaveManagementView(
+                    saveEntries: $saveEntries,
+                    cloudEntry: $cloudEntry,
+                    user: $user,
+                    loading: $loading,
+                    cloudService: $cloudService,
+                    themeColor: $themeColor
+                )
+                GBASaveManagementView(
+                    saveEntries: $gbaSaveEntries,
+                    cloudEntry: $gbaCloudEntry,
+                    user: $user,
+                    loading: $loading,
+                    cloudService: $cloudService,
+                    themeColor: $themeColor
+                )
+            }.tabViewStyle(.page)
         }
+        .font(.custom("Departure Mono", size: 20))
     }
+
 }
