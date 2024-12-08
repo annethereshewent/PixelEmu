@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DSEmulatorMobile
+import GBAEmulatorMobile
 
 enum ButtonMapping: Codable {
     case a
@@ -128,7 +129,9 @@ struct ControllerMappingsView: View {
     @Binding var isPresented: Bool
     @Binding var gameController: GameController?
     @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
+    @Binding var gbaButtonDict: [ButtonMapping:GBAButtonEvent]
     @State private var buttonMappings: [ButtonEvent:ButtonMapping] = [:]
+    @State private var gbaButtonMappings: [GBAButtonEvent:ButtonMapping] = [:]
 
     @State private var awaitingInput: [ButtonEvent:Bool] = [:]
 
@@ -138,8 +141,11 @@ struct ControllerMappingsView: View {
                 Section(header: Text("Joypad mappings").foregroundColor(Colors.primaryColor)) {
                     ControllerMappingButtonView(
                         event: .Up,
+                        gbaEvent: .Up,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Up",
@@ -147,8 +153,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .Down,
+                        gbaEvent: .Down,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Down",
@@ -156,8 +165,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .Left,
+                        gbaEvent: .Left,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left",
@@ -165,8 +177,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .Right,
+                        gbaEvent: .Right,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Right",
@@ -174,8 +189,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .ButtonA,
+                        gbaEvent: .ButtonA,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "B",
@@ -183,8 +201,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .ButtonB,
+                        gbaEvent: .ButtonB,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "A",
@@ -192,8 +213,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .ButtonY,
+                        gbaEvent: nil,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "X",
@@ -201,8 +225,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .ButtonX,
+                        gbaEvent: nil,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Y",
@@ -210,8 +237,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .ButtonL,
+                        gbaEvent: .ButtonL,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left shoulder",
@@ -219,8 +249,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .ButtonR,
+                        gbaEvent: .ButtonR,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Right shoulder",
@@ -228,8 +261,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .Start,
+                        gbaEvent: .Start,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Menu",
@@ -237,8 +273,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .Select,
+                        gbaEvent: .Select,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Options",
@@ -248,8 +287,11 @@ struct ControllerMappingsView: View {
                 Section(header: Text("Hotkey mappings").foregroundColor(Colors.primaryColor)) {
                     ControllerMappingButtonView(
                         event: .MainMenu,
+                        gbaEvent: .GameMenu,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Home",
@@ -257,8 +299,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .ControlStick,
+                        gbaEvent: nil,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left trigger",
@@ -266,8 +311,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .QuickSave,
+                        gbaEvent: .QuickSave,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left thumbstick",
@@ -275,8 +323,11 @@ struct ControllerMappingsView: View {
                     )
                     ControllerMappingButtonView(
                         event: .QuickLoad,
+                        gbaEvent: .QuickLoad,
                         buttonMappings: $buttonMappings,
+                        gbaButtonMappings: $gbaButtonMappings,
                         buttonEventDict: $buttonEventDict,
+                        gbaButtonDict: $gbaButtonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Right thumbstick",
@@ -294,6 +345,10 @@ struct ControllerMappingsView: View {
         .onAppear() {
             for (key, value) in buttonEventDict {
                 buttonMappings[value] = key
+            }
+
+            for (key, value) in gbaButtonDict {
+                gbaButtonMappings[value] = key
             }
         }
         .onChange(of: buttonMappings) {

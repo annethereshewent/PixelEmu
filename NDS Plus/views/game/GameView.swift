@@ -186,7 +186,8 @@ struct GameView: View {
                     Task {
                         await cloudService.uploadSave(
                             saveName: BackupFile.getSaveName(gameUrl: url),
-                            data: data
+                            data: data,
+                            saveType: .nds
                         )
                     }
                 }
@@ -356,7 +357,7 @@ struct GameView: View {
                     if user != nil {
                         if let url = gameUrl {
                             loading = true
-                            if let saveData = await self.cloudService!.getSave(saveName: BackupFile.getSaveName(gameUrl: url)) {
+                            if let saveData = await self.cloudService!.getSave(saveName: BackupFile.getSaveName(gameUrl: url), saveType: .nds) {
                                 let ptr = BackupFile.getPointer(saveData)
                                 emulator?.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
                             } else {
@@ -382,7 +383,9 @@ struct GameView: View {
             isRunning = true
             
             audioManager = AudioManager()
-            
+
+            audioManager!.startMicrophoneAndAudio()
+
             if !isSoundOn {
                 audioManager?.muteAudio()
             }
@@ -541,6 +544,7 @@ struct GameView: View {
             }
             .onDisappear {
                 UIApplication.shared.isIdleTimerDisabled = false
+                audioManager?.stopMicrophone()
             }
             .onChange(of: shouldGoHome) {
                 if shouldGoHome {

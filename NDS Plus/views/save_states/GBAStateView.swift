@@ -1,20 +1,19 @@
 //
-//  SaveStateView.swift
+//  GBAStateView.swift
 //  NDS Plus
 //
-//  Created by Anne Castrillon on 10/14/24.
+//  Created by Anne Castrillon on 12/6/24.
 //
 
 import SwiftUI
-import DSEmulatorMobile
 
-struct SaveStateView: View {
-    let saveState: SaveState
+struct GBAStateView: View {
+    let saveState: GBASaveState
     @State private var screenshot = UIImage()
     @State private var isPopoverPresented = false
-    
+
     @Binding var action: SaveStateAction
-    @Binding var currentState: SaveState?
+    @Binding var currentState: GBASaveState?
 
     let graphicsParser = GraphicsParser()
 
@@ -25,12 +24,12 @@ struct SaveStateView: View {
             VStack {
                 Image(uiImage: screenshot)
                     .resizable()
-                    .frame(width: CGFloat(SCREEN_WIDTH) * 0.5, height: CGFloat(SCREEN_HEIGHT))
+                    .frame(width: CGFloat(GBA_SCREEN_WIDTH) * 0.5, height: CGFloat(GBA_SCREEN_HEIGHT) * 0.5)
                 Text(saveState.saveName)
             }
         }
         .onAppear() {
-            if let image = graphicsParser.fromBytes(bytes: Array(saveState.screenshot), width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 2) {
+            if let image = graphicsParser.fromBytes(bytes: Array(saveState.screenshot), width: GBA_SCREEN_WIDTH, height: GBA_SCREEN_HEIGHT) {
                 screenshot = UIImage(cgImage: image)
             }
         }
@@ -58,7 +57,7 @@ struct SaveStateView: View {
                             .frame(width: 30, height: 30)
                             .foregroundColor(.green)
                         Text("Update save state")
-                        
+
                     }
                 }
                 Button() {

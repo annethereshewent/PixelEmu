@@ -12,8 +12,8 @@ class AudioManager {
     private let audioEngine = AVAudioEngine()
     private let audioNode = AVAudioPlayerNode()
     private let audioFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)
-    private var mic: AVAudioInputNode!
-    
+    private var mic: AVAudioInputNode?
+
     private let nslock = NSLock()
     
     private var buffer: [Float] = []
@@ -32,36 +32,23 @@ class AudioManager {
     var bufferPtr: UnsafeBufferPointer<Float>? = nil
     
     var isRunning = true
-    
-    init() {
+
+    func startAudio() {
         do {
             try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.005)
             try AVAudioSession.sharedInstance().setCategory(.playAndRecord, options: [.allowAirPlay, .mixWithOthers])
             try AVAudioSession.sharedInstance().setActive(true)
             try AVAudioSession.sharedInstance().setAllowHapticsAndSystemSoundsDuringRecording(true)
-            
+
             try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-            
-            
+
             self.audioEngine.attach(self.audioNode)
             self.audioEngine.connect(self.audioNode, to: self.audioEngine.outputNode, format: self.audioFormat)
-            
-            mic = audioEngine.inputNode
-
-            let micFormat = mic.inputFormat(forBus: 0)
-
-            sourceBuffer = AVAudioPCMBuffer(pcmFormat: micFormat, frameCapacity: 4096)
-            
-            if let outputFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 44100.0, channels: 1, interleaved: false) {
-                converter = AVAudioConverter(from: micFormat, to: outputFormat)
-            }
-
-            startMicrophone(format: micFormat)
 
             try self.audioEngine.start()
-            
+
             self.audioNode.play()
-            
+
             DispatchQueue.global().async {
                 self.playAudio()
             }
@@ -70,25 +57,62 @@ class AudioManager {
         }
     }
 
-    func startMicrophone(format: AVAudioFormat) {
-        mic.installTap(onBus: 0, bufferSize: 2048, format: format) { (buffer, when) in
-            if !self.isRunning {
-                self.mic.removeTap(onBus: 0)
-            }
-            if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.converter.outputFormat, frameCapacity: buffer.frameCapacity) {
-                var error: NSError?
+    func startMicrophoneAndAudio() {
+        do {
+            try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.005)
+            try AVAudioSession.sharedInstance().setCategory(.playAndRecord, options: [.allowAirPlay, .mixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+            try AVAudioSession.sharedInstance().setAllowHapticsAndSystemSoundsDuringRecording(true)
 
-                _ = self.converter.convert(to: outputBuffer, error: &error) { [unowned self] numberOfFrames, inputStatus in
-                    inputStatus.pointee = .haveData
-                    return buffer
+            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+
+
+            self.audioEngine.attach(self.audioNode)
+            self.audioEngine.connect(self.audioNode, to: self.audioEngine.outputNode, format: self.audioFormat)
+
+            mic = audioEngine.inputNode
+
+            let micFormat = mic!.inputFormat(forBus: 0)
+
+            sourceBuffer = AVAudioPCMBuffer(pcmFormat: micFormat, frameCapacity: 4096)
+
+            if let outputFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 44100.0, channels: 1, interleaved: false) {
+                converter = AVAudioConverter(from: micFormat, to: outputFormat)
+            }
+
+            mic!.installTap(onBus: 0, bufferSize: 2048, format: micFormat) { (buffer, when) in
+                if !self.isRunning {
+                    self.mic!.removeTap(onBus: 0)
                 }
-                let samples = Array(UnsafeBufferPointer(start: outputBuffer.floatChannelData![0], count: Int(outputBuffer.frameLength)))
+                if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.converter.outputFormat, frameCapacity: buffer.frameCapacity) {
+                    var error: NSError?
 
-                self.nslock.lock()
-                self.micBuffer.append(contentsOf: samples)
-                self.nslock.unlock()
+                    _ = self.converter.convert(to: outputBuffer, error: &error) { [unowned self] numberOfFrames, inputStatus in
+                        inputStatus.pointee = .haveData
+                        return buffer
+                    }
+                    let samples = Array(UnsafeBufferPointer(start: outputBuffer.floatChannelData![0], count: Int(outputBuffer.frameLength)))
+
+                    self.nslock.lock()
+                    self.micBuffer.append(contentsOf: samples)
+                    self.nslock.unlock()
+                }
             }
+
+            try self.audioEngine.start()
+
+            self.audioNode.play()
+
+            DispatchQueue.global().async {
+                self.playAudio()
+            }
+        } catch {
+            print(error)
         }
+    }
+
+    func stopMicrophone() {
+        mic?.removeTap(onBus: 0)
     }
 
     func getBufferPtr() -> UnsafeBufferPointer<Float>? {

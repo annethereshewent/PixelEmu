@@ -13,7 +13,17 @@ import DSEmulatorMobile
 struct ImportGamesView: View {
     @State private var showRomDialog = false
     @State private var showErrorMessage = false
-    
+    @State private var gameNamesSet: Set<String> = []
+
+    private let artworkService = ArtworkService()
+    @Query private var games: [Game]
+    @Query private var gbaGames: [GBAGame]
+
+    @Environment(\.modelContext) private var context
+
+    let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
+    let gbaType = UTType(filenameExtension: "gba", conformingTo: .data)
+
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -25,14 +35,10 @@ struct ImportGamesView: View {
     @Binding var gameName: String
     @Binding var currentView: CurrentView
     @Binding var themeColor: Color
+    @Binding var loading: Bool
 
-    @State private var gameNamesSet: Set<String> = []
+    @Binding var currentLibrary: String
 
-    @Query private var games: [Game]
-
-    @Environment(\.modelContext) private var context
-    
-    let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
     var body: some View {
         ZStack {
             VStack {
@@ -40,7 +46,7 @@ struct ImportGamesView: View {
                 HStack {
                     Image("Import Cartridge")
                         .foregroundColor(themeColor)
-                    Text("Only \".nds\" files allowed")
+                    Text("Only .nds, .gba supported")
                         .frame(width: 200, height: 60)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.custom("Departure Mono", size: 20))
@@ -65,57 +71,23 @@ struct ImportGamesView: View {
             .foregroundColor(Colors.primaryColor)
             .fileImporter(
                 isPresented: $showRomDialog,
-                allowedContentTypes: [ndsType.unsafelyUnwrapped],
+                allowedContentTypes: [ndsType!, gbaType!],
                 allowsMultipleSelection: true
             ) { result in
                 do {
-                    if let bios7Data = bios7Data, let bios9Data = bios9Data {
-                        var bios7Bytes: UnsafeBufferPointer<UInt8>!
-                        var bios9Bytes: UnsafeBufferPointer<UInt8>!
-                        var firmwareBytes: UnsafeBufferPointer<UInt8>!
-                        
-                        Array(bios7Data).withUnsafeBufferPointer { ptr in
-                            bios7Bytes = ptr
-                        }
-                        Array(bios9Data).withUnsafeBufferPointer { ptr in
-                            bios9Bytes = ptr
-                        }
-                        
-                        // firmware is unnecessary for this as we are just
-                        // using the emulator to get the game icon.
-                        [].withUnsafeBufferPointer { ptr in
-                            firmwareBytes = ptr
-                        }
-                        
-                        var emu: MobileEmulator!
-                        
-                        let urls = try result.get()
+                    var emu: MobileEmulator!
+                    let urls = try result.get()
+                    loading = true
+                    Task {
                         for url in urls {
-
                             if url.startAccessingSecurityScopedResource() {
                                 defer {
                                     url.stopAccessingSecurityScopedResource()
                                 }
                                 let data = try Data(contentsOf: url)
-                                
-                                var romPtr: UnsafeBufferPointer<UInt8>!
-                                
-                                let dataArr = Array(data)
-                                
-                                dataArr.withUnsafeBufferPointer { ptr in
-                                    romPtr = ptr
-                                }
-                                
-                                if emu == nil {
-                                    emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr)
-                                } else {
-                                    emu.reloadRom(romPtr)
-                                }
-                                
-                                emu.loadIcon()
-                                
+
                                 romData = data
-                                
+
                                 gameName = String(url
                                     .relativeString
                                     .split(separator: "/")
@@ -124,25 +96,86 @@ struct ImportGamesView: View {
                                 )
                                 .removingPercentEncoding
                                 .unsafelyUnwrapped
-                                
-                                if let game = Game.storeGame(
-                                    gameName: gameName,
-                                    data: romData!,
-                                    url: url,
-                                    iconPtr: emu.getGameIconPointer()
-                                ) {
-                                    if !gameNamesSet.contains(gameName) {
-                                        context.insert(game)
-                                        gameNamesSet.insert(gameName)
+
+                                if url.pathExtension.lowercased() == "nds" {
+                                    var romPtr: UnsafeBufferPointer<UInt8>!
+
+                                    let dataArr = Array(data)
+
+                                    dataArr.withUnsafeBufferPointer { ptr in
+                                        romPtr = ptr
+                                    }
+
+                                    if emu == nil {
+                                        if let bios7Data = bios7Data, let bios9Data = bios9Data {
+                                            var bios7Bytes: UnsafeBufferPointer<UInt8>!
+                                            var bios9Bytes: UnsafeBufferPointer<UInt8>!
+                                            var firmwareBytes: UnsafeBufferPointer<UInt8>!
+
+                                            Array(bios7Data).withUnsafeBufferPointer { ptr in
+                                                bios7Bytes = ptr
+                                            }
+                                            Array(bios9Data).withUnsafeBufferPointer { ptr in
+                                                bios9Bytes = ptr
+                                            }
+
+                                            Array([]).withUnsafeBufferPointer { ptr in
+                                                firmwareBytes = ptr
+                                            }
+
+                                            emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr)
+                                        }
+                                    } else {
+                                        emu.reloadRom(romPtr)
+                                    }
+
+                                    emu.loadIcon()
+                                    if let game = Game.storeGame(
+                                        gameName: gameName,
+                                        data: romData!,
+                                        url: url,
+                                        iconPtr: emu.getGameIconPointer()
+                                    ) {
+                                        // check if album artwork exists before inserting game into DB
+                                        if !gameNamesSet.contains(gameName) {
+                                            if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: DS_ID) {
+                                                game.albumArt = artwork
+                                            }
+                                            context.insert(game)
+                                            gameNamesSet.insert(gameName)
+                                        }
+                                    }
+                                } else {
+                                    if let game = GBAGame.storeGame(
+                                        gameName: gameName,
+                                        data: data,
+                                        url: url
+                                    ) {
+                                        if !gameNamesSet.contains(gameName) {
+                                            if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: GBA_ID) {
+                                                game.albumArt = artwork
+                                            }
+                                            context.insert(game)
+                                            gameNamesSet.insert(gameName)
+                                        }
                                     }
                                 }
                             }
                         }
                         // once done processing all games, return back to library view
                         currentView = .library
+                        loading = false
+                        if urls[0].pathExtension.lowercased() == "nds" {
+                            currentLibrary = "nds"
+                        } else {
+                            currentLibrary = "gba"
+                        }
+
+                        let defaults = UserDefaults.standard
+
+                        defaults.set(currentLibrary, forKey: "currentLibrary")
+
                         emu = nil
-                    } else {
-                        showErrorMessage = true
                     }
                 } catch {
                     showErrorMessage = true
@@ -151,6 +184,10 @@ struct ImportGamesView: View {
             }
             .onAppear() {
                 for game in games {
+                    gameNamesSet.insert(game.gameName)
+                }
+
+                for game in gbaGames {
                     gameNamesSet.insert(game.gameName)
                 }
             }

@@ -12,4 +12,5 @@ enum CurrentFile {
     case bios7
     case bios9
     case firmware
+    case gba
 }
