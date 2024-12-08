@@ -206,6 +206,7 @@ struct GBAGameView: View {
             }
 
             emulator!.load(romPtr)
+
             emulator!.loadBios(biosPtr)
         }
 
@@ -220,17 +221,15 @@ struct GBAGameView: View {
         }
 
         if let emu = emulator, let gameUrl = gameUrl {
-//            backupFile = GBABackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupFileSize()))
-//            if let ptr = backupFile!.createBackupFile() {
-//                emu.loadSave(ptr)
-//            }
             loading = true
             if let saveData = await self.cloudService!.getSave(saveName: BackupFile.getSaveName(gameUrl: gameUrl), saveType: .gba) {
                 let ptr = BackupFile.getPointer(saveData)
                 emu.loadSave(ptr)
             } else {
-                let ptr = BackupFile.getPointer(Data())
-                emu.loadSave(ptr)
+                backupFile = GBABackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupFileSize()))
+                if let ptr = backupFile!.createBackupFile() {
+                    emu.loadSave(ptr)
+                }
             }
             loading = false
         }
@@ -339,15 +338,16 @@ struct GBAGameView: View {
             .onAppear {
                 UIApplication.shared.isIdleTimerDisabled = true
 
-                if !isRunning {
-                    Task {
+                Task {
+                    if !isRunning {
+                        emulatorCopy = nil
                         await run()
                         gameController = GameController(closure: { gameController in
                             addControllerEventListeners(gameController: gameController)
                         })
+                    } else {
+                        resumeGame()
                     }
-                } else {
-                    resumeGame()
                 }
             }
             .onDisappear {
