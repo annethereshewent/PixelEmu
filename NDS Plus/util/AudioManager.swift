@@ -12,8 +12,8 @@ class AudioManager {
     private let audioEngine = AVAudioEngine()
     private let audioNode = AVAudioPlayerNode()
     private let audioFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)
-    private var mic: AVAudioInputNode!
-    
+    private var mic: AVAudioInputNode?
+
     private let nslock = NSLock()
     
     private var buffer: [Float] = []
@@ -72,7 +72,7 @@ class AudioManager {
 
             mic = audioEngine.inputNode
 
-            let micFormat = mic.inputFormat(forBus: 0)
+            let micFormat = mic!.inputFormat(forBus: 0)
 
             sourceBuffer = AVAudioPCMBuffer(pcmFormat: micFormat, frameCapacity: 4096)
 
@@ -80,9 +80,9 @@ class AudioManager {
                 converter = AVAudioConverter(from: micFormat, to: outputFormat)
             }
 
-            mic.installTap(onBus: 0, bufferSize: 2048, format: micFormat) { (buffer, when) in
+            mic!.installTap(onBus: 0, bufferSize: 2048, format: micFormat) { (buffer, when) in
                 if !self.isRunning {
-                    self.mic.removeTap(onBus: 0)
+                    self.mic!.removeTap(onBus: 0)
                 }
                 if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.converter.outputFormat, frameCapacity: buffer.frameCapacity) {
                     var error: NSError?
@@ -112,7 +112,7 @@ class AudioManager {
     }
 
     func stopMicrophone() {
-        mic.removeTap(onBus: 0)
+        mic?.removeTap(onBus: 0)
     }
 
     func getBufferPtr() -> UnsafeBufferPointer<Float>? {
