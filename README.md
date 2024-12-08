@@ -9,7 +9,7 @@ To get the project up and running locally, you'll need to go through the followi
 1. install Rust toolchains for iOS: `rustup target add x86_64-apple-darwin aarch64-apple-darwin aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
 `
 2. Install swift-bridge cli: `cargo install -f swift-bridge-cli`
-3. Change directory to `external/nds-plus-emulator/mobile`.
+3. Change directory to `external/nds-plus-emulator/mobile`
 4. run `./build-rust.sh`
 5. run the following command with swift-bridge:
   ```
@@ -21,7 +21,20 @@ To get the project up and running locally, you'll need to go through the followi
   --macos target/universal-macos/release/libds_emulator_mobile.a \
   --name DSEmulatorMobile
   ```
-8. Install Cocoapods if it's not already installed, then in the root directory of this project, run `pod install`.
+8. Change directory to `external/gba-plus/mobile`
+9. run `./build-rust.sh`
+10. run the following command with swift-bridge:
+  ```
+    swift-bridge-cli create-package \
+  --bridges-dir ./generated \
+  --out-dir GBAEmulatorMobile \
+  --ios target/aarch64-apple-ios/release/libgba_emulator_mobile.a \
+  --simulator target/universal-ios/release/libgba_emulator_mobile.a \
+  --macos target/universal-macos/release/libgba_emulator_mobile.a \
+  --name GBAEmulatorMobile
+  ```
+11. Run `./gba-emu.sh
+12. Install Cocoapods if it's not already installed, then in the root directory of this project, run `pod install`.
 7. Open the generated workspace file from the above command, then go to `File -> Add Package Dependencies`
 8. Select `Add Local` then select the `external/nds-plus-emulator/mobile/DSEmulatorMobile` directory.
 9. Go to the project's general panel, and under `Frameworks, Libraries, and Embedded Content` and hit the `+` button.
