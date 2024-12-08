@@ -10,7 +10,9 @@ import GBAEmulatorMobile
 
 struct GBAMenuView: View {
     @Environment(\.colorScheme) private var colorScheme
+
     @Binding var emulator: GBAEmulator?
+    @Binding var backupFile: GBABackupFile?
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
     @Binding var audioManager: AudioManager?
@@ -140,6 +142,7 @@ struct GBAMenuView: View {
         .sheet(isPresented: $isStateEntriesPresented) {
             GBAStateEntriesView(
                 emulator: $emulator,
+                backupFile: $backupFile,
                 gameName: $gameName,
                 isMenuPresented: $isMenuPresented,
                 game: $game,
