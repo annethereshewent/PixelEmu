@@ -33,7 +33,7 @@ To get the project up and running locally, you'll need to go through the followi
   --macos target/universal-macos/release/libgba_emulator_mobile.a \
   --name GBAEmulatorMobile
   ```
-11. Run `./gba-emu.sh
+11. Run `./gba-emu.sh`
 12. Install Cocoapods if it's not already installed, then in the root directory of this project, run `pod install`.
 7. Open the generated workspace file from the above command, then go to `File -> Add Package Dependencies`
 8. Select `Add Local` then select the `external/nds-plus-emulator/mobile/DSEmulatorMobile` directory.
