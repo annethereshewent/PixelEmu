@@ -1,4 +1,4 @@
-# NDS Plus Mobile
+# PixelEmu
 
 ## Getting Started
 
