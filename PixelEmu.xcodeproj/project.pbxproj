@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2870F371F32611D7E78586B0 /* Pods_NDS_Plus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6448C8EDB8DD8EB2CF0162FF /* Pods_NDS_Plus.framework */; };
-		896072B790B45B70A38AA09F /* Pods_NDS_Plus_NDS_PlusUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8308C38ED1B56D07188F0E7 /* Pods_NDS_Plus_NDS_PlusUITests.framework */; };
-		A61B98B0F51FE6206AA49161 /* Pods_NDS_PlusTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7DABE8183A6D6C1636DBB3F /* Pods_NDS_PlusTests.framework */; };
-		E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806E9F72C97E1B10081D3E8 /* NDS_PlusApp.swift */; };
 		E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806E9F92C97E1B10081D3E8 /* ContentView.swift */; };
 		E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */; };
 		E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E806E9FE2C97E1B20081D3E8 /* Preview Assets.xcassets */; };
@@ -33,6 +29,8 @@
 		E806EAA02CA3AD080081D3E8 /* SaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */; };
 		E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */; };
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
+		E82A46F82D9B41210059BB67 /* PixelEmu-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E82A46F72D9B41210059BB67 /* PixelEmu-Info.plist */; };
+		E82A46FA2D9B41380059BB67 /* PixelEmuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */; };
 		E84B3A8C2D016205003E0061 /* GBABackupFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84B3A8B2D016205003E0061 /* GBABackupFile.swift */; };
 		E84EE44F2D04024700CF15ED /* GBASaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EE44E2D04024700CF15ED /* GBASaveState.swift */; };
 		E84EE4512D0403B000CF15ED /* GBAStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EE4502D0403B000CF15ED /* GBAStateView.swift */; };
@@ -108,23 +106,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1A37EB73FC02471AC7C8A485 /* Pods-NDS PlusTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NDS PlusTests.debug.xcconfig"; path = "Target Support Files/Pods-NDS PlusTests/Pods-NDS PlusTests.debug.xcconfig"; sourceTree = "<group>"; };
-		42D0D22D735B559399633567 /* Pods-NDS Plus-NDS PlusUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NDS Plus-NDS PlusUITests.debug.xcconfig"; path = "Target Support Files/Pods-NDS Plus-NDS PlusUITests/Pods-NDS Plus-NDS PlusUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		6448C8EDB8DD8EB2CF0162FF /* Pods_NDS_Plus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NDS_Plus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		710B58B0EEC593A42E300A91 /* Pods-NDS PlusTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NDS PlusTests.release.xcconfig"; path = "Target Support Files/Pods-NDS PlusTests/Pods-NDS PlusTests.release.xcconfig"; sourceTree = "<group>"; };
-		7140CD42F63817AF7437A28E /* Pods-NDS Plus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NDS Plus.debug.xcconfig"; path = "Target Support Files/Pods-NDS Plus/Pods-NDS Plus.debug.xcconfig"; sourceTree = "<group>"; };
-		9636791FFDD17B340D2960FD /* Pods-NDS Plus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NDS Plus.release.xcconfig"; path = "Target Support Files/Pods-NDS Plus/Pods-NDS Plus.release.xcconfig"; sourceTree = "<group>"; };
-		A447CA76E79FFDEE37BE12B7 /* Pods-NDS Plus-NDS PlusUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NDS Plus-NDS PlusUITests.release.xcconfig"; path = "Target Support Files/Pods-NDS Plus-NDS PlusUITests/Pods-NDS Plus-NDS PlusUITests.release.xcconfig"; sourceTree = "<group>"; };
-		B8308C38ED1B56D07188F0E7 /* Pods_NDS_Plus_NDS_PlusUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NDS_Plus_NDS_PlusUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C7DABE8183A6D6C1636DBB3F /* Pods_NDS_PlusTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NDS_PlusTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E806E9F42C97E1B10081D3E8 /* NDS+.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NDS+.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E806E9F72C97E1B10081D3E8 /* NDS_PlusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDS_PlusApp.swift; sourceTree = "<group>"; };
+		0F25C770C3BB0D97257F1E0A /* Pods-PixelEmu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu.release.xcconfig"; path = "Target Support Files/Pods-PixelEmu/Pods-PixelEmu.release.xcconfig"; sourceTree = "<group>"; };
+		2C75F72BAAA59A0FBAF161BC /* Pods-PixelEmu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu.debug.xcconfig"; path = "Target Support Files/Pods-PixelEmu/Pods-PixelEmu.debug.xcconfig"; sourceTree = "<group>"; };
+		86E4C2EF5B29D1271A65F62E /* Pods-PixelEmu-PixelEmuUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu-PixelEmuUITests.release.xcconfig"; path = "Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests.release.xcconfig"; sourceTree = "<group>"; };
+		886027EC5BD62B0B85C87910 /* Pods-PixelEmuTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmuTests.release.xcconfig"; path = "Target Support Files/Pods-PixelEmuTests/Pods-PixelEmuTests.release.xcconfig"; sourceTree = "<group>"; };
+		A4606BE077067A560D847119 /* Pods-PixelEmuTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmuTests.debug.xcconfig"; path = "Target Support Files/Pods-PixelEmuTests/Pods-PixelEmuTests.debug.xcconfig"; sourceTree = "<group>"; };
+		E806E9F42C97E1B10081D3E8 /* PixelEmu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PixelEmu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E806E9F92C97E1B10081D3E8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E806E9FE2C97E1B20081D3E8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		E806EA042C97E1B20081D3E8 /* NDS PlusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NDS PlusTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E806EA0E2C97E1B20081D3E8 /* NDS PlusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NDS PlusUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E806EA2B2C9824A80081D3E8 /* NDS-Plus-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "NDS-Plus-Info.plist"; sourceTree = SOURCE_ROOT; };
+		E806EA042C97E1B20081D3E8 /* PixelEmuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PixelEmuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E806EA0E2C97E1B20081D3E8 /* PixelEmuUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PixelEmuUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentFile.swift; sourceTree = "<group>"; };
 		E806EA312C9935D00081D3E8 /* GraphicsParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphicsParser.swift; sourceTree = "<group>"; };
 		E806EA592C9A834D0081D3E8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -143,6 +135,8 @@
 		E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveManagementView.swift; sourceTree = "<group>"; };
 		E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
+		E82A46F72D9B41210059BB67 /* PixelEmu-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PixelEmu-Info.plist"; sourceTree = "<group>"; };
+		E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelEmuApp.swift; sourceTree = "<group>"; };
 		E84B3A8B2D016205003E0061 /* GBABackupFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBABackupFile.swift; sourceTree = "<group>"; };
 		E84EE44E2D04024700CF15ED /* GBASaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBASaveState.swift; sourceTree = "<group>"; };
 		E84EE4502D0403B000CF15ED /* GBAStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateView.swift; sourceTree = "<group>"; };
@@ -197,6 +191,7 @@
 		E8EE5D962CC3491A00CD77B6 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModal.swift; sourceTree = "<group>"; };
 		E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		F6D72E464429EADD40F6E67D /* Pods-PixelEmu-PixelEmuUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; path = "Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,7 +201,6 @@
 			files = (
 				E8BBBC7E2CF981510065EF4E /* GBAEmulatorMobile in Frameworks */,
 				E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */,
-				2870F371F32611D7E78586B0 /* Pods_NDS_Plus.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,7 +208,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A61B98B0F51FE6206AA49161 /* Pods_NDS_PlusTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,7 +215,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				896072B790B45B70A38AA09F /* Pods_NDS_Plus_NDS_PlusUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,9 +224,6 @@
 		19D49655ECDEBBE8636FE769 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				6448C8EDB8DD8EB2CF0162FF /* Pods_NDS_Plus.framework */,
-				B8308C38ED1B56D07188F0E7 /* Pods_NDS_Plus_NDS_PlusUITests.framework */,
-				C7DABE8183A6D6C1636DBB3F /* Pods_NDS_PlusTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -242,12 +231,12 @@
 		64BDE64EA0B37E21FEA9C4A6 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				7140CD42F63817AF7437A28E /* Pods-NDS Plus.debug.xcconfig */,
-				9636791FFDD17B340D2960FD /* Pods-NDS Plus.release.xcconfig */,
-				42D0D22D735B559399633567 /* Pods-NDS Plus-NDS PlusUITests.debug.xcconfig */,
-				A447CA76E79FFDEE37BE12B7 /* Pods-NDS Plus-NDS PlusUITests.release.xcconfig */,
-				1A37EB73FC02471AC7C8A485 /* Pods-NDS PlusTests.debug.xcconfig */,
-				710B58B0EEC593A42E300A91 /* Pods-NDS PlusTests.release.xcconfig */,
+				2C75F72BAAA59A0FBAF161BC /* Pods-PixelEmu.debug.xcconfig */,
+				0F25C770C3BB0D97257F1E0A /* Pods-PixelEmu.release.xcconfig */,
+				F6D72E464429EADD40F6E67D /* Pods-PixelEmu-PixelEmuUITests.debug.xcconfig */,
+				86E4C2EF5B29D1271A65F62E /* Pods-PixelEmu-PixelEmuUITests.release.xcconfig */,
+				A4606BE077067A560D847119 /* Pods-PixelEmuTests.debug.xcconfig */,
+				886027EC5BD62B0B85C87910 /* Pods-PixelEmuTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -256,7 +245,7 @@
 			isa = PBXGroup;
 			children = (
 				E806EA992CA1284B0081D3E8 /* .gitignore */,
-				E806E9F62C97E1B10081D3E8 /* NDS Plus */,
+				E806E9F62C97E1B10081D3E8 /* PixelEmu */,
 				E806E9F52C97E1B10081D3E8 /* Products */,
 				64BDE64EA0B37E21FEA9C4A6 /* Pods */,
 				19D49655ECDEBBE8636FE769 /* Frameworks */,
@@ -266,16 +255,18 @@
 		E806E9F52C97E1B10081D3E8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E806E9F42C97E1B10081D3E8 /* NDS+.app */,
-				E806EA042C97E1B20081D3E8 /* NDS PlusTests.xctest */,
-				E806EA0E2C97E1B20081D3E8 /* NDS PlusUITests.xctest */,
+				E806E9F42C97E1B10081D3E8 /* PixelEmu.app */,
+				E806EA042C97E1B20081D3E8 /* PixelEmuTests.xctest */,
+				E806EA0E2C97E1B20081D3E8 /* PixelEmuUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E806E9F62C97E1B10081D3E8 /* NDS Plus */ = {
+		E806E9F62C97E1B10081D3E8 /* PixelEmu */ = {
 			isa = PBXGroup;
 			children = (
+				E82A46F72D9B41210059BB67 /* PixelEmu-Info.plist */,
+				E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */,
 				E8EE5DA52CC429CC00CD77B6 /* serializable */,
 				E8EE5D8B2CC224E600CD77B6 /* fonts */,
 				E8C245E72CBCAA5000B6DF67 /* bin */,
@@ -285,12 +276,10 @@
 				E806EA652C9E9B340081D3E8 /* models */,
 				E806EA642C9E9B290081D3E8 /* util */,
 				E806EA632C9E9B210081D3E8 /* views */,
-				E806EA2B2C9824A80081D3E8 /* NDS-Plus-Info.plist */,
-				E806E9F72C97E1B10081D3E8 /* NDS_PlusApp.swift */,
 				E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */,
 				E806E9FD2C97E1B20081D3E8 /* Preview Content */,
 			);
-			path = "NDS Plus";
+			path = PixelEmu;
 			sourceTree = "<group>";
 		};
 		E806E9FD2C97E1B20081D3E8 /* Preview Content */ = {
@@ -471,9 +460,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E806E9F32C97E1B10081D3E8 /* NDS Plus */ = {
+		E806E9F32C97E1B10081D3E8 /* PixelEmu */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E806EA182C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS Plus" */;
+			buildConfigurationList = E806EA182C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmu" */;
 			buildPhases = (
 				5C6A71F79449220C84AA6CAC /* [CP] Check Pods Manifest.lock */,
 				E806E9F02C97E1B10081D3E8 /* Sources */,
@@ -485,18 +474,18 @@
 			);
 			dependencies = (
 			);
-			name = "NDS Plus";
+			name = PixelEmu;
 			packageProductDependencies = (
 				E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */,
 				E8BBBC7D2CF981510065EF4E /* GBAEmulatorMobile */,
 			);
 			productName = "NDS Plus";
-			productReference = E806E9F42C97E1B10081D3E8 /* NDS+.app */;
+			productReference = E806E9F42C97E1B10081D3E8 /* PixelEmu.app */;
 			productType = "com.apple.product-type.application";
 		};
-		E806EA032C97E1B20081D3E8 /* NDS PlusTests */ = {
+		E806EA032C97E1B20081D3E8 /* PixelEmuTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E806EA1B2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS PlusTests" */;
+			buildConfigurationList = E806EA1B2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuTests" */;
 			buildPhases = (
 				68E013BA5975AFC704C2EC49 /* [CP] Check Pods Manifest.lock */,
 				E806EA002C97E1B20081D3E8 /* Sources */,
@@ -508,14 +497,14 @@
 			dependencies = (
 				E806EA062C97E1B20081D3E8 /* PBXTargetDependency */,
 			);
-			name = "NDS PlusTests";
+			name = PixelEmuTests;
 			productName = "NDS PlusTests";
-			productReference = E806EA042C97E1B20081D3E8 /* NDS PlusTests.xctest */;
+			productReference = E806EA042C97E1B20081D3E8 /* PixelEmuTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		E806EA0D2C97E1B20081D3E8 /* NDS PlusUITests */ = {
+		E806EA0D2C97E1B20081D3E8 /* PixelEmuUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E806EA1E2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS PlusUITests" */;
+			buildConfigurationList = E806EA1E2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuUITests" */;
 			buildPhases = (
 				E5FE161C9202045C777F415C /* [CP] Check Pods Manifest.lock */,
 				E806EA0A2C97E1B20081D3E8 /* Sources */,
@@ -528,9 +517,9 @@
 			dependencies = (
 				E806EA102C97E1B20081D3E8 /* PBXTargetDependency */,
 			);
-			name = "NDS PlusUITests";
+			name = PixelEmuUITests;
 			productName = "NDS PlusUITests";
-			productReference = E806EA0E2C97E1B20081D3E8 /* NDS PlusUITests.xctest */;
+			productReference = E806EA0E2C97E1B20081D3E8 /* PixelEmuUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -556,7 +545,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E806E9EF2C97E1B10081D3E8 /* Build configuration list for PBXProject "NDS Plus" */;
+			buildConfigurationList = E806E9EF2C97E1B10081D3E8 /* Build configuration list for PBXProject "PixelEmu" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -573,9 +562,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E806E9F32C97E1B10081D3E8 /* NDS Plus */,
-				E806EA032C97E1B20081D3E8 /* NDS PlusTests */,
-				E806EA0D2C97E1B20081D3E8 /* NDS PlusUITests */,
+				E806E9F32C97E1B10081D3E8 /* PixelEmu */,
+				E806EA032C97E1B20081D3E8 /* PixelEmuTests */,
+				E806EA0D2C97E1B20081D3E8 /* PixelEmuUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -588,6 +577,7 @@
 				E806EA9A2CA1284B0081D3E8 /* .gitignore in Resources */,
 				E806EA702CA0D8330081D3E8 /* game_db.json in Resources */,
 				E8BA68202CC49A3900CE7E54 /* DepartureMono.woff in Resources */,
+				E82A46F82D9B41210059BB67 /* PixelEmu-Info.plist in Resources */,
 				E8BA68212CC49A3900CE7E54 /* DepartureMono.otf in Resources */,
 				E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */,
 				E8C245EC2CBCAA7300B6DF67 /* drastic_bios_arm9.bin in Resources */,
@@ -622,15 +612,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NDS Plus/Pods-NDS Plus-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-PixelEmu/Pods-PixelEmu-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NDS Plus/Pods-NDS Plus-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-PixelEmu/Pods-PixelEmu-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NDS Plus/Pods-NDS Plus-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PixelEmu/Pods-PixelEmu-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		5C6A71F79449220C84AA6CAC /* [CP] Check Pods Manifest.lock */ = {
@@ -648,7 +638,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-NDS Plus-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-PixelEmu-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -670,7 +660,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-NDS PlusTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-PixelEmuTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -692,7 +682,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-NDS Plus-NDS PlusUITests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-PixelEmu-PixelEmuUITests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -705,15 +695,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NDS Plus-NDS PlusUITests/Pods-NDS Plus-NDS PlusUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NDS Plus-NDS PlusUITests/Pods-NDS Plus-NDS PlusUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NDS Plus-NDS PlusUITests/Pods-NDS Plus-NDS PlusUITests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -746,6 +736,7 @@
 				E8BBBC822CF9870D0065EF4E /* GBAEntryViewWrapper.swift in Sources */,
 				E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */,
 				E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */,
+				E82A46FA2D9B41380059BB67 /* PixelEmuApp.swift in Sources */,
 				E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */,
 				E8A589422D02C389009D4337 /* GBASaveEntry.swift in Sources */,
 				E84EE44F2D04024700CF15ED /* GBASaveState.swift in Sources */,
@@ -768,7 +759,6 @@
 				E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */,
 				E8A334062CFAD03A00765ABB /* GBAScreenViewWrapper.swift in Sources */,
 				E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */,
-				E806E9F82C97E1B10081D3E8 /* NDS_PlusApp.swift in Sources */,
 				E8A334042CFACF8C00765ABB /* GBAScreenView.swift in Sources */,
 				E8BBBC6C2CF96CAB0065EF4E /* GBALibraryView.swift in Sources */,
 				E8C245EF2CBCC36F00B6DF67 /* DualScreenViewWrapper.swift in Sources */,
@@ -810,12 +800,12 @@
 /* Begin PBXTargetDependency section */
 		E806EA062C97E1B20081D3E8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E806E9F32C97E1B10081D3E8 /* NDS Plus */;
+			target = E806E9F32C97E1B10081D3E8 /* PixelEmu */;
 			targetProxy = E806EA052C97E1B20081D3E8 /* PBXContainerItemProxy */;
 		};
 		E806EA102C97E1B20081D3E8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E806E9F32C97E1B10081D3E8 /* NDS Plus */;
+			target = E806E9F32C97E1B10081D3E8 /* PixelEmu */;
 			targetProxy = E806EA0F2C97E1B20081D3E8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -942,18 +932,18 @@
 		};
 		E806EA192C97E1B20081D3E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7140CD42F63817AF7437A28E /* Pods-NDS Plus.debug.xcconfig */;
+			baseConfigurationReference = 2C75F72BAAA59A0FBAF161BC /* Pods-PixelEmu.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"NDS Plus/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"PixelEmu/Preview Content\"";
 				DEVELOPMENT_TEAM = 72VANXCC9C;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "NDS-Plus-Info.plist";
+				INFOPLIST_FILE = "PixelEmu-Info.plist";
 				INFOPLIST_KEY_GCSupportsControllerUserInteraction = YES;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access for recording audio for certain games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -966,8 +956,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-Plus";
-				PRODUCT_NAME = "NDS+";
+				PRODUCT_BUNDLE_IDENTIFIER = com.annecastrillon.PixelEmu;
+				PRODUCT_NAME = PixelEmu;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -980,18 +970,18 @@
 		};
 		E806EA1A2C97E1B20081D3E8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9636791FFDD17B340D2960FD /* Pods-NDS Plus.release.xcconfig */;
+			baseConfigurationReference = 0F25C770C3BB0D97257F1E0A /* Pods-PixelEmu.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"NDS Plus/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"PixelEmu/Preview Content\"";
 				DEVELOPMENT_TEAM = 72VANXCC9C;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "NDS-Plus-Info.plist";
+				INFOPLIST_FILE = "PixelEmu-Info.plist";
 				INFOPLIST_KEY_GCSupportsControllerUserInteraction = YES;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access for recording audio for certain games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1004,8 +994,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-Plus";
-				PRODUCT_NAME = "NDS+";
+				PRODUCT_BUNDLE_IDENTIFIER = com.annecastrillon.PixelEmu;
+				PRODUCT_NAME = PixelEmu;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -1018,7 +1008,7 @@
 		};
 		E806EA1C2C97E1B20081D3E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A37EB73FC02471AC7C8A485 /* Pods-NDS PlusTests.debug.xcconfig */;
+			baseConfigurationReference = A4606BE077067A560D847119 /* Pods-PixelEmuTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1034,13 +1024,13 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NDS Plus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NDS Plus";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PixelEmu.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PixelEmu";
 			};
 			name = Debug;
 		};
 		E806EA1D2C97E1B20081D3E8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 710B58B0EEC593A42E300A91 /* Pods-NDS PlusTests.release.xcconfig */;
+			baseConfigurationReference = 886027EC5BD62B0B85C87910 /* Pods-PixelEmuTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1056,13 +1046,13 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NDS Plus.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NDS Plus";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PixelEmu.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PixelEmu";
 			};
 			name = Release;
 		};
 		E806EA1F2C97E1B20081D3E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 42D0D22D735B559399633567 /* Pods-NDS Plus-NDS PlusUITests.debug.xcconfig */;
+			baseConfigurationReference = F6D72E464429EADD40F6E67D /* Pods-PixelEmu-PixelEmuUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1082,7 +1072,7 @@
 		};
 		E806EA202C97E1B20081D3E8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A447CA76E79FFDEE37BE12B7 /* Pods-NDS Plus-NDS PlusUITests.release.xcconfig */;
+			baseConfigurationReference = 86E4C2EF5B29D1271A65F62E /* Pods-PixelEmu-PixelEmuUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1103,7 +1093,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E806E9EF2C97E1B10081D3E8 /* Build configuration list for PBXProject "NDS Plus" */ = {
+		E806E9EF2C97E1B10081D3E8 /* Build configuration list for PBXProject "PixelEmu" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E806EA162C97E1B20081D3E8 /* Debug */,
@@ -1112,7 +1102,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E806EA182C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS Plus" */ = {
+		E806EA182C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmu" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E806EA192C97E1B20081D3E8 /* Debug */,
@@ -1121,7 +1111,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E806EA1B2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS PlusTests" */ = {
+		E806EA1B2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E806EA1C2C97E1B20081D3E8 /* Debug */,
@@ -1130,7 +1120,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E806EA1E2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "NDS PlusUITests" */ = {
+		E806EA1E2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E806EA1F2C97E1B20081D3E8 /* Debug */,
