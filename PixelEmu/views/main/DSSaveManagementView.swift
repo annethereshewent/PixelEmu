@@ -1,6 +1,6 @@
 //
 //  DSSaveManagementView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 12/5/24.
 //

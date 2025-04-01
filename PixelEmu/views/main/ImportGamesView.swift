@@ -1,6 +1,6 @@
 //
 //  ImportGamesView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/17/24.
 //
@@ -23,6 +23,8 @@ struct ImportGamesView: View {
 
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
     let gbaType = UTType(filenameExtension: "gba", conformingTo: .data)
+    let n64Type = UTType(filenameExtension: "n64", conformingTo: .data)
+    let z64Type = UTType(filenameExtension: "z64", conformingTo: .data)
 
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
@@ -71,7 +73,7 @@ struct ImportGamesView: View {
             .foregroundColor(Colors.primaryColor)
             .fileImporter(
                 isPresented: $showRomDialog,
-                allowedContentTypes: [ndsType!, gbaType!],
+                allowedContentTypes: [ndsType!, gbaType!, n64Type!, z64Type!],
                 allowsMultipleSelection: true
             ) { result in
                 do {
@@ -145,7 +147,7 @@ struct ImportGamesView: View {
                                             gameNamesSet.insert(gameName)
                                         }
                                     }
-                                } else {
+                                } else if url.pathExtension.lowercased() == "gba" {
                                     if let game = GBAGame.storeGame(
                                         gameName: gameName,
                                         data: data,
@@ -153,6 +155,20 @@ struct ImportGamesView: View {
                                     ) {
                                         if !gameNamesSet.contains(gameName) {
                                             if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: GBA_ID) {
+                                                game.albumArt = artwork
+                                            }
+                                            context.insert(game)
+                                            gameNamesSet.insert(gameName)
+                                        }
+                                    }
+                                } else {
+                                    if let game = N64Game.storeGame(
+                                        gameName: gameName,
+                                        data: data,
+                                        url: url
+                                    ) {
+                                        if !gameNamesSet.contains(gameName) {
+                                            if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: N64_ID) {
                                                 game.albumArt = artwork
                                             }
                                             context.insert(game)

@@ -25,7 +25,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E806E9F32C97E1B10081D3E8"
-               BuildableName = "NDS+.app"
+               BuildableName = "PixelEmu.app"
                BlueprintName = "PixelEmu"
                ReferencedContainer = "container:PixelEmu.xcodeproj">
             </BuildableReference>
@@ -78,7 +78,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E806E9F32C97E1B10081D3E8"
-            BuildableName = "NDS+.app"
+            BuildableName = "PixelEmu.app"
             BlueprintName = "PixelEmu"
             ReferencedContainer = "container:PixelEmu.xcodeproj">
          </BuildableReference>
@@ -98,7 +98,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E806E9F32C97E1B10081D3E8"
-            BuildableName = "NDS+.app"
+            BuildableName = "PixelEmu.app"
             BlueprintName = "PixelEmu"
             ReferencedContainer = "container:PixelEmu.xcodeproj">
          </BuildableReference>

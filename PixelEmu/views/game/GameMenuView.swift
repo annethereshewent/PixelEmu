@@ -1,6 +1,6 @@
 //
 //  GameMenuView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/14/24.
 //

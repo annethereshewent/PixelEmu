@@ -1,46 +1,42 @@
 //
-//  GamesListView.swift
+//  N64ListView.swift
 //  PixelEmu
 //
-//  Created by Anne Castrillon on 9/22/24.
+//  Created by Anne Castrillon on 3/31/25.
 //
 
 import SwiftUI
-import DSEmulatorMobile
 import SwiftData
 
-struct GamesListView: View {
+struct N64ListView: View {
     @Environment(\.modelContext) private var context
-    
+
     @Binding var romData: Data?
-    @Binding var bios7Data: Data?
-    @Binding var bios9Data: Data?
-    @Binding var firmwareData: Data?
-    
+
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
-    @Binding var emulator: MobileEmulator?
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
-    @Binding var game: Game?
+    @Binding var game: N64Game?
     @Binding var filter: LibraryFilter
     @Binding var themeColor: Color
+    @Binding var isPaused: Bool
 
     @State private var showResumeDialog = false
     @State private var resumeGame = false
     @State private var settingChanged = false
-    
+
     @State private var showDeleteConfirmation = false
     @State private var showDeleteError = false
     @State private var deleteAction: () -> Void = {}
-    @State private var gameToDelete: Game?
+    @State private var gameToDelete: N64Game?
     @State private var showGameError = false
 
     @State private var isLoadStatesPresented = false
-    @State private var selectedGame: Game?
-    @Query private var games: [Game]
-    
-    private var filteredGames: [Game] {
+    @State private var selectedGame: N64Game?
+    @Query private var games: [N64Game]
+
+    private var filteredGames: [N64Game] {
         switch filter {
         case .all:
             return games.sorted {
@@ -57,23 +53,25 @@ struct GamesListView: View {
             }
         }
     }
-    
+
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-    
-    private func startNewGame(_ game: Game? = nil) {
-        emulator = nil
+
+    private func startNewGame(_ game: N64Game? = nil) {
+        // emulator = nil
         workItem?.cancel()
         isRunning = false
-        
+
+        isPaused = false
+
         workItem = nil
-        
+
         if let game = game {
             self.game = game
             game.lastPlayed = Date.now
-            path.append("GameView")
+            path.append("N64GameView")
         } else if let game = self.game {
             game.lastPlayed = Date.now
-            path.append("GameView")
+            path.append("N64GameView")
         } else {
             showGameError = true
         }
@@ -91,42 +89,46 @@ struct GamesListView: View {
                 ScrollView {
                     LazyVGrid(columns: columns) {
                         ForEach(filteredGames) { game in
-                            GameEntryViewWrapper(
+                            N64EntryViewWrapper(
                                 showDeleteConfirmation: $showDeleteConfirmation,
                                 deleteAction: $deleteAction,
                                 gameToDelete: $gameToDelete,
                                 isLoadStatesPresented: $isLoadStatesPresented,
                                 selectedGame: $selectedGame,
+                                themeColor: $themeColor,
                                 game: game
                             ) {
-                                // refresh the url's bookmark
                                 var isStale = false
-                                if let url = try? URL(
-                                    resolvingBookmarkData: game.bookmark,
-                                    options: [.withoutUI],
-                                    relativeTo: nil,
-                                    bookmarkDataIsStale: &isStale
-                                ) {
+                                do {
+                                    let url = try URL(
+                                        resolvingBookmarkData: game.bookmark,
+                                        options: [.withoutUI],
+                                        relativeTo: nil,
+                                        bookmarkDataIsStale: &isStale
+                                    )
                                     if url.startAccessingSecurityScopedResource() {
-                                        gameUrl = url
                                         defer {
                                             url.stopAccessingSecurityScopedResource()
                                         }
-                                        if let data = try? Data(contentsOf: url) {
-                                            romData = data
-                                    
-                                            if bios7Data != nil &&
-                                                bios9Data != nil
-                                            {
-                                                if self.game != nil && self.game! == game {
-                                                    updateLastPlayed()
-                                                    showResumeDialog = true
-                                                } else {
-                                                    startNewGame(game)
-                                                }
-                                            }
+
+                                        // do some other shit here
+                                        let data = try Data(contentsOf: url)
+
+                                        // now load the rom and bios
+                                        // emulator = GBAEmulator()
+
+                                        romData = data
+                                        gameUrl = url
+
+                                        if self.game != nil && self.game! == game {
+                                            updateLastPlayed()
+                                            showResumeDialog = true
+                                        } else {
+                                            startNewGame(game)
                                         }
                                     }
+                                } catch {
+                                    print(error)
                                 }
                             }
                         }
@@ -164,8 +166,11 @@ struct GamesListView: View {
             }
             .onChange(of: settingChanged) {
                 if resumeGame {
-                    emulator?.setPause(false)
-                    path.append("GameView")
+                    isPaused = false
+
+                    // this isn't working - pause from swift instead of rust for now
+                    // emulator?.setPaused(false)
+                    path.append("N64GameView")
                 } else {
                     startNewGame()
                 }
@@ -178,22 +183,6 @@ struct GamesListView: View {
                         showDeleteError = true
                     }
                 }
-            }
-            .sheet(isPresented: $isLoadStatesPresented) {
-                LoadStatesView(
-                    emulator: $emulator,
-                    selectedGame: $selectedGame,
-                    game: $game,
-                    isPresented: $isLoadStatesPresented,
-                    romData: $romData,
-                    bios7Data: $bios7Data,
-                    bios9Data: $bios9Data,
-                    firmwareData: $firmwareData,
-                    path: $path,
-                    isRunning: $isRunning,
-                    workItem: $workItem,
-                    gameUrl: $gameUrl
-                )
             }
         } else {
             Spacer()

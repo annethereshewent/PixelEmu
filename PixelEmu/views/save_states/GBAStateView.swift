@@ -1,6 +1,6 @@
 //
 //  GBAStateView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 12/6/24.
 //

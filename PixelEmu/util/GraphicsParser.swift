@@ -1,6 +1,6 @@
 //
 //  GraphicsParser.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/16/24.
 //

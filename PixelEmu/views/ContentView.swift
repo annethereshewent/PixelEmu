@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/15/24.
 //
@@ -40,6 +40,7 @@ struct ContentView: View {
     @State private var cloudService: CloudService? = nil
     @State private var game: Game? = nil
     @State private var gbaGame: GBAGame? = nil
+    @State private var n64Game: N64Game? = nil
 
     @State private var currentView: CurrentView = .library
     @State private var isSoundOn: Bool = true
@@ -206,6 +207,7 @@ struct ContentView: View {
                             path: $path,
                             game: $game,
                             gbaGame: $gbaGame,
+                            n64Game: $n64Game,
                             themeColor: $themeColor,
                             isPaused: $isPaused,
                             currentLibrary: $currentLibrary
@@ -365,8 +367,4 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ForEach(ColorScheme.allCases, id: \.self, content: ContentView().preferredColorScheme)
     }
-}
-
-#Preview {
-    ContentView()
 }

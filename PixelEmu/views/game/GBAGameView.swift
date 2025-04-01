@@ -1,6 +1,6 @@
 //
 //  GBAGameView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 11/29/24.
 //

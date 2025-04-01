@@ -1,25 +1,26 @@
 //
-//  GameEntryView.swift
+//  N64EntryView.swift
 //  PixelEmu
 //
-//  Created by Anne Castrillon on 9/24/24.
+//  Created by Anne Castrillon on 3/31/25.
 //
 
 import SwiftUI
 
-struct GameEntryView: View {
-    let game: Game
+struct N64EntryView: View {
+    @Binding var themeColor: Color
+    let game: N64Game
     let callback: () -> Void
-    
+
     private let graphicsParser = GraphicsParser()
-    
+
     var body: some View {
         VStack(spacing: 0) {
             Button {
                 callback()
             } label: {
-                if let artwork = game.albumArt {
-                    let uiImage = UIImage(data: artwork)
+                if let albumArt = game.albumArt {
+                    let uiImage = UIImage(data: albumArt)
                     Image(uiImage: uiImage!)
                         .resizable()
                         .frame(width: 80, height: 80)
@@ -29,21 +30,16 @@ struct GameEntryView: View {
                         Image("Cartridge")
                             .resizable()
                             .frame(width: 80, height: 80)
+                            .background(themeColor)
                         VStack {
-                            if let image = graphicsParser.fromBytes(bytes: Array(game.gameIcon), width: 32, height: 32) {
-                                let uiImage = UIImage(cgImage: image)
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .frame(width: 64, height: 64)
-                            } else {
-                                Text("NDS")
-                            }
+                            Text("N64")
+                                .font(.custom("Departure Mono", size: 14))
                         }
                         Spacer()
                     }
                 }
             }
-            Text(game.gameName.replacing(".nds", with: ""))
+            Text(game.gameName.replacing(".n64", with: "").replacing(".z64", with: ""))
                 .frame(width: 80, height: 80)
                 .fixedSize(horizontal: false, vertical: true)
                 .font(.custom("Departure Mono", size: 10))

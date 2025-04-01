@@ -1,6 +1,6 @@
 //
 //  GameScreen.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/4/24.
 //

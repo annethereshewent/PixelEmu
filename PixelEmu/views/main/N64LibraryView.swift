@@ -1,27 +1,23 @@
 //
-//  GBALibraryView.swift
+//  N64LibraryView.swift
 //  PixelEmu
 //
-//  Created by Anne Castrillon on 11/28/24.
+//  Created by Anne Castrillon on 3/31/25.
 //
 
 import SwiftUI
 
-import GBAEmulatorMobile
-
-struct GBALibraryView: View {
+struct N64LibraryView: View {
     @Binding var recentColor: Color
     @Binding var allColor: Color
     @Binding var filter: LibraryFilter
 
     @Binding var romData: Data?
-    @Binding var biosData: Data?
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
-    @Binding var emulator: GBAEmulator?
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
-    @Binding var game: GBAGame?
+    @Binding var game: N64Game?
     @Binding var themeColor: Color
     @Binding var isPaused: Bool
 
@@ -64,12 +60,10 @@ struct GBALibraryView: View {
                 Spacer()
             }
             .padding(.top, 10)
-            GBAListView(
+            N64ListView(
                 romData: $romData,
-                biosData: $biosData,
                 isRunning: $isRunning,
                 workItem: $workItem,
-                emulator: $emulator,
                 gameUrl: $gameUrl,
                 path: $path,
                 game: $game,

@@ -1,6 +1,6 @@
 //
 //  StateManager.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/31/24.
 //

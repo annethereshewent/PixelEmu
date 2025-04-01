@@ -1,6 +1,6 @@
 //
 //  LibraryView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/17/24.
 //
@@ -35,6 +35,7 @@ struct LibraryView: View {
     @Binding var path: NavigationPath
     @Binding var game: Game?
     @Binding var gbaGame: GBAGame?
+    @Binding var n64Game: N64Game?
     @Binding var themeColor: Color
     @Binding var isPaused: Bool
     @Binding var currentLibrary: String
@@ -76,6 +77,20 @@ struct LibraryView: View {
                     isPaused: $isPaused
                 )
                 .tag("gba")
+                N64LibraryView(
+                    recentColor: $recentColor,
+                    allColor: $allColor,
+                    filter: $filter,
+                    romData: $romData,
+                    isRunning: $isRunning,
+                    workItem: $workItem,
+                    gameUrl: $gameUrl,
+                    path: $path,
+                    game: $n64Game,
+                    themeColor: $themeColor,
+                    isPaused: $isPaused
+                )
+                .tag("n64")
             }.tabViewStyle(.page)
 
         }

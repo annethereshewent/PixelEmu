@@ -4,3 +4,6 @@
 [submodule "external/gba-plus-emulator"]
 	path = external/gba-plus-emulator
 	url = git@github.com:annethereshewent/gba-plus.git
+[submodule "n64-plus"]
+	path = n64-plus
+	url = git@github.com:annethereshewent/n64-plus.git

@@ -1,26 +1,27 @@
 //
-//  GameEntryViewWrapper.swift
+//  N64EntryViewWrapper.swift
 //  PixelEmu
 //
-//  Created by Anne Castrillon on 10/20/24.
+//  Created by Anne Castrillon on 3/31/25.
 //
 
 import SwiftUI
 
-struct GameEntryViewWrapper: View {
+struct N64EntryViewWrapper: View {
     @Binding var showDeleteConfirmation: Bool
     @Binding var deleteAction: () -> Void
-    @Binding var gameToDelete: Game?
+    @Binding var gameToDelete: N64Game?
     @Binding var isLoadStatesPresented: Bool
-    @Binding var selectedGame: Game?
-   
-    
-    let game: Game
-    
+    @Binding var selectedGame: N64Game?
+    @Binding var themeColor: Color
+
+
+    let game: N64Game
+
     let callback: () -> Void
-    
+
     var body: some View {
-        GameEntryView(game: game) {
+        N64EntryView(themeColor: $themeColor, game: game) {
             callback()
         }
         .contextMenu {
@@ -37,7 +38,7 @@ struct GameEntryViewWrapper: View {
                     Image(systemName: "trash")
                 }
             }
-            
+
         }
     }
 }

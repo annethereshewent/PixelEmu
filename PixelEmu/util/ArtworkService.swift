@@ -1,6 +1,6 @@
 //
 //  ArtworkService.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 11/29/24.
 //
@@ -9,6 +9,7 @@ import Foundation
 
 let GBA_ID = 12
 let DS_ID = 15
+let N64_ID = 14
 
 class GameInfo : Decodable {
     var success: Bool
