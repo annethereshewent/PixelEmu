@@ -3,3 +3,5 @@ Pods/
 MoltenVK/
 parallel-rdp-standalone
 SDL3.xcframework/
+MoltenVK.xcframework/
+N64Core/N64Core.a
