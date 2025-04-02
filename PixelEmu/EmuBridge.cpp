@@ -37,12 +37,6 @@ void initEmulator(uint8_t* romBytes, uint32_t romSize) {
 void stepFrame() {
     while (!cpu->bus.rdp.frameFinished) {
         cpu->step();
-        if (!cpu->visited.contains(cpu->debugPc)) {
-            std::println("[CPU] [PC: 0x{:x}] [PhysPC: 0x{:x}]", cpu->previousPc, cpu->debugPc);
-
-            cpu->visited.insert(cpu->debugPc);
-        }
-
     }
 
     cpu->limitFps();
