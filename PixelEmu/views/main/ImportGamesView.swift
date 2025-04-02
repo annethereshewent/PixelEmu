@@ -48,7 +48,7 @@ struct ImportGamesView: View {
                 HStack {
                     Image("Import Cartridge")
                         .foregroundColor(themeColor)
-                    Text("Only .nds, .gba supported")
+                    Text("Only nds, gba, and n64 supported")
                         .frame(width: 200, height: 60)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.custom("Departure Mono", size: 20))
@@ -162,6 +162,7 @@ struct ImportGamesView: View {
                                         }
                                     }
                                 } else {
+                                    print("test!")
                                     if let game = N64Game.storeGame(
                                         gameName: gameName,
                                         data: data,
@@ -183,8 +184,10 @@ struct ImportGamesView: View {
                         loading = false
                         if urls[0].pathExtension.lowercased() == "nds" {
                             currentLibrary = "nds"
-                        } else {
+                        } else if urls[0].pathExtension.lowercased() == "gba" {
                             currentLibrary = "gba"
+                        } else {
+                            currentLibrary = "n64"
                         }
 
                         let defaults = UserDefaults.standard

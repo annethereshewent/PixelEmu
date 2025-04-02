@@ -12,7 +12,7 @@ struct PixelEmuApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .modelContainer(for: [Game.self, SaveState.self, GBAGame.self, GBASaveState.self])
+                .modelContainer(for: [Game.self, SaveState.self, GBAGame.self, GBASaveState.self, N64Game.self])
                 .environmentObject(OrientationInfo())
         }
     }

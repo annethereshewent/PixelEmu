@@ -23,7 +23,7 @@ struct N64EntryView: View {
                     let uiImage = UIImage(data: albumArt)
                     Image(uiImage: uiImage!)
                         .resizable()
-                        .frame(width: 80, height: 80)
+                        .frame(width: 100, height: 100)
                         .scaledToFill()
                 } else {
                     ZStack {

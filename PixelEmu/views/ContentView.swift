@@ -308,6 +308,8 @@ struct ContentView: View {
                         isPaused: $isPaused,
                         buttonEventDict: $gbaButtonDict
                     )
+                } else if view == "N64GameView" {
+                    N64GameView(romData: $romData)
                 }
             }
         }
