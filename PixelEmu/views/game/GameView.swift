@@ -192,7 +192,7 @@ struct GameView: View {
                     }
                 }
             } else {
-                backupFile?.saveGame(ptr: ptr, backupLength: backupLength)
+                backupFile?.saveGame(ptr: ptr)
             }
         }
         
@@ -370,7 +370,7 @@ struct GameView: View {
                         var isStale = false
                         do {
                             let url = try URL(resolvingBookmarkData: game.bookmark, bookmarkDataIsStale: &isStale)
-                            backupFile = BackupFile(entry: entries[0], gameUrl: url)
+                            backupFile = BackupFile(capacity: Int(entries[0].ramCapacity), gameUrl: url)
                             if let data = backupFile!.createBackupFile() {
                                 emulator?.setBackup(entries[0].saveType, entries[0].ramCapacity, data)
                             }

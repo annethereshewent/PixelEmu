@@ -41,9 +41,11 @@ class SDLViewController: UIViewController {
             initEmulator(ptr.baseAddress!, romSize)
         }
 
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global().async {
             while true {
-                stepFrame()
+                DispatchQueue.main.sync {
+                    stepFrame()
+                }
             }
         }
     }

@@ -8,19 +8,19 @@
 import Foundation
 
 class BackupFile {
-    var entry: GameEntry
+    var capacity: Int
     var gameUrl: URL
     var saveUrl: URL? = nil
     
-    init(entry: GameEntry, gameUrl: URL) {
-        self.entry = entry
+    init(capacity: Int, gameUrl: URL) {
+        self.capacity = capacity
         self.gameUrl = gameUrl
     }
     
-    static func getSaveName(gameUrl: URL) -> String {
+    static func getSaveName(gameUrl: URL, saveExtension: String = "sav") -> String {
         return String(gameUrl
             .deletingPathExtension()
-            .appendingPathExtension("sav")
+            .appendingPathExtension(saveExtension)
             .relativeString
             .split(separator: "/")
             .last
@@ -40,9 +40,9 @@ class BackupFile {
         return ptr
     }
     
-    func saveGame(ptr: UnsafePointer<UInt8>, backupLength: Int) {
-        let buffer = UnsafeBufferPointer(start: ptr, count: backupLength)
-        
+    func saveGame(ptr: UnsafePointer<UInt8>) {
+        let buffer = UnsafeBufferPointer(start: ptr, count: capacity)
+
         let data = Data(buffer)
         
         if let saveUrl = self.saveUrl {
@@ -230,7 +230,7 @@ class BackupFile {
                     return Self.getPointer(data)
                 }
             } else {
-                let buffer = [UInt8](repeating: 0xff, count: Int(entry.ramCapacity))
+                let buffer = [UInt8](repeating: 0xff, count: Int(capacity))
                 
                 let ptr = buffer.withUnsafeBufferPointer { ptr in
                     return ptr

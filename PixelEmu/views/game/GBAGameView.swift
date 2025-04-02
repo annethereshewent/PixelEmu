@@ -47,7 +47,7 @@ struct GBAGameView: View {
     @Binding var themeColor: Color
     
     @Binding var gameName: String
-    @Binding var backupFile: GBABackupFile?
+    @Binding var backupFile: BackupFile?
     @Binding var gameController: GameController?
     @Binding var audioManager: AudioManager?
     @Binding var isRunning: Bool
@@ -117,7 +117,7 @@ struct GBAGameView: View {
                     }
                 }
             } else {
-                backupFile?.saveGame(ptr: ptr, backupLength: backupLength)
+                backupFile?.saveGame(ptr: ptr)
             }
         }
     }
@@ -226,7 +226,7 @@ struct GBAGameView: View {
                 let ptr = BackupFile.getPointer(saveData)
                 emu.loadSave(ptr)
             } else {
-                backupFile = GBABackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupFileSize()))
+                backupFile = BackupFile(capacity: Int(emu.backupFileSize()), gameUrl: gameUrl)
                 if let ptr = backupFile!.createBackupFile() {
                     emu.loadSave(ptr)
                 }

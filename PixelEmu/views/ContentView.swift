@@ -55,7 +55,6 @@ struct ContentView: View {
 
     @State private var gameName = ""
     @State private var backupFile: BackupFile? = nil
-    @State private var gbaBackupFile: GBABackupFile? = nil
 
     @State private var buttonEventDict: [ButtonMapping:ButtonEvent] = getDefaultMappings()
     @State private var gbaButtonDict: [ButtonMapping:GBAButtonEvent] = getGBADefaultMappings()
@@ -299,7 +298,7 @@ struct ContentView: View {
                         isSoundOn: $isSoundOn,
                         themeColor: $themeColor,
                         gameName: $gameName,
-                        backupFile: $gbaBackupFile,
+                        backupFile: $backupFile,
                         gameController: $gameController,
                         audioManager: $audioManager,
                         isRunning: $isRunning,
@@ -309,7 +308,10 @@ struct ContentView: View {
                         buttonEventDict: $gbaButtonDict
                     )
                 } else if view == "N64GameView" {
-                    N64GameView(romData: $romData)
+                    N64GameView(
+                        romData: $romData,
+                        gameUrl: $gameUrl
+                    )
                 }
             }
         }

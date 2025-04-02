@@ -18,6 +18,9 @@ void initEmulator(uint8_t* romBytes, uint32_t romSize);
 // Run one frame of emulation
 void stepFrame();
 
+int* getSaveTypes();
+uint64_t getSaveTypesSize();
+
 #ifdef __cplusplus
 }
 #endif

@@ -11,6 +11,7 @@
 #include <SDL3/SDL_main.h>
 
 static CPU* cpu = nullptr;
+static std::vector<int> saveTypes = {};
 
 void initEmulator(uint8_t* romBytes, uint32_t romSize) {
     cpu = new CPU();
@@ -32,6 +33,7 @@ void initEmulator(uint8_t* romBytes, uint32_t romSize) {
     }
 
     cpu->bus.initRdp(window);
+    cpu->bus.initAudio();
 }
 
 void stepFrame() {
@@ -44,4 +46,15 @@ void stepFrame() {
     cpu->bus.rdp.frameFinished = false;
 }
 
+int* getSaveTypes() {
+    for (SaveType type: cpu->bus.saveTypes) {
+        saveTypes.push_back((int)type);
+    }
+
+    return &saveTypes[0];
+}
+
+uint64_t getSaveTypesSize() {
+    return saveTypes.size();
+}
 
