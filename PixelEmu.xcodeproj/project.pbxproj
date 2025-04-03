@@ -77,8 +77,7 @@
 		E8C2894E2D9CE3C500409325 /* MoltenVK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8C2894C2D9CE3C100409325 /* MoltenVK.xcframework */; };
 		E8C2894F2D9CE3C500409325 /* MoltenVK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E8C2894C2D9CE3C100409325 /* MoltenVK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E8C289512D9CE99200409325 /* N64Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8C289502D9CE99200409325 /* N64Core.a */; };
-		E8C289562D9E432E00409325 /* SDL2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8C289542D9E432000409325 /* SDL2.xcframework */; };
-		E8C289572D9E432E00409325 /* SDL2.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E8C289542D9E432000409325 /* SDL2.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E8C2895D2D9F514700409325 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C2895C2D9F514400409325 /* MetalView.swift */; };
 		E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */; };
 		E8DF26BE2CC5F99600A88821 /* LoadStatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BD2CC5F99600A88821 /* LoadStatesView.swift */; };
 		E8DF26C02CC5FA5000A88821 /* LoadStateEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BF2CC5FA5000A88821 /* LoadStateEntryView.swift */; };
@@ -96,7 +95,7 @@
 		E8F081F62D9BC22300CA3EC8 /* N64ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F081F52D9BC22300CA3EC8 /* N64ListView.swift */; };
 		E8F081F82D9BC2C100CA3EC8 /* N64EntryViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F081F72D9BC2C100CA3EC8 /* N64EntryViewWrapper.swift */; };
 		E8F081FA2D9BC30E00CA3EC8 /* N64EntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F081F92D9BC30E00CA3EC8 /* N64EntryView.swift */; };
-		E8F089EE2D9C9B4B00CA3EC8 /* SDLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F089ED2D9C9B3600CA3EC8 /* SDLView.swift */; };
+		E8F089EE2D9C9B4B00CA3EC8 /* MetalWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F089ED2D9C9B3600CA3EC8 /* MetalWrapperView.swift */; };
 		E8F089F22D9CB19C00CA3EC8 /* N64GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F089F12D9CB19C00CA3EC8 /* N64GameView.swift */; };
 /* End PBXBuildFile section */
 
@@ -124,7 +123,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				E8C289572D9E432E00409325 /* SDL2.xcframework in Embed Frameworks */,
 				E8C2894F2D9CE3C500409325 /* MoltenVK.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -208,7 +206,7 @@
 		E8C246012CBE08D600B6DF67 /* SaveStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateView.swift; sourceTree = "<group>"; };
 		E8C2894C2D9CE3C100409325 /* MoltenVK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = MoltenVK.xcframework; sourceTree = "<group>"; };
 		E8C289502D9CE99200409325 /* N64Core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = N64Core.a; sourceTree = "<group>"; };
-		E8C289542D9E432000409325 /* SDL2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = SDL2.xcframework; sourceTree = "<group>"; };
+		E8C2895C2D9F514400409325 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
 		E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryViewWrapper.swift; sourceTree = "<group>"; };
 		E8DF26BD2CC5F99600A88821 /* LoadStatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadStatesView.swift; sourceTree = "<group>"; };
 		E8DF26BF2CC5FA5000A88821 /* LoadStateEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadStateEntryView.swift; sourceTree = "<group>"; };
@@ -249,7 +247,7 @@
 		E8F089E52D9C207C00CA3EC8 /* Scheduler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Scheduler.hpp; sourceTree = "<group>"; };
 		E8F089E72D9C221E00CA3EC8 /* SDL3.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3.xcframework; path = ../../SDL3.xcframework; sourceTree = "<group>"; };
 		E8F089EC2D9C997D00CA3EC8 /* PixelEmu-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PixelEmu-Bridging-Header.h"; sourceTree = "<group>"; };
-		E8F089ED2D9C9B3600CA3EC8 /* SDLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDLView.swift; sourceTree = "<group>"; };
+		E8F089ED2D9C9B3600CA3EC8 /* MetalWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalWrapperView.swift; sourceTree = "<group>"; };
 		E8F089F12D9CB19C00CA3EC8 /* N64GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = N64GameView.swift; sourceTree = "<group>"; };
 		F6D72E464429EADD40F6E67D /* Pods-PixelEmu-PixelEmuUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; path = "Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -259,7 +257,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8C289562D9E432E00409325 /* SDL2.xcframework in Frameworks */,
 				E8C289512D9CE99200409325 /* N64Core.a in Frameworks */,
 				E8BBBC7E2CF981510065EF4E /* GBAEmulatorMobile in Frameworks */,
 				E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */,
@@ -308,7 +305,6 @@
 		E806E9EB2C97E1B10081D3E8 = {
 			isa = PBXGroup;
 			children = (
-				E8C289542D9E432000409325 /* SDL2.xcframework */,
 				E8C2894C2D9CE3C100409325 /* MoltenVK.xcframework */,
 				E8F089C62D9C1BA300CA3EC8 /* N64Core */,
 				E806EA992CA1284B0081D3E8 /* .gitignore */,
@@ -442,7 +438,8 @@
 		E8C245F12CBCC54F00B6DF67 /* game */ = {
 			isa = PBXGroup;
 			children = (
-				E8F089ED2D9C9B3600CA3EC8 /* SDLView.swift */,
+				E8C2895C2D9F514400409325 /* MetalView.swift */,
+				E8F089ED2D9C9B3600CA3EC8 /* MetalWrapperView.swift */,
 				E8A214EE2CD0553800173E06 /* DualScreenView.swift */,
 				E8C245EE2CBCC36F00B6DF67 /* DualScreenViewWrapper.swift */,
 				E8C245F52CBDBA4500B6DF67 /* GameMenuView.swift */,
@@ -877,6 +874,7 @@
 				E8A214ED2CD052B700173E06 /* OrientationInfo.swift in Sources */,
 				E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */,
 				E8A334062CFAD03A00765ABB /* GBAScreenViewWrapper.swift in Sources */,
+				E8C2895D2D9F514700409325 /* MetalView.swift in Sources */,
 				E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */,
 				E8A334042CFACF8C00765ABB /* GBAScreenView.swift in Sources */,
 				E8BBBC6C2CF96CAB0065EF4E /* GBALibraryView.swift in Sources */,
@@ -888,7 +886,7 @@
 				E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */,
 				E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */,
 				E8BBBC842CF987790065EF4E /* GBAEntryView.swift in Sources */,
-				E8F089EE2D9C9B4B00CA3EC8 /* SDLView.swift in Sources */,
+				E8F089EE2D9C9B4B00CA3EC8 /* MetalWrapperView.swift in Sources */,
 				E8A334022CFABD6600765ABB /* GBATouchControlsView.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,

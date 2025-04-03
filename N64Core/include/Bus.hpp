@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <vector>
-#include <SDL2/SDL.h>
 #include "PeripheralInterface.hpp"
 #include "RSP.hpp"
 #include "VideoInterface.hpp"
@@ -88,8 +87,6 @@ public:
     char gameId[4];
     std::vector<SaveType> saveTypes = {};
 
-    SDL_AudioDeviceID device;
-
     uint32_t input = 0;
 
     CPU& cpu;
@@ -144,8 +141,6 @@ public:
     RDInterface rdInterface;
 
     MIPSInterface mips;
-
-    SDL_AudioStream* stream;
 
     uint64_t memRead64(uint64_t address, bool cached);
     uint32_t memRead32(uint64_t address, bool cached, Width bitWidth = Bit32, bool ignoreCycles = false);
@@ -217,7 +212,7 @@ public:
 
     void writeRumblePak(int channel, uint16_t address, int data);
 
-    void initRdp(SDL_Window* window);
+    void initRdp(void* metalLayer);
 
     static void writeValueLE(uint8_t* ptr, uint32_t value, int size);
     static void writeWord(uint8_t* ptr, uint32_t value);

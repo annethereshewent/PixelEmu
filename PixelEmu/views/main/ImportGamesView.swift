@@ -162,7 +162,6 @@ struct ImportGamesView: View {
                                         }
                                     }
                                 } else {
-                                    print("test!")
                                     if let game = N64Game.storeGame(
                                         gameName: gameName,
                                         data: data,

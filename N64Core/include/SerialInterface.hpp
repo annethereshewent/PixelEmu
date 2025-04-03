@@ -15,7 +15,7 @@ enum SIStatusBits {
 
 class SerialInterface {
 public:
-    uint32_t status;
+    uint32_t status = 0;
     uint32_t dramAddress = 0;
     DmaDirection dir = DmaDirection::None;
 

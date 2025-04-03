@@ -26,7 +26,7 @@ struct N64GameView: View {
     var body: some View {
         if gameUrl != nil {
             HStack {
-                SDLView(romData: $romData)
+                MetalWrapperView(romData: $romData)
                     .edgesIgnoringSafeArea(.all)
             }
             .navigationBarTitle("")
