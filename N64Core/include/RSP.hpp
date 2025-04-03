@@ -1,8 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include "SPStatus.hpp"
-#include "SPLength.hpp"
 #include "DmaDirection.hpp"
 #include <unordered_map>
 #include <array>
@@ -15,12 +13,42 @@ enum InstructionType {
     Vector
 };
 
+enum SPStatusBits {
+    SpHalted = 0,
+    SpBroke = 1,
+    SpDmaBusy = 2,
+    SpDmaFull = 3,
+    SpIoBusy = 4,
+    SingleStep = 5,
+    IntBreak = 6,
+    Flag0 = 7,
+    Flag1 = 8,
+    Flag2 = 9,
+    Flag3 = 10,
+    Flag4 = 11,
+    Flag5 = 12,
+    Flag6 = 13,
+    Flag7 = 14
+};
+
 class SPDma {
 public:
+    uint32_t spLength = 0;
     DmaDirection direction = DmaDirection::Read;
-    SPLength length;
     uint32_t dramAddress = 0;
     uint32_t memAddress = 0;
+
+    uint32_t length() {
+        return spLength & 0xfff;
+    };
+
+    uint32_t count() {
+        return (spLength >> 12) & 0xff;
+    };
+
+    uint32_t skip() {
+        return (spLength >> 20) & 0xfff;
+    };
 };
 
 class Bus;
@@ -32,7 +60,7 @@ typedef void (*RSPInstruction)(RSP* rsp, uint32_t instruction);
 
 class RSP {
 public:
-    SPStatus status;
+    uint32_t status;
 
     InstructionType lastInstructionType = Scalar;
     InstructionType instructionType = Scalar;
@@ -361,8 +389,8 @@ public:
 
     uint32_t dmaMemAddress = 0;
     uint32_t dmaRamAddress = 0;
-    SPLength spReadLength;
-    SPLength spWriteLength;
+    uint32_t spReadLength;
+    uint32_t spWriteLength;
 
     std::array<SPDma, 2> fifo;
 

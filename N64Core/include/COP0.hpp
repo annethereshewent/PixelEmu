@@ -4,9 +4,18 @@
 #include <vector>
 #include "CPUInstruction.hpp"
 #include "Scheduler.hpp"
-#include "Cop0Status.hpp"
 
 class CPU;
+
+enum Cop0StatusBits {
+   InterruptEnable = 0,
+   Exl = 1,
+   Erl = 2,
+   Bev = 22,
+   Fr = 26,
+   Cu1 = 29,
+   Cu2 = 30
+};
 
 class COP0 {
 public:
@@ -21,7 +30,7 @@ public:
     uint64_t count = 0;
     uint64_t entryHi = 0;
     uint32_t compare = 0;
-    Cop0Status status;
+    uint32_t status;
     uint32_t cause = 0 ;
     uint64_t epc = 0;
     uint32_t prid = 0;

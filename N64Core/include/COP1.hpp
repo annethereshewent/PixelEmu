@@ -3,59 +3,12 @@
 #include <vector>
 #include <cstdint>
 #include "CPUInstruction.hpp"
-#include "Cop0Status.hpp"
-
-typedef union FCSR {
-    struct {
-        unsigned int roundingMode: 2;
-        unsigned int flagInexact: 1;
-        unsigned int flagUnderflow: 1;
-        unsigned int flagOverflow: 1;
-        unsigned int flagDivisionByZero: 1;
-        unsigned int flagInvalidOp: 1;
-        unsigned int inexactOperationEnable: 1;
-        unsigned int underflowEnable: 1;
-        unsigned int overflowEnable: 1;
-        unsigned int divisionByZeroEnable: 1;
-        unsigned int invalidOpEnable: 1;
-        unsigned int causeUnderflow: 1;
-        unsigned int causeOverflow: 1;
-        unsigned int causeDivisionByZero: 1;
-        unsigned int causeInvalidOp: 1;
-        unsigned int caseUnimplemented: 1;
-        unsigned int unused: 5;
-        unsigned int condition: 1;
-        unsigned int flushDenormToZero: 1;
-    };
-
-    uint32_t value = 0;
-} fcsrbitset;
-
-// gotten from https://stackoverflow.com/questions/11611787/convert-a-32-bits-to-float-value
-union convu32 {
-    uint32_t u32; // here_write_bits
-    float    f32; // here_read_float
-};
-
-union convi32 {
-    int32_t i32; // here_write_bits
-    float   f32; // here_read_float
-};
-
-union convu64 {
-    uint64_t u64;
-    double f64;
-};
-union convi64 {
-    int64_t i64;
-    double f64;
-};
 
 class CPU;
 
 class COP1 {
 public:
-    FCSR fcsr;
+    uint32_t fcsr = 0;
 
     std::array<uint32_t, 32> fgr32 = {};
     std::array<uint64_t, 32> fgr64 = {};
@@ -181,6 +134,6 @@ public:
     static void cvtDL(CPU* cpu, uint32_t instruction);
 
     void writeRegister(uint32_t index, uint64_t value);
-    void setCop1Registers(Cop0Status cop0Status);
+    void setCop1Registers(uint8_t fr);
     uint32_t readRegister(uint32_t index);
 };

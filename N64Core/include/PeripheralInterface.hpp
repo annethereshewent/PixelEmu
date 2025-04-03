@@ -1,9 +1,15 @@
 #pragma once
-#include "PIStatus.hpp"
+
+enum PIStatusBits {
+    DmaBusy = 0,
+    IoBusy = 1,
+    DmaError = 2,
+    DmaCompleted = 3
+};
 
 class PeripheralInterface {
 public:
-    PIStatus piStatus;
+    uint32_t piStatus;
     uint32_t dom1Latch = 0;
     uint32_t dom2Latch = 0;
 

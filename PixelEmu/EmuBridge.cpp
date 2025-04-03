@@ -7,8 +7,8 @@
 #include "EmuBridge.hpp"
 #include "../N64Core/include/CPU.hpp"
 #include <cstdint>
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_main.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_main.h>
 
 static CPU* cpu = nullptr;
 static std::vector<int> saveTypes = {};
@@ -20,12 +20,12 @@ void initEmulator(uint8_t* romBytes, uint32_t romSize) {
 
     SDL_SetMainReady();
 
-    if (!SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO)) {
+    if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO) != 0) {
         std::println("{}", SDL_GetError());
         throw std::runtime_error("Could not initialize SDL");
     }
 
-    SDL_Window* window = SDL_CreateWindow("PixelEmu - N64", 640, 480, SDL_WINDOW_VULKAN);
+    SDL_Window* window = SDL_CreateWindow("PixelEmu - N64", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_VULKAN | SDL_WINDOW_FULLSCREEN);
 
     if(window == NULL || window == nullptr) {
         std::println("window creation Error: {}", SDL_GetError());

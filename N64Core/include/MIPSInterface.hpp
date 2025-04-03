@@ -2,18 +2,15 @@
 
 #include <cstdint>
 
-typedef union MIPSInterrupt {
-    struct {
-        unsigned int spInterrupt: 1;
-        unsigned int siInterrupt: 1;
-        unsigned int aiInterrupt: 1;
-        unsigned int viInterrupt: 1;
-        unsigned int piInterrupt: 1;
-        unsigned int dpInterrupt: 1;
-    };
+enum MIPSInterruptBit {
+    SP = 0,
+    SI = 1,
+    AI = 2,
+    VI = 3,
+    PI = 4,
+    DP = 5
+};
 
-    uint32_t value;
-} mipsinterruptbitset;
 
 class MIPSInterface {
 public:
@@ -25,8 +22,8 @@ public:
 
     uint32_t mipsVersion = 0x2020102;
 
-    MIPSInterrupt mipsInterrupt;
-    MIPSInterrupt mipsMask;
+    uint32_t mipsInterrupt = 0;
+    uint32_t mipsMask = 0;
 
     void write(uint32_t value);
     void setMask(uint32_t value);

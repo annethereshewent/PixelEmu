@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <vector>
-#include <SDL3/SDL.h>
+#include <SDL2/SDL.h>
 #include "PeripheralInterface.hpp"
 #include "RSP.hpp"
 #include "VideoInterface.hpp"
@@ -18,6 +18,8 @@
 #include "Controller.hpp"
 #include <iostream>
 #include <fstream>
+
+class CPU;
 
 const uint32_t SP_INTERRUPT_FLAG = 1;
 const uint32_t SI_INTERRUPT_FLAG = 1 << 1;
@@ -86,7 +88,7 @@ public:
     char gameId[4];
     std::vector<SaveType> saveTypes = {};
 
-    SDL_Gamepad* gamepad = nullptr;
+    SDL_AudioDeviceID device;
 
     uint32_t input = 0;
 
@@ -109,7 +111,7 @@ public:
 
         consoleBuffer.resize(0x10000);
 
-        rsp.status.value = 1;
+        rsp.status = 1;
 
         for (int i = 0; i < icache.size(); i++) {
             icache[i].index = (uint16_t)(i << 5) & 0xfe0;

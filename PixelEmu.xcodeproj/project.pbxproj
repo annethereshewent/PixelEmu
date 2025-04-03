@@ -74,10 +74,11 @@
 		E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245F72CBE043B00B6DF67 /* SaveState.swift */; };
 		E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245FC2CBE06DD00B6DF67 /* SaveStateEntriesView.swift */; };
 		E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C246012CBE08D600B6DF67 /* SaveStateView.swift */; };
-		E8C2894A2D9CE3B400409325 /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8F089F32D9CB66A00CA3EC8 /* SDL3.framework */; };
 		E8C2894E2D9CE3C500409325 /* MoltenVK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8C2894C2D9CE3C100409325 /* MoltenVK.xcframework */; };
 		E8C2894F2D9CE3C500409325 /* MoltenVK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E8C2894C2D9CE3C100409325 /* MoltenVK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E8C289512D9CE99200409325 /* N64Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8C289502D9CE99200409325 /* N64Core.a */; };
+		E8C289562D9E432E00409325 /* SDL2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8C289542D9E432000409325 /* SDL2.xcframework */; };
+		E8C289572D9E432E00409325 /* SDL2.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E8C289542D9E432000409325 /* SDL2.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */; };
 		E8DF26BE2CC5F99600A88821 /* LoadStatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BD2CC5F99600A88821 /* LoadStatesView.swift */; };
 		E8DF26C02CC5FA5000A88821 /* LoadStateEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BF2CC5FA5000A88821 /* LoadStateEntryView.swift */; };
@@ -95,7 +96,6 @@
 		E8F081F62D9BC22300CA3EC8 /* N64ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F081F52D9BC22300CA3EC8 /* N64ListView.swift */; };
 		E8F081F82D9BC2C100CA3EC8 /* N64EntryViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F081F72D9BC2C100CA3EC8 /* N64EntryViewWrapper.swift */; };
 		E8F081FA2D9BC30E00CA3EC8 /* N64EntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F081F92D9BC30E00CA3EC8 /* N64EntryView.swift */; };
-		E8F089EA2D9C232700CA3EC8 /* SDL3.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E8F089E72D9C221E00CA3EC8 /* SDL3.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E8F089EE2D9C9B4B00CA3EC8 /* SDLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F089ED2D9C9B3600CA3EC8 /* SDLView.swift */; };
 		E8F089F22D9CB19C00CA3EC8 /* N64GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F089F12D9CB19C00CA3EC8 /* N64GameView.swift */; };
 /* End PBXBuildFile section */
@@ -124,8 +124,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				E8C289572D9E432E00409325 /* SDL2.xcframework in Embed Frameworks */,
 				E8C2894F2D9CE3C500409325 /* MoltenVK.xcframework in Embed Frameworks */,
-				E8F089EA2D9C232700CA3EC8 /* SDL3.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -208,6 +208,7 @@
 		E8C246012CBE08D600B6DF67 /* SaveStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveStateView.swift; sourceTree = "<group>"; };
 		E8C2894C2D9CE3C100409325 /* MoltenVK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = MoltenVK.xcframework; sourceTree = "<group>"; };
 		E8C289502D9CE99200409325 /* N64Core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = N64Core.a; sourceTree = "<group>"; };
+		E8C289542D9E432000409325 /* SDL2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = SDL2.xcframework; sourceTree = "<group>"; };
 		E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryViewWrapper.swift; sourceTree = "<group>"; };
 		E8DF26BD2CC5F99600A88821 /* LoadStatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadStatesView.swift; sourceTree = "<group>"; };
 		E8DF26BF2CC5FA5000A88821 /* LoadStateEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadStateEntryView.swift; sourceTree = "<group>"; };
@@ -230,18 +231,9 @@
 		E8F089C92D9C1C1700CA3EC8 /* Bus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Bus.hpp; sourceTree = "<group>"; };
 		E8F089CA2D9C1C6B00CA3EC8 /* CPUInstruction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUInstruction.hpp; sourceTree = "<group>"; };
 		E8F089CB2D9C1C9F00CA3EC8 /* PeripheralInterface.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PeripheralInterface.hpp; sourceTree = "<group>"; };
-		E8F089CC2D9C1CAB00CA3EC8 /* PIStatus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PIStatus.hpp; sourceTree = "<group>"; };
 		E8F089CD2D9C1CC700CA3EC8 /* RSP.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RSP.hpp; sourceTree = "<group>"; };
-		E8F089CE2D9C1CD400CA3EC8 /* SPStatus.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SPStatus.hpp; sourceTree = "<group>"; };
-		E8F089CF2D9C1CE600CA3EC8 /* SPLength.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SPLength.hpp; sourceTree = "<group>"; };
 		E8F089D02D9C1D0D00CA3EC8 /* DmaDirection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DmaDirection.hpp; sourceTree = "<group>"; };
 		E8F089D12D9C1D3100CA3EC8 /* VideoInterface.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VideoInterface.hpp; sourceTree = "<group>"; };
-		E8F089D22D9C1D6000CA3EC8 /* VCurrent.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VCurrent.hpp; sourceTree = "<group>"; };
-		E8F089D32D9C1D7300CA3EC8 /* VCtrl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VCtrl.hpp; sourceTree = "<group>"; };
-		E8F089D42D9C1D9100CA3EC8 /* HTotalLeap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HTotalLeap.hpp; sourceTree = "<group>"; };
-		E8F089D52D9C1DCC00CA3EC8 /* VVideo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VVideo.hpp; sourceTree = "<group>"; };
-		E8F089D62D9C1DDC00CA3EC8 /* XScale.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XScale.hpp; sourceTree = "<group>"; };
-		E8F089D72D9C1DE800CA3EC8 /* YScale.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = YScale.hpp; sourceTree = "<group>"; };
 		E8F089D82D9C1E0800CA3EC8 /* AudioInterface.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AudioInterface.hpp; sourceTree = "<group>"; };
 		E8F089D92D9C1E3F00CA3EC8 /* SerialInterface.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SerialInterface.hpp; sourceTree = "<group>"; };
 		E8F089DA2D9C1EB000CA3EC8 /* RDPInterface.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RDPInterface.hpp; sourceTree = "<group>"; };
@@ -255,12 +247,10 @@
 		E8F089E32D9C207000CA3EC8 /* COP0.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = COP0.hpp; sourceTree = "<group>"; };
 		E8F089E42D9C207700CA3EC8 /* COP1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = COP1.hpp; sourceTree = "<group>"; };
 		E8F089E52D9C207C00CA3EC8 /* Scheduler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Scheduler.hpp; sourceTree = "<group>"; };
-		E8F089E62D9C211000CA3EC8 /* Cop0Status.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Cop0Status.hpp; sourceTree = "<group>"; };
 		E8F089E72D9C221E00CA3EC8 /* SDL3.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3.xcframework; path = ../../SDL3.xcframework; sourceTree = "<group>"; };
 		E8F089EC2D9C997D00CA3EC8 /* PixelEmu-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PixelEmu-Bridging-Header.h"; sourceTree = "<group>"; };
 		E8F089ED2D9C9B3600CA3EC8 /* SDLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDLView.swift; sourceTree = "<group>"; };
 		E8F089F12D9CB19C00CA3EC8 /* N64GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = N64GameView.swift; sourceTree = "<group>"; };
-		E8F089F32D9CB66A00CA3EC8 /* SDL3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL3.framework; path = "/Users/annecastrillon/Documents/cpp_projects/n64-emulator/SDL3.xcframework/ios-arm64/SDL3.framework"; sourceTree = "<absolute>"; };
 		F6D72E464429EADD40F6E67D /* Pods-PixelEmu-PixelEmuUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; path = "Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -269,8 +259,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8C289562D9E432E00409325 /* SDL2.xcframework in Frameworks */,
 				E8C289512D9CE99200409325 /* N64Core.a in Frameworks */,
-				E8C2894A2D9CE3B400409325 /* SDL3.framework in Frameworks */,
 				E8BBBC7E2CF981510065EF4E /* GBAEmulatorMobile in Frameworks */,
 				E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */,
 				E8C2894E2D9CE3C500409325 /* MoltenVK.xcframework in Frameworks */,
@@ -318,8 +308,8 @@
 		E806E9EB2C97E1B10081D3E8 = {
 			isa = PBXGroup;
 			children = (
+				E8C289542D9E432000409325 /* SDL2.xcframework */,
 				E8C2894C2D9CE3C100409325 /* MoltenVK.xcframework */,
-				E8F089F32D9CB66A00CA3EC8 /* SDL3.framework */,
 				E8F089C62D9C1BA300CA3EC8 /* N64Core */,
 				E806EA992CA1284B0081D3E8 /* .gitignore */,
 				E806E9F62C97E1B10081D3E8 /* PixelEmu */,
@@ -555,7 +545,6 @@
 		E8F089C72D9C1BB600CA3EC8 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				E8F089E62D9C211000CA3EC8 /* Cop0Status.hpp */,
 				E8F089E52D9C207C00CA3EC8 /* Scheduler.hpp */,
 				E8F089E42D9C207700CA3EC8 /* COP1.hpp */,
 				E8F089E32D9C207000CA3EC8 /* COP0.hpp */,
@@ -569,18 +558,9 @@
 				E8F089DA2D9C1EB000CA3EC8 /* RDPInterface.hpp */,
 				E8F089D92D9C1E3F00CA3EC8 /* SerialInterface.hpp */,
 				E8F089D82D9C1E0800CA3EC8 /* AudioInterface.hpp */,
-				E8F089D72D9C1DE800CA3EC8 /* YScale.hpp */,
-				E8F089D62D9C1DDC00CA3EC8 /* XScale.hpp */,
-				E8F089D52D9C1DCC00CA3EC8 /* VVideo.hpp */,
-				E8F089D42D9C1D9100CA3EC8 /* HTotalLeap.hpp */,
-				E8F089D32D9C1D7300CA3EC8 /* VCtrl.hpp */,
-				E8F089D22D9C1D6000CA3EC8 /* VCurrent.hpp */,
 				E8F089D12D9C1D3100CA3EC8 /* VideoInterface.hpp */,
 				E8F089D02D9C1D0D00CA3EC8 /* DmaDirection.hpp */,
-				E8F089CF2D9C1CE600CA3EC8 /* SPLength.hpp */,
-				E8F089CE2D9C1CD400CA3EC8 /* SPStatus.hpp */,
 				E8F089CD2D9C1CC700CA3EC8 /* RSP.hpp */,
-				E8F089CC2D9C1CAB00CA3EC8 /* PIStatus.hpp */,
 				E8F089CB2D9C1C9F00CA3EC8 /* PeripheralInterface.hpp */,
 				E8F089CA2D9C1C6B00CA3EC8 /* CPUInstruction.hpp */,
 				E8F089C92D9C1C1700CA3EC8 /* Bus.hpp */,

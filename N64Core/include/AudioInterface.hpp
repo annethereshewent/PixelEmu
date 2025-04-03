@@ -3,33 +3,16 @@
 #include <cstdint>
 #include <array>
 
-typedef union AIStatus {
-    struct {
-        unsigned int dmaFull1: 1;
-        unsigned int count: 15;
-        unsigned int bc: 1;
-        unsigned int unused0: 1;
-        unsigned int unused1: 1;
-        unsigned int wc: 1;
-        unsigned int unused2: 1;
-        unsigned int unused3: 1;
-        unsigned int unused4: 1;
-        unsigned int unused5: 1;
-        unsigned int unused6: 1;
-        unsigned int enabled: 1;
-        unsigned int unused7: 1;
-        unsigned int unused8: 1;
-        unsigned int unused9: 1;
-        unsigned int unused10: 1;
-        unsigned int unused11: 1;
-        unsigned int dmaBusy: 1;
-        unsigned int dmaFull2: 1;
-    };
-
-    uint32_t value = 0;
-} aistatusbitset;
-
 class Bus;
+
+enum AIStatusBits {
+    Full = 0,
+    BC = 16,
+    WC = 19,
+    Enabled = 25,
+    Busy = 30,
+    Full2 = 31
+};
 
 class AudioDma {
 public:
@@ -56,7 +39,7 @@ public:
 
     bool dmaEnable = false;
 
-    AIStatus status;
+    uint32_t status;
 
     std::array<AudioDma, 2> fifo = {};
 
