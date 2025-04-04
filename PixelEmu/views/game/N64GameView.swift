@@ -32,7 +32,7 @@ struct N64GameView: View {
                 themeColor
                 VStack {
                     MetalView(renderingData: $renderingData)
-                        .frame(width: 640 * 0.75, height: 480 * 0.75)
+                        .frame(width: 640 * 0.6, height: 480 * 0.6)
                         .padding(.top, 75)
                     Spacer()
                     Spacer()
