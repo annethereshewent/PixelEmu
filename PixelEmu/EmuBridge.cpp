@@ -22,6 +22,16 @@ void initEmulator(uint8_t* romBytes, uint32_t romSize) {
 void stepFrame() {
     while (!cpu->bus.rdp.frameFinished) {
         cpu->step();
+        if (cpu->bus.rdp.cmdsReady) {
+            // process RDP commands
+            for (uint32_t command: cpu->bus.rdp.enqueuedCommands) {
+                std::println("received command 0x{:x}", command);
+            }
+
+            cpu->bus.rdp.clearCommands();
+            cpu->bus.rdp.cmdsReady = false;
+        }
+
     }
 
     cpu->limitFps();
