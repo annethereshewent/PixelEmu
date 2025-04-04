@@ -11,12 +11,11 @@
 static CPU* cpu = nullptr;
 static std::vector<int> saveTypes = {};
 
-void initEmulator(uint8_t* romBytes, uint32_t romSize, void* metalLayer) {
+void initEmulator(uint8_t* romBytes, uint32_t romSize) {
     cpu = new CPU();
     cpu->bus.loadRomBytes(romBytes, romSize);
     cpu->bus.setCic();
 
-    cpu->bus.initRdp(metalLayer);
     cpu->bus.initAudio();
 }
 

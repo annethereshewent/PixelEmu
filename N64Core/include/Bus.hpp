@@ -212,8 +212,6 @@ public:
 
     void writeRumblePak(int channel, uint16_t address, int data);
 
-    void initRdp(void* metalLayer);
-
     static void writeValueLE(uint8_t* ptr, uint32_t value, int size);
     static void writeWord(uint8_t* ptr, uint32_t value);
     static void writeHalf(uint8_t* ptr, uint16_t value);

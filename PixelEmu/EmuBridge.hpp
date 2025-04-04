@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 // Start the emulator with a given ROM path
-void initEmulator(uint8_t* romBytes, uint32_t romSize, void* metalLayer);
+void initEmulator(uint8_t* romBytes, uint32_t romSize);
 
 // Run one frame of emulation
 void stepFrame();

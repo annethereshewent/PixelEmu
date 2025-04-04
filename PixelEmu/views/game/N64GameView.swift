@@ -26,7 +26,7 @@ struct N64GameView: View {
     var body: some View {
         if gameUrl != nil {
             HStack {
-                MetalWrapperView(romData: $romData)
+                MetalView()
                     .edgesIgnoringSafeArea(.all)
             }
             .navigationBarTitle("")
@@ -35,6 +35,19 @@ struct N64GameView: View {
             .edgesIgnoringSafeArea(.all)
             .statusBarHidden()
             .onAppear {
+                guard let romData = romData else {
+                   print("No ROM data!")
+                   return
+                }
+
+                var data = Array(romData)
+
+                let romSize = UInt32(data.count)
+
+                data.withUnsafeMutableBufferPointer { ptr in
+                    initEmulator(ptr.baseAddress!, romSize)
+                }
+
                 backupFiles = []
                 let ptr = getSaveTypes()
                 let count = getSaveTypesSize()
@@ -57,6 +70,14 @@ struct N64GameView: View {
                         backupFiles.append(BackupFile(capacity: MEMPAK_SIZE, gameUrl: gameUrl!))
                     default:
                         print("invalid backup file specified")
+                    }
+                }
+
+                DispatchQueue.global().async {
+                    while true {
+                        DispatchQueue.main.sync {
+                            stepFrame()
+                        }
                     }
                 }
             }

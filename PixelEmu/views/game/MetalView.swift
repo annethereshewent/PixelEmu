@@ -4,17 +4,36 @@
 //
 //  Created by Anne Castrillon on 4/3/25.
 //
+import SwiftUI
+import MetalKit
 
-import UIKit
-import Metal
-import QuartzCore
+struct MetalView: UIViewRepresentable {    
+    func makeUIView(context: Context) -> MTKView {
+        guard let device = MTLCreateSystemDefaultDevice() else {
+            fatalError("Metal is not supported on this device")
+        }
 
-class MetalView: UIView {
-    override class var layerClass: AnyClass {
-        return CAMetalLayer.self
+        let mtkView = MTKView(frame: .zero, device: device)
+        mtkView.clearColor = MTLClearColorMake(0.2, 0.2, 0.4, 1.0) // dark blue-ish
+        mtkView.colorPixelFormat = .bgra8Unorm
+        mtkView.enableSetNeedsDisplay = false
+        mtkView.isPaused = false
+        mtkView.preferredFramesPerSecond = 60
+
+        let renderer = Renderer(mtkView: mtkView)
+        mtkView.delegate = renderer
+        context.coordinator.renderer = renderer // retain the renderer
+
+        return mtkView
     }
 
-    var metalLayer: CAMetalLayer {
-        return self.layer as! CAMetalLayer
+    func updateUIView(_ uiView: MTKView, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        return Coordinator()
+    }
+
+    class Coordinator {
+        var renderer: Renderer?
     }
 }
