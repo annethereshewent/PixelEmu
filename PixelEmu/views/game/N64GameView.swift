@@ -21,13 +21,22 @@ let MEMPAK_TYPE: Int32 = 4
 struct N64GameView: View {
     @Binding var romData: Data?
     @Binding var gameUrl: URL?
+    @Binding var themeColor: Color
+    
     @State private var backupFiles: [BackupFile] = []
+    @State private var renderingData: [UInt32] = []
 
     var body: some View {
         if gameUrl != nil {
-            HStack {
-                MetalView()
-                    .edgesIgnoringSafeArea(.all)
+            ZStack {
+                themeColor
+                VStack {
+                    MetalView(renderingData: $renderingData)
+                        .frame(width: 640 * 0.75, height: 480 * 0.75)
+                        .padding(.top, 75)
+                    Spacer()
+                    Spacer()
+                }
             }
             .navigationBarTitle("")
             .navigationBarHidden(true)
@@ -36,8 +45,8 @@ struct N64GameView: View {
             .statusBarHidden()
             .onAppear {
                 guard let romData = romData else {
-                   print("No ROM data!")
-                   return
+                    print("No ROM data!")
+                    return
                 }
 
                 var data = Array(romData)

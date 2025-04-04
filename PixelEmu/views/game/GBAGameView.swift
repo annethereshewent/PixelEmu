@@ -68,7 +68,6 @@ struct GBAGameView: View {
             }
         }
 
-
         return 0
     }
 

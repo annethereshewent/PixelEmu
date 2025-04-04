@@ -310,7 +310,8 @@ struct ContentView: View {
                 } else if view == "N64GameView" {
                     N64GameView(
                         romData: $romData,
-                        gameUrl: $gameUrl
+                        gameUrl: $gameUrl,
+                        themeColor: $themeColor
                     )
                 }
             }

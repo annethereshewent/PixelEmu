@@ -7,7 +7,8 @@
 import SwiftUI
 import MetalKit
 
-struct MetalView: UIViewRepresentable {    
+struct MetalView: UIViewRepresentable {
+    @Binding var renderingData: [UInt32]
     func makeUIView(context: Context) -> MTKView {
         guard let device = MTLCreateSystemDefaultDevice() else {
             fatalError("Metal is not supported on this device")
@@ -35,5 +36,9 @@ struct MetalView: UIViewRepresentable {
 
     class Coordinator {
         var renderer: Renderer?
+
+        func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+            view.drawableSize = size
+        }
     }
 }
