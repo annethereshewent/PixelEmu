@@ -8,7 +8,8 @@ import SwiftUI
 import MetalKit
 
 struct MetalView: UIViewRepresentable {
-    @Binding var renderingData: [UInt32]
+    @Binding var enqueuedWords: [[UInt32]]
+    
     func makeUIView(context: Context) -> MTKView {
         guard let device = MTLCreateSystemDefaultDevice() else {
             fatalError("Metal is not supported on this device")
@@ -21,14 +22,20 @@ struct MetalView: UIViewRepresentable {
         mtkView.isPaused = false
         mtkView.preferredFramesPerSecond = 60
 
-        let renderer = Renderer(mtkView: mtkView)
+        let renderer = Renderer(mtkView: mtkView, enqueuedWords: enqueuedWords)
         mtkView.delegate = renderer
         context.coordinator.renderer = renderer // retain the renderer
+
+        mtkView.isPaused = false
+        mtkView.enableSetNeedsDisplay = false
+        mtkView.preferredFramesPerSecond = 60
 
         return mtkView
     }
 
-    func updateUIView(_ uiView: MTKView, context: Context) {}
+    func updateUIView(_ uiView: MTKView, context: Context) {
+        context.coordinator.renderer?.enqueuedWords = enqueuedWords
+    }
 
     func makeCoordinator() -> Coordinator {
         return Coordinator()

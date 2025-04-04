@@ -149,7 +149,6 @@ public:
 
     bool cmdsReady = false;
 
-    std::vector<uint32_t> enqueuedCommands = {};
     std::vector<std::vector<uint32_t>> enqueuedWords = {};
 
     uint32_t clockCounter = 0;

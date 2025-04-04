@@ -24,14 +24,14 @@ struct N64GameView: View {
     @Binding var themeColor: Color
     
     @State private var backupFiles: [BackupFile] = []
-    @State private var renderingData: [UInt32] = []
+    @State private var enqueuedWords: [[UInt32]] = []
 
     var body: some View {
         if gameUrl != nil {
             ZStack {
                 themeColor
                 VStack {
-                    MetalView(renderingData: $renderingData)
+                    MetalView(enqueuedWords: $enqueuedWords)
                         .frame(width: 640 * 0.6, height: 480 * 0.6)
                         .padding(.top, 75)
                     Spacer()
@@ -85,7 +85,34 @@ struct N64GameView: View {
                 DispatchQueue.global().async {
                     while true {
                         DispatchQueue.main.sync {
-                            stepFrame()
+                            while (!getFrameFinished()) {
+                                step()
+
+                                if (getCmdsReady()) {
+                                    let wordPtr = getFlattened()
+                                    let lengthPtr = getRowLengths()
+                                    let numRows = getNumRows()
+                                    let totalWordCount = getWordCount()
+
+                                    let wordBuffer = UnsafeBufferPointer(start: wordPtr, count: Int(totalWordCount))
+                                    let rowLengths = UnsafeBufferPointer(start: lengthPtr, count: Int(numRows))
+
+                                    var cursor = 0
+                                    enqueuedWords = []
+
+                                    for rowLen in rowLengths {
+                                        let row = Array(wordBuffer[cursor ..< cursor + Int(rowLen)])
+                                        enqueuedWords.append(row)
+                                        cursor += Int(rowLen)
+                                    }
+
+                                    clearCmdsReady()
+                                    clearEnqueuedCommands()
+                                }
+                            }
+
+                            limitFps()
+                            clearFrameFinished()
                         }
                     }
                 }

@@ -10,6 +10,9 @@
 
 static CPU* cpu = nullptr;
 static std::vector<int> saveTypes = {};
+static std::vector<uint32_t> flattened = {};
+static std::vector<uint64_t> rowLengths = {};
+static std::vector<std::vector<uint32_t>> enqueuedWords = {};
 
 void initEmulator(uint8_t* romBytes, uint32_t romSize) {
     cpu = new CPU();
@@ -19,24 +22,13 @@ void initEmulator(uint8_t* romBytes, uint32_t romSize) {
     cpu->bus.initAudio();
 }
 
-void stepFrame() {
-    while (!cpu->bus.rdp.frameFinished) {
-        cpu->step();
-        if (cpu->bus.rdp.cmdsReady) {
-            // process RDP commands
-            for (uint32_t command: cpu->bus.rdp.enqueuedCommands) {
-                std::println("received command 0x{:x}", command);
-            }
-
-            cpu->bus.rdp.clearCommands();
-            cpu->bus.rdp.cmdsReady = false;
-        }
-
+void step() {
+    cpu->step();
+    if (cpu->bus.rdp.cmdsReady) {
+        // process RDP commands
+        enqueuedWords = cpu->bus.rdp.enqueuedWords;
+        flattenCommands();
     }
-
-    cpu->limitFps();
-
-    cpu->bus.rdp.frameFinished = false;
 }
 
 int* getSaveTypes() {
@@ -51,3 +43,50 @@ uint64_t getSaveTypesSize() {
     return saveTypes.size();
 }
 
+void flattenCommands() {
+    for (const auto& row : enqueuedWords) {
+        rowLengths.push_back(row.size());
+        flattened.insert(flattened.end(), row.begin(), row.end());
+    }
+}
+
+uint64_t* getRowLengths() {
+    return &rowLengths[0];
+}
+
+uint32_t* getFlattened() {
+    return &flattened[0];
+}
+
+uint64_t getNumRows() {
+    return rowLengths.size();
+}
+
+
+bool getFrameFinished() {
+    return cpu->bus.rdp.frameFinished;
+}
+
+void clearFrameFinished() {
+    cpu->bus.rdp.frameFinished = false;
+}
+
+bool getCmdsReady() {
+    return cpu->bus.rdp.cmdsReady;
+}
+
+void clearCmdsReady() {
+    cpu->bus.rdp.cmdsReady = false;
+}
+
+void limitFps() {
+    cpu->limitFps();
+}
+
+void clearEnqueuedCommands() {
+    cpu->bus.rdp.enqueuedWords.clear();
+}
+
+uint64_t getWordCount() {
+    return flattened.size();
+}
