@@ -6,9 +6,17 @@
 //
 
 // Vertex
+
+#include <metal_stdlib>
+using namespace metal;
+
 vertex float4 vertex_basic(const device float2* position [[ buffer(0) ]],
                           uint vid [[ vertex_id ]]) {
     return float4(position[vid], 0.0, 1.0);
+}
+
+fragment float4 fragment_basic(constant float4& color [[buffer(0)]]) {
+    return color;
 }
 
 struct VertexIn {
@@ -32,6 +40,9 @@ vertex VertexOut vertex_main(VertexIn in [[stage_in]]) {
 }
 
 // Fragment
-fragment float4 fragment_main(const constant float4& color [[ buffer(0) ]]) {
-    return color;
+fragment float4 fragment_main(VertexOut in [[stage_in]],
+                              texture2d<float> tex [[texture(0)]])
+{
+    constexpr sampler textureSampler(address::repeat, filter::nearest);
+    return tex.sample(textureSampler, in.uv);
 }

@@ -205,17 +205,18 @@ class Renderer: NSObject, MTKViewDelegate {
 
         let library = device.makeDefaultLibrary()!
         let vertexBasicFunction = library.makeFunction(name: "vertex_basic")!
-        let fragmentFunction = library.makeFunction(name: "fragment_main")!
+        let fragmentBasicFunction = library.makeFunction(name: "fragment_basic")!
+        let fragmentMainFunction = library.makeFunction(name: "fragment_main")!
         let vertexMainFunction = library.makeFunction(name: "vertex_main")
 
         let fillPipelineDescriptor = MTLRenderPipelineDescriptor()
         fillPipelineDescriptor.vertexFunction = vertexBasicFunction
-        fillPipelineDescriptor.fragmentFunction = fragmentFunction
+        fillPipelineDescriptor.fragmentFunction = fragmentBasicFunction
         fillPipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
 
         let mainPipelineDescriptor = MTLRenderPipelineDescriptor()
         mainPipelineDescriptor.vertexFunction = vertexMainFunction
-        mainPipelineDescriptor.fragmentFunction = fragmentFunction
+        mainPipelineDescriptor.fragmentFunction = fragmentMainFunction
         mainPipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
 
         let vertexDescriptor = MTLVertexDescriptor()
@@ -254,9 +255,6 @@ class Renderer: NSObject, MTKViewDelegate {
     func draw(in view: MTKView) {
         for words in enqueuedWords {
             let command = parseCommand(command: (words[0] >> 24) & 0x3f)
-
-            print("got command \(command)")
-
             executeCommand(command: command, words: words)
         }
 
@@ -302,6 +300,9 @@ class Renderer: NSObject, MTKViewDelegate {
             }
 
             if triangleProps.count > 0 {
+                let redTexture = makeSolidColorTexture(device: device, color: SIMD4<UInt8>(255, 0, 0, 255))
+
+                encoder.setFragmentTexture(redTexture, index: 0)
                 for i in 0...triangleProps.count - 1 {
                     let triangle = triangleProps[i]
 
@@ -366,9 +367,6 @@ class Renderer: NSObject, MTKViewDelegate {
                         }
                     }
 
-                    print(textureWidth)
-                    print(textureHeight)
-
                     if i < textureProps.count {
                         let texture = textureProps[i]
 
@@ -392,11 +390,6 @@ class Renderer: NSObject, MTKViewDelegate {
                         rdpVertices[0].uv = uv0
                         rdpVertices[1].uv = uv1
                         rdpVertices[2].uv = uv2
-
-                        print("vertex uvs:")
-                        for vertex in rdpVertices {
-                            print(vertex.uv)
-                        }
                     }
 
                     let vertexBuffer = device.makeBuffer(
@@ -459,13 +452,13 @@ class Renderer: NSObject, MTKViewDelegate {
         props.ym = Float(signExtend(value: ((words[1] >> 16) & 0x3fff), bits: 14)) / 4.0
         props.yh = Float(signExtend(value: (words[1] & 0x3fff), bits: 14)) / 4.0
 
-        props.xl = Float(signExtend(value: words[2] & 0xfffffff, bits: 28) >> 1) / 65536
-        props.xm = Float(signExtend(value: words[6] & 0xfffffff, bits: 28) >> 1) / 65536
-        props.xh = Float(signExtend(value: words[4] & 0xfffffff, bits: 28) >> 1) / 65536
+        props.xl = Float(signExtend(value: words[2] & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.xm = Float(signExtend(value: words[6] & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.xh = Float(signExtend(value: words[4] & 0xfffffff, bits: 28) >> 1) / 65536.0
 
-        props.dxldy = Float(signExtend(value: (words[3] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536
-        props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536
-        props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536
+        props.dxldy = Float(signExtend(value: (words[3] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
 
         triangleProps.append(props)
 
@@ -563,6 +556,142 @@ class Renderer: NSObject, MTKViewDelegate {
         canRender = true
     }
 
+    func shadeTextureTriangle(words: [UInt32]) {
+        var props = TriangleProps()
+        props.flip = (words[0] >> 23) & 0b1 == 1
+
+        let signDxhdy = (words[5] >> 31) & 0b1 == 1
+
+        props.doOffset = props.flip == signDxhdy
+
+        props.tile = (words[0] >> 16) & 0x3f
+
+        props.yl = Float(signExtend(value: (words[0] & 0x3fff), bits: 14)) / 4.0
+        props.ym = Float(signExtend(value: ((words[1] >> 16) & 0x3fff), bits: 14)) / 4.0
+        props.yh = Float(signExtend(value: (words[1] & 0x3fff), bits: 14)) / 4.0
+
+        props.xl = Float(signExtend(value: words[2] & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.xm = Float(signExtend(value: words[6] & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.xh = Float(signExtend(value: words[4] & 0xfffffff, bits: 28) >> 1) / 65536.0
+
+        props.dxldy = Float(signExtend(value: (words[3] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
+
+        triangleProps.append(props)
+
+        var color = ColorProps()
+
+        let r = (words[8] & 0xffff0000) | ((words[12] >> 16) & 0xffff)
+        let g = (words[8] << 16) | (words[12] & 0xffff)
+        let b = (words[9] & 0xffff0000) | ((words[13] >> 16) & 0xffff)
+        let a = (words[9] << 16) | (words[13] & 0xffff)
+
+        let drdx = (words[10] & 0xffff0000) | ((words[15] >> 16) & 0xffff)
+        let dgdx = (words[10] << 16) | (words[14] & 0xffff)
+        let dbdx = (words[11] & 0xffff0000) | ((words[15] >> 16) & 0xffff)
+        let dadx = (words[11] << 16) | (words[15] & 0xffff)
+
+        let drde = (words[16] & 0xffff0000) | ((words[20] >> 16) & 0xffff)
+        let dgde = (words[16] << 16) | (words[20] & 0xffff)
+        let dbde = (words[17] & 0xffff0000) | ((words[21] >> 16) & 0xffff)
+        let dade = (words[17] << 16) | (words[21] & 0xffff)
+
+        let drdy = (words[18] & 0xffff0000) | ((words[22] >> 16) & 0xffff)
+        let dgdy = (words[18] << 16) | (words[22] & 0xffff)
+        let dbdy = (words[19] & 0xffff0000) | ((words[23] >> 16) & 0xffff)
+        let dady = (words[19] << 16) | (words[23] & 0xffff)
+
+        color.r = Float(Int32(bitPattern: r))
+        color.g = Float(Int32(bitPattern: g))
+        color.b = Float(Int32(bitPattern: b))
+        color.a = Float(Int32(bitPattern: a))
+
+        color.drdx = Float(Int32(bitPattern: drdx))
+        color.dgdx = Float(Int32(bitPattern: dgdx))
+        color.dbdx = Float(Int32(bitPattern: dbdx))
+        color.dadx = Float(Int32(bitPattern: dadx))
+
+        color.drdy = Float(Int32(bitPattern: drdy))
+        color.dgdy = Float(Int32(bitPattern: dgdy))
+        color.dbdy = Float(Int32(bitPattern: dbdy))
+        color.dady = Float(Int32(bitPattern: dady))
+
+        color.drde = Float(Int32(bitPattern: drde))
+        color.dgde = Float(Int32(bitPattern: dgde))
+        color.dbde = Float(Int32(bitPattern: dbde))
+        color.dade = Float(Int32(bitPattern: dade))
+
+        colorProps.append(color)
+
+        var texture = TextureProps()
+
+        let s = ((words[24] & 0xffff0000) | ((words[28] >> 16) & 0xffff))
+        let t = ((words[24] << 16) & 0xffff0000) | (words[28] & 0xffff)
+        let w = (words[25] & 0xffff0000) | ((words[29] >> 16) & 0xffff)
+
+        let dsdx = (words[26] & 0xffff0000) | ((words[30] >> 16) & 0xffff)
+        let dtdx = ((words[26] << 16) & 0xffff0000) | (words[30] & 0xffff)
+
+        let dwdx = (words[27] & 0xffff0000) | ((words[31] >> 16) & 0xffff)
+
+        let dsde = (words[32] & 0xffff0000) | ((words[36] >> 16) & 0xffff)
+        let dtde = ((words[32] << 16) & 0xffff0000) | (words[36] & 0xffff)
+        let dwde = (words[33] & 0xffff0000) | ((words[37] >> 16) & 0xffff)
+
+        let dsdy = (words[34] & 0xffff0000) | ((words[38] >> 16) & 0xffff)
+        let dtdy = ((words[34] << 16) & 0xffff0000) | (words[38] & 0xffff)
+        let dwdy = (words[35] & 0xffff0000) | ((words[39] >> 16) & 0xffff)
+
+        texture.s = Float(Int32(bitPattern: s)) / 65536.0
+        texture.t = Float(Int32(bitPattern: t)) / 65536.0
+        texture.w = Float(Int32(bitPattern: w)) / 65536.0
+
+        texture.dsdx = Float(Int32(bitPattern: dsdx)) / 65536.0
+        texture.dtdx = Float(Int32(bitPattern: dtdx)) / 65536.0
+
+        texture.dwdx = Float(Int32(bitPattern: dwdx)) / 65536.0
+
+        texture.dsde = Float(Int32(bitPattern: dsde)) / 65536.0
+        texture.dtde = Float(Int32(bitPattern: dtde)) / 65536.0
+        texture.dwde = Float(Int32(bitPattern: dwde)) / 65536.0
+
+        texture.dsdy = Float(Int32(bitPattern: dsdy)) / 65536.0
+        texture.dtdy = Float(Int32(bitPattern: dtdy)) / 65536.0
+        texture.dwdy = Float(Int32(bitPattern: dwdy)) / 65536.0
+
+        textureProps.append(texture)
+
+        canRender = true
+    }
+
+    func makeSolidColorTexture(device: MTLDevice, color: SIMD4<UInt8>, size: Int = 64) -> MTLTexture? {
+        let descriptor = MTLTextureDescriptor()
+        descriptor.pixelFormat = .rgba8Unorm
+        descriptor.width = size
+        descriptor.height = size
+        descriptor.usage = [.shaderRead]
+        descriptor.storageMode = .shared
+
+        guard let texture = device.makeTexture(descriptor: descriptor) else {
+            return nil
+        }
+
+        // Fill pixel buffer with RGBA values
+        var pixelData = [UInt8](repeating: 0, count: size * size * 4)
+        for i in 0..<size*size {
+            pixelData[i * 4 + 0] = color.x // R
+            pixelData[i * 4 + 1] = color.y // G
+            pixelData[i * 4 + 2] = color.z // B
+            pixelData[i * 4 + 3] = color.w // A
+        }
+
+        let region = MTLRegionMake2D(0, 0, size, size)
+        texture.replace(region: region, mipmapLevel: 0, withBytes: pixelData, bytesPerRow: size * 4)
+
+        return texture
+    }
+
     func signExtend(value: UInt32, bits: Int) -> Int32 {
         let shift = 32 - bits
 
@@ -614,7 +743,7 @@ class Renderer: NSObject, MTKViewDelegate {
         case .TextureZBufferTriangle: break
         case .ShadeTriangle: break
         case .ShadeZBufferTriangle: break
-        case .ShadeTextureTriangle: break
+        case .ShadeTextureTriangle: shadeTextureTriangle(words: words)
         case .ShadeTextureZBufferTriangle: shadeTextureZBufferTriangle(words: words)
         case .TextureRectangle: break
         case .TextureRectangleFlip: break

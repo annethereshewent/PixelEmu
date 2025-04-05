@@ -9,7 +9,7 @@ enum PIStatusBits {
 
 class PeripheralInterface {
 public:
-    uint32_t piStatus;
+    uint32_t piStatus = 0;
     uint32_t dom1Latch = 0;
     uint32_t dom2Latch = 0;
 

@@ -39,7 +39,7 @@ public:
 
     bool dmaEnable = false;
 
-    uint32_t status;
+    uint32_t status = 0;
 
     std::array<AudioDma, 2> fifo = {};
 
