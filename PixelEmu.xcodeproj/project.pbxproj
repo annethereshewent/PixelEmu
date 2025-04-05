@@ -77,6 +77,7 @@
 		E8C289512D9CE99200409325 /* N64Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8C289502D9CE99200409325 /* N64Core.a */; };
 		E8C2895D2D9F514700409325 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C2895C2D9F514400409325 /* MetalView.swift */; };
 		E8C289642D9FE95100409325 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C289632D9FE94F00409325 /* Renderer.swift */; };
+		E8C289692DA0BA4100409325 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E8C289682DA0B9FF00409325 /* Shaders.metal */; };
 		E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */; };
 		E8DF26BE2CC5F99600A88821 /* LoadStatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BD2CC5F99600A88821 /* LoadStatesView.swift */; };
 		E8DF26C02CC5FA5000A88821 /* LoadStateEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BF2CC5FA5000A88821 /* LoadStateEntryView.swift */; };
@@ -204,6 +205,7 @@
 		E8C289502D9CE99200409325 /* N64Core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = N64Core.a; sourceTree = "<group>"; };
 		E8C2895C2D9F514400409325 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
 		E8C289632D9FE94F00409325 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		E8C289682DA0B9FF00409325 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryViewWrapper.swift; sourceTree = "<group>"; };
 		E8DF26BD2CC5F99600A88821 /* LoadStatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadStatesView.swift; sourceTree = "<group>"; };
 		E8DF26BF2CC5FA5000A88821 /* LoadStateEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadStateEntryView.swift; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 		E806E9EB2C97E1B10081D3E8 = {
 			isa = PBXGroup;
 			children = (
+				E8C289672DA0B9F500409325 /* shaders */,
 				E8F089C62D9C1BA300CA3EC8 /* N64Core */,
 				E806EA992CA1284B0081D3E8 /* .gitignore */,
 				E806E9F62C97E1B10081D3E8 /* PixelEmu */,
@@ -498,6 +501,14 @@
 				E8C289632D9FE94F00409325 /* Renderer.swift */,
 			);
 			path = render;
+			sourceTree = "<group>";
+		};
+		E8C289672DA0B9F500409325 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				E8C289682DA0B9FF00409325 /* Shaders.metal */,
+			);
+			path = shaders;
 			sourceTree = "<group>";
 		};
 		E8EE5D8B2CC224E600CD77B6 /* fonts */ = {
@@ -863,6 +874,7 @@
 				E8EE5D932CC238F500CD77B6 /* NavigationBarView.swift in Sources */,
 				E8A214EF2CD0553800173E06 /* DualScreenView.swift in Sources */,
 				E8DF26C02CC5FA5000A88821 /* LoadStateEntryView.swift in Sources */,
+				E8C289692DA0BA4100409325 /* Shaders.metal in Sources */,
 				E8AE9BF52D0637A600A834EC /* GBAEntryModal.swift in Sources */,
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E8F089F22D9CB19C00CA3EC8 /* N64GameView.swift in Sources */,

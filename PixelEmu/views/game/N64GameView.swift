@@ -32,7 +32,7 @@ struct N64GameView: View {
                 themeColor
                 VStack {
                     MetalView(enqueuedWords: $enqueuedWords)
-                        .frame(width: 640 * 0.6, height: 480 * 0.6)
+                        .frame(width: 320, height: 240)
                         .padding(.top, 75)
                     Spacer()
                     Spacer()
