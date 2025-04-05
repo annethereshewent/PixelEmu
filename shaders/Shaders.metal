@@ -6,9 +6,29 @@
 //
 
 // Vertex
-vertex float4 vertex_main(const device float2* position [[ buffer(0) ]],
+vertex float4 vertex_basic(const device float2* position [[ buffer(0) ]],
                           uint vid [[ vertex_id ]]) {
     return float4(position[vid], 0.0, 1.0);
+}
+
+struct VertexIn {
+    float2 position [[attribute(0)]];
+    float2 uv       [[attribute(1)]];
+    float4 color    [[attribute(2)]];
+};
+
+struct VertexOut {
+    float4 position [[position]];
+    float2 uv;
+    float4 color;
+};
+
+vertex VertexOut vertex_main(VertexIn in [[stage_in]]) {
+    VertexOut out;
+    out.position = float4(in.position, 0.0, 1.0);
+    out.uv = in.uv;
+    out.color = in.color;
+    return out;
 }
 
 // Fragment
