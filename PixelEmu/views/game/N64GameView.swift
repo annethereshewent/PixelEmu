@@ -89,6 +89,7 @@ struct N64GameView: View {
                                 step()
 
                                 if (getCmdsReady()) {
+                                    print("commands are ready!")
                                     let wordPtr = getFlattened()
                                     let lengthPtr = getRowLengths()
                                     let numRows = getNumRows()
