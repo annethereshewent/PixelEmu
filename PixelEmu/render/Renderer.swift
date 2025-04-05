@@ -43,6 +43,13 @@ struct TriangleProps {
     var dxhdy: Float = 0
 }
 
+struct TexImageProps {
+    var address: UInt32 = 0
+    var width: UInt32 = 0
+    var size: TextureSize = .Bpp4
+    var format: TextureFormat = .RGBA
+}
+
 struct TextureProps {
     var s: Float = 0
     var t: Float = 0
@@ -59,6 +66,13 @@ struct TextureProps {
     var dsdy: Float = 0
     var dtdy: Float = 0
     var dwdy: Float = 0
+}
+
+struct TileState {
+    var slo: UInt32 = 0
+    var shi: UInt32 = 0
+    var tlo: UInt32 = 0
+    var thi: UInt32 = 0
 }
 
 struct RDPVertex {
@@ -98,6 +112,22 @@ struct RDPState {
     var enableTextureLod: Bool = false
     var coverageMode: Int = 0
     var dither: Int = 0
+}
+
+enum TextureSize: UInt8 {
+    case Bpp4 = 0
+    case Bpp8 = 1
+    case Bpp16 = 2
+    case Bpp32 = 3
+}
+
+enum TextureFormat: UInt8
+{
+    case RGBA = 0
+    case YUV = 1
+    case CI = 2
+    case IA = 3
+    case I = 4
 }
 
 enum RdpCommand: UInt32 {
@@ -160,6 +190,10 @@ class Renderer: NSObject, MTKViewDelegate {
     var textureProps: [TextureProps] = []
     var colorProps: [ColorProps] = []
     var zProps: [ZProps] = []
+
+    var tiles: [TileState] = [TileState](repeating: TileState(), count: 8)
+
+    var textureImage = TexImageProps()
 
     var canRender = false
 
@@ -277,8 +311,6 @@ class Renderer: NSObject, MTKViewDelegate {
                         RDPVertex()
                     ]
 
-                    print("vertices = (\(triangle.xl), \(triangle.yl)), (\(triangle.xm), \(triangle.ym)), (\(triangle.xh), \(triangle.yh))")
-
                     let vertices = [
                         SIMD2<Float>((Float(triangle.xl) / screenWidth) * 2.0 - 1.0, (Float(triangle.yl) / screenHeight) * 2.0 - 1.0),
                         SIMD2<Float>((Float(triangle.xm) / screenWidth) * 2.0 - 1.0, (Float(triangle.ym) / screenHeight) * 2.0 - 1.0),
@@ -317,20 +349,32 @@ class Renderer: NSObject, MTKViewDelegate {
                         rdpVertices[0].color = color0
                         rdpVertices[1].color = color1
                         rdpVertices[2].color = color2
+                    }
 
-                        for vertex in rdpVertices {
-                            print(vertex.color)
+                    var textureWidth: Float = 0.0
+                    var textureHeight: Float = 0.0
+
+                    for tile in tiles {
+                        let width = Float(tile.shi - tile.slo) + 1
+                        let height = Float(tile.thi - tile.tlo) + 1
+
+                        if width > textureWidth {
+                            textureWidth = width
+                        }
+                        if height > textureHeight {
+                            textureHeight = height
                         }
                     }
 
-                    let textureWidth: Float = 64
-                    let textureHeight: Float = 64
+                    print(textureWidth)
+                    print(textureHeight)
 
                     if i < textureProps.count {
                         let texture = textureProps[i]
 
                         let u0 = texture.s
                         let v0 = texture.t
+                        let w0 = texture.w
 
                         let u1 = u0 + texture.dsdx * (triangle.xm - baseX) + texture.dsdy * (triangle.ym - baseY)
                         let u2 = u0 + texture.dsdx * (triangle.xh - baseX) + texture.dsdy * (triangle.yh - baseY)
@@ -338,14 +382,18 @@ class Renderer: NSObject, MTKViewDelegate {
                         let v1 = v0 + texture.dtdx * (triangle.xm - baseX) + texture.dtdy * (triangle.ym - baseY)
                         let v2 = v0 + texture.dtdx * (triangle.xh - baseX) + texture.dtdy * (triangle.yh - baseY)
 
-                        let uv0 = SIMD2<Float>(Float(u0) / (65536.0 * textureWidth), Float(v0) / (65536.0 * textureHeight))
-                        let uv1 = SIMD2<Float>(Float(u1) / (65536.0 * textureWidth), Float(v1) / (65536.0 * textureHeight))
-                        let uv2 = SIMD2<Float>(Float(u2) / (65536.0 * textureWidth), Float(v2) / (65536.0 * textureHeight))
+                        let w1 = w0 + texture.dwdx * (triangle.xm - baseX) + texture.dwdy * (triangle.ym - baseY)
+                        let w2 = w0 + texture.dwdx * (triangle.xh - baseX) + texture.dwdy * (triangle.yh - baseY)
+
+                        let uv0 = SIMD2<Float>(Float(u0) / Float(w0) / textureWidth, Float(v0) / Float(w0) / textureHeight)
+                        let uv1 = SIMD2<Float>(Float(u1) / Float(w1) / textureWidth, Float(v1) / Float(w1) / textureHeight)
+                        let uv2 = SIMD2<Float>(Float(u2) / Float(w2) / textureWidth, Float(v2) / Float(w2) / textureHeight)
 
                         rdpVertices[0].uv = uv0
                         rdpVertices[1].uv = uv1
                         rdpVertices[2].uv = uv2
 
+                        print("vertex uvs:")
                         for vertex in rdpVertices {
                             print(vertex.uv)
                         }
@@ -474,8 +522,6 @@ class Renderer: NSObject, MTKViewDelegate {
         let dsdx = (words[26] & 0xffff0000) | ((words[30] >> 16) & 0xffff)
         let dtdx = ((words[26] << 16) & 0xffff0000) | (words[30] & 0xffff)
 
-        print(dtdx)
-
         let dwdx = (words[27] & 0xffff0000) | ((words[31] >> 16) & 0xffff)
 
         let dsde = (words[32] & 0xffff0000) | ((words[36] >> 16) & 0xffff)
@@ -486,26 +532,22 @@ class Renderer: NSObject, MTKViewDelegate {
         let dtdy = ((words[34] << 16) & 0xffff0000) | (words[38] & 0xffff)
         let dwdy = (words[35] & 0xffff0000) | ((words[39] >> 16) & 0xffff)
 
-        texture.s = Float(Int32(bitPattern: s))
-        texture.t = Float(Int32(bitPattern: t))
-        texture.w = Float(Int32(bitPattern: w))
+        texture.s = Float(Int32(bitPattern: s)) / 65536.0
+        texture.t = Float(Int32(bitPattern: t)) / 65536.0
+        texture.w = Float(Int32(bitPattern: w)) / 65536.0
 
-        print("s = \(texture.s) t = \(texture.t) w = \(texture.w)")
+        texture.dsdx = Float(Int32(bitPattern: dsdx)) / 65536.0
+        texture.dtdx = Float(Int32(bitPattern: dtdx)) / 65536.0
 
-        texture.dsdx = Float(Int32(bitPattern: dsdx))
-        texture.dtdx = Float(Int32(bitPattern: dtdx))
+        texture.dwdx = Float(Int32(bitPattern: dwdx)) / 65536.0
 
-        texture.dwdx = Float(Int32(bitPattern: dwdx))
+        texture.dsde = Float(Int32(bitPattern: dsde)) / 65536.0
+        texture.dtde = Float(Int32(bitPattern: dtde)) / 65536.0
+        texture.dwde = Float(Int32(bitPattern: dwde)) / 65536.0
 
-        texture.dsde = Float(Int32(bitPattern: dsde))
-        texture.dtde = Float(Int32(bitPattern: dtde))
-        texture.dwde = Float(Int32(bitPattern: dwde))
-
-        texture.dsdy = Float(Int32(bitPattern: dsdy))
-        texture.dtdy = Float(Int32(bitPattern: dtdy))
-        texture.dwdy = Float(Int32(bitPattern: dwdy))
-
-        print(texture)
+        texture.dsdy = Float(Int32(bitPattern: dsdy)) / 65536.0
+        texture.dtdy = Float(Int32(bitPattern: dtdy)) / 65536.0
+        texture.dwdy = Float(Int32(bitPattern: dwdy)) / 65536.0
 
         textureProps.append(texture)
 
@@ -531,6 +573,32 @@ class Renderer: NSObject, MTKViewDelegate {
 
     func setFillColor(words: [UInt32]) {
         fillColor = words[0]
+    }
+
+    func setTextureImage(words: [UInt32]) {
+        let format = TextureFormat(rawValue: UInt8((words[0] >> 21) & 7))!
+        let size = TextureSize(rawValue: UInt8((words[0] >> 19) & 3))!
+
+        let width = (words[0] & 0x3ff) + 1
+        let address = words[1] & 0xffffff
+
+        textureImage.address = address
+        textureImage.width = width
+        textureImage.size = size
+        textureImage.format = format
+    }
+
+    func setTileSize(words: [UInt32]) {
+        let tile = Int((words[1] >> 24) & 7)
+        let slo = (words[0] >> 12) & 0xfff
+        let shi = (words[1] >> 12) & 0xfff
+        let tlo = words[0] & 0xfff
+        let thi = words[1] & 0xfff
+
+        tiles[tile].slo = slo >> 2
+        tiles[tile].shi = shi >> 2
+        tiles[tile].tlo = tlo >> 2
+        tiles[tile].thi = thi >> 2
     }
 
     func executeCommand(command: RdpCommand, words: [UInt32]) {
@@ -561,7 +629,7 @@ class Renderer: NSObject, MTKViewDelegate {
         case .SetPrimDepth: break
         case .SetOtherModes: break
         case .LoadTLut: break
-        case .SetTileSize: break
+        case .SetTileSize: setTileSize(words: words)
         case .LoadBlock: break
         case .LoadTile: break
         case .SetTile: break
@@ -572,7 +640,7 @@ class Renderer: NSObject, MTKViewDelegate {
         case .SetPrimColor: break
         case .SetEnvColor: break
         case .SetCombine: break
-        case .SetTextureImage: break
+        case .SetTextureImage: setTextureImage(words: words)
         case .SetMaskImage: break
         case .SetColorImage: break
         }
