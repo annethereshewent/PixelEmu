@@ -356,9 +356,9 @@ class Renderer: NSObject, MTKViewDelegate {
                     ]
 
                     let vertices = [
-                        SIMD2<Float>((Float(triangle.xl) / screenWidth) * 2.0 - 1.0, (Float(triangle.yl) / screenHeight) * 2.0 - 1.0),
-                        SIMD2<Float>((Float(triangle.xm) / screenWidth) * 2.0 - 1.0, (Float(triangle.ym) / screenHeight) * 2.0 - 1.0),
-                        SIMD2<Float>((Float(triangle.xh) / screenWidth) * 2.0 - 1.0, (Float(triangle.yh) / screenHeight) * 2.0 - 1.0),
+                        SIMD2<Float>((Float(triangle.xl) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.yl) / screenHeight) * 2.0),
+                        SIMD2<Float>((Float(triangle.xm) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.ym) / screenHeight) * 2.0),
+                        SIMD2<Float>((Float(triangle.xh) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.yh) / screenHeight) * 2.0),
                     ]
 
                     rdpVertices[0].position = vertices[0]
@@ -613,13 +613,13 @@ class Renderer: NSObject, MTKViewDelegate {
         props.ym = Float(signExtend(value: ((words[1] >> 16) & 0x3fff), bits: 14)) / 4.0
         props.yh = Float(signExtend(value: (words[1] & 0x3fff), bits: 14)) / 4.0
 
-        props.xl = Float(signExtend(value: words[2] & 0xfffffff, bits: 28) >> 1) / 65536.0
-        props.xm = Float(signExtend(value: words[6] & 0xfffffff, bits: 28) >> 1) / 65536.0
-        props.xh = Float(signExtend(value: words[4] & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.xl = Float(signExtend(value: words[2] & 0xfffffff, bits: 28)) / 65536.0
+        props.xm = Float(signExtend(value: words[6] & 0xfffffff, bits: 28)) / 65536.0
+        props.xh = Float(signExtend(value: words[4] & 0xfffffff, bits: 28)) / 65536.0
 
-        props.dxldy = Float(signExtend(value: (words[3] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
-        props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
-        props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.dxldy = Float(signExtend(value: (words[3] >> 2) & 0xfffffff, bits: 28)) / 65536.0
+        props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28)) / 65536.0
+        props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28)) / 65536.0
 
         triangleProps.append(props)
 
