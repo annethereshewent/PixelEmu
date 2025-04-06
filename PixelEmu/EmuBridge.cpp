@@ -84,6 +84,8 @@ void limitFps() {
 }
 
 void clearEnqueuedCommands() {
+    flattened.clear();
+    rowLengths.clear();
     cpu->bus.rdp.enqueuedWords.clear();
 }
 
