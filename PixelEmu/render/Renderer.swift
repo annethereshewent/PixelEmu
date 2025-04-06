@@ -73,6 +73,25 @@ struct TileState {
     var shi: UInt32 = 0
     var tlo: UInt32 = 0
     var thi: UInt32 = 0
+    var tileProps = TileProps()
+}
+
+struct TileProps {
+    var mirrorSBit = false
+    var clampSBit = false
+    var mirrorTBit = false
+    var clampTBit = false
+
+    var offset: UInt32 = 0
+    var stride: UInt32 = 0
+    var size: TextureSize = .Bpp4
+    var fmt: TextureFormat = .RGBA
+    var palette: UInt32 = 0
+
+    var shiftS: UInt32 = 0
+    var shiftT: UInt32 = 0
+    var maskS: UInt32 = 0
+    var maskT: UInt32 = 0
 }
 
 struct RDPVertex {
@@ -343,9 +362,9 @@ class Renderer: NSObject, MTKViewDelegate {
             }
 
             if triangleProps.count > 0 {
-                let redTexture = makeSolidColorTexture(device: device, color: SIMD4<UInt8>(255, 0, 0, 255))
-
-                encoder.setFragmentTexture(redTexture, index: 0)
+//                let redTexture = makeSolidColorTexture(device: device, color: SIMD4<UInt8>(0, 0, 255, 255))
+//
+//                encoder.setFragmentTexture(redTexture, index: 0)
                 for i in 0...triangleProps.count - 1 {
                     let triangle = triangleProps[i]
 
@@ -599,6 +618,86 @@ class Renderer: NSObject, MTKViewDelegate {
         canRender = true
     }
 
+    func shadeZBufferTriangle(words: [UInt32]) {
+        var props = TriangleProps()
+        props.flip = (words[0] >> 23) & 0b1 == 1
+
+        let signDxhdy = (words[5] >> 31) & 0b1 == 1
+
+        props.doOffset = props.flip == signDxhdy
+
+        props.tile = (words[0] >> 16) & 0x3f
+
+        props.yl = Float(signExtend(value: (words[0] & 0x3fff), bits: 14)) / 4.0
+        props.ym = Float(signExtend(value: ((words[1] >> 16) & 0x3fff), bits: 14)) / 4.0
+        props.yh = Float(signExtend(value: (words[1] & 0x3fff), bits: 14)) / 4.0
+
+        props.xl = Float(signExtend(value: words[2] & 0xfffffff, bits: 28)) / 65536.0
+        props.xm = Float(signExtend(value: words[6] & 0xfffffff, bits: 28)) / 65536.0
+        props.xh = Float(signExtend(value: words[4] & 0xfffffff, bits: 28)) / 65536.0
+
+        props.dxldy = Float(signExtend(value: (words[3] >> 2) & 0xfffffff, bits: 28)) / 65536.0
+        props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28)) / 65536.0
+        props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28)) / 65536.0
+
+        triangleProps.append(props)
+
+        var color = ColorProps()
+
+        let r = (words[8] & 0xffff0000) | ((words[12] >> 16) & 0xffff)
+        let g = (words[8] << 16) | (words[12] & 0xffff)
+        let b = (words[9] & 0xffff0000) | ((words[13] >> 16) & 0xffff)
+        let a = (words[9] << 16) | (words[13] & 0xffff)
+
+        let drdx = (words[10] & 0xffff0000) | ((words[15] >> 16) & 0xffff)
+        let dgdx = (words[10] << 16) | (words[14] & 0xffff)
+        let dbdx = (words[11] & 0xffff0000) | ((words[15] >> 16) & 0xffff)
+        let dadx = (words[11] << 16) | (words[15] & 0xffff)
+
+        let drde = (words[16] & 0xffff0000) | ((words[20] >> 16) & 0xffff)
+        let dgde = (words[16] << 16) | (words[20] & 0xffff)
+        let dbde = (words[17] & 0xffff0000) | ((words[21] >> 16) & 0xffff)
+        let dade = (words[17] << 16) | (words[21] & 0xffff)
+
+        let drdy = (words[18] & 0xffff0000) | ((words[22] >> 16) & 0xffff)
+        let dgdy = (words[18] << 16) | (words[22] & 0xffff)
+        let dbdy = (words[19] & 0xffff0000) | ((words[23] >> 16) & 0xffff)
+        let dady = (words[19] << 16) | (words[23] & 0xffff)
+
+        color.r = Float(Int32(bitPattern: r))
+        color.g = Float(Int32(bitPattern: g))
+        color.b = Float(Int32(bitPattern: b))
+        color.a = Float(Int32(bitPattern: a))
+
+        color.drdx = Float(Int32(bitPattern: drdx))
+        color.dgdx = Float(Int32(bitPattern: dgdx))
+        color.dbdx = Float(Int32(bitPattern: dbdx))
+        color.dadx = Float(Int32(bitPattern: dadx))
+
+        color.drdy = Float(Int32(bitPattern: drdy))
+        color.dgdy = Float(Int32(bitPattern: dgdy))
+        color.dbdy = Float(Int32(bitPattern: dbdy))
+        color.dady = Float(Int32(bitPattern: dady))
+
+        color.drde = Float(Int32(bitPattern: drde))
+        color.dgde = Float(Int32(bitPattern: dgde))
+        color.dbde = Float(Int32(bitPattern: dbde))
+        color.dade = Float(Int32(bitPattern: dade))
+
+        colorProps.append(color)
+
+        var z = ZProps()
+
+        z.z = Float(Int32(bitPattern: words[24]))
+        z.dzdx = Float(Int32(bitPattern: words[25]))
+        z.dzde = Float(Int32(bitPattern: words[26]))
+        z.dzdy = Float(Int32(bitPattern: words[27]))
+
+        zProps.append(z)
+
+        canRender = true
+    }
+
     func shadeTextureTriangle(words: [UInt32]) {
         var props = TriangleProps()
         props.flip = (words[0] >> 23) & 0b1 == 1
@@ -773,6 +872,39 @@ class Renderer: NSObject, MTKViewDelegate {
         tiles[tile].thi = thi >> 2
     }
 
+    func setTile(words: [UInt32]) {
+        let tile = Int((words[1] >> 24) & 7)
+
+        var props = TileProps()
+
+        props.offset = ((words[0] >> 0) & 511) << 3
+        props.stride = ((words[0] >> 9) & 511) << 3
+        props.size = TextureSize(rawValue: UInt8((words[0] >> 19) & 3))!
+        props.fmt = TextureFormat(rawValue: UInt8((words[0] >> 21) & 7))!
+
+        props.palette = (words[1] >> 20) & 15
+
+        props.shiftS = (words[1] >> 0) & 15
+        props.maskS = min((words[1] >> 4) & 15, 10)
+        props.shiftT = (words[1] >> 10) & 15
+        props.maskT = min((words[1] >> 14) & 15, 10)
+
+        if (words[1] & (1 << 8) != 0) {
+            props.mirrorSBit = true
+        }
+        if (words[1] & (1 << 9) != 0 || props.maskS == 0) {
+            props.clampSBit = true
+        }
+        if (words[1] & (1 << 18) != 0) {
+            props.mirrorTBit = true
+        }
+        if (words[1] & (1 << 19) != 0 || props.maskT == 0) {
+            props.clampTBit = true
+        }
+
+        tiles[Int(tile)].tileProps = props
+    }
+
     func executeCommand(command: RdpCommand, words: [UInt32]) {
         switch command {
         case .Nop: break // do nothing
@@ -785,7 +917,7 @@ class Renderer: NSObject, MTKViewDelegate {
         case .TextureTriangle: break
         case .TextureZBufferTriangle: break
         case .ShadeTriangle: break
-        case .ShadeZBufferTriangle: break
+        case .ShadeZBufferTriangle: shadeZBufferTriangle(words: words)
         case .ShadeTextureTriangle: shadeTextureTriangle(words: words)
         case .ShadeTextureZBufferTriangle: shadeTextureZBufferTriangle(words: words)
         case .TextureRectangle: break
@@ -804,7 +936,7 @@ class Renderer: NSObject, MTKViewDelegate {
         case .SetTileSize: setTileSize(words: words)
         case .LoadBlock: break
         case .LoadTile: break
-        case .SetTile: break
+        case .SetTile: setTile(words: words)
         case .FillRectangle: fillRectangle(words: words)
         case .SetFillColor: setFillColor(words: words)
         case .SetFogColor: break
