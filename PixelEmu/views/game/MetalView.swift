@@ -17,7 +17,7 @@ struct MetalView: UIViewRepresentable {
 
         let mtkView = MTKView(frame: .zero, device: device)
         mtkView.clearColor = MTLClearColorMake(0.2, 0.2, 0.4, 1.0) // dark blue-ish
-        mtkView.colorPixelFormat = .bgra8Unorm
+        mtkView.colorPixelFormat = .rgba8Unorm
         mtkView.enableSetNeedsDisplay = false
         mtkView.isPaused = false
         mtkView.preferredFramesPerSecond = 60

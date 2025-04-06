@@ -388,6 +388,10 @@ class Renderer: NSObject, MTKViewDelegate {
 
                     let tile = tiles[currentTile]
 
+                    let sampler = makeSampler(clampS: tile.tileProps.clampSBit, clampT: tile.tileProps.clampTBit)
+
+                    encoder.setFragmentSamplerState(sampler, index: 0)
+
                     var uniforms = FragmentUniforms(hasTexture: false)
 
                     if let texture = tile.texture {
@@ -889,7 +893,7 @@ class Renderer: NSObject, MTKViewDelegate {
         let slo = ((words[0] >> 12) & 0xfff) >> 2
         let shi = ((words[1] >> 12) & 0xfff) >> 2
         let tlo = ((words[0] >> 0) & 0xfff) >> 2
-        let _ = ((words[1] >> 0) & 0xfff) >> 2
+        let _dt = ((words[1] >> 0) & 0xfff) >> 2
 
         let numTexels = shi - slo + 1
         let height = 1
@@ -934,7 +938,7 @@ class Renderer: NSObject, MTKViewDelegate {
                 var r = UInt8((texel >> 11) & 0x1F)
                 var g = UInt8((texel >> 6) & 0x1F)
                 var b = UInt8((texel >> 1) & 0x1F)
-                let a = UInt8((texel & 0b1) * 255)
+                let a = UInt8((texel & 0b1) * 0xff)
 
                 r = (r << 3) | (r >> 2)
                 g = (g << 3) | (g >> 2)
@@ -946,7 +950,7 @@ class Renderer: NSObject, MTKViewDelegate {
                 bytes.append(a)
             }
         } else {
-            fatalError("pixel format not supported yet: \(format) \(size)")
+            print("pixel format not supported yet: \(format) \(size)")
         }
 
         // Width is unknown — usually this is a 1D block, so let’s try a fixed height of 1
@@ -967,6 +971,14 @@ class Renderer: NSObject, MTKViewDelegate {
         )
         // Store in tile
         tiles[tile].texture = texture
+
+        if tiles[tile].shi == 0 && tiles[tile].slo == 0 && tiles[tile].thi == 0 && tiles[tile].tlo == 0 {
+            // Fallback: use tile 0’s size info
+            tiles[tile].slo = tiles[0].slo
+            tiles[tile].shi = tiles[0].shi
+            tiles[tile].tlo = tiles[0].tlo
+            tiles[tile].thi = tiles[0].thi
+        }
 
         currentTile = tile
     }
@@ -1095,5 +1107,14 @@ class Renderer: NSObject, MTKViewDelegate {
         case .SetMaskImage: break
         case .SetColorImage: break
         }
+    }
+
+    func makeSampler(clampS: Bool, clampT: Bool) -> MTLSamplerState {
+        let desc = MTLSamplerDescriptor()
+        desc.minFilter = .nearest
+        desc.magFilter = .nearest
+        desc.sAddressMode = clampS ? .clampToEdge : .repeat
+        desc.tAddressMode = clampT ? .clampToEdge : .repeat
+        return device.makeSamplerState(descriptor: desc)!
     }
 }

@@ -46,10 +46,9 @@ vertex VertexOut vertex_main(VertexIn in [[stage_in]]) {
 // Fragment
 fragment float4 fragment_main(VertexOut in [[stage_in]],
                               texture2d<float> tex [[texture(0)]],
-                              constant FragmentUniforms& uniforms [[buffer(1)]])
+                              constant FragmentUniforms& uniforms [[buffer(1)]],
+                              sampler textureSampler [[sampler(0)]])
 {
-    constexpr sampler textureSampler(address::repeat, filter::nearest);
-
     if (uniforms.hasTexture) {
         in.uv = clamp(in.uv, float2(0.0), float2(1.0));
         return tex.sample(textureSampler, in.uv);
