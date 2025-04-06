@@ -178,24 +178,14 @@ struct TexturedVertex {
     var uv: SIMD2<Float>
 }
 
-let fullscreenQuad: [TexturedVertex] = [
-    TexturedVertex(position: [-1,  1], uv: [0, 0]),
-    TexturedVertex(position: [ 1,  1], uv: [1, 0]),
-    TexturedVertex(position: [-1, -1], uv: [0, 1]),
-    TexturedVertex(position: [ 1, -1], uv: [1, 1]),
-]
-
 class Renderer: NSObject, MTKViewDelegate {
     let device: MTLDevice
     let commandQueue: MTLCommandQueue
 
     var rdpState = RDPState()
 
-    var screenQuadBuffer: MTLBuffer!
-
     var fillPipelineState: MTLRenderPipelineState!
     var mainPipelineState: MTLRenderPipelineState!
-    var quadPipelineState: MTLRenderPipelineState!
 
     var enqueuedWords: [[UInt32]] = []
 
@@ -220,10 +210,6 @@ class Renderer: NSObject, MTKViewDelegate {
         self.enqueuedWords = enqueuedWords
         super.init()
 
-        screenQuadBuffer = device.makeBuffer(bytes: fullscreenQuad,
-                                                 length: MemoryLayout<TexturedVertex>.stride * fullscreenQuad.count,
-                                                 options: [])
-
         let library = device.makeDefaultLibrary()!
         let vertexBasicFunction = library.makeFunction(name: "vertex_basic")!
         let fragmentBasicFunction = library.makeFunction(name: "fragment_basic")!
@@ -239,11 +225,6 @@ class Renderer: NSObject, MTKViewDelegate {
         mainPipelineDescriptor.vertexFunction = vertexMainFunction
         mainPipelineDescriptor.fragmentFunction = fragmentMainFunction
         mainPipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
-
-        let quadPipelineDescriptor = MTLRenderPipelineDescriptor()
-        quadPipelineDescriptor.vertexFunction = vertexMainFunction
-        quadPipelineDescriptor.fragmentFunction = fragmentMainFunction
-        quadPipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
 
         let vertexDescriptor = MTLVertexDescriptor()
 
@@ -286,12 +267,9 @@ class Renderer: NSObject, MTKViewDelegate {
 
         vertexQuadDescriptor.layouts[0].stride = MemoryLayout<TexturedVertex>.stride
 
-        quadPipelineDescriptor.vertexDescriptor = vertexQuadDescriptor
-
         do {
             fillPipelineState = try device.makeRenderPipelineState(descriptor: fillPipelineDescriptor)
             mainPipelineState = try device.makeRenderPipelineState(descriptor: mainPipelineDescriptor)
-            quadPipelineState = try device.makeRenderPipelineState(descriptor: quadPipelineDescriptor)
        } catch {
            fatalError("Failed to create pipeline state: \(error)")
        }
@@ -311,46 +289,6 @@ class Renderer: NSObject, MTKViewDelegate {
     }
 
     func draw(in view: MTKView) {
-        print("drawing to framebuffer")
-        guard let drawable = view.currentDrawable,
-              let renderPass = view.currentRenderPassDescriptor,
-              let commandBuffer = commandQueue.makeCommandBuffer(),
-              let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPass) else {
-            return
-        }
-
-        encoder.setRenderPipelineState(quadPipelineState)
-        encoder.setFragmentTexture(offscreenTex, index: 0)
-        encoder.setVertexBuffer(screenQuadBuffer, offset: 0, index: 0)
-        encoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
-
-        encoder.endEncoding()
-        commandBuffer.present(drawable)
-        commandBuffer.commit()
-    }
-
-    func parseCommand(command: UInt32) -> RdpCommand {
-        return RdpCommand(rawValue: command) ?? .Nop
-    }
-
-    func fillRectangle(words: [UInt32]) {
-        var fillRect = FillRect()
-
-        let word0 = words[0]
-        let word1 = words[1]
-
-        fillRect.x1 = ((word0 >> 12) & 0xFFF) >> 2
-        fillRect.y1 = ((word0 >> 0) & 0xFFF) >> 2
-        fillRect.x2 = ((word1 >> 12) & 0xFFF) >> 2
-        fillRect.y2 = ((word1 >> 0) & 0xFFF) >> 2
-        fillRect.color = fillColor
-
-        canRender = true
-
-        fillRects.append(fillRect)
-    }
-
-    func executeCommands(view: MTKView) {
         for words in enqueuedWords {
             let command = parseCommand(command: (words[0] >> 24) & 0x3f)
             executeCommand(command: command, words: words)
@@ -359,20 +297,21 @@ class Renderer: NSObject, MTKViewDelegate {
         enqueuedWords = []
 
         if canRender {
-            let screenWidth: Float = 320
-            let screenHeight: Float = 240
-            print("ayyyy im rendering shit")
-            guard let commandBuffer = commandQueue.makeCommandBuffer() else {
+            guard let drawable = view.currentDrawable,
+                  let renderPass = view.currentRenderPassDescriptor,
+                  let commandBuffer = commandQueue.makeCommandBuffer(),
+                  let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPass) else {
                 return
             }
+
+            let screenWidth: Float = 320
+            let screenHeight: Float = 240
 
             let descriptor = MTLRenderPassDescriptor()
             descriptor.colorAttachments[0].texture = offscreenTex
             descriptor.colorAttachments[0].loadAction = .clear
             descriptor.colorAttachments[0].storeAction = .store
             descriptor.colorAttachments[0].clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0)
-
-            guard let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor) else { return }
 
             for rect in fillRects {
                 let x1 = Float(min(rect.x1, rect.x2))
@@ -509,7 +448,7 @@ class Renderer: NSObject, MTKViewDelegate {
             }
 
             encoder.endEncoding()
-            commandBuffer.present(view.currentDrawable!)
+            commandBuffer.present(drawable)
             commandBuffer.commit()
 
             fillRects = []
@@ -519,7 +458,27 @@ class Renderer: NSObject, MTKViewDelegate {
             triangleProps = []
             canRender = false
         }
+    }
 
+    func parseCommand(command: UInt32) -> RdpCommand {
+        return RdpCommand(rawValue: command) ?? .Nop
+    }
+
+    func fillRectangle(words: [UInt32]) {
+        var fillRect = FillRect()
+
+        let word0 = words[0]
+        let word1 = words[1]
+
+        fillRect.x1 = ((word0 >> 12) & 0xFFF) >> 2
+        fillRect.y1 = ((word0 >> 0) & 0xFFF) >> 2
+        fillRect.x2 = ((word1 >> 12) & 0xFFF) >> 2
+        fillRect.y2 = ((word1 >> 0) & 0xFFF) >> 2
+        fillRect.color = fillColor
+
+        canRender = true
+
+        fillRects.append(fillRect)
     }
 
     func shadeTextureZBufferTriangle(words: [UInt32]) {
@@ -536,13 +495,13 @@ class Renderer: NSObject, MTKViewDelegate {
         props.ym = Float(signExtend(value: ((words[1] >> 16) & 0x3fff), bits: 14)) / 4.0
         props.yh = Float(signExtend(value: (words[1] & 0x3fff), bits: 14)) / 4.0
 
-        props.xl = Float(signExtend(value: words[2] & 0xfffffff, bits: 28) >> 1) / 65536.0
-        props.xm = Float(signExtend(value: words[6] & 0xfffffff, bits: 28) >> 1) / 65536.0
-        props.xh = Float(signExtend(value: words[4] & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.xl = Float(signExtend(value: words[2] & 0xfffffff, bits: 28)) / 65536.0
+        props.xm = Float(signExtend(value: words[6] & 0xfffffff, bits: 28)) / 65536.0
+        props.xh = Float(signExtend(value: words[4] & 0xfffffff, bits: 28)) / 65536.0
 
-        props.dxldy = Float(signExtend(value: (words[3] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
-        props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
-        props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28) >> 1) / 65536.0
+        props.dxldy = Float(signExtend(value: (words[3] >> 2) & 0xfffffff, bits: 28)) / 65536.0
+        props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28)) / 65536.0
+        props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28)) / 65536.0
 
         triangleProps.append(props)
 

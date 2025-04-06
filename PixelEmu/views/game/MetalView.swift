@@ -35,7 +35,9 @@ struct MetalView: UIViewRepresentable {
 
     func updateUIView(_ uiView: MTKView, context: Context) {
         context.coordinator.renderer?.enqueuedWords = enqueuedWords
-        context.coordinator.renderer?.executeCommands(view: uiView)
+        DispatchQueue.main.async {
+            enqueuedWords = []
+        }
     }
 
     func makeCoordinator() -> Coordinator {

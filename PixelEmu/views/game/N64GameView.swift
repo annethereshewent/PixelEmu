@@ -84,37 +84,36 @@ struct N64GameView: View {
 
                 DispatchQueue.global().async {
                     while true {
-                        DispatchQueue.main.sync {
+                        DispatchQueue.main.async {
                             while (!getFrameFinished()) {
                                 step()
-
+                                
                                 if (getCmdsReady()) {
-                                    print("commands are ready!")
                                     let wordPtr = getFlattened()
                                     let lengthPtr = getRowLengths()
                                     let numRows = getNumRows()
                                     let totalWordCount = getWordCount()
-
+                                    
                                     let wordBuffer = UnsafeBufferPointer(start: wordPtr, count: Int(totalWordCount))
                                     let rowLengths = UnsafeBufferPointer(start: lengthPtr, count: Int(numRows))
-
+                                    
                                     var cursor = 0
-                                    enqueuedWords = []
-
                                     for rowLen in rowLengths {
                                         let row = Array(wordBuffer[cursor ..< cursor + Int(rowLen)])
                                         enqueuedWords.append(row)
                                         cursor += Int(rowLen)
                                     }
-
+                                    
+                                    
                                     clearCmdsReady()
                                     clearEnqueuedCommands()
                                 }
                             }
-
-                            limitFps()
-                            clearFrameFinished()
                         }
+
+                        limitFps()
+                        clearFrameFinished()
+
                     }
                 }
             }
