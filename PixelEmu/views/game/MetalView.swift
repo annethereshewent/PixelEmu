@@ -26,10 +26,6 @@ struct MetalView: UIViewRepresentable {
         mtkView.delegate = renderer
         context.coordinator.renderer = renderer // retain the renderer
 
-        mtkView.isPaused = false
-        mtkView.enableSetNeedsDisplay = false
-        mtkView.preferredFramesPerSecond = 60
-
         return mtkView
     }
 
