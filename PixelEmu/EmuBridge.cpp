@@ -89,6 +89,10 @@ void clearEnqueuedCommands() {
     cpu->bus.rdp.enqueuedWords.clear();
 }
 
+uint8_t* getRdramPtr(uint32_t baseAddress) {
+    return &cpu->bus.rdram[baseAddress];
+}
+
 uint64_t getWordCount() {
     return flattened.size();
 }

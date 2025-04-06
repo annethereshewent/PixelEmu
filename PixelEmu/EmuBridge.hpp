@@ -29,6 +29,8 @@ uint64_t getSaveTypesSize();
 uint64_t getNumRows();
 uint64_t getWordCount();
 
+uint8_t* getRdramPtr(uint32_t baseAddress);
+
 void limitFps();
 void clearFrameFinished();
 bool getFrameFinished();

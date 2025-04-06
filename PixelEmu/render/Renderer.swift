@@ -74,6 +74,7 @@ struct TileState {
     var tlo: UInt32 = 0
     var thi: UInt32 = 0
     var tileProps = TileProps()
+    var texture: MTLTexture? = nil
 }
 
 struct TileProps {
@@ -203,6 +204,8 @@ class Renderer: NSObject, MTKViewDelegate {
 
     var rdpState = RDPState()
 
+    var currentTile: Int = 0
+
     var fillPipelineState: MTLRenderPipelineState!
     var mainPipelineState: MTLRenderPipelineState!
 
@@ -310,6 +313,7 @@ class Renderer: NSObject, MTKViewDelegate {
     func draw(in view: MTKView) {
         for words in enqueuedWords {
             let command = parseCommand(command: (words[0] >> 24) & 0x3f)
+            print(command)
             executeCommand(command: command, words: words)
         }
 
@@ -362,9 +366,6 @@ class Renderer: NSObject, MTKViewDelegate {
             }
 
             if triangleProps.count > 0 {
-//                let redTexture = makeSolidColorTexture(device: device, color: SIMD4<UInt8>(0, 0, 255, 255))
-//
-//                encoder.setFragmentTexture(redTexture, index: 0)
                 for i in 0...triangleProps.count - 1 {
                     let triangle = triangleProps[i]
 
@@ -417,15 +418,14 @@ class Renderer: NSObject, MTKViewDelegate {
                     var textureWidth: Float = 0.0
                     var textureHeight: Float = 0.0
 
-                    for tile in tiles {
-                        let width = Float(tile.shi - tile.slo) + 1
-                        let height = Float(tile.thi - tile.tlo) + 1
+                    let tile = tiles[currentTile]
 
-                        if width > textureWidth {
-                            textureWidth = width
-                        }
-                        if height > textureHeight {
-                            textureHeight = height
+                    if let texture = tile.texture {
+                        textureWidth = Float(tile.shi - tile.slo) + 1
+                        textureHeight = Float(tile.thi - tile.tlo) + 1
+
+                        if i < textureProps.count {
+                            encoder.setFragmentTexture(texture, index: 0)
                         }
                     }
 
@@ -902,7 +902,167 @@ class Renderer: NSObject, MTKViewDelegate {
             props.clampTBit = true
         }
 
-        tiles[Int(tile)].tileProps = props
+        tiles[tile].tileProps = props
+    }
+
+    func loadBlock(words: [UInt32]) {
+        let tile = Int((words[1] >> 24) & 7)
+
+        let address = textureImage.address
+        let texWidth = textureImage.width
+        let format = textureImage.format
+        let size = textureImage.size
+
+        let slo = ((words[0] >> 12) & 0xfff) >> 2
+        let shi = ((words[1] >> 12) & 0xfff) >> 2
+        let tlo = ((words[0] >> 0) & 0xfff) >> 2
+        let thi = ((words[1] >> 0) & 0xfff) >> 2
+
+        let width = shi - slo + 1
+        let height = thi - tlo + 1
+
+        var bytesPerPixel: UInt32 = 0
+
+        switch size {
+        case .Bpp16: bytesPerPixel = 2
+        case .Bpp32: bytesPerPixel = 4
+        case .Bpp8: bytesPerPixel = 1
+        case .Bpp4: bytesPerPixel = 1
+        }
+
+        let texelCount = width * 8
+        let byteCount = texelCount * bytesPerPixel
+
+        let rdramPtr = getRdramPtr(address)
+        let data = UnsafeBufferPointer(start: rdramPtr, count: Int(byteCount))
+
+        var bytes: [UInt8] = []
+
+        // Assuming RGBA16 for now
+        if format == .RGBA && size == .Bpp16 {
+            for i in stride(from: 0, to: byteCount, by: 2) {
+                let texel = UInt16(data[Int(i) + 1]) << 8 | UInt16(data[Int(i)])
+
+                var r = UInt8((texel >> 11) & 0x1F)
+                var g = UInt8((texel >> 6) & 0x1F)
+                var b = UInt8((texel >> 1) & 0x1F)
+                let a = UInt8((texel & 0b1) * 255)
+
+                r = (r << 3) | (r >> 2)
+                g = (g << 3) | (g >> 2)
+                b = (b << 3) | (b >> 2)
+
+                bytes.append(r)
+                bytes.append(g)
+                bytes.append(b)
+                bytes.append(a)
+            }
+        }
+
+        // Width is unknown — usually this is a 1D block, so let’s try a fixed height of 1
+        let descriptor = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: .rgba8Unorm,
+            width: Int(texelCount),
+            height: 1,
+            mipmapped: false
+        )
+        descriptor.usage = [.shaderRead]
+
+        let texture = device.makeTexture(descriptor: descriptor)!
+        texture.replace(
+            region: MTLRegionMake2D(0, 0, Int(texelCount), 1),
+            mipmapLevel: 0,
+            withBytes: bytes,
+            bytesPerRow: Int(texelCount) * 4
+        )
+
+        // Store in tile
+        tiles[tile].texture = texture
+
+        currentTile = tile
+    }
+
+    func loadTile(words: [UInt32]) {
+        let tile = Int((words[1] >> 24) & 7)
+
+        let address = textureImage.address
+        let texWidth = textureImage.width
+        let format = textureImage.format
+        let size = textureImage.size
+
+        let slo = ((words[0] >> 12) & 0xfff) >> 2
+        let shi = ((words[1] >> 12) & 0xfff) >> 2
+        let tlo = ((words[0] >> 0) & 0xfff) >> 2
+        let thi = ((words[1] >> 0) & 0xfff) >> 2
+
+        let width = shi - slo + 1
+        let height = thi - tlo + 1
+
+        var bytesPerPixel: UInt32 = 0
+
+        switch size {
+        case .Bpp16: bytesPerPixel = 2
+        case .Bpp32: bytesPerPixel = 4
+        case .Bpp8: bytesPerPixel = 1
+        case .Bpp4: bytesPerPixel = 1
+        }
+
+        let byteLength = width * height * bytesPerPixel
+
+        let rdramPtr = getRdramPtr(address)
+
+        let data = UnsafeBufferPointer(start: rdramPtr, count: Int(byteLength))
+
+        var i = 0
+
+        var bytes: [UInt8] = []
+
+        if format == .RGBA && size == .Bpp16 {
+            while i < byteLength {
+                let texel = UInt16(data[i + 1]) << 8 | UInt16(data[i])
+
+                var r = UInt8((texel >> 11) & 0x1F)
+                var g = UInt8((texel >> 6) & 0x1F)
+                var b = UInt8((texel >> 1) & 0x1F)
+                let a = UInt8((texel & 0b1) * 255)
+
+                print("a = \(a)")
+
+                r = (r << 3) | (r >> 2)
+                g = (g << 3) | (g >> 2)
+                b = (b << 3) | (b >> 2)
+
+                bytes.append(r)
+                bytes.append(g)
+                bytes.append(b)
+                bytes.append(a)
+
+                i += 2
+            }
+        } else {
+            fatalError("texture size not supported yet: \(size)")
+        }
+
+        let descriptor = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: .rgba8Unorm,
+            width: Int(width),
+            height: Int(height),
+            mipmapped: false
+        )
+        descriptor.usage = [.shaderRead]
+
+        let texture = device.makeTexture(descriptor: descriptor)!
+
+        texture.replace(
+            region: MTLRegionMake2D(0, 0, Int(width), Int(height)),
+            mipmapLevel: 0,
+            withBytes: bytes,
+            bytesPerRow: Int(width) * 4
+        )
+
+        currentTile = tile
+
+        tiles[tile].texture = texture
     }
 
     func executeCommand(command: RdpCommand, words: [UInt32]) {
@@ -934,8 +1094,8 @@ class Renderer: NSObject, MTKViewDelegate {
         case .SetOtherModes: break
         case .LoadTLut: break
         case .SetTileSize: setTileSize(words: words)
-        case .LoadBlock: break
-        case .LoadTile: break
+        case .LoadBlock: loadBlock(words: words)
+        case .LoadTile: loadTile(words: words)
         case .SetTile: setTile(words: words)
         case .FillRectangle: fillRectangle(words: words)
         case .SetFillColor: setFillColor(words: words)
