@@ -10,6 +10,10 @@
 #include <metal_stdlib>
 using namespace metal;
 
+struct FragmentUniforms {
+    bool hasTexture;
+};
+
 vertex float4 vertex_basic(const device float2* position [[ buffer(0) ]],
                           uint vid [[ vertex_id ]]) {
     return float4(position[vid], 0.0, 1.0);
@@ -41,8 +45,15 @@ vertex VertexOut vertex_main(VertexIn in [[stage_in]]) {
 
 // Fragment
 fragment float4 fragment_main(VertexOut in [[stage_in]],
-                              texture2d<float> tex [[texture(0)]])
+                              texture2d<float> tex [[texture(0)]],
+                              constant FragmentUniforms& uniforms [[buffer(1)]])
 {
     constexpr sampler textureSampler(address::repeat, filter::nearest);
-    return tex.sample(textureSampler, in.uv);
+
+    if (uniforms.hasTexture) {
+        in.uv = clamp(in.uv, float2(0.0), float2(1.0));
+        return tex.sample(textureSampler, in.uv);
+    } else {
+        return float4(in.color);
+    }
 }

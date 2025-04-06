@@ -8,9 +8,16 @@
 import Metal
 import MetalKit
 
+let MAX_TEXELS: UInt32 = 2048
+
 enum CycleType {
     case cycle1
 }
+
+struct FragmentUniforms {
+    var hasTexture: Bool
+}
+
 struct FillRect {
     var x1: UInt32 = 0
     var x2: UInt32 = 0
@@ -224,8 +231,6 @@ class Renderer: NSObject, MTKViewDelegate {
 
     var canRender = false
 
-    var offscreenTex: MTLTexture!
-
     init(mtkView: MTKView, enqueuedWords: [[UInt32]]) {
         self.device = mtkView.device!
         self.commandQueue = device.makeCommandQueue()!
@@ -266,28 +271,8 @@ class Renderer: NSObject, MTKViewDelegate {
         vertexDescriptor.attributes[2].bufferIndex = 0
 
         vertexDescriptor.layouts[0].stride = MemoryLayout<SIMD2<Float>>.stride * 2 + MemoryLayout<SIMD4<Float>>.stride
-        // vertexDescriptor.layouts[0].stride = MemoryLayout<TexturedVertex>.stride
 
         mainPipelineDescriptor.vertexDescriptor = vertexDescriptor
-
-        let vertexQuadDescriptor = MTLVertexDescriptor()
-
-        // Position at attribute(0)
-        vertexQuadDescriptor.attributes[0].format = .float2
-        vertexQuadDescriptor.attributes[0].offset = 0
-        vertexQuadDescriptor.attributes[0].bufferIndex = 0
-
-        // UV at attribute(1)
-        vertexQuadDescriptor.attributes[1].format = .float2
-        vertexQuadDescriptor.attributes[1].offset = MemoryLayout<SIMD2<Float>>.stride
-        vertexQuadDescriptor.attributes[1].bufferIndex = 0
-
-        // Color at attribute(2)
-        vertexQuadDescriptor.attributes[2].format = .float4
-        vertexQuadDescriptor.attributes[2].offset = MemoryLayout<SIMD2<Float>>.stride * 2
-        vertexQuadDescriptor.attributes[2].bufferIndex = 0
-
-        vertexQuadDescriptor.layouts[0].stride = MemoryLayout<TexturedVertex>.stride
 
         do {
             fillPipelineState = try device.makeRenderPipelineState(descriptor: fillPipelineDescriptor)
@@ -295,15 +280,6 @@ class Renderer: NSObject, MTKViewDelegate {
        } catch {
            fatalError("Failed to create pipeline state: \(error)")
        }
-
-        let descriptor = MTLTextureDescriptor.texture2DDescriptor(
-            pixelFormat: .bgra8Unorm,
-            width: 320,
-            height: 240,
-            mipmapped: false
-        )
-        descriptor.usage = [.renderTarget, .shaderRead]
-        offscreenTex = device.makeTexture(descriptor: descriptor)
     }
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
@@ -313,7 +289,6 @@ class Renderer: NSObject, MTKViewDelegate {
     func draw(in view: MTKView) {
         for words in enqueuedWords {
             let command = parseCommand(command: (words[0] >> 24) & 0x3f)
-            print(command)
             executeCommand(command: command, words: words)
         }
 
@@ -329,12 +304,6 @@ class Renderer: NSObject, MTKViewDelegate {
 
             let screenWidth: Float = 320
             let screenHeight: Float = 240
-
-            let descriptor = MTLRenderPassDescriptor()
-            descriptor.colorAttachments[0].texture = offscreenTex
-            descriptor.colorAttachments[0].loadAction = .clear
-            descriptor.colorAttachments[0].storeAction = .store
-            descriptor.colorAttachments[0].clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0)
 
             for rect in fillRects {
                 let x1 = Float(min(rect.x1, rect.x2))
@@ -420,16 +389,17 @@ class Renderer: NSObject, MTKViewDelegate {
 
                     let tile = tiles[currentTile]
 
+                    var uniforms = FragmentUniforms(hasTexture: false)
+
                     if let texture = tile.texture {
                         textureWidth = Float(tile.shi - tile.slo) + 1
                         textureHeight = Float(tile.thi - tile.tlo) + 1
 
-                        if i < textureProps.count {
-                            encoder.setFragmentTexture(texture, index: 0)
-                        }
+                        encoder.setFragmentTexture(texture, index: 0)
                     }
 
                     if i < textureProps.count {
+                        uniforms.hasTexture = true
                         let texture = textureProps[i]
 
                         let u0 = texture.s
@@ -454,12 +424,18 @@ class Renderer: NSObject, MTKViewDelegate {
                         rdpVertices[2].uv = uv2
                     }
 
+
+                    if !uniforms.hasTexture {
+                        print(rdpVertices.map { $0.color })
+                    }
+
                     let vertexBuffer = device.makeBuffer(
                         bytes: rdpVertices,
                         length: MemoryLayout<RDPVertex>.stride * vertices.count,
                         options: []
                     )
 
+                    encoder.setFragmentBytes(&uniforms, length: MemoryLayout<FragmentUniforms>.stride, index: 1)
                     encoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
                     encoder.setRenderPipelineState(mainPipelineState)
                     encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3)
@@ -909,17 +885,31 @@ class Renderer: NSObject, MTKViewDelegate {
         let tile = Int((words[1] >> 24) & 7)
 
         let address = textureImage.address
-        let texWidth = textureImage.width
+        let width = textureImage.width
         let format = textureImage.format
         let size = textureImage.size
 
         let slo = ((words[0] >> 12) & 0xfff) >> 2
         let shi = ((words[1] >> 12) & 0xfff) >> 2
         let tlo = ((words[0] >> 0) & 0xfff) >> 2
-        let thi = ((words[1] >> 0) & 0xfff) >> 2
+        let _ = ((words[1] >> 0) & 0xfff) >> 2
 
-        let width = shi - slo + 1
-        let height = thi - tlo + 1
+        let numTexels = shi - slo + 1
+        let height = 1
+
+        if numTexels > MAX_TEXELS {
+            return
+        }
+
+//        let maxTmemIteration = (width - 1) >> (4 - size.rawValue)
+//        let maxT = (maxTmemIteration * dt) >> 11
+//
+//        if maxT != 0 {
+//            let maxElementsBeforeWrap = (MAX_TEXELS + dt - 1) / dt
+//            let minElementsBeforeWrap = (MAX_TEXELS) / dt
+//
+//            // TODO: determine if stride is uneven
+//        }
 
         var bytesPerPixel: UInt32 = 0
 
@@ -927,13 +917,14 @@ class Renderer: NSObject, MTKViewDelegate {
         case .Bpp16: bytesPerPixel = 2
         case .Bpp32: bytesPerPixel = 4
         case .Bpp8: bytesPerPixel = 1
-        case .Bpp4: bytesPerPixel = 1
+        case .Bpp4: bytesPerPixel = 0
         }
 
-        let texelCount = width * 8
-        let byteCount = texelCount * bytesPerPixel
+        let byteCount = numTexels * bytesPerPixel
 
-        let rdramPtr = getRdramPtr(address)
+        let vramAddress = address + ((width * tlo + slo) << (size.rawValue - 1))
+
+        let rdramPtr = getRdramPtr(vramAddress)
         let data = UnsafeBufferPointer(start: rdramPtr, count: Int(byteCount))
 
         var bytes: [UInt8] = []
@@ -941,7 +932,7 @@ class Renderer: NSObject, MTKViewDelegate {
         // Assuming RGBA16 for now
         if format == .RGBA && size == .Bpp16 {
             for i in stride(from: 0, to: byteCount, by: 2) {
-                let texel = UInt16(data[Int(i) + 1]) << 8 | UInt16(data[Int(i)])
+                let texel = UInt16(data[Int(i)]) << 8 | UInt16(data[Int(i) + 1])
 
                 var r = UInt8((texel >> 11) & 0x1F)
                 var g = UInt8((texel >> 6) & 0x1F)
@@ -957,25 +948,26 @@ class Renderer: NSObject, MTKViewDelegate {
                 bytes.append(b)
                 bytes.append(a)
             }
+        } else {
+            fatalError("pixel format not supported yet: \(format) \(size)")
         }
 
         // Width is unknown — usually this is a 1D block, so let’s try a fixed height of 1
         let descriptor = MTLTextureDescriptor.texture2DDescriptor(
             pixelFormat: .rgba8Unorm,
-            width: Int(texelCount),
-            height: 1,
+            width: Int(numTexels),
+            height: height,
             mipmapped: false
         )
         descriptor.usage = [.shaderRead]
 
         let texture = device.makeTexture(descriptor: descriptor)!
         texture.replace(
-            region: MTLRegionMake2D(0, 0, Int(texelCount), 1),
+            region: MTLRegionMake2D(0, 0, Int(numTexels), 1),
             mipmapLevel: 0,
             withBytes: bytes,
-            bytesPerRow: Int(texelCount) * 4
+            bytesPerRow: Int(numTexels) * 4
         )
-
         // Store in tile
         tiles[tile].texture = texture
 
@@ -1025,8 +1017,6 @@ class Renderer: NSObject, MTKViewDelegate {
                 var g = UInt8((texel >> 6) & 0x1F)
                 var b = UInt8((texel >> 1) & 0x1F)
                 let a = UInt8((texel & 0b1) * 255)
-
-                print("a = \(a)")
 
                 r = (r << 3) | (r >> 2)
                 g = (g << 3) | (g >> 2)
