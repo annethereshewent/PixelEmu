@@ -221,9 +221,9 @@ class Renderer: NSObject, MTKViewDelegate {
     var fillColor: UInt32 = 0
     var fillRects: [FillRect] = []
     var triangleProps: [TriangleProps] = []
-    var textureProps: [TextureProps] = []
+    var textureProps: [TextureProps?] = []
     var colorProps: [ColorProps] = []
-    var zProps: [ZProps] = []
+    var zProps: [ZProps?] = []
 
     var tiles: [TileState] = [TileState](repeating: TileState(), count: 8)
 
@@ -357,32 +357,31 @@ class Renderer: NSObject, MTKViewDelegate {
                     let baseX = triangle.xl
                     let baseY = triangle.yl
 
-                    if i < colorProps.count {
-                        let color = colorProps[i]
+                    let color = colorProps[i]
 
-                        let r0 = color.r
-                        let g0 = color.g
-                        let b0 = color.b
-                        let a0 = color.a
+                    let r0 = color.r
+                    let g0 = color.g
+                    let b0 = color.b
+                    let a0 = color.a
 
-                        let r1 = r0 + color.drdx * (triangle.xm - baseX) + color.drdy * (triangle.ym - baseY)
-                        let g1 = g0 + color.dgdx * (triangle.xm - baseX) + color.dgdy * (triangle.ym - baseY)
-                        let b1 = b0 + color.dbdx * (triangle.xm - baseX) + color.dbdy * (triangle.ym - baseY)
-                        let a1 = a0 + color.dadx * (triangle.xm - baseX) + color.dady * (triangle.ym - baseY)
+                    let r1 = r0 + color.drdx * (triangle.xm - baseX) + color.drdy * (triangle.ym - baseY)
+                    let g1 = g0 + color.dgdx * (triangle.xm - baseX) + color.dgdy * (triangle.ym - baseY)
+                    let b1 = b0 + color.dbdx * (triangle.xm - baseX) + color.dbdy * (triangle.ym - baseY)
+                    let a1 = a0 + color.dadx * (triangle.xm - baseX) + color.dady * (triangle.ym - baseY)
 
-                        let r2 = r0 + color.drdx * (triangle.xh - baseX) + color.drdy * (triangle.yh - baseY)
-                        let g2 = g0 + color.dgdx * (triangle.xh - baseX) + color.dgdy * (triangle.yh - baseY)
-                        let b2 = b0 + color.dbdx * (triangle.xh - baseX) + color.dbdy * (triangle.yh - baseY)
-                        let a2 = a0 + color.dadx * (triangle.xh - baseX) + color.dady * (triangle.yh - baseY)
+                    let r2 = r0 + color.drdx * (triangle.xh - baseX) + color.drdy * (triangle.yh - baseY)
+                    let g2 = g0 + color.dgdx * (triangle.xh - baseX) + color.dgdy * (triangle.yh - baseY)
+                    let b2 = b0 + color.dbdx * (triangle.xh - baseX) + color.dbdy * (triangle.yh - baseY)
+                    let a2 = a0 + color.dadx * (triangle.xh - baseX) + color.dady * (triangle.yh - baseY)
 
-                        let color0 = simd_clamp(SIMD4<Float>(Float(r0) / 65536.0 / 255.0, Float(g0) / 65536.0 / 255.0, Float(b0) / 65536.0 / 255.0, Float(a0) / 65536.0 / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
-                        let color1 = simd_clamp(SIMD4<Float>(Float(r1) / 65536.0 / 255.0, Float(g1) / 65536.0 / 255.0, Float(b1) / 65536.0 / 255.0, Float(a1) / 65536.0 / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
-                        let color2 = simd_clamp(SIMD4<Float>(Float(r2) / 65536.0 / 255.0, Float(g2) / 65536.0 / 255.0, Float(b2) / 65536.0 / 255.0, Float(a2) / 65536.0 / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
+                    let color0 = simd_clamp(SIMD4<Float>(Float(r0) / 65536.0 / 255.0, Float(g0) / 65536.0 / 255.0, Float(b0) / 65536.0 / 255.0, Float(a0) / 65536.0 / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
+                    let color1 = simd_clamp(SIMD4<Float>(Float(r1) / 65536.0 / 255.0, Float(g1) / 65536.0 / 255.0, Float(b1) / 65536.0 / 255.0, Float(a1) / 65536.0 / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
+                    let color2 = simd_clamp(SIMD4<Float>(Float(r2) / 65536.0 / 255.0, Float(g2) / 65536.0 / 255.0, Float(b2) / 65536.0 / 255.0, Float(a2) / 65536.0 / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
 
-                        rdpVertices[0].color = color0
-                        rdpVertices[1].color = color1
-                        rdpVertices[2].color = color2
-                    }
+                    rdpVertices[0].color = color0
+                    rdpVertices[1].color = color1
+                    rdpVertices[2].color = color2
+
 
                     var textureWidth: Float = 0.0
                     var textureHeight: Float = 0.0
@@ -398,9 +397,8 @@ class Renderer: NSObject, MTKViewDelegate {
                         encoder.setFragmentTexture(texture, index: 0)
                     }
 
-                    if i < textureProps.count {
+                    if let texture = textureProps[i] {
                         uniforms.hasTexture = true
-                        let texture = textureProps[i]
 
                         let u0 = texture.s
                         let v0 = texture.t
@@ -422,11 +420,6 @@ class Renderer: NSObject, MTKViewDelegate {
                         rdpVertices[0].uv = uv0
                         rdpVertices[1].uv = uv1
                         rdpVertices[2].uv = uv2
-                    }
-
-
-                    if !uniforms.hasTexture {
-                        print(rdpVertices.map { $0.color })
                     }
 
                     let vertexBuffer = device.makeBuffer(
@@ -662,6 +655,8 @@ class Renderer: NSObject, MTKViewDelegate {
 
         colorProps.append(color)
 
+        textureProps.append(nil)
+
         var z = ZProps()
 
         z.z = Float(Int32(bitPattern: words[24]))
@@ -779,6 +774,8 @@ class Renderer: NSObject, MTKViewDelegate {
         texture.dwdy = Float(Int32(bitPattern: dwdy)) / 65536.0
 
         textureProps.append(texture)
+
+        zProps.append(nil)
 
         canRender = true
     }
@@ -932,7 +929,7 @@ class Renderer: NSObject, MTKViewDelegate {
         // Assuming RGBA16 for now
         if format == .RGBA && size == .Bpp16 {
             for i in stride(from: 0, to: byteCount, by: 2) {
-                let texel = UInt16(data[Int(i)]) << 8 | UInt16(data[Int(i) + 1])
+                let texel = UInt16(data[Int(i) + 1]) << 8 | UInt16(data[Int(i)])
 
                 var r = UInt8((texel >> 11) & 0x1F)
                 var g = UInt8((texel >> 6) & 0x1F)
