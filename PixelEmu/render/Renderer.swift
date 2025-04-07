@@ -209,6 +209,8 @@ class Renderer: NSObject, MTKViewDelegate {
     let device: MTLDevice
     let commandQueue: MTLCommandQueue
 
+    var tmem = [UInt8](repeating: 0, count: 4096)
+
     var rdpState = RDPState()
 
     var currentTile: Int = 0
@@ -893,7 +895,7 @@ class Renderer: NSObject, MTKViewDelegate {
         let slo = ((words[0] >> 12) & 0xfff) >> 2
         let shi = ((words[1] >> 12) & 0xfff) >> 2
         let tlo = ((words[0] >> 0) & 0xfff) >> 2
-        // let _dt = ((words[1] >> 0) & 0xfff) >> 2
+        let dt = ((words[1] >> 0) & 0xfff) >> 2
 
         let numTexels = shi - slo + 1
         let height = 1
@@ -925,32 +927,55 @@ class Renderer: NSObject, MTKViewDelegate {
 
         let vramAddress = address + ((width * tlo + slo) << (size.rawValue - 1))
 
+        print("vramAddress = 0x\(String(format: "%x", vramAddress))")
+
         let rdramPtr = getRdramPtr(vramAddress)
         let data = UnsafeBufferPointer(start: rdramPtr, count: Int(byteCount))
 
         var bytes: [UInt8] = []
 
+        let tileStride = tiles[tile].tileProps.stride
+        let actualStride = tileStride * 8
+
         // Assuming RGBA16 for now
         if format == .RGBA && size == .Bpp16 {
-            for i in stride(from: 0, to: byteCount, by: 2) {
+            for i in stride(from: 0, to: byteCount, by: Int(bytesPerPixel)) {
                 let texel = UInt16(data[Int(i) + 1]) << 8 | UInt16(data[Int(i)])
 
-                var r = UInt8((texel >> 11) & 0x1F)
-                var g = UInt8((texel >> 6) & 0x1F)
-                var b = UInt8((texel >> 1) & 0x1F)
-                let a = UInt8((texel & 0b1) * 0xff)
+                let s = slo + (i / 2)
+                let t = (s * dt) >> 11
 
-                r = (r << 3) | (r >> 2)
-                g = (g << 3) | (g >> 2)
-                b = (b << 3) | (b >> 2)
+                print("s = \(s) t = \(t)")
 
-                bytes.append(r)
-                bytes.append(g)
-                bytes.append(b)
-                bytes.append(a)
+                let tmemOffset = tiles[tile].tileProps.offset + t * actualStride + s * bytesPerPixel
+
+                print("tmemOffset = 0x\(String(format: "%x", tmemOffset))")
+
+                tmem[Int(tmemOffset)] = UInt8(texel >> 8)
+                tmem[Int(tmemOffset) + 1] = UInt8(texel & 0xff)
+
             }
         } else {
             fatalError("pixel format not supported yet: \(format) \(size)")
+        }
+
+        // finally populate the byte array with texels from tmem!
+        for i in stride(from: 0, to: byteCount, by: Int(bytesPerPixel)) {
+            let texel = UInt16(tmem[Int(i)]) << 8 | UInt16(tmem[Int(i) + 1])
+
+            var r = UInt8((texel >> 11) & 0x1F)
+            var g = UInt8((texel >> 6) & 0x1F)
+            var b = UInt8((texel >> 1) & 0x1F)
+            let a = UInt8((texel & 0b1) * 0xff)
+
+            r = (r << 3) | (r >> 2)
+            g = (g << 3) | (g >> 2)
+            b = (b << 3) | (b >> 2)
+
+            bytes.append(r)
+            bytes.append(g)
+            bytes.append(b)
+            bytes.append(a)
         }
 
         // Width is unknown — usually this is a 1D block, so let’s try a fixed height of 1
