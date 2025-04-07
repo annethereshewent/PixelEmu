@@ -784,7 +784,7 @@ class Renderer: NSObject, MTKViewDelegate {
         canRender = true
     }
 
-    func makeSolidColorTexture(device: MTLDevice, color: SIMD4<UInt8>, size: Int = 64) -> MTLTexture? {
+    func makeSolidColorTexture(color: SIMD4<UInt8>, size: Int = 64) -> MTLTexture? {
         let descriptor = MTLTextureDescriptor()
         descriptor.pixelFormat = .rgba8Unorm
         descriptor.width = size
@@ -893,7 +893,7 @@ class Renderer: NSObject, MTKViewDelegate {
         let slo = ((words[0] >> 12) & 0xfff) >> 2
         let shi = ((words[1] >> 12) & 0xfff) >> 2
         let tlo = ((words[0] >> 0) & 0xfff) >> 2
-        let _dt = ((words[1] >> 0) & 0xfff) >> 2
+        // let _dt = ((words[1] >> 0) & 0xfff) >> 2
 
         let numTexels = shi - slo + 1
         let height = 1
@@ -950,7 +950,7 @@ class Renderer: NSObject, MTKViewDelegate {
                 bytes.append(a)
             }
         } else {
-            print("pixel format not supported yet: \(format) \(size)")
+            fatalError("pixel format not supported yet: \(format) \(size)")
         }
 
         // Width is unknown — usually this is a 1D block, so let’s try a fixed height of 1
@@ -963,13 +963,14 @@ class Renderer: NSObject, MTKViewDelegate {
         descriptor.usage = [.shaderRead]
 
         let texture = device.makeTexture(descriptor: descriptor)!
+
         texture.replace(
-            region: MTLRegionMake2D(0, 0, Int(numTexels), 1),
+            region: MTLRegionMake2D(0, 0, Int(numTexels), height),
             mipmapLevel: 0,
             withBytes: bytes,
             bytesPerRow: Int(numTexels) * 4
         )
-        // Store in tile
+
         tiles[tile].texture = texture
 
         if tiles[tile].shi == 0 && tiles[tile].slo == 0 && tiles[tile].thi == 0 && tiles[tile].tlo == 0 {
