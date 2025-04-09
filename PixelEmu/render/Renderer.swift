@@ -272,7 +272,7 @@ class Renderer: NSObject, MTKViewDelegate {
         vertexDescriptor.attributes[2].offset = MemoryLayout<SIMD2<Float>>.stride * 2
         vertexDescriptor.attributes[2].bufferIndex = 0
 
-        vertexDescriptor.layouts[0].stride = MemoryLayout<SIMD2<Float>>.stride * 2 + MemoryLayout<SIMD4<Float>>.stride
+        vertexDescriptor.layouts[0].stride = MemoryLayout<RDPVertex>.stride
 
         mainPipelineDescriptor.vertexDescriptor = vertexDescriptor
 
@@ -376,9 +376,9 @@ class Renderer: NSObject, MTKViewDelegate {
                     let b2 = b0 + color.dbdx * (triangle.xh - baseX) + color.dbdy * (triangle.yh - baseY)
                     let a2 = a0 + color.dadx * (triangle.xh - baseX) + color.dady * (triangle.yh - baseY)
 
-                    let color0 = simd_clamp(SIMD4<Float>(Float(r0) / 65536.0 / 255.0, Float(g0) / 65536.0 / 255.0, Float(b0) / 65536.0 / 255.0, Float(a0) / 65536.0 / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
-                    let color1 = simd_clamp(SIMD4<Float>(Float(r1) / 65536.0 / 255.0, Float(g1) / 65536.0 / 255.0, Float(b1) / 65536.0 / 255.0, Float(a1) / 65536.0 / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
-                    let color2 = simd_clamp(SIMD4<Float>(Float(r2) / 65536.0 / 255.0, Float(g2) / 65536.0 / 255.0, Float(b2) / 65536.0 / 255.0, Float(a2) / 65536.0 / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
+                    let color0 = simd_clamp(SIMD4<Float>(Float(r0) / 255.0, Float(g0) / 255.0, Float(b0) / 255.0, Float(a0) / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
+                    let color1 = simd_clamp(SIMD4<Float>(Float(r1) / 255.0, Float(g1) / 255.0, Float(b1) / 255.0, Float(a1) / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
+                    let color2 = simd_clamp(SIMD4<Float>(Float(r2) / 255.0, Float(g2) / 255.0, Float(b2) / 255.0, Float(a2) / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
 
                     rdpVertices[0].color = color0
                     rdpVertices[1].color = color1
@@ -521,25 +521,25 @@ class Renderer: NSObject, MTKViewDelegate {
         let dbdy = (words[19] & 0xffff0000) | ((words[23] >> 16) & 0xffff)
         let dady = (words[19] << 16) | (words[23] & 0xffff)
 
-        color.r = Float(Int32(bitPattern: r))
-        color.g = Float(Int32(bitPattern: g))
-        color.b = Float(Int32(bitPattern: b))
-        color.a = Float(Int32(bitPattern: a))
+        color.r = Float(Int32(bitPattern: r)) / 65536.0
+        color.g = Float(Int32(bitPattern: g)) / 65536.0
+        color.b = Float(Int32(bitPattern: b)) / 65536.0
+        color.a = Float(Int32(bitPattern: a)) / 65536.0
 
-        color.drdx = Float(Int32(bitPattern: drdx))
-        color.dgdx = Float(Int32(bitPattern: dgdx))
-        color.dbdx = Float(Int32(bitPattern: dbdx))
-        color.dadx = Float(Int32(bitPattern: dadx))
+        color.drdx = Float(Int32(bitPattern: drdx)) / 65536.0
+        color.dgdx = Float(Int32(bitPattern: dgdx)) / 65536.0
+        color.dbdx = Float(Int32(bitPattern: dbdx)) / 65536.0
+        color.dadx = Float(Int32(bitPattern: dadx)) / 65536.0
 
-        color.drdy = Float(Int32(bitPattern: drdy))
-        color.dgdy = Float(Int32(bitPattern: dgdy))
-        color.dbdy = Float(Int32(bitPattern: dbdy))
-        color.dady = Float(Int32(bitPattern: dady))
+        color.drdy = Float(Int32(bitPattern: drdy)) / 65536.0
+        color.dgdy = Float(Int32(bitPattern: dgdy)) / 65536.0
+        color.dbdy = Float(Int32(bitPattern: dbdy)) / 65536.0
+        color.dady = Float(Int32(bitPattern: dady)) / 65536.0
 
-        color.drde = Float(Int32(bitPattern: drde))
-        color.dgde = Float(Int32(bitPattern: dgde))
-        color.dbde = Float(Int32(bitPattern: dbde))
-        color.dade = Float(Int32(bitPattern: dade))
+        color.drde = Float(Int32(bitPattern: drde)) / 65536.0
+        color.dgde = Float(Int32(bitPattern: dgde)) / 65536.0
+        color.dbde = Float(Int32(bitPattern: dbde)) / 65536.0
+        color.dade = Float(Int32(bitPattern: dade)) / 65536.0
 
         colorProps.append(color)
 
@@ -583,10 +583,10 @@ class Renderer: NSObject, MTKViewDelegate {
 
         var z = ZProps()
 
-        z.z = Float(Int32(bitPattern: words[40]))
-        z.dzdx = Float(Int32(bitPattern: words[41]))
-        z.dzde = Float(Int32(bitPattern: words[42]))
-        z.dzdy = Float(Int32(bitPattern: words[43]))
+        z.z = Float(Int32(bitPattern: words[40])) / 65536.0
+        z.dzdx = Float(Int32(bitPattern: words[41])) / 65536.0
+        z.dzde = Float(Int32(bitPattern: words[42])) / 65536.0
+        z.dzdy = Float(Int32(bitPattern: words[43])) / 65536.0
 
         zProps.append(z)
 
@@ -639,25 +639,25 @@ class Renderer: NSObject, MTKViewDelegate {
         let dbdy = (words[19] & 0xffff0000) | ((words[23] >> 16) & 0xffff)
         let dady = (words[19] << 16) | (words[23] & 0xffff)
 
-        color.r = Float(Int32(bitPattern: r))
-        color.g = Float(Int32(bitPattern: g))
-        color.b = Float(Int32(bitPattern: b))
-        color.a = Float(Int32(bitPattern: a))
+        color.r = Float(Int32(bitPattern: r)) / 65536.0
+        color.g = Float(Int32(bitPattern: g)) / 65536.0
+        color.b = Float(Int32(bitPattern: b)) / 65536.0
+        color.a = Float(Int32(bitPattern: a)) / 65536.0
 
-        color.drdx = Float(Int32(bitPattern: drdx))
-        color.dgdx = Float(Int32(bitPattern: dgdx))
-        color.dbdx = Float(Int32(bitPattern: dbdx))
-        color.dadx = Float(Int32(bitPattern: dadx))
+        color.drdx = Float(Int32(bitPattern: drdx)) / 65536.0
+        color.dgdx = Float(Int32(bitPattern: dgdx)) / 65536.0
+        color.dbdx = Float(Int32(bitPattern: dbdx)) / 65536.0
+        color.dadx = Float(Int32(bitPattern: dadx)) / 65536.0
 
-        color.drdy = Float(Int32(bitPattern: drdy))
-        color.dgdy = Float(Int32(bitPattern: dgdy))
-        color.dbdy = Float(Int32(bitPattern: dbdy))
-        color.dady = Float(Int32(bitPattern: dady))
+        color.drdy = Float(Int32(bitPattern: drdy)) / 65536.0
+        color.dgdy = Float(Int32(bitPattern: dgdy)) / 65536.0
+        color.dbdy = Float(Int32(bitPattern: dbdy)) / 65536.0
+        color.dady = Float(Int32(bitPattern: dady)) / 65536.0
 
-        color.drde = Float(Int32(bitPattern: drde))
-        color.dgde = Float(Int32(bitPattern: dgde))
-        color.dbde = Float(Int32(bitPattern: dbde))
-        color.dade = Float(Int32(bitPattern: dade))
+        color.drde = Float(Int32(bitPattern: drde)) / 65536.0
+        color.dgde = Float(Int32(bitPattern: dgde)) / 65536.0
+        color.dbde = Float(Int32(bitPattern: dbde)) / 65536.0
+        color.dade = Float(Int32(bitPattern: dade)) / 65536.0
 
         colorProps.append(color)
 
@@ -665,10 +665,10 @@ class Renderer: NSObject, MTKViewDelegate {
 
         var z = ZProps()
 
-        z.z = Float(Int32(bitPattern: words[24]))
-        z.dzdx = Float(Int32(bitPattern: words[25]))
-        z.dzde = Float(Int32(bitPattern: words[26]))
-        z.dzdy = Float(Int32(bitPattern: words[27]))
+        z.z = Float(Int32(bitPattern: words[24])) / 65536.0
+        z.dzdx = Float(Int32(bitPattern: words[25])) / 65536.0
+        z.dzde = Float(Int32(bitPattern: words[26])) / 65536.0
+        z.dzdy = Float(Int32(bitPattern: words[27])) / 65536.0
 
         zProps.append(z)
 
@@ -721,25 +721,25 @@ class Renderer: NSObject, MTKViewDelegate {
         let dbdy = (words[19] & 0xffff0000) | ((words[23] >> 16) & 0xffff)
         let dady = (words[19] << 16) | (words[23] & 0xffff)
 
-        color.r = Float(Int32(bitPattern: r))
-        color.g = Float(Int32(bitPattern: g))
-        color.b = Float(Int32(bitPattern: b))
-        color.a = Float(Int32(bitPattern: a))
+        color.r = Float(Int32(bitPattern: r)) / 65536.0
+        color.g = Float(Int32(bitPattern: g)) / 65536.0
+        color.b = Float(Int32(bitPattern: b)) / 65536.0
+        color.a = Float(Int32(bitPattern: a)) / 65536.0
 
-        color.drdx = Float(Int32(bitPattern: drdx))
-        color.dgdx = Float(Int32(bitPattern: dgdx))
-        color.dbdx = Float(Int32(bitPattern: dbdx))
-        color.dadx = Float(Int32(bitPattern: dadx))
+        color.drdx = Float(Int32(bitPattern: drdx)) / 65536.0
+        color.dgdx = Float(Int32(bitPattern: dgdx)) / 65536.0
+        color.dbdx = Float(Int32(bitPattern: dbdx)) / 65536.0
+        color.dadx = Float(Int32(bitPattern: dadx)) / 65536.0
 
-        color.drdy = Float(Int32(bitPattern: drdy))
-        color.dgdy = Float(Int32(bitPattern: dgdy))
-        color.dbdy = Float(Int32(bitPattern: dbdy))
-        color.dady = Float(Int32(bitPattern: dady))
+        color.drdy = Float(Int32(bitPattern: drdy)) / 65536.0
+        color.dgdy = Float(Int32(bitPattern: dgdy)) / 65536.0
+        color.dbdy = Float(Int32(bitPattern: dbdy)) / 65536.0
+        color.dady = Float(Int32(bitPattern: dady)) / 65536.0
 
-        color.drde = Float(Int32(bitPattern: drde))
-        color.dgde = Float(Int32(bitPattern: dgde))
-        color.dbde = Float(Int32(bitPattern: dbde))
-        color.dade = Float(Int32(bitPattern: dade))
+        color.drde = Float(Int32(bitPattern: drde)) / 65536.0
+        color.dgde = Float(Int32(bitPattern: dgde)) / 65536.0
+        color.dbde = Float(Int32(bitPattern: dbde)) / 65536.0
+        color.dade = Float(Int32(bitPattern: dade)) / 65536.0
 
         colorProps.append(color)
 
@@ -927,8 +927,6 @@ class Renderer: NSObject, MTKViewDelegate {
 
         let vramAddress = address + ((width * tlo + slo) << (size.rawValue - 1))
 
-        print("vramAddress = 0x\(String(format: "%x", vramAddress))")
-
         let rdramPtr = getRdramPtr(vramAddress)
         let data = UnsafeBufferPointer(start: rdramPtr, count: Int(byteCount))
 
@@ -940,16 +938,12 @@ class Renderer: NSObject, MTKViewDelegate {
         // Assuming RGBA16 for now
         if format == .RGBA && size == .Bpp16 {
             for i in stride(from: 0, to: byteCount, by: Int(bytesPerPixel)) {
-                let texel = UInt16(data[Int(i) + 1]) << 8 | UInt16(data[Int(i)])
+                let texel = UInt16(data[Int(i)]) << 8 | UInt16(data[Int(i) + 1])
 
                 let s = slo + (i / 2)
                 let t = (s * dt) >> 11
 
-                print("s = \(s) t = \(t)")
-
                 let tmemOffset = tiles[tile].tileProps.offset + t * actualStride + s * bytesPerPixel
-
-                print("tmemOffset = 0x\(String(format: "%x", tmemOffset))")
 
                 tmem[Int(tmemOffset)] = UInt8(texel >> 8)
                 tmem[Int(tmemOffset) + 1] = UInt8(texel & 0xff)
@@ -960,8 +954,11 @@ class Renderer: NSObject, MTKViewDelegate {
         }
 
         // finally populate the byte array with texels from tmem!
-        for i in stride(from: 0, to: byteCount, by: Int(bytesPerPixel)) {
-            let texel = UInt16(tmem[Int(i)]) << 8 | UInt16(tmem[Int(i) + 1])
+        for s in 0..<Int(numTexels) {
+            let t = (s * Int(dt)) >> 11
+            let tmemOffset = Int(tiles[tile].tileProps.offset) + t * Int(actualStride) + s * Int(bytesPerPixel)
+
+            let texel = UInt16(tmem[tmemOffset]) << 8 | UInt16(tmem[tmemOffset + 1])
 
             var r = UInt8((texel >> 11) & 0x1F)
             var g = UInt8((texel >> 6) & 0x1F)
