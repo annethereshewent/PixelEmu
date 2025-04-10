@@ -385,8 +385,8 @@ class Renderer: NSObject, MTKViewDelegate {
                     rdpVertices[2].color = color2
 
 
-                    var textureWidth: Float = 0.0
-                    var textureHeight: Float = 0.0
+//                    var textureWidth: Float = 0.0
+//                    var textureHeight: Float = 0.0
 
                     let tile = tiles[currentTile]
 
@@ -397,8 +397,8 @@ class Renderer: NSObject, MTKViewDelegate {
                     var uniforms = FragmentUniforms(hasTexture: false)
 
                     if let texture = tile.texture {
-                        textureWidth = Float(tile.shi - tile.slo) + 1
-                        textureHeight = Float(tile.thi - tile.tlo) + 1
+//                        textureWidth = Float(tile.shi - tile.slo) + 1
+//                        textureHeight = Float(tile.thi - tile.tlo) + 1
 
                         encoder.setFragmentTexture(texture, index: 0)
                     }
@@ -419,9 +419,9 @@ class Renderer: NSObject, MTKViewDelegate {
                         let w1 = w0 + texture.dwdx * (triangle.xm - baseX) + texture.dwdy * (triangle.ym - baseY)
                         let w2 = w0 + texture.dwdx * (triangle.xh - baseX) + texture.dwdy * (triangle.yh - baseY)
 
-                        let uv0 = SIMD2<Float>(Float(u0) / Float(w0) / textureWidth, Float(v0) / Float(w0) / textureHeight)
-                        let uv1 = SIMD2<Float>(Float(u1) / Float(w1) / textureWidth, Float(v1) / Float(w1) / textureHeight)
-                        let uv2 = SIMD2<Float>(Float(u2) / Float(w2) / textureWidth, Float(v2) / Float(w2) / textureHeight)
+                        let uv0 = SIMD2<Float>(Float(u0) / Float(w0), Float(v0) / Float(w0))
+                        let uv1 = SIMD2<Float>(Float(u1) / Float(w1), Float(v1) / Float(w1))
+                        let uv2 = SIMD2<Float>(Float(u2) / Float(w2), Float(v2) / Float(w2))
 
                         rdpVertices[0].uv = uv0
                         rdpVertices[1].uv = uv1
@@ -884,6 +884,12 @@ class Renderer: NSObject, MTKViewDelegate {
         tiles[tile].tileProps = props
     }
 
+    func setOtherModes(words: [UInt32]) {
+        if (words[0] >> 19) & 0b1 == 1 {
+
+        }
+    }
+
     func loadBlock(words: [UInt32]) {
         let tile = Int((words[1] >> 24) & 7)
 
@@ -930,8 +936,6 @@ class Renderer: NSObject, MTKViewDelegate {
         let rdramPtr = getRdramPtr(vramAddress)
         let data = UnsafeBufferPointer(start: rdramPtr, count: Int(byteCount))
 
-        var bytes: [UInt8] = []
-
         let tileStride = tiles[tile].tileProps.stride
         let actualStride = tileStride * 8
 
@@ -943,7 +947,7 @@ class Renderer: NSObject, MTKViewDelegate {
                 let s = slo + (i / 2)
                 let t = (s * dt) >> 11
 
-                let tmemOffset = tiles[tile].tileProps.offset + t * actualStride + s * bytesPerPixel
+                let tmemOffset = (tiles[tile].tileProps.offset << 3) + t * actualStride + s * bytesPerPixel
 
                 tmem[Int(tmemOffset)] = UInt8(texel >> 8)
                 tmem[Int(tmemOffset) + 1] = UInt8(texel & 0xff)
@@ -953,47 +957,7 @@ class Renderer: NSObject, MTKViewDelegate {
             fatalError("pixel format not supported yet: \(format) \(size)")
         }
 
-        // finally populate the byte array with texels from tmem!
-        for s in 0..<Int(numTexels) {
-            let t = (s * Int(dt)) >> 11
-            let tmemOffset = Int(tiles[tile].tileProps.offset) + t * Int(actualStride) + s * Int(bytesPerPixel)
-
-            let texel = UInt16(tmem[tmemOffset]) << 8 | UInt16(tmem[tmemOffset + 1])
-
-            var r = UInt8((texel >> 11) & 0x1F)
-            var g = UInt8((texel >> 6) & 0x1F)
-            var b = UInt8((texel >> 1) & 0x1F)
-            let a = UInt8((texel & 0b1) * 0xff)
-
-            r = (r << 3) | (r >> 2)
-            g = (g << 3) | (g >> 2)
-            b = (b << 3) | (b >> 2)
-
-            bytes.append(r)
-            bytes.append(g)
-            bytes.append(b)
-            bytes.append(a)
-        }
-
-        // Width is unknown — usually this is a 1D block, so let’s try a fixed height of 1
-        let descriptor = MTLTextureDescriptor.texture2DDescriptor(
-            pixelFormat: .rgba8Unorm,
-            width: Int(numTexels),
-            height: height,
-            mipmapped: false
-        )
-        descriptor.usage = [.shaderRead]
-
-        let texture = device.makeTexture(descriptor: descriptor)!
-
-        texture.replace(
-            region: MTLRegionMake2D(0, 0, Int(numTexels), height),
-            mipmapLevel: 0,
-            withBytes: bytes,
-            bytesPerRow: Int(numTexels) * 4
-        )
-
-        tiles[tile].texture = texture
+        print("numTexels = \(numTexels)")
 
         if tiles[tile].shi == 0 && tiles[tile].slo == 0 && tiles[tile].thi == 0 && tiles[tile].tlo == 0 {
             // Fallback: use tile 0’s size info
@@ -1003,7 +967,67 @@ class Renderer: NSObject, MTKViewDelegate {
             tiles[tile].thi = tiles[0].thi
         }
 
+        tiles[tile].texture = decodeRGBA16(tile: tiles[tile])
+
         currentTile = tile
+    }
+
+    func decodeRGBA16(tile: TileState) -> MTLTexture? {
+        let tileWidth = tile.shi - tile.slo + 1
+        let tileHeight = tile.thi - tile.tlo + 1
+
+        let srcRowStride = tile.tileProps.stride << 3
+        var srcRowOffset = tile.tileProps.offset << 3
+
+        var bytes = [UInt8]()
+
+        var rowSwizzle: UInt32 = 0
+        for _ in 0..<tileHeight {
+            var srcOffset = srcRowOffset
+            for _ in 0..<tileWidth {
+                let index = Int(srcOffset ^ rowSwizzle)
+
+                let texel = UInt16(tmem[index]) << 8 | UInt16(tmem[index + 1])
+
+                var r = UInt8((texel >> 11) & 0x1F)
+                var g = UInt8((texel >> 6) & 0x1F)
+                var b = UInt8((texel >> 1) & 0x1F)
+                let a = UInt8((texel & 0b1) * 0xff)
+
+                r = (r << 3) | (r >> 2)
+                g = (g << 3) | (g >> 2)
+                b = (b << 3) | (b >> 2)
+
+                bytes.append(r)
+                bytes.append(g)
+                bytes.append(b)
+                bytes.append(a)
+
+                srcOffset += 2
+            }
+            srcRowOffset += srcRowStride
+
+            rowSwizzle ^= 4
+        }
+
+        let descriptor = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: .rgba8Unorm,
+            width: Int(tileWidth),
+            height: Int(tileHeight),
+            mipmapped: false
+        )
+        descriptor.usage = [.shaderRead]
+
+        let texture = device.makeTexture(descriptor: descriptor)!
+
+        texture.replace(
+            region: MTLRegionMake2D(0, 0, Int(tileWidth), Int(tileHeight)),
+            mipmapLevel: 0,
+            withBytes: bytes,
+            bytesPerRow: Int(tileWidth) * 4
+        )
+
+        return texture
     }
 
     func loadTile(words: [UInt32]) {
@@ -1113,7 +1137,7 @@ class Renderer: NSObject, MTKViewDelegate {
         case .SetConvert: break
         case .SetScissor: break
         case .SetPrimDepth: break
-        case .SetOtherModes: break
+        case .SetOtherModes: setOtherModes(words: words)
         case .LoadTLut: break
         case .SetTileSize: setTileSize(words: words)
         case .LoadBlock: loadBlock(words: words)
