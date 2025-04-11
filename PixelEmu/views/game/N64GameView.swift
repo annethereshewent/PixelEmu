@@ -117,7 +117,7 @@ struct TileProps {
 }
 
 struct RDPVertex {
-    var position: SIMD2<Float> = SIMD2<Float>(0, 0)
+    var position: SIMD3<Float> = SIMD3<Float>(0, 0, 0)
     var uv: SIMD2<Float> = SIMD2<Float>(0, 0)
     var color: SIMD4<Float> = SIMD4<Float>(0, 0, 0, 0)
 }
@@ -582,6 +582,8 @@ struct N64GameView: View {
         texture.dwdy = Float(Int32(bitPattern: dwdy)) / 65536.0
 
         rendererState.textureProps.append(texture)
+
+        rendererState.zProps.append(nil)
 
         rendererState.zProps.append(nil)
         rendererState.canRender = true

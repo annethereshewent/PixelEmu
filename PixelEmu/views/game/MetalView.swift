@@ -26,6 +26,8 @@ struct MetalView: UIViewRepresentable {
         mtkView.delegate = renderer
         context.coordinator.renderer = renderer // retain the renderer
 
+        mtkView.depthStencilPixelFormat = .depth32Float
+
         onViewCreated(mtkView, renderer.device)
 
         return mtkView

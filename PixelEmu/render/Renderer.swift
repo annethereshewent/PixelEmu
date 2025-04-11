@@ -27,14 +27,21 @@ class Renderer: NSObject, MTKViewDelegate {
     var mainPipelineState: MTLRenderPipelineState!
     var debugPipelineState: MTLRenderPipelineState!
 
-    var tiles: [TileState] = [TileState](repeating: TileState(), count: 8)
-    var triangleProps: [TriangleProps] = []
-    var colorProps: [ColorProps] = []
-    var canRender: Bool = false
-    var fillRects: [FillRect] = []
-    var zProps: [ZProps?] = []
-    var textureProps: [TextureProps?] = []
-    var currentTile: Int = 0
+    var depthTexture: MTLTexture!
+    var depthStencilState: MTLDepthStencilState!
+    var depthDisabledState: MTLDepthStencilState!
+
+    func buildDepthTexture(for view: MTKView) -> MTLTexture? {
+        let descriptor = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: .depth32Float,
+            width: 320,
+            height: 240,
+            mipmapped: false
+        )
+        descriptor.usage = [.renderTarget]
+        descriptor.storageMode = .private
+        return device.makeTexture(descriptor: descriptor)
+    }
 
 
     init(mtkView: MTKView, state: RendererState) {
@@ -58,35 +65,46 @@ class Renderer: NSObject, MTKViewDelegate {
         fillPipelineDescriptor.vertexFunction = vertexBasicFunction
         fillPipelineDescriptor.fragmentFunction = fragmentBasicFunction
         fillPipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
+        fillPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float
 
         let mainPipelineDescriptor = MTLRenderPipelineDescriptor()
         mainPipelineDescriptor.vertexFunction = vertexMainFunction
         mainPipelineDescriptor.fragmentFunction = fragmentMainFunction
         mainPipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
+        mainPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float
 
         let debugPipelineDescriptor = MTLRenderPipelineDescriptor()
         debugPipelineDescriptor.vertexFunction = vertexDebugFunction
         debugPipelineDescriptor.fragmentFunction = fragmentDebugFunction
         debugPipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
+        debugPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float
 
         let vertexDescriptor = MTLVertexDescriptor()
 
         // Position at attribute(0)
-        vertexDescriptor.attributes[0].format = .float2
+        vertexDescriptor.attributes[0].format = .float3
         vertexDescriptor.attributes[0].offset = 0
         vertexDescriptor.attributes[0].bufferIndex = 0
 
         // UV at attribute(1)
         vertexDescriptor.attributes[1].format = .float2
-        vertexDescriptor.attributes[1].offset = MemoryLayout<SIMD2<Float>>.stride
+        vertexDescriptor.attributes[1].offset = 16
         vertexDescriptor.attributes[1].bufferIndex = 0
 
         // Color at attribute(2)
         vertexDescriptor.attributes[2].format = .float4
-        vertexDescriptor.attributes[2].offset = MemoryLayout<SIMD2<Float>>.stride * 2
+        vertexDescriptor.attributes[2].offset = 32
         vertexDescriptor.attributes[2].bufferIndex = 0
 
-        vertexDescriptor.layouts[0].stride = MemoryLayout<RDPVertex>.stride
+//        print(MemoryLayout.offset(of: \RDPVertex.position))
+//        print(MemoryLayout.offset(of: \RDPVertex.uv))
+//        print(MemoryLayout.offset(of: \RDPVertex.color))
+//
+//        if MemoryLayout<RDPVertex>.stride != 36 {
+//            fatalError("it doesn't equal: \(MemoryLayout<RDPVertex>.stride)")
+//        }
+
+        vertexDescriptor.layouts[0].stride = 48
 
         let debugVertexDescriptor = MTLVertexDescriptor()
 
@@ -104,6 +122,20 @@ class Renderer: NSObject, MTKViewDelegate {
 
         mainPipelineDescriptor.vertexDescriptor = vertexDescriptor
         debugPipelineDescriptor.vertexDescriptor = debugVertexDescriptor
+
+        depthTexture = buildDepthTexture(for: mtkView)
+
+        let depthStencilDescriptor = MTLDepthStencilDescriptor()
+        depthStencilDescriptor.depthCompareFunction = .less
+        depthStencilDescriptor.isDepthWriteEnabled = true
+
+        depthStencilState = device.makeDepthStencilState(descriptor: depthStencilDescriptor)
+
+        let depthDisabledDesc = MTLDepthStencilDescriptor()
+        depthDisabledDesc.depthCompareFunction = .always
+        depthDisabledDesc.isDepthWriteEnabled = false
+
+        depthDisabledState = device.makeDepthStencilState(descriptor: depthDisabledDesc)
 
         do {
             fillPipelineState = try device.makeRenderPipelineState(descriptor: fillPipelineDescriptor)
@@ -127,9 +159,16 @@ class Renderer: NSObject, MTKViewDelegate {
                 return
             }
 
+            let passDescriptor = view.currentRenderPassDescriptor!
+            passDescriptor.depthAttachment.texture = depthTexture
+            passDescriptor.depthAttachment.loadAction = .clear
+            passDescriptor.depthAttachment.storeAction = .store
+            passDescriptor.depthAttachment.clearDepth = 1.0
+
             let screenWidth: Float = 320
             let screenHeight: Float = 240
 
+            encoder.setDepthStencilState(depthDisabledState)
             for rect in state.fillRects {
                 let x1 = Float(min(rect.x1, rect.x2))
                 let x2 = Float(max(rect.x1, rect.x2) + 1)
@@ -192,18 +231,39 @@ class Renderer: NSObject, MTKViewDelegate {
                         RDPVertex()
                     ]
 
+                    let baseX = triangle.xl
+                    let baseY = triangle.yl
+
+                    var z0: Float = 1.0
+                    var z1: Float = 1.0
+                    var z2: Float = 1.0
+
+                    let depthNorm: Float = Float(0x7fff)
+
+                    if let z = state.zProps[i] {
+                        z0 = Float(z.z)
+
+                        z1 = z0 + z.dzdx * (triangle.xm - baseX) + z.dzdy * (triangle.ym - baseY)
+                        z2 = z0 + z.dzdx * (triangle.xh - baseX) + z.dzdy * (triangle.yh - baseY)
+
+                        z0 /= depthNorm
+                        z1 /= depthNorm
+                        z2 /= depthNorm
+
+                        encoder.setDepthStencilState(depthStencilState)
+                    } else {
+                        encoder.setDepthStencilState(depthDisabledState)
+                    }
+
                     let vertices = [
-                        SIMD2<Float>((Float(triangle.xl) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.yl) / screenHeight) * 2.0),
-                        SIMD2<Float>((Float(triangle.xm) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.ym) / screenHeight) * 2.0),
-                        SIMD2<Float>((Float(triangle.xh) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.yh) / screenHeight) * 2.0),
+                        SIMD3<Float>((Float(triangle.xl) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.yl) / screenHeight) * 2.0, z0),
+                        SIMD3<Float>((Float(triangle.xm) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.ym) / screenHeight) * 2.0, z1),
+                        SIMD3<Float>((Float(triangle.xh) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.yh) / screenHeight) * 2.0, z2),
                     ]
 
                     rdpVertices[0].position = vertices[0]
                     rdpVertices[1].position = vertices[1]
                     rdpVertices[2].position = vertices[2]
-
-                    let baseX = triangle.xl
-                    let baseY = triangle.yl
 
                     let color = state.colorProps[i]
 
@@ -230,7 +290,7 @@ class Renderer: NSObject, MTKViewDelegate {
                     rdpVertices[1].color = color1
                     rdpVertices[2].color = color2
 
-                    let tile = state.tiles[currentTile]
+                    let tile = state.tiles[state.currentTile]
 
                     let sampler = makeSampler(clampS: tile.tileProps.clampSBit, clampT: tile.tileProps.clampTBit)
 
