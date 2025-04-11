@@ -28,8 +28,10 @@ uint64_t* getRowLengths();
 uint64_t getSaveTypesSize();
 uint64_t getNumRows();
 uint64_t getWordCount();
+uint8_t getByte(uint32_t baseAddress);
 
 uint8_t* getRdramPtr(uint32_t baseAddress);
+void printRange(uint32_t address, uint32_t range);
 
 void limitFps();
 void clearFrameFinished();

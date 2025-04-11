@@ -8,8 +8,8 @@ import SwiftUI
 import MetalKit
 
 struct MetalView: UIViewRepresentable {
-    @Binding var enqueuedWords: [[UInt32]]
-    var onViewCreated: (_ view: MTKView) -> Void
+    var rendererState: RendererState
+    var onViewCreated: (_ view: MTKView, _ device: MTLDevice) -> Void
 
     func makeUIView(context: Context) -> MTKView {
         guard let device = MTLCreateSystemDefaultDevice() else {
@@ -22,21 +22,16 @@ struct MetalView: UIViewRepresentable {
         mtkView.enableSetNeedsDisplay = false
         mtkView.isPaused = true
 
-        let renderer = Renderer(mtkView: mtkView, enqueuedWords: enqueuedWords)
+        let renderer = Renderer(mtkView: mtkView, state: rendererState)
         mtkView.delegate = renderer
         context.coordinator.renderer = renderer // retain the renderer
 
-        onViewCreated(mtkView)
+        onViewCreated(mtkView, renderer.device)
 
         return mtkView
     }
 
-    func updateUIView(_ uiView: MTKView, context: Context) {
-        context.coordinator.renderer?.enqueuedWords = enqueuedWords
-        DispatchQueue.main.async {
-            enqueuedWords = []
-        }
-    }
+    func updateUIView(_ uiView: MTKView, context: Context) {}
 
     func makeCoordinator() -> Coordinator {
         return Coordinator()

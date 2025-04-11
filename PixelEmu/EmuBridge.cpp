@@ -8,31 +8,30 @@
 #include "../N64Core/include/CPU.hpp"
 #include <cstdint>
 
-static CPU* cpu = nullptr;
+static CPU cpu;
 static std::vector<int> saveTypes = {};
 static std::vector<uint32_t> flattened = {};
 static std::vector<uint64_t> rowLengths = {};
 static std::vector<std::vector<uint32_t>> enqueuedWords = {};
 
 void initEmulator(uint8_t* romBytes, uint32_t romSize) {
-    cpu = new CPU();
-    cpu->bus.loadRomBytes(romBytes, romSize);
-    cpu->bus.setCic();
+    cpu.bus.loadRomBytes(romBytes, romSize);
+    cpu.bus.setCic();
 
-    cpu->bus.initAudio();
+    cpu.bus.initAudio();
 }
 
 void step() {
-    cpu->step();
-    if (cpu->bus.rdp.cmdsReady) {
+    cpu.step();
+    if (cpu.bus.rdp.cmdsReady) {
         // process RDP commands
-        enqueuedWords = cpu->bus.rdp.enqueuedWords;
+        enqueuedWords = cpu.bus.rdp.enqueuedWords;
         flattenCommands();
     }
 }
 
 int* getSaveTypes() {
-    for (SaveType type: cpu->bus.saveTypes) {
+    for (SaveType type: cpu.bus.saveTypes) {
         saveTypes.push_back((int)type);
     }
 
@@ -64,35 +63,47 @@ uint64_t getNumRows() {
 
 
 bool getFrameFinished() {
-    return cpu->bus.rdp.frameFinished;
+    return cpu.bus.rdp.frameFinished;
 }
 
 void clearFrameFinished() {
-    cpu->bus.rdp.frameFinished = false;
+    cpu.bus.rdp.frameFinished = false;
 }
 
 bool getCmdsReady() {
-    return cpu->bus.rdp.cmdsReady;
+    return cpu.bus.rdp.cmdsReady;
 }
 
 void clearCmdsReady() {
-    cpu->bus.rdp.cmdsReady = false;
+    cpu.bus.rdp.cmdsReady = false;
 }
 
 void limitFps() {
-    cpu->limitFps();
+    cpu.limitFps();
 }
 
 void clearEnqueuedCommands() {
     flattened.clear();
     rowLengths.clear();
-    cpu->bus.rdp.enqueuedWords.clear();
+    cpu.bus.rdp.enqueuedWords.clear();
 }
 
 uint8_t* getRdramPtr(uint32_t baseAddress) {
-    return &cpu->bus.rdram[baseAddress];
+    return &cpu.bus.rdram[baseAddress];
+}
+
+uint8_t getByte(uint32_t baseAddress) {
+    return cpu.bus.rdram[baseAddress];
 }
 
 uint64_t getWordCount() {
     return flattened.size();
+}
+
+void printRange(uint32_t address, uint32_t range) {
+    for (int i = 0; i < range; i++) {
+        uint32_t offset = address + i;
+        uint8_t value = cpu.bus.rdram[offset];
+        std::println("rdram[0x{:x}] = 0x{:x}", offset, value);
+    }
 }

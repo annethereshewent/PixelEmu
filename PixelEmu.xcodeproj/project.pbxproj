@@ -81,6 +81,7 @@
 		E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */; };
 		E8DF26BE2CC5F99600A88821 /* LoadStatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BD2CC5F99600A88821 /* LoadStatesView.swift */; };
 		E8DF26C02CC5FA5000A88821 /* LoadStateEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DF26BF2CC5FA5000A88821 /* LoadStateEntryView.swift */; };
+		E8E674912DA9060000F135C1 /* RendererState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E674902DA9060000F135C1 /* RendererState.swift */; };
 		E8EE5D862CC2216300CD77B6 /* CurrentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D852CC2216300CD77B6 /* CurrentView.swift */; };
 		E8EE5D882CC2221600CD77B6 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D872CC2221600CD77B6 /* LibraryView.swift */; };
 		E8EE5D8A2CC2227600CD77B6 /* ImportGamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */; };
@@ -209,6 +210,7 @@
 		E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryViewWrapper.swift; sourceTree = "<group>"; };
 		E8DF26BD2CC5F99600A88821 /* LoadStatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadStatesView.swift; sourceTree = "<group>"; };
 		E8DF26BF2CC5FA5000A88821 /* LoadStateEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadStateEntryView.swift; sourceTree = "<group>"; };
+		E8E674902DA9060000F135C1 /* RendererState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RendererState.swift; sourceTree = "<group>"; };
 		E8EE5D852CC2216300CD77B6 /* CurrentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentView.swift; sourceTree = "<group>"; };
 		E8EE5D872CC2221600CD77B6 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportGamesView.swift; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 		E806EA642C9E9B290081D3E8 /* util */ = {
 			isa = PBXGroup;
 			children = (
+				E8E674902DA9060000F135C1 /* RendererState.swift */,
 				E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */,
 				E896C28C2CA67FFA008161AA /* AudioManager.swift */,
 				E806EA732CA0EE100081D3E8 /* BackupFile.swift */,
@@ -854,6 +857,7 @@
 				E8A589462D03EA8D009D4337 /* GBAMenuView.swift in Sources */,
 				E8A589482D03ED2E009D4337 /* GBAStateEntriesView.swift in Sources */,
 				E8BBBC6A2CF96AEA0065EF4E /* DSLibraryView.swift in Sources */,
+				E8E674912DA9060000F135C1 /* RendererState.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
 				E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */,
 				E84EE4512D0403B000CF15ED /* GBAStateView.swift in Sources */,

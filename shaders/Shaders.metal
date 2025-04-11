@@ -51,7 +51,11 @@ fragment float4 fragment_main(VertexOut in [[stage_in]],
 {
     if (uniforms.hasTexture) {
         in.uv = clamp(in.uv, float2(0.0), float2(1.0));
-        return tex.sample(textureSampler, in.uv);
+
+        float4 texColor = tex.sample(textureSampler, in.uv);
+        float4 finalColor = texColor * in.color;
+
+        return finalColor;
     } else {
         return float4(in.color);
     }
