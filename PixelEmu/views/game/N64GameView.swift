@@ -836,8 +836,6 @@ struct N64GameView: View {
 
         let vramAddress = address + ((width * tlo + slo) << (size.rawValue - 1))
 
-        print("vramAddress = \(String(format: "%x", vramAddress))")
-
         let rdramOffset = getRdramPtr(vramAddress)
         let data = UnsafeBufferPointer(start: rdramOffset, count: Int(byteCount + 7))
 

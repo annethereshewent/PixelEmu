@@ -258,10 +258,6 @@ class Renderer: NSObject, MTKViewDelegate {
                         let w1 = w0 + texture.dwdx * (triangle.xm - baseX) + texture.dwdy * (triangle.ym - baseY)
                         let w2 = w0 + texture.dwdx * (triangle.xh - baseX) + texture.dwdy * (triangle.yh - baseY)
 
-                        print("u0 = \(u0) v0 = \(v0) w0 = \(w0)")
-                        print("u1 = \(u1) v1 = \(v1) w1 = \(w1)")
-                        print("u2 = \(u2) v2 = \(v2) w2 = \(w2)")
-
                         let uv0 = SIMD2<Float>(Float(u0) / Float(w0), Float(v0) / Float(w0))
                         let uv1 = SIMD2<Float>(Float(u1) / Float(w1), Float(v1) / Float(w1))
                         let uv2 = SIMD2<Float>(Float(u2) / Float(w2), Float(v2) / Float(w2))
