@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MetalKit
 
 let SRAM_SIZE = 0x8000
 let FLASH_SIZE = 0x20000
@@ -25,13 +26,20 @@ struct N64GameView: View {
     
     @State private var backupFiles: [BackupFile] = []
     @State private var enqueuedWords: [[UInt32]] = []
+    @State private var mtkView: MTKView? = nil
 
     var body: some View {
         if gameUrl != nil {
             ZStack {
                 themeColor
                 VStack {
-                    MetalView(enqueuedWords: $enqueuedWords)
+                    MetalView(enqueuedWords: $enqueuedWords) { mtkView in
+                        if (self.mtkView == nil) {
+                            DispatchQueue.main.async {
+                                self.mtkView = mtkView
+                            }
+                        }
+                    }
                         .frame(width: 320, height: 240)
                         .padding(.top, 75)
                     Spacer()
@@ -84,7 +92,7 @@ struct N64GameView: View {
 
                 DispatchQueue.global().async {
                     while true {
-                        DispatchQueue.main.async {
+                        DispatchQueue.main.sync {
                             while (!getFrameFinished()) {
                                 step()
                                 
@@ -109,11 +117,10 @@ struct N64GameView: View {
                                     clearEnqueuedCommands()
                                 }
                             }
+                            limitFps()
+                            clearFrameFinished()
+                            mtkView?.draw()
                         }
-
-                        limitFps()
-                        clearFrameFinished()
-
                     }
                 }
             }

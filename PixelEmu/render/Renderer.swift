@@ -48,6 +48,8 @@ struct TriangleProps {
     var dxldy: Float = 0
     var dxmdy: Float = 0
     var dxhdy: Float = 0
+
+    var texture: MTLTexture? = nil
 }
 
 struct TexImageProps {
@@ -82,6 +84,7 @@ struct TileState {
     var thi: UInt32 = 0
     var tileProps = TileProps()
     var texture: MTLTexture? = nil
+    var textures: [MTLTexture?] = []
 }
 
 struct TileProps {
@@ -205,7 +208,15 @@ struct TexturedVertex {
     var uv: SIMD2<Float>
 }
 
+let fullscreenQuad: [TexturedVertex] = [
+    TexturedVertex(position: [-1,  1], uv: [0, 0]), // top-left
+    TexturedVertex(position: [ 1,  1], uv: [1, 0]), // top-right
+    TexturedVertex(position: [-1, -1], uv: [0, 1]), // bottom-left
+    TexturedVertex(position: [ 1, -1], uv: [1, 1])  // bottom-right
+]
+
 class Renderer: NSObject, MTKViewDelegate {
+    var quadBuffer: MTLBuffer!
     let device: MTLDevice
     let commandQueue: MTLCommandQueue
 
@@ -217,6 +228,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
     var fillPipelineState: MTLRenderPipelineState!
     var mainPipelineState: MTLRenderPipelineState!
+    var debugPipelineState: MTLRenderPipelineState!
 
     var enqueuedWords: [[UInt32]] = []
 
@@ -238,12 +250,17 @@ class Renderer: NSObject, MTKViewDelegate {
         self.commandQueue = device.makeCommandQueue()!
         self.enqueuedWords = enqueuedWords
         super.init()
+        quadBuffer = device.makeBuffer(bytes: fullscreenQuad,
+                                           length: fullscreenQuad.count * MemoryLayout<TexturedVertex>.stride,
+                                           options: [])
 
         let library = device.makeDefaultLibrary()!
         let vertexBasicFunction = library.makeFunction(name: "vertex_basic")!
         let fragmentBasicFunction = library.makeFunction(name: "fragment_basic")!
         let fragmentMainFunction = library.makeFunction(name: "fragment_main")!
         let vertexMainFunction = library.makeFunction(name: "vertex_main")
+        let vertexDebugFunction = library.makeFunction(name: "vertex_debug")
+        let fragmentDebugFunction = library.makeFunction(name: "fragment_debug")
 
         let fillPipelineDescriptor = MTLRenderPipelineDescriptor()
         fillPipelineDescriptor.vertexFunction = vertexBasicFunction
@@ -254,6 +271,11 @@ class Renderer: NSObject, MTKViewDelegate {
         mainPipelineDescriptor.vertexFunction = vertexMainFunction
         mainPipelineDescriptor.fragmentFunction = fragmentMainFunction
         mainPipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
+
+        let debugPipelineDescriptor = MTLRenderPipelineDescriptor()
+        debugPipelineDescriptor.vertexFunction = vertexDebugFunction
+        debugPipelineDescriptor.fragmentFunction = fragmentDebugFunction
+        debugPipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat
 
         let vertexDescriptor = MTLVertexDescriptor()
 
@@ -274,11 +296,27 @@ class Renderer: NSObject, MTKViewDelegate {
 
         vertexDescriptor.layouts[0].stride = MemoryLayout<RDPVertex>.stride
 
+        let debugVertexDescriptor = MTLVertexDescriptor()
+
+        // Position at attribute(0)
+        debugVertexDescriptor.attributes[0].format = .float2
+        debugVertexDescriptor.attributes[0].offset = 0
+        debugVertexDescriptor.attributes[0].bufferIndex = 0
+
+        // UV at attribute(1)
+        debugVertexDescriptor.attributes[1].format = .float2
+        debugVertexDescriptor.attributes[1].offset = MemoryLayout<SIMD2<Float>>.stride
+        debugVertexDescriptor.attributes[1].bufferIndex = 0
+
+        debugVertexDescriptor.layouts[0].stride = MemoryLayout<TexturedVertex>.stride
+
         mainPipelineDescriptor.vertexDescriptor = vertexDescriptor
+        debugPipelineDescriptor.vertexDescriptor = debugVertexDescriptor
 
         do {
             fillPipelineState = try device.makeRenderPipelineState(descriptor: fillPipelineDescriptor)
             mainPipelineState = try device.makeRenderPipelineState(descriptor: mainPipelineDescriptor)
+            debugPipelineState = try device.makeRenderPipelineState(descriptor: debugPipelineDescriptor)
        } catch {
            fatalError("Failed to create pipeline state: \(error)")
        }
@@ -291,8 +329,11 @@ class Renderer: NSObject, MTKViewDelegate {
     func draw(in view: MTKView) {
         for words in enqueuedWords {
             let command = parseCommand(command: (words[0] >> 24) & 0x3f)
+            // print(command)
             executeCommand(command: command, words: words)
         }
+
+        // print("finished parsing command queue")
 
         enqueuedWords = []
 
@@ -336,6 +377,28 @@ class Renderer: NSObject, MTKViewDelegate {
                 encoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
             }
 
+//            if triangleProps.count > 0 {
+//                print("rendering texture from tile \(currentTile)")
+//                guard let drawable = view.currentDrawable,
+//                      let descriptor = view.currentRenderPassDescriptor,
+//                      let commandBuffer = commandQueue.makeCommandBuffer(),
+//                      let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor) else {
+//                    return
+//                }
+//
+//                let index = Int.random(in: 0..<tiles[currentTile].textures.count)
+//
+//                encoder.setRenderPipelineState(debugPipelineState) // <- created using the debug shaders
+//                encoder.setVertexBuffer(quadBuffer, offset: 0, index: 0)
+//                encoder.setFragmentTexture(tiles[currentTile].textures[index], index: 0)
+//                encoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
+//
+//                encoder.endEncoding()
+//                commandBuffer.present(drawable)
+//                commandBuffer.commit()
+//
+//                tiles[currentTile].textures = []
+//            }
             if triangleProps.count > 0 {
                 for i in 0...triangleProps.count - 1 {
                     let triangle = triangleProps[i]
@@ -384,10 +447,6 @@ class Renderer: NSObject, MTKViewDelegate {
                     rdpVertices[1].color = color1
                     rdpVertices[2].color = color2
 
-
-//                    var textureWidth: Float = 0.0
-//                    var textureHeight: Float = 0.0
-
                     let tile = tiles[currentTile]
 
                     let sampler = makeSampler(clampS: tile.tileProps.clampSBit, clampT: tile.tileProps.clampTBit)
@@ -396,10 +455,7 @@ class Renderer: NSObject, MTKViewDelegate {
 
                     var uniforms = FragmentUniforms(hasTexture: false)
 
-                    if let texture = tile.texture {
-//                        textureWidth = Float(tile.shi - tile.slo) + 1
-//                        textureHeight = Float(tile.thi - tile.tlo) + 1
-
+                    if let texture = triangle.texture {
                         encoder.setFragmentTexture(texture, index: 0)
                     }
 
@@ -496,6 +552,12 @@ class Renderer: NSObject, MTKViewDelegate {
         props.dxldy = Float(signExtend(value: (words[3] >> 2) & 0xfffffff, bits: 28)) / 65536.0
         props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28)) / 65536.0
         props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28)) / 65536.0
+
+        if tiles[currentTile].texture == nil {
+            tiles[currentTile].texture = decodeRGBA16(tile: tiles[currentTile], dataTile: tiles[7])
+        }
+
+        props.texture = tiles[currentTile].texture
 
         triangleProps.append(props)
 
@@ -697,6 +759,12 @@ class Renderer: NSObject, MTKViewDelegate {
         props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28)) / 65536.0
         props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28)) / 65536.0
 
+        if tiles[currentTile].texture == nil {
+            tiles[currentTile].texture = decodeRGBA16(tile: tiles[currentTile], dataTile: tiles[7])
+        }
+
+        props.texture = tiles[currentTile].texture
+
         triangleProps.append(props)
 
         var color = ColorProps()
@@ -849,6 +917,14 @@ class Renderer: NSObject, MTKViewDelegate {
         tiles[tile].shi = shi >> 2
         tiles[tile].tlo = tlo >> 2
         tiles[tile].thi = thi >> 2
+
+        tiles[tile].texture = nil
+
+        // tiles[tile].texture = decodeRGBA16(tile: tiles[tile])
+        // tiles[tile].textures.append(decodeRGBA16(tile: tiles[tile], dataTile: tiles[7]))
+
+        // print("setting currentTile to \(tile)")
+        currentTile = tile
     }
 
     func setTile(words: [UInt32]) {
@@ -881,6 +957,8 @@ class Renderer: NSObject, MTKViewDelegate {
             props.clampTBit = true
         }
 
+        tiles[tile].texture = nil
+
         tiles[tile].tileProps = props
     }
 
@@ -904,21 +982,10 @@ class Renderer: NSObject, MTKViewDelegate {
         let dt = ((words[1] >> 0) & 0xfff) >> 2
 
         let numTexels = shi - slo + 1
-        let height = 1
 
         if numTexels > MAX_TEXELS {
             return
         }
-
-//        let maxTmemIteration = (width - 1) >> (4 - size.rawValue)
-//        let maxT = (maxTmemIteration * dt) >> 11
-//
-//        if maxT != 0 {
-//            let maxElementsBeforeWrap = (MAX_TEXELS + dt - 1) / dt
-//            let minElementsBeforeWrap = (MAX_TEXELS) / dt
-//
-//            // TODO: determine if stride is uneven
-//        }
 
         var bytesPerPixel: UInt32 = 0
 
@@ -933,58 +1000,76 @@ class Renderer: NSObject, MTKViewDelegate {
 
         let vramAddress = address + ((width * tlo + slo) << (size.rawValue - 1))
 
-        let rdramPtr = getRdramPtr(vramAddress)
-        let data = UnsafeBufferPointer(start: rdramPtr, count: Int(byteCount))
-
-        let tileStride = tiles[tile].tileProps.stride
-        let actualStride = tileStride * 8
+        let rdramOffset = getRdramPtr(vramAddress)
+        let data = UnsafeBufferPointer(start: rdramOffset, count: Int(byteCount + 7))
 
         // Assuming RGBA16 for now
         if format == .RGBA && size == .Bpp16 {
-            for i in stride(from: 0, to: byteCount, by: Int(bytesPerPixel)) {
-                let texel = UInt16(data[Int(i)]) << 8 | UInt16(data[Int(i) + 1])
+            let qWords = (byteCount + 7) >> 3
+            if dt == 0 {
 
-                let s = slo + (i / 2)
-                let t = (s * dt) >> 11
+            } else {
+                let wordSwapBit = 1
 
-                let tmemOffset = (tiles[tile].tileProps.offset << 3) + t * actualStride + s * bytesPerPixel
+                var ramOffset = 0
+                var tmemOffset = Int(tiles[tile].tileProps.offset)
+                let qWordsPerLine = (2048 / dt)
 
-                tmem[Int(tmemOffset)] = UInt8(texel >> 8)
-                tmem[Int(tmemOffset) + 1] = UInt8(texel & 0xff)
+                var oddRow = false
 
+                var i = 0
+
+                print("ramOffset = \(ramOffset), qWords = \(qWords), qWordsPerLine = \(qWordsPerLine)")
+
+                while i < qWords {
+                    let qWordsToCopy = min(Int(qWords) - i, Int(qWordsPerLine))
+
+                    if oddRow {
+                        for _ in 0..<qWordsToCopy {
+                            for i in 0..<8 {
+                                let swizzledIndex = (i / 4) ^ wordSwapBit == 1 ? (i ^ 4) : i
+                                tmem[tmemOffset + swizzledIndex] = data[(ramOffset + i)]
+                            }
+                            tmemOffset += 8
+                            ramOffset += 8
+                        }
+                    } else {
+                        for _ in 0..<qWordsToCopy {
+                            for i in 0..<8 {
+                                tmem[tmemOffset + i] = data[(ramOffset + i)]
+                            }
+                            tmemOffset += 8
+                            ramOffset += 8
+                        }
+                    }
+
+                    i += qWordsToCopy
+
+                    print("i = \(i)")
+
+                    oddRow = !oddRow
+                }
             }
         } else {
             fatalError("pixel format not supported yet: \(format) \(size)")
         }
-
-        print("numTexels = \(numTexels)")
-
-        if tiles[tile].shi == 0 && tiles[tile].slo == 0 && tiles[tile].thi == 0 && tiles[tile].tlo == 0 {
-            // Fallback: use tile 0’s size info
-            tiles[tile].slo = tiles[0].slo
-            tiles[tile].shi = tiles[0].shi
-            tiles[tile].tlo = tiles[0].tlo
-            tiles[tile].thi = tiles[0].thi
-        }
-
-        tiles[tile].texture = decodeRGBA16(tile: tiles[tile])
-
-        currentTile = tile
     }
 
-    func decodeRGBA16(tile: TileState) -> MTLTexture? {
+    func decodeRGBA16(tile: TileState, dataTile: TileState) -> MTLTexture? {
         let tileWidth = tile.shi - tile.slo + 1
         let tileHeight = tile.thi - tile.tlo + 1
 
-        let srcRowStride = tile.tileProps.stride << 3
-        var srcRowOffset = tile.tileProps.offset << 3
+        let srcRowStride = tile.tileProps.stride == 0 ? tileWidth * 2 : tile.tileProps.stride
+        var srcRowOffset = tile.tileProps.offset
+
+        print("tileWidth = \(tileWidth), tileHeight = \(tileHeight) srcRowStride = \(srcRowStride), srcRowOffset = \(srcRowOffset)")
 
         var bytes = [UInt8]()
 
         var rowSwizzle: UInt32 = 0
-        for _ in 0..<tileHeight {
+        for y in 0..<tileHeight {
             var srcOffset = srcRowOffset
-            for _ in 0..<tileWidth {
+            for x in 0..<tileWidth {
                 let index = Int(srcOffset ^ rowSwizzle)
 
                 let texel = UInt16(tmem[index]) << 8 | UInt16(tmem[index + 1])
@@ -1057,9 +1142,9 @@ class Renderer: NSObject, MTKViewDelegate {
 
         let byteLength = width * height * bytesPerPixel
 
-        let rdramPtr = getRdramPtr(address)
+        let rdramOffset = getRdramPtr(address)
 
-        let data = UnsafeBufferPointer(start: rdramPtr, count: Int(byteLength))
+        let data = UnsafeBufferPointer(start: rdramOffset, count: Int(byteLength))
 
         var i = 0
 
