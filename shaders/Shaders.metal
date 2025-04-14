@@ -12,6 +12,8 @@ using namespace metal;
 
 struct FragmentUniforms {
     bool hasTexture;
+    bool clampS;
+    bool clampT;
 };
 
 vertex float4 vertex_basic(const device float2* position [[ buffer(0) ]],
@@ -50,7 +52,12 @@ fragment float4 fragment_main(VertexOut in [[stage_in]],
                               sampler textureSampler [[sampler(0)]])
 {
     if (uniforms.hasTexture) {
-        // in.uv = clamp(in.uv, float2(0.0), float2(1.0));
+        if (uniforms.clampS) {
+            in.uv.x = clamp(in.uv.x, 0.0, 1.0);
+        }
+        if (uniforms.clampT) {
+            in.uv.y = clamp(in.uv.y, 0.0, 1.0);
+        }
 
         float4 texColor = tex.sample(textureSampler, in.uv);
         float4 finalColor = texColor * in.color;

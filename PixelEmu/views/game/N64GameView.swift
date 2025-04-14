@@ -26,7 +26,9 @@ enum CycleType {
 }
 
 struct FragmentUniforms {
-    var hasTexture: Bool
+    var hasTexture = false
+    var clampS = false
+    var clampT = false
 }
 
 struct FillRect {
@@ -61,6 +63,7 @@ struct TriangleProps {
     var dxhdy: Float = 0
 
     var texture: MTLTexture? = nil
+    var validHeight: Int = 0
 }
 
 struct TexImageProps {
@@ -96,6 +99,7 @@ struct TileState {
     var tileProps = TileProps()
     var texture: MTLTexture? = nil
     var textures: [MTLTexture?] = []
+    var validHeight: Int = 0
 }
 
 struct TileProps {
@@ -281,14 +285,16 @@ struct N64GameView: View {
         props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28)) / 65536.0
 
 
-
-
         if rendererState.tiles[rendererState.currentTile].texture == nil {
-            rendererState.tiles[rendererState.currentTile].texture = decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile], dataTile: rendererState.tiles[7])
-            // rendererState.tiles[rendererState.currentTile].textures.append(rendererState.tiles[rendererState.currentTile].texture)
+            let tileWidth = rendererState.tiles[rendererState.currentTile].shi - rendererState.tiles[rendererState.currentTile].slo + 1
+            let tileHeight = rendererState.tiles[rendererState.currentTile].thi - rendererState.tiles[rendererState.currentTile].tlo + 1
+            rendererState.tiles[rendererState.currentTile].texture = decodeRDRAMTexture(address: rendererState.vramAddress, width: Int(tileWidth), height: Int(tileHeight))
+            rendererState.blockTexelsLoaded = 0
         }
 
         props.texture = rendererState.tiles[rendererState.currentTile].texture
+        props.validHeight = rendererState.tiles[rendererState.currentTile].validHeight
+
         // props.texture = decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile], dataTile: rendererState.tiles[7])
 
         rendererState.triangleProps.append(props)
@@ -490,12 +496,18 @@ struct N64GameView: View {
         props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28)) / 65536.0
         props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28)) / 65536.0
 
+//        print("area = \(area), xh = \(props.xh), xm = \(props.xm), xl = \(props.xl), yh = \(props.yh), ym = \(props.ym), yl = \(props.yl), dxhdy = \(props.dxhdy), dxmdy = \(props.dxmdy), dxldy = \(props.dxldy)")
+
         if rendererState.tiles[rendererState.currentTile].texture == nil {
-            rendererState.tiles[rendererState.currentTile].texture = decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile], dataTile: rendererState.tiles[7])
-            // rendererState.tiles[rendererState.currentTile].textures.append(rendererState.tiles[rendererState.currentTile].texture)
+            let tileWidth = rendererState.tiles[rendererState.currentTile].shi - rendererState.tiles[rendererState.currentTile].slo + 1
+            let tileHeight = rendererState.tiles[rendererState.currentTile].thi - rendererState.tiles[rendererState.currentTile].tlo + 1
+            rendererState.tiles[rendererState.currentTile].texture = decodeRDRAMTexture(address: rendererState.vramAddress, width: Int(tileWidth), height: Int(tileHeight))
+            rendererState.blockTexelsLoaded = 0
         }
 
         props.texture = rendererState.tiles[rendererState.currentTile].texture
+        props.validHeight = rendererState.tiles[rendererState.currentTile].validHeight
+
 //        props.texture = decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile], dataTile: rendererState.tiles[7])
 //        rendererState.tiles[rendererState.currentTile].textures.append(decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile], dataTile: rendererState.tiles[7]))
 
@@ -754,6 +766,13 @@ struct N64GameView: View {
 
         rendererState.tiles[tile].texture = nil
 
+        if rendererState.blockTexelsLoaded != 0 {
+            let tileWidth = rendererState.tiles[tile].shi - rendererState.tiles[tile].slo + 1
+            rendererState.tiles[tile].validHeight = rendererState.blockTexelsLoaded / Int(tileWidth)
+            rendererState.blockTexelsLoaded = 0
+        }
+
+
         // rendererState.tiles[tile].texture = decodeRGBA16(tile: rendererState.tiles[tile])
         // rendererState.tiles[tile].textures.append(decodeRGBA16(tile: rendererState.tiles[tile], dataTile: rendererState.tiles[7]))
 
@@ -792,7 +811,6 @@ struct N64GameView: View {
         }
 
         rendererState.tiles[tile].texture = nil
-
         rendererState.tiles[tile].tileProps = props
     }
 
@@ -805,10 +823,6 @@ struct N64GameView: View {
     func loadBlock(words: [UInt32]) {
         let tile = Int((words[1] >> 24) & 7)
 
-        for i in 0..<8 {
-            rendererState.tiles[i].texture = nil
-        }
-
         let address = textureImage.address
         let width = textureImage.width
         let format = textureImage.format
@@ -820,6 +834,15 @@ struct N64GameView: View {
         let dt = ((words[1] >> 0) & 0xfff) >> 2
 
         let numTexels = shi - slo + 1
+
+
+        rendererState.blockTexelsLoaded += Int(numTexels)
+
+        for i in 0..<8 {
+            rendererState.tiles[i].texture = nil
+            let tileWidth = rendererState.tiles[i].shi - rendererState.tiles[i].slo + 1
+            rendererState.tiles[i].validHeight = rendererState.blockTexelsLoaded / Int(tileWidth)
+        }
 
         if numTexels > MAX_TEXELS {
             return
@@ -845,7 +868,15 @@ struct N64GameView: View {
         if format == .RGBA && size == .Bpp16 {
             let qWords = (byteCount + 7) >> 3
             if dt == 0 {
-
+                var ramOffset = 0
+                var tmemOffset = Int(rendererState.tiles[tile].tileProps.offset)
+                for _ in 0..<qWords {
+                    for i in 0..<8 {
+                        tmem[tmemOffset + i] = data[ramOffset + (i ^ 1)]
+                    }
+                    tmemOffset += 8
+                    ramOffset += 8
+                }
             } else {
                 let wordSwapBit = 1
 
@@ -862,17 +893,17 @@ struct N64GameView: View {
 
                     if oddRow {
                         for _ in 0..<qWordsToCopy {
-                            for i in 0..<8 {
-                                let swizzledIndex = (i / 4) ^ wordSwapBit == 1 ? (i ^ 4) : i
-                                tmem[tmemOffset + swizzledIndex] = data[(ramOffset + i) ^ 3]
+                            for j in 0..<8 {
+                                let swizzledIndex = j ^ 4
+                                tmem[tmemOffset + swizzledIndex] = data[(ramOffset + j) ^ 3]
                             }
                             tmemOffset += 8
                             ramOffset += 8
                         }
                     } else {
                         for _ in 0..<qWordsToCopy {
-                            for i in 0..<8 {
-                                tmem[tmemOffset + i] = data[(ramOffset + i) ^ 3]
+                            for j in 0..<8 {
+                                tmem[tmemOffset + j] = data[(ramOffset + j) ^ 3]
                             }
                             tmemOffset += 8
                             ramOffset += 8
@@ -885,8 +916,56 @@ struct N64GameView: View {
                 }
             }
         } else {
-            fatalError("pixel format not supported yet: \(format) \(size)")
+            // fatalError("pixel format not supported yet: \(format) \(size)")
         }
+        rendererState.vramAddress = vramAddress
+    }
+
+    func decodeTmem(_ width: Int, _ numTexels: Int) -> MTLTexture? {
+        var bytes: [UInt8] = []
+
+        let textureWidth = 32
+        let textureHeight = numTexels / 32
+
+        let bytesPerTexel = 2
+        let byteCount = textureWidth * textureHeight * bytesPerTexel
+
+        for i in stride(from: 0, to: byteCount, by: 2) {
+            let texel = UInt16(tmem[i]) << 8 | UInt16(tmem[i + 1])
+
+            var r = UInt8((texel >> 11) & 0x1F)
+            var g = UInt8((texel >> 6) & 0x1F)
+            var b = UInt8((texel >> 1) & 0x1F)
+            let a = UInt8((texel & 0b1) * 0xff)
+
+            r = (r << 3) | (r >> 2)
+            g = (g << 3) | (g >> 2)
+            b = (b << 3) | (b >> 2)
+
+            bytes.append(r)
+            bytes.append(g)
+            bytes.append(b)
+            bytes.append(a)
+        }
+
+        let descriptor = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: .rgba8Unorm,
+            width: textureWidth,
+            height: textureHeight,
+            mipmapped: false
+        )
+
+        descriptor.usage = [.shaderRead]
+        guard let texture = device?.makeTexture(descriptor: descriptor) else { return nil }
+
+        texture.replace(
+            region: MTLRegionMake2D(0, 0, textureWidth, textureHeight),
+            mipmapLevel: 0,
+            withBytes: bytes,
+            bytesPerRow: 32 * 4
+        )
+
+        return texture
     }
 
     func decodeRDRAMTexture(address: UInt32, width: Int, height: Int) -> MTLTexture? {
@@ -904,7 +983,7 @@ struct N64GameView: View {
             var r = UInt8((texel >> 11) & 0x1F)
             var g = UInt8((texel >> 6) & 0x1F)
             var b = UInt8((texel >> 1) & 0x1F)
-            let a = UInt8((texel & 0b1) * 255)
+            let a = UInt8((texel & 0b1) * 0xff)
 
             r = (r << 3) | (r >> 2)
             g = (g << 3) | (g >> 2)
@@ -936,9 +1015,9 @@ struct N64GameView: View {
         return texture
     }
 
-    func decodeRGBA16(tile: TileState, dataTile: TileState) -> MTLTexture? {
+    func decodeRGBA16(tile: TileState) -> MTLTexture? {
         let tileWidth = tile.shi - tile.slo + 1
-        let tileHeight = tile.thi - tile.tlo + 1
+        let tileHeight = min(Int(tile.thi - tile.tlo) + 1, tile.validHeight)
 
         let srcRowStride = tile.tileProps.stride
         var srcRowOffset = tile.tileProps.offset
@@ -1084,12 +1163,14 @@ struct N64GameView: View {
                                         executeCommand(command: command, words: words)
                                     }
 
+                                    enqueuedWords = []
                                     clearCmdsReady()
                                     clearEnqueuedCommands()
-                                    enqueuedWords = []
+
 
                                 }
                             }
+
                             limitFps()
                             clearFrameFinished()
 
