@@ -29,6 +29,7 @@
 		E806EAA02CA3AD080081D3E8 /* SaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */; };
 		E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */; };
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
+		E80CF1DF2DAF819300558EF8 /* Compute.metal in Sources */ = {isa = PBXBuildFile; fileRef = E80CF1DE2DAF818D00558EF8 /* Compute.metal */; };
 		E82A46F82D9B41210059BB67 /* PixelEmu-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E82A46F72D9B41210059BB67 /* PixelEmu-Info.plist */; };
 		E82A46FA2D9B41380059BB67 /* PixelEmuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */; };
 		E84EE44F2D04024700CF15ED /* GBASaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EE44E2D04024700CF15ED /* GBASaveState.swift */; };
@@ -159,6 +160,7 @@
 		E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveManagementView.swift; sourceTree = "<group>"; };
 		E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
+		E80CF1DE2DAF818D00558EF8 /* Compute.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Compute.metal; sourceTree = "<group>"; };
 		E82A46F72D9B41210059BB67 /* PixelEmu-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PixelEmu-Info.plist"; sourceTree = "<group>"; };
 		E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelEmuApp.swift; sourceTree = "<group>"; };
 		E84EE44E2D04024700CF15ED /* GBASaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBASaveState.swift; sourceTree = "<group>"; };
@@ -509,6 +511,7 @@
 		E8C289672DA0B9F500409325 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				E80CF1DE2DAF818D00558EF8 /* Compute.metal */,
 				E8C289682DA0B9FF00409325 /* Shaders.metal */,
 			);
 			path = shaders;
@@ -858,6 +861,7 @@
 				E8A589482D03ED2E009D4337 /* GBAStateEntriesView.swift in Sources */,
 				E8BBBC6A2CF96AEA0065EF4E /* DSLibraryView.swift in Sources */,
 				E8E674912DA9060000F135C1 /* RendererState.swift in Sources */,
+				E80CF1DF2DAF819300558EF8 /* Compute.metal in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
 				E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */,
 				E84EE4512D0403B000CF15ED /* GBAStateView.swift in Sources */,

@@ -126,6 +126,15 @@ struct RDPVertex {
     var color: SIMD4<Float> = SIMD4<Float>(0, 0, 0, 0)
 }
 
+struct Triangle {
+    var v0: RDPVertex = RDPVertex()
+    var v1: RDPVertex = RDPVertex()
+    var v2: RDPVertex = RDPVertex()
+    var dsdx_dtdx_dwdx: SIMD3<Float> = SIMD3<Float>(0, 0, 0)
+    var dsdy_dtdy_dwdy: SIMD3<Float> = SIMD3<Float>(0, 0, 0)
+}
+
+
 struct ColorProps {
     var r: Float = 0
     var g: Float = 0
