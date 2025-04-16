@@ -225,36 +225,66 @@ class Renderer: NSObject, MTKViewDelegate {
 //                state.tiles[state.currentTile].textures = []
 //            }
             if state.triangleProps.count > 0 {
-                var previousProps = TriangleProps()
+                var previousVerts: [SIMD2<Float>] = []
                 for i in 0..<state.triangleProps.count {
-                    var triangle = state.triangleProps[i]
+                    let triangle = state.triangleProps[i]
 
-                    let area = (triangle.xm - triangle.xh) * (triangle.yl - triangle.yh) - (triangle.xl - triangle.xh) * (triangle.ym - triangle.yh)
+//                    var y0 = triangle.yh
+//                    var x0 = triangle.xh
+//
+//                    var y1 = triangle.ym
+//                    var x1 = triangle.flip ? triangle.xh - triangle.dxhdy * (y1 - y0) : triangle.xh + triangle.dxhdy * (y1 - y0)
+//
+//                    var y2 = triangle.yl
+//                    var x2 = triangle.xl
 
-                    if area == 0 {
+                    var y0 = triangle.yh
+                    var x0 = triangle.xh
+
+//                    var y1 = triangle.ym
+//                    var x1 = triangle.flip ? triangle.xm - triangle.dxmdy * (y1 - y0) : triangle.xm + triangle.dxmdy * (y1 - y0)
+//
+//                    var y2 = triangle.yl
+//                    var x2 = triangle.flip ? triangle.xl + triangle.dxldy * (y2 - y1) : triangle.xl - triangle.dxldy * (y2 - y1)
+
+                    var x2 = triangle.xl
+                    var y2 = triangle.ym
+
+                    var y1 = triangle.yl
+                    var x1 = triangle.flip ? triangle.xl + triangle.dxldy * (y2 - y1) : triangle.xl - triangle.dxldy * (y2 - y1)
+
+                    if triangle.flip {
+                        let tempX = x1
+                        x1 = x2
+                        x2 = tempX
+
+                        let tempY = y1
+                        y1 = y2
+                        y2 = tempY
+                    }
+
+                    let verts = [
+                        SIMD2<Float>(x0, y0),
+                        SIMD2<Float>(x1, y1),
+                        SIMD2<Float>(x2, y2)
+                    ]
+
+                    print("v0: (\(x0), \(y0)) v1: (\(x1), \(y1)) v2: (\(x2), \(y2))")
+                    print("dxhdy: \(triangle.dxhdy), dxmdy: \(triangle.dxmdy), dxldy: \(triangle.dxldy)")
+
+                    let area = (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0)
+
+                    if area == 0 && previousVerts.count > 0 {
                         // need to redefine xl, xm, xh, etc
                         // xh = x0 xm = x1 xl = x2 yh = y0 ym = y1 yl = y2
-//                        triangle.xh = previousProps.xl
-//                        triangle.yh = previousProps.yl
-//
-//                        triangle.xl = previousProps.xh
-//                        triangle.yl = previousProps.yl
-//
-//                        triangle.xm = previousProps.xh
-//                        triangle.ym = previousProps.yh
-//
-//                        let area = (triangle.xm - triangle.xh) * (triangle.yl - triangle.yh) - (triangle.xl - triangle.xh) * (triangle.ym - triangle.yh)
-//
-//                        print(area)
+                        x0 = previousVerts[0].x
+                        y0 = previousVerts[0].y
 
-                        triangle.xh = previousProps.xh
-                        triangle.yh = previousProps.yh
+                        x2 = previousVerts[2].x
+                        y2 = previousVerts[2].y
 
-                        triangle.xl = previousProps.xl
-                        triangle.yl = previousProps.yl
-
-                        triangle.xm = previousProps.xl
-                        triangle.ym = previousProps.yh
+                        x1 = previousVerts[2].x
+                        y1 = previousVerts[0].y
                     }
 
                     var rdpVertices = [
@@ -263,8 +293,8 @@ class Renderer: NSObject, MTKViewDelegate {
                         RDPVertex()
                     ]
 
-                    let baseX = triangle.xh
-                    let baseY = triangle.yh
+                    let baseX = x0
+                    let baseY = y0
 
                     var z0: Float = 1.0
                     var z1: Float = 1.0
@@ -273,10 +303,10 @@ class Renderer: NSObject, MTKViewDelegate {
                     let depthNorm: Float = Float(0x7fff)
 
                     if let z = state.zProps[i] {
-                        z0 = Float(z.z)
+                        z0 = z.z
 
-                        z1 = z0 + z.dzdx * (triangle.xm - baseX) + z.dzdy * (triangle.ym - baseY)
-                        z2 = z0 + z.dzdx * (triangle.xl - baseX) + z.dzdy * (triangle.yl - baseY)
+                        z1 = z0 + z.dzdx * (x1 - baseX) + z.dzdy * (y1 - baseY)
+                        z2 = z0 + z.dzdx * (x2 - baseX) + z.dzdy * (y2 - baseY)
 
                         z0 /= depthNorm
                         z1 /= depthNorm
@@ -288,16 +318,16 @@ class Renderer: NSObject, MTKViewDelegate {
                     }
 
                     let vertices = [
-                        SIMD3<Float>((Float(triangle.xh) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.yh) / screenHeight) * 2.0, z0),
-                        SIMD3<Float>((Float(triangle.xm) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.ym) / screenHeight) * 2.0, z1),
-                        SIMD3<Float>((Float(triangle.xl) / screenWidth) * 2.0 - 1.0, 1.0 - (Float(triangle.yl) / screenHeight) * 2.0, z2),
+                        SIMD3<Float>((x0 / screenWidth) * 2.0 - 1.0, 1.0 - (y0 / screenHeight) * 2.0, z0),
+                        SIMD3<Float>((x1 / screenWidth) * 2.0 - 1.0, 1.0 - (y1 / screenHeight) * 2.0, z1),
+                        SIMD3<Float>((x2 / screenWidth) * 2.0 - 1.0, 1.0 - (y2 / screenHeight) * 2.0, z2),
                     ]
 
                     rdpVertices[0].position = vertices[0]
                     rdpVertices[1].position = vertices[1]
                     rdpVertices[2].position = vertices[2]
 
-                    previousProps = triangle
+                    previousVerts = verts
 
                     let color = state.colorProps[i]
 
@@ -306,15 +336,15 @@ class Renderer: NSObject, MTKViewDelegate {
                     let b0 = color.b
                     let a0 = color.a
 
-                    let r1 = r0 + color.drdx * (triangle.xm - baseX) + color.drdy * (triangle.ym - baseY)
-                    let g1 = g0 + color.dgdx * (triangle.xm - baseX) + color.dgdy * (triangle.ym - baseY)
-                    let b1 = b0 + color.dbdx * (triangle.xm - baseX) + color.dbdy * (triangle.ym - baseY)
-                    let a1 = a0 + color.dadx * (triangle.xm - baseX) + color.dady * (triangle.ym - baseY)
+                    let r1 = r0 + color.drdx * (x1 - baseX) + color.drdy * (y1 - baseY)
+                    let g1 = g0 + color.dgdx * (x1 - baseX) + color.dgdy * (y1 - baseY)
+                    let b1 = b0 + color.dbdx * (x1 - baseX) + color.dbdy * (y1 - baseY)
+                    let a1 = a0 + color.dadx * (x1 - baseX) + color.dady * (y1 - baseY)
 
-                    let r2 = r0 + color.drdx * (triangle.xl - baseX) + color.drdy * (triangle.yl - baseY)
-                    let g2 = g0 + color.dgdx * (triangle.xl - baseX) + color.dgdy * (triangle.yl - baseY)
-                    let b2 = b0 + color.dbdx * (triangle.xl - baseX) + color.dbdy * (triangle.yl - baseY)
-                    let a2 = a0 + color.dadx * (triangle.xl - baseX) + color.dady * (triangle.yl - baseY)
+                    let r2 = r0 + color.drdx * (x2 - baseX) + color.drdy * (y2 - baseY)
+                    let g2 = g0 + color.dgdx * (x2 - baseX) + color.dgdy * (y2 - baseY)
+                    let b2 = b0 + color.dbdx * (x2 - baseX) + color.dbdy * (y2 - baseY)
+                    let a2 = a0 + color.dadx * (x2 - baseX) + color.dady * (y2 - baseY)
 
                     let color0 = simd_clamp(SIMD4<Float>(Float(r0) / 255.0, Float(g0) / 255.0, Float(b0) / 255.0, Float(a0) / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
                     let color1 = simd_clamp(SIMD4<Float>(Float(r1) / 255.0, Float(g1) / 255.0, Float(b1) / 255.0, Float(a1) / 255.0), SIMD4<Float>(0.0, 0.0, 0.0, 0.0), SIMD4<Float>(1.0, 1.0, 1.0, 1.0))
@@ -326,7 +356,8 @@ class Renderer: NSObject, MTKViewDelegate {
 
                     let tile = state.tiles[state.currentTile]
 
-                    let textureHeight = tile.thi - tile.tlo + 1
+                    let textureHeight = Float(tile.thi - tile.tlo + 1)
+                    let textureWidth = Float(tile.shi - tile.slo + 1)
 
                     let sampler = makeSampler(mirrorS: tile.tileProps.mirrorSBit, mirrorT: tile.tileProps.mirrorTBit)
 
@@ -342,12 +373,10 @@ class Renderer: NSObject, MTKViewDelegate {
                         encoder.setFragmentTexture(texture, index: 0)
                     }
 
-                    let (x0, y0) = (triangle.xh, triangle.yh)
-                    let (x1, y1) = (triangle.xm, triangle.ym)
-                    let (x2, y2) = (triangle.xl, triangle.yl)
-
-                    if let texture = state.textureProps[i] {
+                    if var texture = state.textureProps[i] {
                         uniforms.hasTexture = true
+
+                        let scale: Float = 16
 
                         let u0 = texture.s
                         let v0 = texture.t

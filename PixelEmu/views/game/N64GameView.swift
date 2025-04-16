@@ -289,6 +289,7 @@ struct N64GameView: View {
             let tileWidth = rendererState.tiles[rendererState.currentTile].shi - rendererState.tiles[rendererState.currentTile].slo + 1
             let tileHeight = rendererState.tiles[rendererState.currentTile].thi - rendererState.tiles[rendererState.currentTile].tlo + 1
             rendererState.tiles[rendererState.currentTile].texture = decodeRDRAMTexture(address: rendererState.vramAddress, width: Int(tileWidth), height: Int(tileHeight))
+            // rendererState.tiles[rendererState.currentTile].texture = decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile])
             rendererState.blockTexelsLoaded = 0
         }
 
@@ -502,6 +503,7 @@ struct N64GameView: View {
             let tileWidth = rendererState.tiles[rendererState.currentTile].shi - rendererState.tiles[rendererState.currentTile].slo + 1
             let tileHeight = rendererState.tiles[rendererState.currentTile].thi - rendererState.tiles[rendererState.currentTile].tlo + 1
             rendererState.tiles[rendererState.currentTile].texture = decodeRDRAMTexture(address: rendererState.vramAddress, width: Int(tileWidth), height: Int(tileHeight))
+            // rendererState.tiles[rendererState.currentTile].texture = decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile])
             rendererState.blockTexelsLoaded = 0
         }
 

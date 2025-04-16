@@ -87,7 +87,7 @@ vertex VertexDebugOut vertex_debug(uint vid [[vertex_id]],
     return out;
 };
 
-fragment float4 fragment_debug(VertexOut in [[stage_in]],
+fragment float4 fragment_debug(VertexDebugOut in [[stage_in]],
                                texture2d<float> tex [[texture(0)]]) {
     constexpr sampler s(address::clamp_to_edge, filter::nearest);
     return tex.sample(s, in.uv);
