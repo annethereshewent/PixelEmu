@@ -8,18 +8,32 @@
 #include <metal_stdlib>
 using namespace metal;
 
-struct RDPVertex {
-    float3 position;
-    float2 uv;
-    float4 color;
-};
-
 struct Triangle {
-    RDPVertex v0;
-    RDPVertex v1;
-    RDPVertex v2;
+    float xl;
+    float xh;
+    float xm;
+
+    float yl;
+    float yh;
+    float ym;
+
+    float dxldy;
+    float dxmdy;
+    float dxhdy;
+
+    float4 rgba;
+
+    float s;
+    float t;
+
+    float4 drdx_dgdx_dbdx_dadx;
+    float4 drdy_dgdy_dbdy_dady;
+    float4 drde_dgde_dbde_dade;
+
     float3 dsdx_dtdx_dwdx;
     float3 dsdy_dtdy_dwdy;
+
+    bool flip;
 };
 
 kernel void clear_framebuffer(
@@ -41,46 +55,52 @@ kernel void rasterize_triangle(
 {
     Triangle tri = triangles[tid];
 
-    float3 pos1 = tri.v0.position;
-    float3 pos2 = tri.v1.position;
-    float3 pos3 = tri.v2.position;
+    int ymin = int(tri.yh);
+    int ymax = int(tri.yl);
 
-    float minX = min(pos1.x, min(pos2.x, pos3.x));
-    float maxX = max(pos1.x, max(pos2.x, pos3.x));
+    for (int y = ymin; y <= ymax; y++) {
+        float xLeft;
+        float xRight;
 
-    float minY = min(pos1.y, min(pos2.y, pos3.y));
-    float maxY = max(pos1.y, max(pos2.y, pos3.y));
+        float4 rgba = tri.rgba + (y - ymin) * tri.drdy_dgdy_dbdy_dady;
 
-    int minXi = max(int(floor(minX)), 0);
-    int maxXi = min(int(ceil(maxX)), int(framebuffer.get_width()));
+//        if (tri.flip) {
+//            // xLeft = tri.xm - (y - tri.yh) * tri.dxmdy;
+//            xLeft = tri.xm + (y - tri.yh) * tri.dxmdy;
+//
+//            float xRightTop = tri.xh + (y - tri.yh) * tri.dxhdy;
+//            float xRightBottom = tri.xl + (y - tri.ym) * tri.dxldy;
+//
+//            xRight = y <= tri.ym ? xRightTop : xRightBottom;
+//        } else {
+//            xLeft = tri.xh - (y - tri.yh) * tri.dxhdy;
+//            float xRightTop = tri.xm + (y - tri.yh) * tri.dxmdy;
+//            float xRightBottom = tri.xl - (y - tri.ym) * tri.dxldy;
+//            xRight = y <= tri.ym ? xRightTop : xRightBottom;
+//        }
+        if (tri.flip) {
+            // Right-major triangle: right edge = xh, left = xm/xl
+            float xLeftMid = tri.xm + (y - tri.yh) * tri.dxmdy;
+            float xLeftLow = tri.xl + (y - tri.ym) * tri.dxldy;
+            xLeft = y <= tri.ym ? xLeftMid : xLeftLow;
 
-    int minYi = max(int(floor(minY)), 0);
-    int maxYi = min(int(ceil(maxY)), int(framebuffer.get_height()));
+            xRight = tri.xh + (y - tri.yh) * tri.dxhdy;
+        } else {
+            // Left-major triangle: left edge = xh, right = xm/xl
+            xLeft = tri.xh + (y - tri.yh) * tri.dxhdy;
 
+            float xRightMid = tri.xm + (y - tri.yh) * tri.dxmdy;
+            float xRightLow = tri.xl + (y - tri.ym) * tri.dxldy;
+            xRight = y <= tri.ym ? xRightMid : xRightLow;
+        }
 
-    float2 a = pos1.xy;
-    float2 b = pos2.xy;
-    float2 c = pos3.xy;
+        int xStart = max(int(floor(xLeft)), 0);
+        int xEnd = min(int(ceil(xRight)), int(framebuffer.get_width()) - 1);
+        int yClamped = clamp(y, 0, int(framebuffer.get_height()) - 1);
 
-    for (int y = minYi; y <= maxYi; y++) {
-        for (int x = minXi; x <= maxXi; x++) {
-            float2 p = float2(x, y);
-
-            float2 ab = b - a;
-            float2 bc = c - b;
-            float2 ca = a - c;
-
-            float2 ap = p - a;
-            float2 bp = p - b;
-            float2 cp = p - c;
-
-            float abEdge = ab.x * ap.y - ab.y * ap.x;
-            float bcEdge = bc.x * bp.y - bc.y * bp.x;
-            float caEdge = ca.x * cp.y - ca.y * cp.x;
-
-            if ((abEdge <= 0 && bcEdge <= 0 && caEdge <= 0) || (abEdge >= 0 && bcEdge >= 0 && caEdge >= 0)) {
-                framebuffer.write(float4(1, 0.411764, 0.705888, 1), uint2(x, y));
-            }
+        for (int x = xStart; x <= xEnd; x++) {
+            framebuffer.write(clamp(rgba / 255.0, 0, 1), uint2(x, yClamped));
+            rgba += tri.drde_dgde_dbde_dade;
         }
     }
 }

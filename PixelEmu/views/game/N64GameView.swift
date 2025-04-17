@@ -127,11 +127,31 @@ struct RDPVertex {
 }
 
 struct Triangle {
-    var v0: RDPVertex = RDPVertex()
-    var v1: RDPVertex = RDPVertex()
-    var v2: RDPVertex = RDPVertex()
+    var xl: Float = 0
+    var xh: Float = 0
+    var xm: Float = 0
+
+    var yl: Float = 0
+    var yh: Float = 0
+    var ym: Float = 0
+
+    var dxldy: Float = 0
+    var dxmdy: Float = 0
+    var dxhdy: Float = 0
+
+    var rgba: SIMD4<Float> = SIMD4<Float>(0, 0, 0, 0)
+
+    var s: Float = 0
+    var t: Float = 0
+
+    var drdx_dgdx_dbdx_dadx: SIMD4<Float> = SIMD4<Float>(0, 0, 0, 0)
+    var drdy_dgdy_dbdy_dady: SIMD4<Float> = SIMD4<Float>(0, 0, 0, 0)
+    var drde_dgde_dbde_dade: SIMD4<Float> = SIMD4<Float>(0, 0, 0, 0)
+
     var dsdx_dtdx_dwdx: SIMD3<Float> = SIMD3<Float>(0, 0, 0)
     var dsdy_dtdy_dwdy: SIMD3<Float> = SIMD3<Float>(0, 0, 0)
+
+    var flip: Bool = false
 }
 
 
@@ -506,21 +526,8 @@ struct N64GameView: View {
         props.dxmdy = Float(signExtend(value: (words[7] >> 2) & 0xfffffff, bits: 28)) / 65536.0
         props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28)) / 65536.0
 
-//        print("area = \(area), xh = \(props.xh), xm = \(props.xm), xl = \(props.xl), yh = \(props.yh), ym = \(props.ym), yl = \(props.yl), dxhdy = \(props.dxhdy), dxmdy = \(props.dxmdy), dxldy = \(props.dxldy)")
 
-        if rendererState.tiles[rendererState.currentTile].texture == nil {
-            let tileWidth = rendererState.tiles[rendererState.currentTile].shi - rendererState.tiles[rendererState.currentTile].slo + 1
-            let tileHeight = rendererState.tiles[rendererState.currentTile].thi - rendererState.tiles[rendererState.currentTile].tlo + 1
-            rendererState.tiles[rendererState.currentTile].texture = decodeRDRAMTexture(address: rendererState.vramAddress, width: Int(tileWidth), height: Int(tileHeight))
-            // rendererState.tiles[rendererState.currentTile].texture = decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile])
-            rendererState.blockTexelsLoaded = 0
-        }
-
-        props.texture = rendererState.tiles[rendererState.currentTile].texture
         props.validHeight = rendererState.tiles[rendererState.currentTile].validHeight
-
-//        props.texture = decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile], dataTile: rendererState.tiles[7])
-//        rendererState.tiles[rendererState.currentTile].textures.append(decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile], dataTile: rendererState.tiles[7]))
 
         rendererState.triangleProps.append(props)
 
