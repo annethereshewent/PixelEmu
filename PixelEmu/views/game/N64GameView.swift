@@ -54,7 +54,7 @@ struct TriangleProps {
     var xl: Float = 0
     var xm: Float = 0
     var xh: Float = 0
-    var flip = false
+    var flip: UInt32 = 0
     var tile: UInt32 = 0
     var doOffset = false
 
@@ -62,8 +62,10 @@ struct TriangleProps {
     var dxmdy: Float = 0
     var dxhdy: Float = 0
 
-    var texture: MTLTexture? = nil
-    var validHeight: Int = 0
+    var validHeight: UInt32 = 0
+    var validTexelCount: UInt32 = 0
+
+    var bufferOffset: UInt32 = 0
 }
 
 struct TexImageProps {
@@ -97,16 +99,16 @@ struct TileState {
     var tlo: UInt32 = 0
     var thi: UInt32 = 0
     var tileProps = TileProps()
-    var texture: MTLTexture? = nil
-    var textures: [MTLTexture?] = []
-    var validHeight: Int = 0
+    var bufferOffset: UInt32? = nil
+    var validHeight: UInt32 = 0
+    var validTexelCount: UInt32 = 0
 }
 
 struct TileProps {
-    var mirrorSBit = false
-    var clampSBit = false
-    var mirrorTBit = false
-    var clampTBit = false
+    var mirrorSBit: UInt32 = 0
+    var clampSBit: UInt32 = 0
+    var mirrorTBit: UInt32 = 0
+    var clampTBit: UInt32 = 0
 
     var offset: UInt32 = 0
     var stride: UInt32 = 0
@@ -141,8 +143,7 @@ struct Triangle {
 
     var rgba: SIMD4<Float> = SIMD4<Float>(0, 0, 0, 0)
 
-    var s: Float = 0
-    var t: Float = 0
+    var stw: SIMD3<Float> = SIMD3<Float>(0,0,0)
 
     var drdx_dgdx_dbdx_dadx: SIMD4<Float> = SIMD4<Float>(0, 0, 0, 0)
     var drdy_dgdy_dbdy_dady: SIMD4<Float> = SIMD4<Float>(0, 0, 0, 0)
@@ -150,8 +151,17 @@ struct Triangle {
 
     var dsdx_dtdx_dwdx: SIMD3<Float> = SIMD3<Float>(0, 0, 0)
     var dsdy_dtdy_dwdy: SIMD3<Float> = SIMD3<Float>(0, 0, 0)
+    var dsde_dtde_dwde: SIMD3<Float> = SIMD3<Float>(0, 0, 0)
 
-    var flip: Bool = false
+    var bufferOffset: UInt32 = 0
+    var validTexelCount: UInt32 = 0
+    var textureWidth: UInt32 = 0
+    var textureHeight: UInt32 = 0
+
+    var flip: UInt32 = 0
+    var hasTexture: UInt32 = 0
+
+    var tileProps: TileProps = TileProps()
 }
 
 
@@ -188,14 +198,14 @@ struct RDPState {
     var dither: Int = 0
 }
 
-enum TextureSize: UInt8 {
+enum TextureSize: UInt32 {
     case Bpp4 = 0
     case Bpp8 = 1
     case Bpp16 = 2
     case Bpp32 = 3
 }
 
-enum TextureFormat: UInt8
+enum TextureFormat: UInt32
 {
     case RGBA = 0
     case YUV = 1
@@ -293,9 +303,9 @@ struct N64GameView: View {
 
     func shadeTextureZBufferTriangle(words: [UInt32]) {
         var props = TriangleProps()
-        props.flip = (words[0] >> 23) & 0b1 == 1
+        props.flip = (words[0] >> 23) & 0b1
 
-        let signDxhdy = (words[5] >> 31) & 0b1 == 1
+        let signDxhdy = (words[5] >> 31) & 0b1
 
         props.doOffset = props.flip == signDxhdy
 
@@ -314,16 +324,19 @@ struct N64GameView: View {
         props.dxhdy = Float(signExtend(value: (words[5] >> 2) & 0xfffffff, bits: 28)) / 65536.0
 
 
-        if rendererState.tiles[rendererState.currentTile].texture == nil {
-            let tileWidth = rendererState.tiles[rendererState.currentTile].shi - rendererState.tiles[rendererState.currentTile].slo + 1
-            let tileHeight = rendererState.tiles[rendererState.currentTile].thi - rendererState.tiles[rendererState.currentTile].tlo + 1
-            rendererState.tiles[rendererState.currentTile].texture = decodeRDRAMTexture(address: rendererState.vramAddress, width: Int(tileWidth), height: Int(tileHeight))
-            // rendererState.tiles[rendererState.currentTile].texture = decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile])
+        if rendererState.tiles[rendererState.currentTile].bufferOffset == nil {
+            let bytes = loadFromTmem()
+            rendererState.tiles[rendererState.currentTile].bufferOffset = rendererState.textureBuffer.count > 0 ? UInt32(rendererState.textureBuffer.count) - 1 : 0
+
+            rendererState.textureBuffer.append(contentsOf: bytes)
+            rendererState.tiles[rendererState.currentTile].validTexelCount = rendererState.blockTexelsLoaded
+
             rendererState.blockTexelsLoaded = 0
         }
 
-        props.texture = rendererState.tiles[rendererState.currentTile].texture
+        props.bufferOffset = rendererState.tiles[rendererState.currentTile].bufferOffset!
         props.validHeight = rendererState.tiles[rendererState.currentTile].validHeight
+        props.validTexelCount = rendererState.tiles[rendererState.currentTile].validTexelCount
 
         // props.texture = decodeRGBA16(tile: rendererState.tiles[rendererState.currentTile], dataTile: rendererState.tiles[7])
 
@@ -425,9 +438,9 @@ struct N64GameView: View {
 
     func shadeZBufferTriangle(words: [UInt32]) {
         var props = TriangleProps()
-        props.flip = (words[0] >> 23) & 0b1 == 1
+        props.flip = (words[0] >> 23) & 0b1
 
-        let signDxhdy = (words[5] >> 31) & 0b1 == 1
+        let signDxhdy = (words[5] >> 31) & 0b1
 
         props.doOffset = props.flip == signDxhdy
 
@@ -506,9 +519,9 @@ struct N64GameView: View {
 
     func shadeTextureTriangle(words: [UInt32]) {
         var props = TriangleProps()
-        props.flip = (words[0] >> 23) & 0b1 == 1
+        props.flip = (words[0] >> 23) & 0b1
 
-        let signDxhdy = (words[5] >> 31) & 0b1 == 1
+        let signDxhdy = (words[5] >> 31) & 0b1
 
         props.doOffset = props.flip == signDxhdy
 
@@ -528,8 +541,6 @@ struct N64GameView: View {
 
 
         props.validHeight = rendererState.tiles[rendererState.currentTile].validHeight
-
-        rendererState.triangleProps.append(props)
 
         var color = ColorProps()
 
@@ -613,10 +624,44 @@ struct N64GameView: View {
 
         rendererState.textureProps.append(texture)
 
+        if rendererState.tiles[rendererState.currentTile].bufferOffset == nil {
+            let bytes = loadFromTmem()
+
+            rendererState.tiles[rendererState.currentTile].bufferOffset = rendererState.textureBuffer.count > 0 ? UInt32(rendererState.textureBuffer.count) - 1 : 0
+            rendererState.tiles[rendererState.currentTile].validTexelCount = rendererState.blockTexelsLoaded
+            rendererState.blockTexelsLoaded = 0
+            rendererState.textureBuffer.append(contentsOf: bytes)
+            
+        }
+
+        props.bufferOffset = rendererState.tiles[rendererState.currentTile].bufferOffset!
+        props.validTexelCount = rendererState.tiles[rendererState.currentTile].validTexelCount
+
+        props.validHeight = rendererState.tiles[rendererState.currentTile].validHeight
+
         rendererState.zProps.append(nil)
 
         rendererState.zProps.append(nil)
+        rendererState.triangleProps.append(props)
+
         rendererState.canRender = true
+    }
+
+    func loadFromTmem() -> [UInt8] {
+        let tile = rendererState.tiles[rendererState.currentTile]
+        let tileWidth = tile.shi - tile.slo + 1
+        let numTexels = tileWidth * tile.validHeight
+        let numBytes = Int(numTexels) * 2
+
+        var data: [UInt8] = []
+
+        let tmemStart = Int(tile.tileProps.offset)
+
+        for i in tmemStart..<numBytes+tmemStart {
+            data.append(tmem[i])
+        }
+
+        return data
     }
 
     func executeCommand(command: RdpCommand, words: [UInt32]) {
@@ -731,18 +776,18 @@ struct N64GameView: View {
         )
         descriptor.usage = [.shaderRead]
 
-        let texture = device?.makeTexture(descriptor: descriptor)!
-
-        texture?.replace(
-            region: MTLRegionMake2D(0, 0, Int(width), Int(height)),
-            mipmapLevel: 0,
-            withBytes: bytes,
-            bytesPerRow: Int(width) * 4
-        )
-
-        rendererState.currentTile = tile
-
-        rendererState.tiles[tile].texture = texture
+//        let texture = device?.makeTexture(descriptor: descriptor)!
+//
+//        texture?.replace(
+//            region: MTLRegionMake2D(0, 0, Int(width), Int(height)),
+//            mipmapLevel: 0,
+//            withBytes: bytes,
+//            bytesPerRow: Int(width) * 4
+//        )
+//
+//        rendererState.currentTile = tile
+//
+//        rendererState.tiles[tile].texelInfo = texture
     }
 
     func signExtend(value: UInt32, bits: Int) -> Int32 {
@@ -758,8 +803,8 @@ struct N64GameView: View {
     }
 
     func setTextureImage(words: [UInt32]) {
-        let format = TextureFormat(rawValue: UInt8((words[0] >> 21) & 7))!
-        let size = TextureSize(rawValue: UInt8((words[0] >> 19) & 3))!
+        let format = TextureFormat(rawValue: UInt32((words[0] >> 21) & 7))!
+        let size = TextureSize(rawValue: UInt32((words[0] >> 19) & 3))!
 
         let width = (words[0] & 0x3ff) + 1
         let address = words[1] & 0xffffff
@@ -782,19 +827,14 @@ struct N64GameView: View {
         rendererState.tiles[tile].tlo = tlo >> 2
         rendererState.tiles[tile].thi = thi >> 2
 
-        rendererState.tiles[tile].texture = nil
+        rendererState.tiles[tile].bufferOffset = nil
 
         if rendererState.blockTexelsLoaded != 0 {
             let tileWidth = rendererState.tiles[tile].shi - rendererState.tiles[tile].slo + 1
-            rendererState.tiles[tile].validHeight = rendererState.blockTexelsLoaded / Int(tileWidth)
+            rendererState.tiles[tile].validHeight = rendererState.blockTexelsLoaded / tileWidth
             rendererState.blockTexelsLoaded = 0
         }
 
-
-        // rendererState.tiles[tile].texture = decodeRGBA16(tile: rendererState.tiles[tile])
-        // rendererState.tiles[tile].textures.append(decodeRGBA16(tile: rendererState.tiles[tile], dataTile: rendererState.tiles[7]))
-
-        // print("setting rendererState.currentTile to \(tile)")
         rendererState.currentTile = tile
     }
 
@@ -805,8 +845,8 @@ struct N64GameView: View {
 
         props.offset = ((words[0] >> 0) & 511) << 3
         props.stride = ((words[0] >> 9) & 511) << 3
-        props.size = TextureSize(rawValue: UInt8((words[0] >> 19) & 3))!
-        props.fmt = TextureFormat(rawValue: UInt8((words[0] >> 21) & 7))!
+        props.size = TextureSize(rawValue: UInt32((words[0] >> 19) & 3))!
+        props.fmt = TextureFormat(rawValue: UInt32((words[0] >> 21) & 7))!
 
         props.palette = (words[1] >> 20) & 15
 
@@ -816,19 +856,19 @@ struct N64GameView: View {
         props.maskT = min((words[1] >> 14) & 15, 10)
 
         if (words[1] & (1 << 8) != 0) {
-            props.mirrorSBit = true
+            props.mirrorSBit = 1
         }
         if (words[1] & (1 << 9) != 0 || props.maskS == 0) {
-            props.clampSBit = true
+            props.clampSBit = 1
         }
         if (words[1] & (1 << 18) != 0) {
-            props.mirrorTBit = true
+            props.mirrorTBit = 1
         }
         if (words[1] & (1 << 19) != 0 || props.maskT == 0) {
-            props.clampTBit = true
+            props.clampTBit = 1
         }
 
-        rendererState.tiles[tile].texture = nil
+        rendererState.tiles[tile].bufferOffset = nil
         rendererState.tiles[tile].tileProps = props
     }
 
@@ -854,12 +894,12 @@ struct N64GameView: View {
         let numTexels = shi - slo + 1
 
 
-        rendererState.blockTexelsLoaded += Int(numTexels)
+        rendererState.blockTexelsLoaded += numTexels
 
         for i in 0..<8 {
-            rendererState.tiles[i].texture = nil
+            rendererState.tiles[i].bufferOffset = nil
             let tileWidth = rendererState.tiles[i].shi - rendererState.tiles[i].slo + 1
-            rendererState.tiles[i].validHeight = rendererState.blockTexelsLoaded / Int(tileWidth)
+            rendererState.tiles[i].validHeight = rendererState.blockTexelsLoaded / tileWidth
         }
 
         if numTexels > MAX_TEXELS {
@@ -936,7 +976,6 @@ struct N64GameView: View {
         } else {
             // fatalError("pixel format not supported yet: \(format) \(size)")
         }
-        rendererState.vramAddress = vramAddress
     }
 
     func decodeTmem(_ width: Int, _ numTexels: Int) -> MTLTexture? {
@@ -1035,7 +1074,7 @@ struct N64GameView: View {
 
     func decodeRGBA16(tile: TileState) -> MTLTexture? {
         let tileWidth = tile.shi - tile.slo + 1
-        let tileHeight = min(Int(tile.thi - tile.tlo) + 1, tile.validHeight)
+        let tileHeight = min(tile.thi - tile.tlo + 1, tile.validHeight)
 
         let srcRowStride = tile.tileProps.stride
         var srcRowOffset = tile.tileProps.offset

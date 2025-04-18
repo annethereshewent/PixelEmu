@@ -14,7 +14,7 @@ class RendererState {
     var fillRects: [FillRect] = []
     var currentTile: Int = 0
     var canRender = false
-    var blockTexelsLoaded: Int = 0
-    // DEBUG: REMOVE ME
-    var vramAddress: UInt32 = 0
+    var blockTexelsLoaded: UInt32 = 0
+
+    var textureBuffer: [UInt8] = []
 }

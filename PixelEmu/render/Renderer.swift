@@ -235,6 +235,8 @@ class Renderer: NSObject, MTKViewDelegate {
 
                 for i in 0..<state.triangleProps.count {
                     let props = state.triangleProps[i]
+                    let textureWidth = state.tiles[state.currentTile].shi - state.tiles[state.currentTile].slo + 1
+                    let textureHeight = state.tiles[state.currentTile].thi - state.tiles[state.currentTile].tlo + 1
                     var triangle = Triangle(
                         xl: props.xl,
                         xh: props.xh,
@@ -248,7 +250,12 @@ class Renderer: NSObject, MTKViewDelegate {
                         dxmdy: props.dxmdy,
                         dxhdy: props.dxhdy,
 
-                        flip: props.flip
+                        bufferOffset: props.bufferOffset,
+                        validTexelCount: props.validTexelCount,
+
+                        flip: props.flip,
+
+                        tileProps: state.tiles[state.currentTile].tileProps
                     )
 
                     let color = state.colorProps[i]
@@ -277,8 +284,7 @@ class Renderer: NSObject, MTKViewDelegate {
                     )
 
                     if let texture = state.textureProps[i] {
-                        triangle.s = texture.s
-                        triangle.t = texture.t
+                        triangle.stw = SIMD3<Float>(texture.s, texture.t, texture.w)
 
                         triangle.dsdx_dtdx_dwdx = SIMD3<Float>(
                             texture.dsdx,
@@ -291,6 +297,14 @@ class Renderer: NSObject, MTKViewDelegate {
                             texture.dtdy,
                             texture.dwdy
                         )
+
+                        triangle.dsde_dtde_dwde = SIMD3<Float>(
+                            texture.dsde,
+                            texture.dtde,
+                            texture.dwde
+                        )
+
+                        triangle.hasTexture = 1
                     }
 
                     triangles.append(triangle)
@@ -324,9 +338,11 @@ class Renderer: NSObject, MTKViewDelegate {
                     return
                 }
 
+                let textureDataBuffer = device.makeBuffer(bytes: rendererState.textureBuffer, length: rendererState.textureBuffer.count, options: [])
                 let triangleBuffer = device.makeBuffer(bytes: triangles, length: MemoryLayout<Triangle>.stride * triangles.count, options: [])
 
                 computeEncoder.setBuffer(triangleBuffer, offset: 0, index: 0)
+                computeEncoder.setBuffer(textureDataBuffer, offset: 0, index: 1)
                 computeEncoder.setTexture(outputTexture, index: 0)
                 computeEncoder.setComputePipelineState(computePipelineState)
                 computeEncoder.dispatchThreadgroups(threadgroups, threadsPerThreadgroup: threadsPerThreadgroup)
@@ -353,34 +369,8 @@ class Renderer: NSObject, MTKViewDelegate {
             state.zProps = []
             state.triangleProps = []
             state.canRender = false
+            state.textureBuffer = []
         }
-    }
-
-    func makeSolidColorTexture(color: SIMD4<UInt8>, size: Int = 64) -> MTLTexture? {
-        let descriptor = MTLTextureDescriptor()
-        descriptor.pixelFormat = .rgba8Unorm
-        descriptor.width = size
-        descriptor.height = size
-        descriptor.usage = [.shaderRead]
-        descriptor.storageMode = .shared
-
-        guard let texture = device.makeTexture(descriptor: descriptor) else {
-            return nil
-        }
-
-        // Fill pixel buffer with RGBA values
-        var pixelData = [UInt8](repeating: 0, count: size * size * 4)
-        for i in 0..<size*size {
-            pixelData[i * 4 + 0] = color.x // R
-            pixelData[i * 4 + 1] = color.y // G
-            pixelData[i * 4 + 2] = color.z // B
-            pixelData[i * 4 + 3] = color.w // A
-        }
-
-        let region = MTLRegionMake2D(0, 0, size, size)
-        texture.replace(region: region, mipmapLevel: 0, withBytes: pixelData, bytesPerRow: size * 4)
-
-        return texture
     }
 
     func makeSampler(mirrorS: Bool, mirrorT: Bool) -> MTLSamplerState {
