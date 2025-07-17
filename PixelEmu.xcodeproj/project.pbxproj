@@ -88,23 +88,6 @@
 		E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		E806EA052C97E1B20081D3E8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E806E9EC2C97E1B10081D3E8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E806E9F32C97E1B10081D3E8;
-			remoteInfo = "PixelEmu";
-		};
-		E806EA0F2C97E1B20081D3E8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E806E9EC2C97E1B10081D3E8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E806E9F32C97E1B10081D3E8;
-			remoteInfo = "PixelEmu";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		0F25C770C3BB0D97257F1E0A /* Pods-PixelEmu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu.release.xcconfig"; path = "Target Support Files/Pods-PixelEmu/Pods-PixelEmu.release.xcconfig"; sourceTree = "<group>"; };
 		2C75F72BAAA59A0FBAF161BC /* Pods-PixelEmu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu.debug.xcconfig"; path = "Target Support Files/Pods-PixelEmu/Pods-PixelEmu.debug.xcconfig"; sourceTree = "<group>"; };
@@ -115,8 +98,6 @@
 		E806E9F92C97E1B10081D3E8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E806E9FE2C97E1B20081D3E8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		E806EA042C97E1B20081D3E8 /* PixelEmuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PixelEmuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E806EA0E2C97E1B20081D3E8 /* PixelEmuUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PixelEmuUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentFile.swift; sourceTree = "<group>"; };
 		E806EA312C9935D00081D3E8 /* GraphicsParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphicsParser.swift; sourceTree = "<group>"; };
 		E806EA592C9A834D0081D3E8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -204,20 +185,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E806EA012C97E1B20081D3E8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E806EA0B2C97E1B20081D3E8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -256,8 +223,6 @@
 			isa = PBXGroup;
 			children = (
 				E806E9F42C97E1B10081D3E8 /* PixelEmu.app */,
-				E806EA042C97E1B20081D3E8 /* PixelEmuTests.xctest */,
-				E806EA0E2C97E1B20081D3E8 /* PixelEmuUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -479,48 +444,9 @@
 				E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */,
 				E8BBBC7D2CF981510065EF4E /* GBAEmulatorMobile */,
 			);
-			productName = "PixelEmu";
+			productName = PixelEmu;
 			productReference = E806E9F42C97E1B10081D3E8 /* PixelEmu.app */;
 			productType = "com.apple.product-type.application";
-		};
-		E806EA032C97E1B20081D3E8 /* PixelEmuTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E806EA1B2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuTests" */;
-			buildPhases = (
-				68E013BA5975AFC704C2EC49 /* [CP] Check Pods Manifest.lock */,
-				E806EA002C97E1B20081D3E8 /* Sources */,
-				E806EA012C97E1B20081D3E8 /* Frameworks */,
-				E806EA022C97E1B20081D3E8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E806EA062C97E1B20081D3E8 /* PBXTargetDependency */,
-			);
-			name = PixelEmuTests;
-			productName = "PixelEmuTests";
-			productReference = E806EA042C97E1B20081D3E8 /* PixelEmuTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		E806EA0D2C97E1B20081D3E8 /* PixelEmuUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E806EA1E2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuUITests" */;
-			buildPhases = (
-				E5FE161C9202045C777F415C /* [CP] Check Pods Manifest.lock */,
-				E806EA0A2C97E1B20081D3E8 /* Sources */,
-				E806EA0B2C97E1B20081D3E8 /* Frameworks */,
-				E806EA0C2C97E1B20081D3E8 /* Resources */,
-				F70EE5EB1E2D31EA9C2AE0E0 /* [CP] Embed Pods Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E806EA102C97E1B20081D3E8 /* PBXTargetDependency */,
-			);
-			name = PixelEmuUITests;
-			productName = "PixelEmuUITests";
-			productReference = E806EA0E2C97E1B20081D3E8 /* PixelEmuUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -534,14 +460,6 @@
 				TargetAttributes = {
 					E806E9F32C97E1B10081D3E8 = {
 						CreatedOnToolsVersion = 15.4;
-					};
-					E806EA032C97E1B20081D3E8 = {
-						CreatedOnToolsVersion = 15.4;
-						TestTargetID = E806E9F32C97E1B10081D3E8;
-					};
-					E806EA0D2C97E1B20081D3E8 = {
-						CreatedOnToolsVersion = 15.4;
-						TestTargetID = E806E9F32C97E1B10081D3E8;
 					};
 				};
 			};
@@ -563,8 +481,6 @@
 			projectRoot = "";
 			targets = (
 				E806E9F32C97E1B10081D3E8 /* PixelEmu */,
-				E806EA032C97E1B20081D3E8 /* PixelEmuTests */,
-				E806EA0D2C97E1B20081D3E8 /* PixelEmuUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -586,20 +502,6 @@
 				E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */,
 				E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */,
 				E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E806EA022C97E1B20081D3E8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E806EA0C2C97E1B20081D3E8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -643,67 +545,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		68E013BA5975AFC704C2EC49 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PixelEmuTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E5FE161C9202045C777F415C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PixelEmu-PixelEmuUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F70EE5EB1E2D31EA9C2AE0E0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -781,34 +622,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E806EA002C97E1B20081D3E8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E806EA0A2C97E1B20081D3E8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		E806EA062C97E1B20081D3E8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E806E9F32C97E1B10081D3E8 /* PixelEmu */;
-			targetProxy = E806EA052C97E1B20081D3E8 /* PBXContainerItemProxy */;
-		};
-		E806EA102C97E1B20081D3E8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E806E9F32C97E1B10081D3E8 /* PixelEmu */;
-			targetProxy = E806EA0F2C97E1B20081D3E8 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		E806EA162C97E1B20081D3E8 /* Debug */ = {
@@ -1006,90 +820,6 @@
 			};
 			name = Release;
 		};
-		E806EA1C2C97E1B20081D3E8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = A4606BE077067A560D847119 /* Pods-PixelEmuTests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 72VANXCC9C;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PixelEmu.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PixelEmu";
-			};
-			name = Debug;
-		};
-		E806EA1D2C97E1B20081D3E8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 886027EC5BD62B0B85C87910 /* Pods-PixelEmuTests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 72VANXCC9C;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PixelEmu.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PixelEmu";
-			};
-			name = Release;
-		};
-		E806EA1F2C97E1B20081D3E8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F6D72E464429EADD40F6E67D /* Pods-PixelEmu-PixelEmuUITests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 72VANXCC9C;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "PixelEmu";
-			};
-			name = Debug;
-		};
-		E806EA202C97E1B20081D3E8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 86E4C2EF5B29D1271A65F62E /* Pods-PixelEmu-PixelEmuUITests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 72VANXCC9C;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "PixelEmu";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1107,24 +837,6 @@
 			buildConfigurations = (
 				E806EA192C97E1B20081D3E8 /* Debug */,
 				E806EA1A2C97E1B20081D3E8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E806EA1B2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E806EA1C2C97E1B20081D3E8 /* Debug */,
-				E806EA1D2C97E1B20081D3E8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E806EA1E2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E806EA1F2C97E1B20081D3E8 /* Debug */,
-				E806EA202C97E1B20081D3E8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
