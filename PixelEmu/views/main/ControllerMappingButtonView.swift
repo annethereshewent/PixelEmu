@@ -1,6 +1,6 @@
 //
 //  ControllerMappingButtonView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 11/2/24.
 //
@@ -77,7 +77,7 @@ struct ControllerMappingButtonView: View {
                                 buttonMappings[switchEvent] = oldButton
                             }
                             buttonMappings[event] = button
-                            
+
                             if let gbaEvent = gbaEvent {
                                 if let switchEvent = gbaButtonDict[button], let oldButton = gbaButtonMappings[gbaEvent] {
                                     gbaButtonMappings[switchEvent] = oldButton

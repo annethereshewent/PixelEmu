@@ -1,6 +1,6 @@
 //
 //  LibraryView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/17/24.
 //

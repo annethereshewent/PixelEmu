@@ -1,6 +1,6 @@
 //
 //  ImportGamesView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/17/24.
 //
@@ -65,7 +65,7 @@ struct ImportGamesView: View {
                 }
                 Spacer()
                 Spacer()
-                
+
             }
             .font(.custom("Departure Mono", size: 24))
             .foregroundColor(Colors.primaryColor)

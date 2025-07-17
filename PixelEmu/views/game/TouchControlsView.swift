@@ -1,6 +1,6 @@
 //
 //  TouchControlsView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/22/24.
 //
@@ -9,9 +9,9 @@ import SwiftUI
 import DSEmulatorMobile
 
 struct TouchControlsView: View {
-    
+
     @Environment(\.presentationMode) var presentationMode
-    
+
     @Binding var emulator: MobileEmulator?
     @Binding var audioManager: AudioManager?
     @Binding var workItem: DispatchWorkItem?
@@ -27,9 +27,9 @@ struct TouchControlsView: View {
     @Binding var heldButtons: Set<ButtonEvent>
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
-    
+
     @State private var buttons: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
-    @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()    
+    @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
     @State private var buttonsMisc: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
 
     @EnvironmentObject var orientationInfo: OrientationInfo
@@ -59,7 +59,7 @@ struct TouchControlsView: View {
         if orientationInfo.orientation == .landscape {
             return 0.90
         }
-        
+
         let rect = UIScreen.main.bounds
 
         if rect.height > 852.0 {
@@ -75,7 +75,7 @@ struct TouchControlsView: View {
         buttonStarted[ButtonEvent.ButtonY] = false
         buttonStarted[ButtonEvent.ButtonX] = false
     }
-    
+
     private func checkForHapticFeedback(point: CGPoint, entries: [ButtonEvent:CGRect]) {
         for entry in entries {
             if entry.value.contains(point) && !buttonStarted[entry.key]! {
@@ -85,31 +85,31 @@ struct TouchControlsView: View {
             }
         }
     }
-    
+
     private func initButtonState() {
         self.buttonStarted[ButtonEvent.Up] = false
         self.buttonStarted[ButtonEvent.Down] = false
         self.buttonStarted[ButtonEvent.Left] = false
         self.buttonStarted[ButtonEvent.Right] = false
-        
+
         self.buttonStarted[ButtonEvent.ButtonA] = false
         self.buttonStarted[ButtonEvent.ButtonB] = false
         self.buttonStarted[ButtonEvent.ButtonY] = false
         self.buttonStarted[ButtonEvent.ButtonX] = false
-        
+
         self.buttonStarted[ButtonEvent.ButtonL] = false
         self.buttonStarted[ButtonEvent.ButtonR] = false
-        
+
         self.buttonStarted[ButtonEvent.Start] = false
         self.buttonStarted[ButtonEvent.Select] = false
-        
+
         self.buttonStarted[ButtonEvent.ButtonHome] = false
     }
-    
+
     private func handleControlPad(point: CGPoint) {
         self.handleInput(point: point, entries: controlPad)
     }
-    
+
     private func handleInput(point: CGPoint, entries: [ButtonEvent:CGRect]) {
         if let emu = emulator {
             for entry in entries {
@@ -137,7 +137,7 @@ struct TouchControlsView: View {
             }
         }
     }
-    
+
     private func releaseControlPad() {
         if let emu = emulator {
             emu.updateInput(ButtonEvent.Up, false)
@@ -146,11 +146,11 @@ struct TouchControlsView: View {
             emu.updateInput(ButtonEvent.Down, false)
         }
     }
-    
+
     private func handleButtons(point: CGPoint) {
         self.handleInput(point: point, entries: buttons)
     }
-    
+
     private func releaseButtons() {
         let buttons = [ButtonEvent.ButtonA, ButtonEvent.ButtonB, ButtonEvent.ButtonY, ButtonEvent.ButtonX]
         if let emu = emulator {
@@ -161,14 +161,14 @@ struct TouchControlsView: View {
             }
         }
     }
-    
+
     private func goHome() {
         emulator?.setPause(true)
         audioManager?.muteAudio()
-        
+
         presentationMode.wrappedValue.dismiss()
     }
-    
+
     private func handleMiscButtons(point: CGPoint) {
         for entry in buttonsMisc {
             if entry.value.contains(point) {
@@ -275,7 +275,7 @@ struct TouchControlsView: View {
                                     let down = CGRect(x: frame.minX, y: (frame.maxY / 3) * 2, width: frame.width, height: frame.height / 3)
                                     let right = CGRect(x: (frame.maxX / 3) * 2, y: frame.minY, width: frame.width / 3, height: frame.height)
                                     let left = CGRect(x: frame.minX, y: frame.minY, width: frame.width / 3, height: frame.height)
-                                    
+
                                     controlPad[ButtonEvent.Up] = up
                                     controlPad[ButtonEvent.Down] = down
                                     controlPad[ButtonEvent.Left] = left
@@ -314,7 +314,7 @@ struct TouchControlsView: View {
                                     buttonStarted[ButtonEvent.Start] = false
                                     buttonStarted[ButtonEvent.Select] = false
                                     buttonStarted[ButtonEvent.ButtonHome] = false
-                                    
+
                                     releaseMiscButtons()
                                 }
                         )

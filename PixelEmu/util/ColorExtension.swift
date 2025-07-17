@@ -1,6 +1,6 @@
 //
 //  ColorExtension.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/18/24.
 //
@@ -9,7 +9,7 @@
 
 import SwiftUI
 import UIKit
-    
+
 extension Color: RawRepresentable {
     public init?(rawValue: String) {
         guard let data = Data(base64Encoded: rawValue) else {

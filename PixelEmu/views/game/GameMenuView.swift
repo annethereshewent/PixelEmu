@@ -1,6 +1,6 @@
 //
 //  GameMenuView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/14/24.
 //
@@ -27,7 +27,7 @@ struct GameMenuView: View {
     @Binding var gameController: GameController?
 
     @State var isStateEntriesPresented: Bool = false
-    
+
     private var color: Color {
         switch colorScheme {
         case .dark:
@@ -38,7 +38,7 @@ struct GameMenuView: View {
             return Color.white
         }
     }
-    
+
     private func goHome() {
         isMenuPresented = false
         shouldGoHome = true
@@ -123,7 +123,7 @@ struct GameMenuView: View {
                         Text("Resume game")
                     }
                 }
-                
+
                 Spacer()
             }
             .onDisappear() {

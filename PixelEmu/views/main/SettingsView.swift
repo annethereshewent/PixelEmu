@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/17/24.
 //
@@ -20,7 +20,7 @@ struct SettingsView: View {
     @Binding var user: GIDGoogleUser?
     @Binding var cloudService: CloudService?
     @Binding var isSoundOn: Bool
-    
+
     @Binding var bios7Loaded: Bool
     @Binding var bios9Loaded: Bool
     @Binding var gbaBiosLoaded: Bool
@@ -50,7 +50,7 @@ struct SettingsView: View {
             if let url = URL(string: "bios9.bin", relativeTo: location) {
                 try? data.write(to: url)
             }
-        
+
         case .firmware:
             if let url = URL(string: "firmware.bin", relativeTo: location) {
                 try? data.write(to: url)
@@ -194,12 +194,12 @@ struct SettingsView: View {
                             case .bios7:
                                 bios7Data = data
                                 bios7Loaded = true
-                                
+
                                 defaults.set(bios7Loaded, forKey: "bios7Loaded")
                             case .bios9:
                                 bios9Data = data
                                 bios9Loaded = true
-                                
+
                                 defaults.set(bios9Loaded, forKey: "bios9Loaded")
                             case .firmware:
                                 firmwareData = data
@@ -220,9 +220,9 @@ struct SettingsView: View {
                         }
                     }
                 }
-                
+
             }
-        
+
         }
         .sheet(isPresented: $isMappingsPresented) {
             ControllerMappingsView(
@@ -235,7 +235,7 @@ struct SettingsView: View {
         }
         .onChange(of: isSoundOn) {
             let defaults = UserDefaults.standard
-            
+
             defaults.setValue(isSoundOn, forKey: "isSoundOn")
         }
     }

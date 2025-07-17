@@ -1,6 +1,6 @@
 //
 //  NavigationBarView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/17/24.
 //
@@ -27,7 +27,7 @@ struct NavigationBarView: View {
                             .padding(.trailing, 15)
                             .foregroundColor(Colors.primaryColor)
                     }
-                    
+
                 }
                 if currentView == .importGames {
                     Image("Plus")

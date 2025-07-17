@@ -1,6 +1,6 @@
 //
 //  GameEntryModal.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/18/24.
 //
@@ -24,15 +24,15 @@ struct GameEntryModal: View {
     @Binding var themeColor: Color
 
     let isCloudSave: Bool
-    
+
     @State private var isPresented = false
-    
+
     private let savType = UTType(filenameExtension: "sav", conformingTo: .data)
-    
+
     private func downloadCloudSave() {
         // download save for offline use
         let saveName = entry!.game.gameName.replacing(".nds" ,with: ".sav")
-        
+
         loading = true
         Task {
             if let save = await cloudService?.getSave(saveName: saveName, saveType: .nds) {
@@ -49,7 +49,7 @@ struct GameEntryModal: View {
             loading = false
         }
     }
-    
+
     private func uploadSave() {
         // upload local entry to cloud
         loading = true
@@ -62,23 +62,23 @@ struct GameEntryModal: View {
                     if cloudSaves.firstIndex(of: entry) == nil {
                         cloudSaves.insert(SaveEntry(game: entry.game), at: 0)
                     }
-                    
+
                     showUploadAlert = true
                 }
             }
             entry = nil
         }
     }
-    
+
     private func modifyCloudSave(_ result: Result<URL, any Error>) {
         do {
             let url = try result.get()
-            
+
             if url.startAccessingSecurityScopedResource() {
                 defer {
                     url.stopAccessingSecurityScopedResource()
                 }
-                
+
                 let data = try Data(contentsOf: url)
                 loading = true
                 Task {
@@ -88,7 +88,7 @@ struct GameEntryModal: View {
                         saveType: .nds
                     )
                     showUploadAlert = true
-                    
+
                     loading = false
                     entry = nil
                 }
@@ -97,9 +97,9 @@ struct GameEntryModal: View {
             print(error)
         }
     }
-    
+
     private func deleteSave() {
-        
+
         if let entry = entry {
             let entryCopy = entry.copy()
             showDeleteDialog = true
@@ -115,17 +115,17 @@ struct GameEntryModal: View {
             } else {
                 deleteAction = {
                     let saveName = entryCopy.game.gameName.replacing(".nds", with: ".sav")
-                    
+
                     loading = true
                     Task {
                         let success = await cloudService?.deleteSave(saveName: saveName, saveType: .nds) ?? false
-                        
+
                         loading = false
                         if success {
                             if let index = cloudSaves.firstIndex(of: entryCopy) {
                                 cloudSaves.remove(at: index)
                             }
-                            
+
                             showDeleteAlert = true
                         }
                     }
@@ -135,7 +135,7 @@ struct GameEntryModal: View {
 
         entry = nil
     }
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -154,7 +154,7 @@ struct GameEntryModal: View {
                         }
                     }
                     .padding(.top, 20)
-                
+
                     Button {
                         downloadCloudSave()
                     } label: {
@@ -187,7 +187,7 @@ struct GameEntryModal: View {
             }
             .foregroundColor(.white)
             .padding()
-                
+
         }
         .background(Colors.backgroundColor)
         .font(.custom("Departure Mono", size: 20))

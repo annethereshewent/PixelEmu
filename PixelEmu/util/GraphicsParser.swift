@@ -1,6 +1,6 @@
 //
 //  GraphicsParser.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/16/24.
 //
@@ -29,9 +29,9 @@ let GBA_LANDSCAPE_FULLSCREEN_RATIO: Float = 2.25
 class GraphicsParser {
     func fromPointer(ptr: UnsafePointer<UInt8>) -> CGImage? {
         let buffer = UnsafeBufferPointer(start: ptr, count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
-        
+
         let pixelsArr = Array(buffer)
-        
+
         return fromBytes(bytes: pixelsArr, width: SCREEN_WIDTH, height: SCREEN_HEIGHT)
     }
 
@@ -69,7 +69,7 @@ class GraphicsParser {
                 intent: .defaultIntent
             )
             else { return nil }
-        
+
         return image
     }
 }

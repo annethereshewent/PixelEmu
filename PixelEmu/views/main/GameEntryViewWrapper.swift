@@ -1,6 +1,6 @@
 //
 //  GameEntryViewWrapper.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/20/24.
 //
@@ -14,12 +14,12 @@ struct GameEntryViewWrapper: View {
     @Binding var gameToDelete: Game?
     @Binding var isLoadStatesPresented: Bool
     @Binding var selectedGame: Game?
-   
-    
+
+
     let game: Game
-    
+
     let callback: () -> Void
-    
+
     var body: some View {
         GameEntryView(game: game) {
             callback()
@@ -38,7 +38,7 @@ struct GameEntryViewWrapper: View {
                     Image(systemName: "trash")
                 }
             }
-            
+
         }
     }
 }

@@ -1,6 +1,6 @@
 //
 //  GamesListView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/22/24.
 //
@@ -11,12 +11,12 @@ import SwiftData
 
 struct GamesListView: View {
     @Environment(\.modelContext) private var context
-    
+
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
-    
+
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
     @Binding var emulator: MobileEmulator?
@@ -29,7 +29,7 @@ struct GamesListView: View {
     @State private var showResumeDialog = false
     @State private var resumeGame = false
     @State private var settingChanged = false
-    
+
     @State private var showDeleteConfirmation = false
     @State private var showDeleteError = false
     @State private var deleteAction: () -> Void = {}
@@ -39,7 +39,7 @@ struct GamesListView: View {
     @State private var isLoadStatesPresented = false
     @State private var selectedGame: Game?
     @Query private var games: [Game]
-    
+
     private var filteredGames: [Game] {
         switch filter {
         case .all:
@@ -57,16 +57,16 @@ struct GamesListView: View {
             }
         }
     }
-    
+
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-    
+
     private func startNewGame(_ game: Game? = nil) {
         emulator = nil
         workItem?.cancel()
         isRunning = false
-        
+
         workItem = nil
-        
+
         if let game = game {
             self.game = game
             game.lastPlayed = Date.now
@@ -114,7 +114,7 @@ struct GamesListView: View {
                                         }
                                         if let data = try? Data(contentsOf: url) {
                                             romData = data
-                                    
+
                                             if bios7Data != nil &&
                                                 bios9Data != nil
                                             {

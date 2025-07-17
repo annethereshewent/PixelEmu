@@ -1,6 +1,6 @@
 //
 //  GameView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/18/24.
 //
@@ -18,7 +18,7 @@ struct GameView: View {
     @EnvironmentObject var orientationInfo: OrientationInfo
 
     @State private var debounceTimer: Timer? = nil
-    
+
     @State private var loading = false
 
     @State private var homePressed = false
@@ -48,11 +48,11 @@ struct GameView: View {
     @Binding var game: Game?
     @Binding var isSoundOn: Bool
     @Binding var themeColor: Color
-    
+
     @Binding var gameName: String
     @Binding var backupFile: BackupFile?
     @Binding var gameController: GameController?
-    
+
     @Binding var audioManager: AudioManager?
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
@@ -63,7 +63,7 @@ struct GameView: View {
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
-    
+
     private let graphicsParser = GraphicsParser()
 
     private func goHome() {
@@ -164,25 +164,25 @@ struct GameView: View {
             if emu.hasSaved() {
                 emu.setSaved(false)
                 debounceTimer?.invalidate()
-                
+
                 debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { _ in
                     self.saveGame()
                 }
             }
         }
     }
-    
+
     private func saveGame() {
         if let emu = emulator {
             let ptr = emu.backupPointer();
             let backupLength = Int(emu.backupLength())
-            
+
             if let cloudService = cloudService {
                 if let url = gameUrl {
                     let buffer = UnsafeBufferPointer(start: ptr, count: backupLength)
-                    
+
                     let data = Data(buffer)
-                    
+
                     Task {
                         await cloudService.uploadSave(
                             saveName: BackupFile.getSaveName(gameUrl: url),
@@ -195,7 +195,7 @@ struct GameView: View {
                 backupFile?.saveGame(ptr: ptr, backupLength: backupLength)
             }
         }
-        
+
     }
 
     private func updateEmuInput(_ mapping: ButtonMapping, _ defaultButton: ButtonEvent, _ pressed: Bool) {
@@ -319,20 +319,20 @@ struct GameView: View {
             []
         }
         let romArr: [UInt8] = Array(romData!)
-        
+
         var bios7Ptr: UnsafeBufferPointer<UInt8>? = nil
         var bios9Ptr: UnsafeBufferPointer<UInt8>? = nil
         var firmwarePtr: UnsafeBufferPointer<UInt8>? = nil
         var romPtr: UnsafeBufferPointer<UInt8>? = nil
-        
+
         bios7Arr.withUnsafeBufferPointer() { ptr in
             bios7Ptr = ptr
         }
-        
+
         bios9Arr.withUnsafeBufferPointer() { ptr in
             bios9Ptr = ptr
         }
-        
+
         firmwareArr.withUnsafeBufferPointer() { ptr in
             firmwarePtr = ptr
         }
@@ -347,10 +347,10 @@ struct GameView: View {
                 romPtr!
             )
         }
-        
+
         if let game = game {
             let gameCode = emulator?.getGameCode()
-            
+
             if let entries = GameEntry.decodeGameDb() {
                 let entries = entries.filter { $0.gameCode == gameCode }
                 if entries.count > 0 {
@@ -381,7 +381,7 @@ struct GameView: View {
                 }
             }
             isRunning = true
-            
+
             audioManager = AudioManager()
 
             audioManager!.startMicrophoneAndAudio()
@@ -389,34 +389,34 @@ struct GameView: View {
             if !isSoundOn {
                 audioManager?.muteAudio()
             }
-            
+
             workItem = DispatchWorkItem {
                 if let emu = emulator {
                     while true {
                         DispatchQueue.main.sync {
                             emu.stepFrame()
-                            
+
                             if let player = audioManager {
                                 if let bufferPtr = player.getBufferPtr() {
                                     emu.updateAudioBuffer(bufferPtr)
                                 }
                             }
-                            
+
                             let aPixels = emu.getEngineAPicturePointer()
-                            
+
                             var imageA: CGImage? = nil
                             var imageB: CGImage? = nil
-                            
+
                             if let image = graphicsParser.fromPointer(ptr: aPixels) {
                                 imageA = image
                             }
-                            
+
                             let bPixels = emu.getEngineBPicturePointer()
-                            
+
                             if let image = graphicsParser.fromPointer(ptr: bPixels) {
                                 imageB = image
                             }
-                            
+
                             if emu.isTopA() {
                                 topImage = imageA
                                 bottomImage = imageB
@@ -424,9 +424,9 @@ struct GameView: View {
                                 topImage = imageB
                                 bottomImage = imageA
                             }
-                            
+
                             let audioBufferLength = emu.audioBufferLength()
-                        
+
                             let audioBufferPtr = emu.audioBufferPtr()
 
                             let playerPaused = audioManager?.playerPaused ?? true
@@ -435,21 +435,21 @@ struct GameView: View {
                                 let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
                                 self.audioManager?.updateBuffer(samples: audioSamples)
                             }
-                            
+
                             self.checkSaves()
                         }
-                        
+
                         if !isRunning {
                             break
                         }
                     }
                 }
             }
-            
+
             DispatchQueue.global().async(execute: workItem!)
         }
     }
-    
+
     var body: some View {
         if !loading {
             ZStack {

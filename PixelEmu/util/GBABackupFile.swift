@@ -1,6 +1,6 @@
 //
 //  GBABackupFile.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 12/4/24.
 //

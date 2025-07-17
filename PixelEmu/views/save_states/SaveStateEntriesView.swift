@@ -1,6 +1,6 @@
 //
 //  SaveStateEntriesView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/14/24.
 //
@@ -18,14 +18,14 @@ enum SaveStateAction {
 
 struct SaveStateEntriesView: View {
     @Environment(\.modelContext) private var context
-    
+
     @State var currentState: SaveState? = nil
 
     @Binding var emulator: MobileEmulator?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
     @Binding var game: Game?
-    
+
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
@@ -36,10 +36,10 @@ struct SaveStateEntriesView: View {
     @State private var stateManager: StateManager!
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-    
+
     private func createSaveState(updateState: SaveState? = nil) {
         // create a new save state
-        
+
         if let emu = emulator {
             let dataPtr = emu.createSaveState()
             let compressedLength = emu.compressedLength()
@@ -64,7 +64,7 @@ struct SaveStateEntriesView: View {
         }
         isMenuPresented = false
     }
-    
+
     private func loadSaveState() {
         do {
             try stateManager.loadSaveState(currentState: currentState)
@@ -73,13 +73,13 @@ struct SaveStateEntriesView: View {
         }
         isMenuPresented = false
     }
-    
+
     private func updateSaveState() {
         if let currentState = currentState {
             createSaveState(updateState: currentState)
         }
     }
-    
+
     private func deleteSaveState() {
         if let saveState = currentState, let game = game {
             if let index = game.saveStates.firstIndex(of: saveState) {
@@ -88,7 +88,7 @@ struct SaveStateEntriesView: View {
             }
         }
     }
-    
+
     var body: some View {
         VStack {
             HStack {

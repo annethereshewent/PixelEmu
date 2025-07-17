@@ -1,6 +1,6 @@
 //
 //  SaveManagementView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/24/24.
 //
@@ -44,7 +44,7 @@ struct SaveManagementView: View {
             }
         }
     }
-    
+
     var body: some View {
         VStack {
             Text("Save management")

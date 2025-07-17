@@ -1,6 +1,6 @@
 //
 //  LoadStateEntryView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/20/24.
 //
@@ -13,9 +13,9 @@ struct LoadStateEntryView: View {
     @Binding var currentState: SaveState?
 
     @State private var screenshot = UIImage()
-    
+
     private let graphicsParser = GraphicsParser()
-    
+
     var body: some View {
         Button() {
             currentState = saveState

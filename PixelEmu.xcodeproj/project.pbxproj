@@ -94,14 +94,14 @@
 			containerPortal = E806E9EC2C97E1B10081D3E8 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = E806E9F32C97E1B10081D3E8;
-			remoteInfo = "NDS Plus";
+			remoteInfo = "PixelEmu";
 		};
 		E806EA0F2C97E1B20081D3E8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E806E9EC2C97E1B10081D3E8 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = E806E9F32C97E1B10081D3E8;
-			remoteInfo = "NDS Plus";
+			remoteInfo = "PixelEmu";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -479,7 +479,7 @@
 				E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */,
 				E8BBBC7D2CF981510065EF4E /* GBAEmulatorMobile */,
 			);
-			productName = "NDS Plus";
+			productName = "PixelEmu";
 			productReference = E806E9F42C97E1B10081D3E8 /* PixelEmu.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -498,7 +498,7 @@
 				E806EA062C97E1B20081D3E8 /* PBXTargetDependency */,
 			);
 			name = PixelEmuTests;
-			productName = "NDS PlusTests";
+			productName = "PixelEmuTests";
 			productReference = E806EA042C97E1B20081D3E8 /* PixelEmuTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -518,7 +518,7 @@
 				E806EA102C97E1B20081D3E8 /* PBXTargetDependency */,
 			);
 			name = PixelEmuUITests;
-			productName = "NDS PlusUITests";
+			productName = "PixelEmuUITests";
 			productReference = E806EA0E2C97E1B20081D3E8 /* PixelEmuUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
@@ -1066,7 +1066,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "NDS Plus";
+				TEST_TARGET_NAME = "PixelEmu";
 			};
 			name = Debug;
 		};
@@ -1086,7 +1086,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "NDS Plus";
+				TEST_TARGET_NAME = "PixelEmu";
 			};
 			name = Release;
 		};

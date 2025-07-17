@@ -1,6 +1,6 @@
 //
 //  GBAGameView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 11/29/24.
 //
@@ -45,7 +45,7 @@ struct GBAGameView: View {
     @Binding var game: GBAGame?
     @Binding var isSoundOn: Bool
     @Binding var themeColor: Color
-    
+
     @Binding var gameName: String
     @Binding var backupFile: GBABackupFile?
     @Binding var gameController: GameController?
@@ -175,7 +175,7 @@ struct GBAGameView: View {
             // TODO: figure out why
             emulator = emu
             emulatorCopy = nil
-            
+
             if isSoundOn {
                 audioManager?.resumeAudio()
             }

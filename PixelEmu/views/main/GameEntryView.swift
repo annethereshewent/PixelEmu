@@ -1,6 +1,6 @@
 //
 //  GameEntryView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/24/24.
 //
@@ -10,9 +10,9 @@ import SwiftUI
 struct GameEntryView: View {
     let game: Game
     let callback: () -> Void
-    
+
     private let graphicsParser = GraphicsParser()
-    
+
     var body: some View {
         VStack(spacing: 0) {
             Button {

@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/15/24.
 //
@@ -25,17 +25,17 @@ struct ContentView: View {
 
     @State private var firmwareData: Data?
     @State private var romData: Data? = nil
-    
+
     @State private var workItem: DispatchWorkItem? = nil
     @State private var isRunning = false
     @State private var loggedInCloud = false
-    
+
     @State private var path = NavigationPath()
     @State private var emulator: MobileEmulator? = nil
     @State private var gbaEmulator: GBAEmulator? = nil
     @State private var gbaEmuCopy: GBAEmulator? = nil
     @State private var gameUrl: URL? = nil
-    
+
     @State private var user: GIDGoogleUser? = nil
     @State private var cloudService: CloudService? = nil
     @State private var game: Game? = nil
@@ -44,7 +44,7 @@ struct ContentView: View {
     @State private var currentView: CurrentView = .library
     @State private var isSoundOn: Bool = true
     @State private var audioManager: AudioManager? = nil
-    
+
     @State private var gameController: GameController? = GameController(closure:  { _ in })
     @State private var topImage: CGImage?
     @State private var bottomImage: CGImage?
@@ -73,7 +73,7 @@ struct ContentView: View {
         bios7Data = nil
         bios9Data = nil
         firmwareData = nil
-        
+
         self.checkForBinaries(currentFile: .bios7)
         self.checkForBinaries(currentFile: .bios9)
         self.checkForBinaries(currentFile: .firmware)
@@ -140,7 +140,7 @@ struct ContentView: View {
                         }
                     }
                 }
-                
+
             case .bios9:
                 if let fileUrl = URL(string: "bios9.bin", relativeTo: applicationUrl) {
                     if let data = try? Data(contentsOf: fileUrl) {
@@ -180,9 +180,9 @@ struct ContentView: View {
             }
         }
     }
-        
+
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
-    
+
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
         NavigationStack(path: $path) {
@@ -315,11 +315,11 @@ struct ContentView: View {
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = false
             let defaults = UserDefaults.standard
-            
+
             if let isSoundOn = defaults.object(forKey: "isSoundOn") as? Bool {
                 self.isSoundOn = isSoundOn
             }
-            
+
             bios7Loaded = defaults.bool(forKey: "bios7Loaded")
             bios9Loaded = defaults.bool(forKey: "bios9Loaded")
 
@@ -345,20 +345,20 @@ struct ContentView: View {
             GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
                 if let signedInUser = user {
                     self.user = signedInUser
-                    
+
                     self.user?.refreshTokensIfNeeded { user, error in
                         guard error == nil else { return }
                         guard let user = user else { return }
-                        
+
                         self.user = user
-                        
+
                         self.cloudService = CloudService(user: self.user!)
                     }
                 }
             }
         }
     }
-    
+
 }
 
 struct ContentView_Previews: PreviewProvider {

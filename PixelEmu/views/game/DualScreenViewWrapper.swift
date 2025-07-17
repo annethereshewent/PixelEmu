@@ -1,6 +1,6 @@
 //
 //  GameScreensViewWrapper.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/13/24.
 //
@@ -33,7 +33,7 @@ struct DualScreenViewWrapper: View {
         if orientationInfo.orientation == .landscape {
             return 0.90
         }
-        
+
         let rect = UIScreen.main.bounds
 
         if rect.height > 852.0 {
@@ -47,7 +47,7 @@ struct DualScreenViewWrapper: View {
         if gameController?.controller?.extendedGamepad == nil {
             return 40.0
         }
-        
+
         return 0.0
     }
 
@@ -148,11 +148,11 @@ struct DualScreenViewWrapper: View {
                                 if let manager = audioManager {
                                     feedbackGenerator.impactOccurred()
                                     manager.toggleAudio()
-                                    
+
                                     isSoundOn = !manager.playerPaused
 
                                     let defaults = UserDefaults.standard
-                                    
+
                                     defaults.setValue(isSoundOn, forKey: "isSoundOn")
                                 }
                             } label: {

@@ -1,6 +1,6 @@
 //
 //  ControllerMappingsView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 11/1/24.
 //

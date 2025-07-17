@@ -1,6 +1,6 @@
 //
 //  DSSaveManagementView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 12/5/24.
 //
@@ -44,7 +44,7 @@ struct DSSaveManagementView: View {
                             GameEntryView(game: saveEntry.game) {
                                 if cloudEntry == saveEntry {
                                     cloudEntry = nil
-                                    
+
                                 } else {
                                     cloudEntry = saveEntry
                                 }
@@ -74,7 +74,7 @@ struct DSSaveManagementView: View {
                 if loading {
                     ProgressView()
                 }
-                
+
             }
             .onAppear {
                 if user != nil {
@@ -92,7 +92,7 @@ struct DSSaveManagementView: View {
             .onTapGesture {
                 cloudEntry = nil
                 localEntry = nil
-                
+
                 showDownloadAlert = false
                 showUploadAlert = false
                 showErrorAlert = false
