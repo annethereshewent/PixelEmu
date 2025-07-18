@@ -132,7 +132,6 @@ class BackupFile {
     }
 
     static func getLocalSaves(games: [any Playable]) -> [SaveEntry] {
-        print(games.map({ $0.gameName }))
         var saveEntries = [SaveEntry]()
         do {
             var location = try FileManager.default.url(

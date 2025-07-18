@@ -19,7 +19,7 @@ struct GameView: View {
 
     @State private var debounceTimer: Timer? = nil
 
-    @State private var loading = true
+    @State private var loading = false
 
     @State private var homePressed = false
     @State private var controlStickKeyPressed = false
@@ -452,13 +452,13 @@ struct GameView: View {
     }
 
     var body: some View {
-        if !loading {
-            ZStack {
-                if gameController?.controller?.extendedGamepad == nil {
-                    themeColor
-                } else {
-                    Color.black
-                }
+        ZStack {
+            if gameController?.controller?.extendedGamepad == nil {
+                themeColor
+            } else {
+                Color.black
+            }
+            if !loading {
                 VStack(spacing: 0) {
                     if orientationInfo.orientation == .portrait {
                         Spacer()
@@ -493,101 +493,7 @@ struct GameView: View {
                         )
                     }
                 }
-            }
-            .sheet(
-                isPresented: $isMenuPresented
-            ) {
-                GameMenuView(
-                    emulator: $emulator,
-                    isRunning: $isRunning,
-                    workItem: $workItem,
-                    audioManager: $audioManager,
-                    isMenuPresented: $isMenuPresented,
-                    gameName: $gameName,
-                    bios7Data: $bios7Data,
-                    bios9Data: $bios9Data,
-                    firmwareData: $firmwareData,
-                    romData: $romData,
-                    shouldGoHome: $shouldGoHome,
-                    game: $game,
-                    isHoldButtonsPresented: $isHoldButtonsPresented,
-                    isSoundOn: $isSoundOn,
-                    gameController: $gameController
-                )
-            }
-            .onAppear {
-                UIApplication.shared.isIdleTimerDisabled = true
-
-                if let emu = emulator, let bios7Data = bios7Data, let bios9Data = bios9Data, let romData = romData, let game = game {
-                    stateManager = StateManager(
-                        emu: emu,
-                        gbaEmu: nil,
-                        game: game,
-                        context: context,
-                        biosData: nil,
-                        bios7Data: bios7Data,
-                        bios9Data: bios9Data,
-                        romData: romData,
-                        firmwareData: firmwareData
-                    )
-                }
-
-                Task {
-                    if !isRunning {
-                        await self.run()
-                        gameController = GameController(closure: { gameController in
-                            addControllerEventListeners(gameController: gameController)
-                        })
-                    } else {
-                        if isSoundOn {
-                            audioManager?.resumeAudio()
-                        }
-                    }
-                }
-            }
-            .onDisappear {
-                UIApplication.shared.isIdleTimerDisabled = false
-                audioManager?.stopMicrophone()
-            }
-            .onChange(of: shouldGoHome) {
-                if shouldGoHome {
-                    goHome()
-                }
-            }
-            .onChange(of: scenePhase) {
-                switch scenePhase {
-                case .active:
-                    if isPaused {
-                        if let emu = emulator {
-                            isPaused = false
-                            emu.setPause(false)
-                            if isSoundOn {
-                                audioManager?.resumeAudio()
-                            }
-                        }
-                    }
-                    break
-                case .inactive:
-                    break
-                case .background:
-                    if let emu = emulator {
-                        isPaused = true
-                        emu.setPause(true)
-                        audioManager?.muteAudio()
-                    }
-                    break
-                default:
-                    break
-                }
-            }
-            .navigationBarTitle("")
-            .navigationBarHidden(true)
-            .ignoresSafeArea(.all)
-            .edgesIgnoringSafeArea(.all)
-            .statusBarHidden()
-        } else {
-            ZStack {
-                themeColor
+            } else {
                 VStack {
                     Image("Launch Screen Logo")
                         .resizable()
@@ -595,11 +501,101 @@ struct GameView: View {
                     ProgressView()
                 }
             }
-            .navigationBarTitle("")
-            .navigationBarHidden(true)
-            .ignoresSafeArea(.all)
-            .edgesIgnoringSafeArea(.all)
-            .statusBarHidden()
         }
+        .sheet(
+            isPresented: $isMenuPresented
+        ) {
+            GameMenuView(
+                gameType: .nds,
+                emulator: $emulator,
+                gbaEmulator: .constant(nil),
+                isRunning: $isRunning,
+                workItem: $workItem,
+                audioManager: $audioManager,
+                isMenuPresented: $isMenuPresented,
+                gameName: $gameName,
+                biosData: .constant(nil),
+                bios7Data: $bios7Data,
+                bios9Data: $bios9Data,
+                firmwareData: $firmwareData,
+                romData: $romData,
+                shouldGoHome: $shouldGoHome,
+                game: $game,
+                isHoldButtonsPresented: $isHoldButtonsPresented,
+                isSoundOn: $isSoundOn,
+                gameController: $gameController
+            )
+        }
+        .onAppear {
+            UIApplication.shared.isIdleTimerDisabled = true
+
+            if let emu = emulator, let bios7Data = bios7Data, let bios9Data = bios9Data, let romData = romData, let game = game {
+                stateManager = StateManager(
+                    emu: emu,
+                    gbaEmu: nil,
+                    game: game,
+                    context: context,
+                    biosData: nil,
+                    bios7Data: bios7Data,
+                    bios9Data: bios9Data,
+                    romData: romData,
+                    firmwareData: firmwareData
+                )
+            }
+
+            Task {
+                if !isRunning {
+                    await self.run()
+                    gameController = GameController(closure: { gameController in
+                        addControllerEventListeners(gameController: gameController)
+                    })
+                } else {
+                    if isSoundOn {
+                        audioManager?.resumeAudio()
+                    }
+                }
+            }
+        }
+        .onDisappear {
+            UIApplication.shared.isIdleTimerDisabled = false
+            audioManager?.stopMicrophone()
+        }
+        .onChange(of: shouldGoHome) {
+            if shouldGoHome {
+                goHome()
+            }
+        }
+        .onChange(of: scenePhase) {
+            switch scenePhase {
+            case .active:
+                if isPaused {
+                    if let emu = emulator {
+                        isPaused = false
+                        emu.setPause(false)
+                        if isSoundOn {
+                            audioManager?.resumeAudio()
+                        }
+                    }
+                }
+                break
+            case .inactive:
+                break
+            case .background:
+                if let emu = emulator {
+                    isPaused = true
+                    emu.setPause(true)
+                    audioManager?.muteAudio()
+                }
+                break
+            default:
+                break
+            }
+        }
+        .navigationBarTitle("")
+        .navigationBarHidden(true)
+        .ignoresSafeArea(.all)
+        .edgesIgnoringSafeArea(.all)
+        .statusBarHidden()
     }
+
 }

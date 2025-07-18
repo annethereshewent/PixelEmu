@@ -25,7 +25,6 @@ struct SaveManagementView: View {
     @Query private var gbaGames: [GBAGame]
 
     private func handleSignInButton() {
-        print("test!")
         guard let rootViewController = (UIApplication.shared.connectedScenes.first
                   as? UIWindowScene)?.windows.first?.rootViewController
         else {

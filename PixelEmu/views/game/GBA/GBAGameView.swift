@@ -329,14 +329,19 @@ struct GBAGameView: View {
         .sheet(
             isPresented: $isMenuPresented
         ) {
-            GBAMenuView(
-                emulator: $emulator,
+            GameMenuView(
+                gameType: .gba,
+                emulator: .constant(nil),
+                gbaEmulator: $emulator,
                 isRunning: $isRunning,
                 workItem: $workItem,
                 audioManager: $audioManager,
                 isMenuPresented: $isMenuPresented,
                 gameName: $gameName,
                 biosData: $biosData,
+                bios7Data: .constant(nil),
+                bios9Data: .constant(nil),
+                firmwareData: .constant(nil),
                 romData: $romData,
                 shouldGoHome: $shouldGoHome,
                 game: $game,

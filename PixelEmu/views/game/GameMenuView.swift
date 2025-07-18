@@ -7,15 +7,19 @@
 
 import SwiftUI
 import DSEmulatorMobile
+import GBAEmulatorMobile
 
 struct GameMenuView: View {
+    let gameType: GameType
     @Environment(\.colorScheme) private var colorScheme
     @Binding var emulator: MobileEmulator?
+    @Binding var gbaEmulator: GBAEmulator?
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
     @Binding var audioManager: AudioManager?
     @Binding var isMenuPresented: Bool
     @Binding var gameName: String
+    @Binding var biosData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
@@ -128,7 +132,11 @@ struct GameMenuView: View {
             }
             .onDisappear() {
                 if !isHoldButtonsPresented && !shouldGoHome {
-                    emulator?.setPause(false)
+                    switch gameType {
+                    case .nds: emulator?.setPause(false)
+                    case .gba: gbaEmulator?.setPaused(false)
+                    case .gbc: break
+                    }
                     if isSoundOn {
                         audioManager?.resumeAudio()
                     }
@@ -140,16 +148,31 @@ struct GameMenuView: View {
         .font(.custom("Departure Mono", size: 16))
         .foregroundColor(color)
         .sheet(isPresented: $isStateEntriesPresented) {
-            SaveStateEntriesView(
-                emulator: $emulator,
-                gameName: $gameName,
-                isMenuPresented: $isMenuPresented,
-                game: $game,
-                bios7Data: $bios7Data,
-                bios9Data: $bios9Data,
-                firmwareData: $firmwareData,
-                romData: $romData
-            )
+            switch gameType {
+            case .nds:
+                SaveStateEntriesView(
+                    emulator: $emulator,
+                    gameName: $gameName,
+                    isMenuPresented: $isMenuPresented,
+                    game: $game,
+                    bios7Data: $bios7Data,
+                    bios9Data: $bios9Data,
+                    firmwareData: $firmwareData,
+                    romData: $romData
+                )
+            case .gba:
+                GBAStateEntriesView(
+                    emulator: $gbaEmulator,
+                    gameName: $gameName,
+                    isMenuPresented: $isMenuPresented,
+                    game: $game,
+                    biosData: $biosData,
+                    romData: $romData
+                )
+            case .gbc:
+                Text("TODO")
+            }
+
         }
     }
 }
