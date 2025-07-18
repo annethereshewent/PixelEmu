@@ -40,6 +40,7 @@ struct ContentView: View {
     @State private var cloudService: CloudService? = nil
     @State private var game: (any Playable)? = nil
     @State private var gbaGame: (any Playable)? = nil
+    @State private var gbcGame: (any Playable)? = nil
 
     @State private var currentView: CurrentView = .library
     @State private var isSoundOn: Bool = true
@@ -207,6 +208,7 @@ struct ContentView: View {
                             path: $path,
                             game: $game,
                             gbaGame: $gbaGame,
+                            gbcGame: $gbcGame,
                             themeColor: $themeColor,
                             isPaused: $isPaused,
                             currentLibrary: $currentLibrary

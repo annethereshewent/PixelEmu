@@ -35,6 +35,7 @@ struct LibraryView: View {
     @Binding var path: NavigationPath
     @Binding var game: (any Playable)?
     @Binding var gbaGame: (any Playable)?
+    @Binding var gbcGame: (any Playable)?
     @Binding var themeColor: Color
     @Binding var isPaused: Bool
     @Binding var currentLibrary: String
@@ -58,7 +59,7 @@ struct LibraryView: View {
                     emulator: $emulator,
                     gameUrl: $gameUrl,
                     path: $path,
-                    game: $gbaGame,
+                    game: $gbcGame,
                     themeColor: $themeColor,
                     isPaused: $isPaused
                 )
