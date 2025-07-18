@@ -45,7 +45,7 @@ struct ContentView: View {
     @State private var isSoundOn: Bool = true
     @State private var audioManager: AudioManager? = nil
 
-    @State private var gameController: GameController? = GameController(closure:  { _ in })
+    @State private var gameController: GameController? = nil
     @State private var topImage: CGImage?
     @State private var bottomImage: CGImage?
 

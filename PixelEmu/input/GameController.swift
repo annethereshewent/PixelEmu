@@ -11,11 +11,11 @@ import DSEmulatorMobile
 
 @Observable
 class GameController {
-    let eventListenerClosure: (GCController?) -> Void
+    let eventListenerClosure: (GCController) -> Void
 
     var controller: GCController? = GCController()
 
-    init(closure: @escaping (GCController?) -> Void) {
+    init(closure: @escaping (GCController) -> Void) {
         eventListenerClosure = closure
         NotificationCenter.default.addObserver(
             self,
@@ -49,8 +49,8 @@ class GameController {
 
         self.controller = gameController
 
-        eventListenerClosure(self.controller)
+        eventListenerClosure(gameController)
 
-        controller?.physicalInputProfile.buttons[GCInputButtonHome]?.preferredSystemGestureState = GCControllerElement.SystemGestureState.disabled
+        gameController.physicalInputProfile.buttons[GCInputButtonHome]?.preferredSystemGestureState = GCControllerElement.SystemGestureState.disabled
     }
 }
