@@ -11,7 +11,7 @@ import GBAEmulatorMobile
 import SwiftData
 
 struct GamesListView: View {
-    let gameType: GameType = .nds
+    let gameType: GameType
 
     @State private var showGameError = false
 
@@ -67,7 +67,7 @@ struct GamesListView: View {
 
     var body: some View {
         if games.count > 0 {
-            if games[0].type == .nds {
+            if gameType == .nds {
                 DSListView(
                     showGameError: $showGameError,
                     gameUrl: $gameUrl,
@@ -83,7 +83,7 @@ struct GamesListView: View {
                     path: $path,
                     filteredGames: filteredGames as! [Game]
                 )
-            } else if games[0].type == .gba {
+            } else if gameType == .gba {
                 GBAListView(
                     showGameError: $showGameError,
                     gameUrl: $gameUrl,

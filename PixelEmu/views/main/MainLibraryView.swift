@@ -12,6 +12,8 @@ import GBAEmulatorMobile
 import GBCEmulatorMobile
 
 struct MainLibraryView: View {
+    let gameType: GameType
+
     @Binding var recentColor: Color
     @Binding var allColor: Color
     @Binding var filter: LibraryFilter
@@ -72,6 +74,7 @@ struct MainLibraryView: View {
             }
             .padding(.top, 10)
             GamesListView(
+                gameType: gameType,
                 romData: $romData,
                 bios7Data: $bios7Data,
                 bios9Data: $bios9Data,

@@ -46,6 +46,7 @@ struct LibraryView: View {
             Text("\(currentLibrary.uppercased()) library")
             TabView(selection: $currentLibrary) {
                 MainLibraryView(
+                    gameType: .nds,
                     recentColor: $recentColor,
                     allColor: $allColor,
                     filter: $filter,
@@ -67,6 +68,7 @@ struct LibraryView: View {
                 )
                 .tag("nds")
                 MainLibraryView(
+                    gameType: .gba,
                     recentColor: $recentColor,
                     allColor: $allColor,
                     filter: $filter,

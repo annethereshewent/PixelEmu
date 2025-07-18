@@ -17,13 +17,15 @@ struct GBAListView: View {
     @State private var showDeleteConfirmation = false
     @State private var showDeleteError = false
     @State private var deleteAction: () -> Void = {}
-    @State private var gameToDelete: GBAGame?
+    @State private var gameToDelete: (any Playable)?
 
     @State private var showResumeDialog = false
     @State private var resumeGame = false
     @State private var settingChanged = false
     @State private var isLoadStatesPresented = false
-    @State private var selectedGame: GBAGame?
+    @State private var selectedGame: (any Playable)?
+    @State private var selectedGbaGame: GBAGame?
+    @State private var gbaGame: GBAGame?
 
     @Binding var showGameError: Bool
     @Binding var gameUrl: URL?
@@ -73,80 +75,57 @@ struct GBAListView: View {
             ScrollView {
                 LazyVGrid(columns: columns) {
                     ForEach(filteredGames) { game in
-//                        GameEntryViewWrapper(
-//                            showDeleteConfirmation: $showDeleteConfirmation,
-//                            deleteAction: $deleteAction,
-//                            gameToDelete: $gameToDelete,
-//                            isLoadStatesPresented: $isLoadStatesPresented,
-//                            selectedGame: $selectedGame,
-//                            themeColor: $themeColor,
-//                            game: game
-//                        ) {
-//                            var isStale = false
-//                            do {
-//                                let url = try URL(
-//                                    resolvingBookmarkData: game.bookmark,
-//                                    options: [.withoutUI],
-//                                    relativeTo: nil,
-//                                    bookmarkDataIsStale: &isStale
-//                                )
-//                                if url.startAccessingSecurityScopedResource() {
-//                                    defer {
-//                                        url.stopAccessingSecurityScopedResource()
-//                                    }
-//
-//                                    // do some other shit here
-//                                    let data = try Data(contentsOf: url)
-//
-//                                    // now load the rom and bios
-//                                    emulator = GBAEmulator()
-//
-//                                    romData = data
-//                                    gameUrl = url
-//
-//                                    if self.game != nil && self.game! == game {
-//                                        updateLastPlayed()
-//                                        showResumeDialog = true
-//                                    } else {
-//                                        startNewGame(game)
-//                                    }
-//                                }
-//                            } catch {
-//                                print(error)
-//                            }
-//                        }
+                        GameEntryViewWrapper(
+                            showDeleteConfirmation: $showDeleteConfirmation,
+                            deleteAction: $deleteAction,
+                            gameToDelete: $gameToDelete,
+                            isLoadStatesPresented: $isLoadStatesPresented,
+                            selectedGame: $selectedGame,
+                            game: game
+                        ) {
+                            var isStale = false
+                            do {
+                                let url = try URL(
+                                    resolvingBookmarkData: game.bookmark,
+                                    options: [.withoutUI],
+                                    relativeTo: nil,
+                                    bookmarkDataIsStale: &isStale
+                                )
+                                if url.startAccessingSecurityScopedResource() {
+                                    defer {
+                                        url.stopAccessingSecurityScopedResource()
+                                    }
+
+
+                                    let data = try Data(contentsOf: url)
+
+                                    // now load the rom and bios
+                                    emulator = GBAEmulator()
+
+                                    romData = data
+                                    gameUrl = url
+
+                                    let gbaGame = self.game as! GBAGame?
+                                    if gbaGame != nil && gbaGame! == game {
+                                        updateLastPlayed()
+                                        showResumeDialog = true
+                                    } else {
+                                        startNewGame(game)
+                                    }
+                                }
+                            } catch {
+                                print(error)
+                            }
+                        }
                     }
                 }
             }
-            if showResumeDialog {
-                ResumeGameDialog(
-                    showDialog: $showResumeDialog,
-                    resumeGame: $resumeGame,
-                    settingChanged: $settingChanged,
-                    themeColor: $themeColor
-                )
-            } else if showDeleteConfirmation {
-                DeleteDialog(
-                    showDialog: $showDeleteConfirmation,
-                    deleteAction: $deleteAction,
-                    themeColor: $themeColor,
-                    deleteMessage: "Are you sure you want to remove this game from your library?"
-                )
-            } else if showDeleteError {
-                AlertModal(
-                    alertTitle: "Oops!",
-                    text: "There was an error removing the game.",
-                    showAlert: $showDeleteError,
-                    themeColor: $themeColor
-                )
-            } else if showGameError {
-                AlertModal(
-                    alertTitle: "Oops!",
-                    text: "There was an error loading the specified game.",
-                    showAlert: $showGameError,
-                    themeColor: $themeColor
-                )
-            }
+        }
+        .onChange(of: game?.gameName) {
+            gbaGame = game as! GBAGame?
+        }
+        .onChange(of: selectedGame?.gameName) {
+            selectedGbaGame = selectedGame as! GBAGame?
         }
         .onChange(of: settingChanged) {
             if resumeGame {
@@ -159,14 +138,43 @@ struct GBAListView: View {
                 startNewGame()
             }
         }
-        .onChange(of: gameToDelete) {
+        .onChange(of: gameToDelete?.gameName) {
             deleteAction = {
                 if let game = gameToDelete {
-                    context.delete(game)
+                    context.delete(game as! GBAGame)
                 } else {
                     showDeleteError = true
                 }
             }
+        }
+        if showResumeDialog {
+            ResumeGameDialog(
+                showDialog: $showResumeDialog,
+                resumeGame: $resumeGame,
+                settingChanged: $settingChanged,
+                themeColor: $themeColor
+            )
+        } else if showDeleteConfirmation {
+            DeleteDialog(
+                showDialog: $showDeleteConfirmation,
+                deleteAction: $deleteAction,
+                themeColor: $themeColor,
+                deleteMessage: "Are you sure you want to remove this game from your library?"
+            )
+        } else if showDeleteError {
+            AlertModal(
+                alertTitle: "Oops!",
+                text: "There was an error removing the game.",
+                showAlert: $showDeleteError,
+                themeColor: $themeColor
+            )
+        } else if showGameError {
+            AlertModal(
+                alertTitle: "Oops!",
+                text: "There was an error loading the specified game.",
+                showAlert: $showGameError,
+                themeColor: $themeColor
+            )
         }
     }
 }
