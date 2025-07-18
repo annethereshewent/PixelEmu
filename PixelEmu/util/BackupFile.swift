@@ -132,6 +132,7 @@ class BackupFile {
     }
 
     static func getLocalSaves(games: [any Playable]) -> [SaveEntry] {
+        print(games.map({ $0.gameName }))
         var saveEntries = [SaveEntry]()
         do {
             var location = try FileManager.default.url(
@@ -180,8 +181,8 @@ class BackupFile {
         return saveEntries
     }
 
-    static func getLocalGBASaves(games: [GBAGame]) -> [GBASaveEntry] {
-        var saveEntries = [GBASaveEntry]()
+    static func getLocalGBASaves(games: [GBAGame]) -> [SaveEntry] {
+        var saveEntries = [SaveEntry]()
         do {
             var location = try FileManager.default.url(
                 for: .applicationSupportDirectory,
@@ -209,7 +210,7 @@ class BackupFile {
 
             for item in items {
                 if let game = gameDictionary[item] {
-                    saveEntries.append(GBASaveEntry(game: game))
+                    saveEntries.append(SaveEntry(game: game))
                 }
             }
 

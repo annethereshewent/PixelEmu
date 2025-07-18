@@ -1,5 +1,5 @@
 //
-//  DSSaveManagementView.swift
+//  MainSaveManagementView.swift
 //  PixelEmu
 //
 //  Created by Anne Castrillon on 12/5/24.
@@ -10,6 +10,7 @@ import SwiftData
 import GoogleSignIn
 
 struct MainSaveManagementView: View {
+    let gameType: GameType
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
     @Binding var saveEntries: [SaveEntry]
@@ -30,6 +31,7 @@ struct MainSaveManagementView: View {
     @State private var deleteAction: () -> Void = {}
 
     @Query private var games: [Game]
+    @Query private var gbaGames: [GBAGame]
 
     private let successTitle = "Success!"
 
@@ -37,7 +39,7 @@ struct MainSaveManagementView: View {
         ZStack {
             ScrollView {
                 if saveEntries.count > 0 {
-                    Text("NDS cloud saves")
+                    Text("\(gameType.getConsoleName()) cloud saves")
                         .foregroundColor(Colors.primaryColor)
                     LazyVGrid(columns: columns) {
                         ForEach(saveEntries, id: \.game.gameName) { saveEntry in
@@ -56,7 +58,7 @@ struct MainSaveManagementView: View {
                     }
                 }
                 if localSaves.count > 0 {
-                    Text("NDS local saves")
+                    Text("\(gameType.getConsoleName()) local saves")
                         .foregroundColor(Colors.primaryColor)
                     LazyVGrid(columns: columns) {
                         ForEach(localSaves, id: \.game.gameName) { saveEntry in
@@ -81,14 +83,14 @@ struct MainSaveManagementView: View {
                     if games.count > 0 {
                         loading = true
                         Task {
-                            switch games[0].type {
+                            switch gameType {
                             case .nds:
                                 if let saveEntries = await cloudService?.getDsSaves(games: games) {
                                     self.saveEntries = saveEntries
                                 }
                                 loading = false
                             case .gba:
-                                if let saveEntries = await cloudService?.getGbaSaves(games: games) {
+                                if let saveEntries = await cloudService?.getGbaSaves(games: gbaGames) {
                                     self.saveEntries = saveEntries
                                 }
                                 loading = false
@@ -100,7 +102,11 @@ struct MainSaveManagementView: View {
                     }
                 }
                 // get any local saves
-                localSaves = BackupFile.getLocalSaves(games: games)
+                switch gameType {
+                case .nds: localSaves = BackupFile.getLocalSaves(games: games)
+                case .gba: localSaves = BackupFile.getLocalGBASaves(games: gbaGames)
+                case .gbc: break
+                }
             }
             .onTapGesture {
                 cloudEntry = nil

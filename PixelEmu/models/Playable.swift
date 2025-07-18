@@ -10,6 +10,14 @@ enum GameType {
     case nds
     case gba
     case gbc
+
+    func getConsoleName() -> String {
+        switch self {
+        case .gba: return "GBA"
+        case .nds: return "NDS"
+        case .gbc: return "GBC"
+        }
+    }
 }
 
 protocol Playable: Identifiable {

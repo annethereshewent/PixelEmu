@@ -25,6 +25,7 @@ struct SaveManagementView: View {
     @Query private var gbaGames: [GBAGame]
 
     private func handleSignInButton() {
+        print("test!")
         guard let rootViewController = (UIApplication.shared.connectedScenes.first
                   as? UIWindowScene)?.windows.first?.rootViewController
         else {
@@ -35,6 +36,7 @@ struct SaveManagementView: View {
                 print(error!)
                 return
             }
+
             user = result.user
             cloudService = CloudService(user: user!)
             Task {
@@ -69,6 +71,7 @@ struct SaveManagementView: View {
             }
             TabView {
                 MainSaveManagementView(
+                    gameType: .nds,
                     saveEntries: $saveEntries,
                     cloudEntry: $cloudEntry,
                     user: $user,
@@ -77,7 +80,8 @@ struct SaveManagementView: View {
                     themeColor: $themeColor
                 )
                 MainSaveManagementView(
-                    saveEntries: $saveEntries,
+                    gameType: .gba,
+                    saveEntries: $gbaSaveEntries,
                     cloudEntry: $cloudEntry,
                     user: $user,
                     loading: $loading,
