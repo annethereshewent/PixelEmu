@@ -99,7 +99,6 @@ struct GameView: View {
     }
 
     private func checkIfHotKey(_ mapping: ButtonMapping, _ pressed: Bool) -> Bool {
-        print("hello!")
         if let value = buttonEventDict?[mapping] {
             switch value {
             case .MainMenu:
@@ -181,8 +180,6 @@ struct GameView: View {
             default: break
             }
         }
-
-        print("yeah!")
 
         return false
     }
@@ -420,17 +417,13 @@ struct GameView: View {
 
     private func addGBAControllerEventListeners(_ controller: GCController) {
         if let controller = controller.extendedGamepad {
-            print("Found a controller!")
             controller.buttonB.pressedChangedHandler = { (button, value, pressed) in
-                print("you pressed a!")
                 updateGBAInput(.b, .ButtonA, pressed)
             }
             controller.buttonA.pressedChangedHandler = { (button, value, pressed) in
-                print("you pressed b!")
                 updateGBAInput(.a, .ButtonB, pressed)
             }
             controller.leftShoulder.pressedChangedHandler = { (button, value, pressed) in
-                print("you pressed L!")
                 updateGBAInput(.leftShoulder, .ButtonL, pressed)
             }
             controller.rightShoulder.pressedChangedHandler = { (button, value, pressed) in
