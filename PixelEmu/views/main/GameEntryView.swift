@@ -27,7 +27,7 @@ struct GameEntryView: View {
             return game.gameName.replacing(".nds", with: "")
         case .gba:
             if game.gameName.hasSuffix(".gba") {
-                return game.gameName.replacing(".nds", with: "")
+                return game.gameName.replacing(".gba", with: "")
             } else if game.gameName.hasSuffix(".GBA") {
                 return game.gameName.replacing(".GBA", with: "")
             }
@@ -41,7 +41,7 @@ struct GameEntryView: View {
 
         return ""
     }
-
+    
     var body: some View {
         VStack(spacing: 0) {
             Button {
@@ -68,9 +68,13 @@ struct GameEntryView: View {
                                         .frame(width: 64, height: 64)
                                 } else {
                                     Text(getConsoleTitle(type: game.type))
+                                        .font(.custom("Departure Mono", size: 14))
                                 }
                             }
                             Spacer()
+                        } else {
+                            Text(getConsoleTitle(type: game.type))
+                                .font(.custom("Departure Mono", size: 14))
                         }
                     }
                 }
