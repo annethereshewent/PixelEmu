@@ -201,20 +201,28 @@ class CloudService {
         return []
     }
 
-    func getGbaSaves(games: [GBAGame]) async -> [GBASaveEntry] {
+//    func getSaves(games: [any Playable]) async -> [SaveEntry] {
+//        if games[0].type == .nds {
+//            await getDsSaves(games: games as! [Game])
+//        } else {
+//            await getGbaSaves(games: games as! [GBAGame])
+//        }
+//    }
+
+    func getGbaSaves(games: [any Playable]) async -> [SaveEntry] {
         if let driveResponse = await getSavesData(saveType: .gba) {
-            var gameDictionary = [String:GBAGame]()
+            var gameDictionary = [String:any Playable]()
 
             for game in games {
                 gameDictionary[game.gameName.replacing(".GBA", with: ".gba")] = game
             }
 
-            var saveEntries = [GBASaveEntry]()
+            var saveEntries = [SaveEntry]()
 
             for file in driveResponse.files {
                 let gameName = file.name.replacing(".sav", with: ".gba")
                 if let game = gameDictionary[gameName] {
-                    saveEntries.append(GBASaveEntry(game: game))
+                    saveEntries.append(SaveEntry(game: game))
                 }
             }
 

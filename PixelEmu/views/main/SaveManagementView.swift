@@ -15,9 +15,8 @@ struct SaveManagementView: View {
     @Binding var cloudService: CloudService?
     @Binding var themeColor: Color
 
-    @State private var gbaSaveEntries: [GBASaveEntry] = []
-    @State private var gbaCloudEntry: GBASaveEntry? = nil
     @State private var saveEntries: [SaveEntry] = []
+    @State private var gbaSaveEntries: [SaveEntry] = []
     @State private var cloudEntry: SaveEntry? = nil
     @State private var isPresented = false
     @State private var loading = false
@@ -69,7 +68,7 @@ struct SaveManagementView: View {
                 .foregroundColor(themeColor)
             }
             TabView {
-                DSSaveManagementView(
+                MainSaveManagementView(
                     saveEntries: $saveEntries,
                     cloudEntry: $cloudEntry,
                     user: $user,
@@ -77,9 +76,9 @@ struct SaveManagementView: View {
                     cloudService: $cloudService,
                     themeColor: $themeColor
                 )
-                GBASaveManagementView(
-                    saveEntries: $gbaSaveEntries,
-                    cloudEntry: $gbaCloudEntry,
+                MainSaveManagementView(
+                    saveEntries: $saveEntries,
+                    cloudEntry: $cloudEntry,
                     user: $user,
                     loading: $loading,
                     cloudService: $cloudService,

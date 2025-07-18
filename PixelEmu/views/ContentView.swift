@@ -9,6 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 import DSEmulatorMobile
 import GBAEmulatorMobile
+import GBCEmulatorMobile
 import GoogleSignIn
 
 struct ContentView: View {
@@ -38,8 +39,8 @@ struct ContentView: View {
 
     @State private var user: GIDGoogleUser? = nil
     @State private var cloudService: CloudService? = nil
-    @State private var game: Game? = nil
-    @State private var gbaGame: GBAGame? = nil
+    @State private var game: (any Playable)? = nil
+    @State private var gbaGame: (any Playable)? = nil
 
     @State private var currentView: CurrentView = .library
     @State private var isSoundOn: Bool = true
@@ -66,6 +67,8 @@ struct ContentView: View {
     @State private var isPaused = false
 
     @State private var currentLibrary = "nds"
+
+    @State private var gbcEmulator: GBCMobileEmulator? = nil
 
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
@@ -202,6 +205,7 @@ struct ContentView: View {
                             workItem: $workItem,
                             emulator: $emulator,
                             gbaEmulator: $gbaEmulator,
+                            gbcEmulator: $gbcEmulator,
                             gameUrl: $gameUrl,
                             path: $path,
                             game: $game,
@@ -266,6 +270,7 @@ struct ContentView: View {
                         bios7Data: $bios7Data,
                         bios9Data: $bios9Data,
                         firmwareData: $firmwareData,
+                        gbaBiosData: $gbaBiosData,
                         romData: $romData,
                         gameUrl: $gameUrl,
                         user: $user,
@@ -284,11 +289,34 @@ struct ContentView: View {
                         buttonEventDict: $buttonEventDict
                     )
                 } else if view == "GBAGameView" {
-                    GBAGameView(
+//                    GameView(
+//                        isMenuPresented: $isMenuPresented,
+//                        emulator: $gbaEmulator,
+//                        biosData: $gbaBiosData,
+//                        romData: $romData,
+//                        gameUrl: $gameUrl,
+//                        user: $user,
+//                        cloudService: $cloudService,
+//                        game: $gbaGame,
+//                        isSoundOn: $isSoundOn,
+//                        themeColor: $themeColor,
+//                        gameName: $gameName,
+//                        backupFile: $gbaBackupFile,
+//                        gameController: $gameController,
+//                        audioManager: $audioManager,
+//                        isRunning: $isRunning,
+//                        workItem: $workItem,
+//                        image: $gbaImage,
+//                        isPaused: $isPaused,
+//                        buttonEventDict: $gbaButtonDict
+//                    )
+                    GameView(
                         isMenuPresented: $isMenuPresented,
-                        emulator: $gbaEmulator,
-                        emulatorCopy: $gbaEmuCopy,
-                        biosData: $gbaBiosData,
+                        emulator: $emulator,
+                        bios7Data: $bios7Data,
+                        bios9Data: $bios9Data,
+                        firmwareData: $firmwareData,
+                        gbaBiosData: $gbaBiosData,
                         romData: $romData,
                         gameUrl: $gameUrl,
                         user: $user,
@@ -297,14 +325,14 @@ struct ContentView: View {
                         isSoundOn: $isSoundOn,
                         themeColor: $themeColor,
                         gameName: $gameName,
-                        backupFile: $gbaBackupFile,
+                        backupFile: $backupFile,
                         gameController: $gameController,
                         audioManager: $audioManager,
                         isRunning: $isRunning,
                         workItem: $workItem,
-                        image: $gbaImage,
-                        isPaused: $isPaused,
-                        buttonEventDict: $gbaButtonDict
+                        topImage: $topImage,
+                        bottomImage: $bottomImage,
+                        buttonEventDict: $buttonEventDict
                     )
                 }
             }

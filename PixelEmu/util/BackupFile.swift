@@ -7,6 +7,8 @@
 
 import Foundation
 
+extension String: Error {}
+
 class BackupFile {
     var entry: GameEntry
     var gameUrl: URL
@@ -129,7 +131,7 @@ class BackupFile {
         return nil
     }
 
-    static func getLocalSaves(games: [Game]) -> [SaveEntry] {
+    static func getLocalSaves(games: [any Playable]) -> [SaveEntry] {
         var saveEntries = [SaveEntry]()
         do {
             var location = try FileManager.default.url(
@@ -146,10 +148,23 @@ class BackupFile {
 
             let items = try FileManager.default.contentsOfDirectory(atPath: location.path)
 
-            var gameDictionary = [String:Game]()
+            var gameDictionary = [String:any Playable]()
 
             for game in games {
-                gameDictionary[game.gameName.replacing(".nds", with: ".sav")] = game
+                var actualGameName = ""
+                if game.type == .nds {
+                    actualGameName = game.gameName.replacing(".nds", with: ".sav")
+                } else if game.type == .gba {
+                    if game.gameName.contains(".GBA") {
+                        actualGameName = game.gameName.replacing(".GBA", with: ".sav")
+                    } else if game.gameName.contains(".gba") {
+                        actualGameName = game.gameName.replacing(".gba", with: ".sav")
+                    }
+                }
+
+                if actualGameName != "" {
+                    gameDictionary[actualGameName] = game
+                }
             }
 
             for item in items {

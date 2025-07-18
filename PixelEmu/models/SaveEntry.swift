@@ -14,9 +14,9 @@ class SaveEntry: Equatable {
         lhs.game.gameName == rhs.game.gameName
     }
 
-    let game: Game
+    let game: any Playable
 
-    init(game: Game) {
+    init(game: any Playable) {
         self.game = game
     }
 

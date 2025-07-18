@@ -39,6 +39,74 @@ struct ImportGamesView: View {
 
     @Binding var currentLibrary: String
 
+
+    private func storeGBAGame(data: Data, emu: MobileEmulator?, url: URL) async {
+        if var game = GBAGame.storeGame(
+            gameName: gameName,
+            data: data,
+            url: url
+        ) {
+            if !gameNamesSet.contains(gameName) {
+                if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: GBA_ID) {
+                    game.albumArt = artwork
+                }
+                context.insert(game as! GBAGame)
+                gameNamesSet.insert(gameName)
+            }
+        }
+    }
+
+    private func storeDSGame(data: Data, emu: MobileEmulator?, url: URL) async {
+        var emu = emu
+        var romPtr: UnsafeBufferPointer<UInt8>!
+
+        let dataArr = Array(data)
+
+        dataArr.withUnsafeBufferPointer { ptr in
+            romPtr = ptr
+        }
+
+        if emu == nil {
+            if let bios7Data = bios7Data, let bios9Data = bios9Data {
+                var bios7Bytes: UnsafeBufferPointer<UInt8>!
+                var bios9Bytes: UnsafeBufferPointer<UInt8>!
+                var firmwareBytes: UnsafeBufferPointer<UInt8>!
+
+                Array(bios7Data).withUnsafeBufferPointer { ptr in
+                    bios7Bytes = ptr
+                }
+                Array(bios9Data).withUnsafeBufferPointer { ptr in
+                    bios9Bytes = ptr
+                }
+
+                Array([]).withUnsafeBufferPointer { ptr in
+                    firmwareBytes = ptr
+                }
+
+                emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr)
+            }
+        } else {
+            emu?.reloadRom(romPtr)
+        }
+
+        emu?.loadIcon()
+        if var game = Game.storeGame(
+            gameName: gameName,
+            data: romData!,
+            url: url,
+            iconPtr: emu?.getGameIconPointer()
+        ) {
+            // check if album artwork exists before inserting game into DB
+            if !gameNamesSet.contains(gameName) {
+                if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: DS_ID) {
+                    game.albumArt = artwork
+                }
+
+                context.insert(game as! Game)
+            }
+        }
+    }
+
     var body: some View {
         ZStack {
             VStack {
@@ -75,7 +143,7 @@ struct ImportGamesView: View {
                 allowsMultipleSelection: true
             ) { result in
                 do {
-                    var emu: MobileEmulator!
+                    var emu: MobileEmulator?
                     let urls = try result.get()
                     loading = true
                     Task {
@@ -98,67 +166,9 @@ struct ImportGamesView: View {
                                 .unsafelyUnwrapped
 
                                 if url.pathExtension.lowercased() == "nds" {
-                                    var romPtr: UnsafeBufferPointer<UInt8>!
-
-                                    let dataArr = Array(data)
-
-                                    dataArr.withUnsafeBufferPointer { ptr in
-                                        romPtr = ptr
-                                    }
-
-                                    if emu == nil {
-                                        if let bios7Data = bios7Data, let bios9Data = bios9Data {
-                                            var bios7Bytes: UnsafeBufferPointer<UInt8>!
-                                            var bios9Bytes: UnsafeBufferPointer<UInt8>!
-                                            var firmwareBytes: UnsafeBufferPointer<UInt8>!
-
-                                            Array(bios7Data).withUnsafeBufferPointer { ptr in
-                                                bios7Bytes = ptr
-                                            }
-                                            Array(bios9Data).withUnsafeBufferPointer { ptr in
-                                                bios9Bytes = ptr
-                                            }
-
-                                            Array([]).withUnsafeBufferPointer { ptr in
-                                                firmwareBytes = ptr
-                                            }
-
-                                            emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr)
-                                        }
-                                    } else {
-                                        emu.reloadRom(romPtr)
-                                    }
-
-                                    emu.loadIcon()
-                                    if let game = Game.storeGame(
-                                        gameName: gameName,
-                                        data: romData!,
-                                        url: url,
-                                        iconPtr: emu.getGameIconPointer()
-                                    ) {
-                                        // check if album artwork exists before inserting game into DB
-                                        if !gameNamesSet.contains(gameName) {
-                                            if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: DS_ID) {
-                                                game.albumArt = artwork
-                                            }
-                                            context.insert(game)
-                                            gameNamesSet.insert(gameName)
-                                        }
-                                    }
+                                    await storeDSGame(data: data, emu: emu, url: url)
                                 } else {
-                                    if let game = GBAGame.storeGame(
-                                        gameName: gameName,
-                                        data: data,
-                                        url: url
-                                    ) {
-                                        if !gameNamesSet.contains(gameName) {
-                                            if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: GBA_ID) {
-                                                game.albumArt = artwork
-                                            }
-                                            context.insert(game)
-                                            gameNamesSet.insert(gameName)
-                                        }
-                                    }
+                                    await storeGBAGame(data: data, emu: emu, url: url)
                                 }
                             }
                         }

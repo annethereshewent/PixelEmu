@@ -41,11 +41,12 @@ struct GameView: View {
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
+    @Binding var gbaBiosData: Data?
     @Binding var romData: Data?
     @Binding var gameUrl: URL?
     @Binding var user: GIDGoogleUser?
     @Binding var cloudService: CloudService?
-    @Binding var game: Game?
+    @Binding var game: (any Playable)?
     @Binding var isSoundOn: Bool
     @Binding var themeColor: Color
 
@@ -520,8 +521,10 @@ struct GameView: View {
                 if let emu = emulator, let bios7Data = bios7Data, let bios9Data = bios9Data, let romData = romData, let game = game {
                     stateManager = StateManager(
                         emu: emu,
+                        gbaEmu: nil,
                         game: game,
                         context: context,
+                        biosData: nil,
                         bios7Data: bios7Data,
                         bios9Data: bios9Data,
                         romData: romData,

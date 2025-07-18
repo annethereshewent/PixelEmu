@@ -24,7 +24,7 @@ struct SaveStateEntriesView: View {
     @Binding var emulator: MobileEmulator?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
-    @Binding var game: Game?
+    @Binding var game: (any Playable)?
 
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -81,9 +81,9 @@ struct SaveStateEntriesView: View {
     }
 
     private func deleteSaveState() {
-        if let saveState = currentState, let game = game {
-            if let index = game.saveStates.firstIndex(of: saveState) {
-                game.saveStates.remove(at: index)
+        if let saveState = currentState, var game = game {
+            if let index = game.saveStates?.firstIndex(of: saveState) {
+                game.saveStates?.remove(at: index)
                 context.delete(saveState)
             }
         }
@@ -107,7 +107,7 @@ struct SaveStateEntriesView: View {
             ScrollView {
                 if let game = game {
                     LazyVGrid(columns: columns) {
-                        ForEach(game.saveStates.sorted { $0.compare($1) }) { saveState in
+                        ForEach(game.saveStates!.sorted { $0.compare($1) }) { saveState in
                             SaveStateView(
                                 saveState: saveState,
                                 action: $action,
@@ -123,8 +123,10 @@ struct SaveStateEntriesView: View {
             if let emu = emulator, let game = game, let bios7Data = bios7Data, let bios9Data = bios9Data, let romData = romData {
                 stateManager = StateManager(
                     emu: emu,
+                    gbaEmu: nil,
                     game: game,
                     context: context,
+                    biosData: nil,
                     bios7Data: bios7Data,
                     bios9Data: bios9Data,
                     romData: romData,

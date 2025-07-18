@@ -13,17 +13,22 @@ let ICON_WIDTH = 32
 let ICON_HEIGHT = 32
 
 @Model
-class Game {
+class Game: Playable {
     @Attribute(.unique)
     var gameName: String
     var bookmark: Data
-    var gameIcon: Data
+    var gameIcon: Data?
     @Relationship(deleteRule: .cascade, inverse: \SaveState.game)
-    var saveStates: [SaveState]
+    var saveStates: [SaveState]?
     @Attribute(originalName: "addedOn")
     var lastPlayed: Date
 
     var albumArt: Data? = nil
+
+    @Transient
+    var type: GameType = .nds
+    @Transient
+    var gbaSaveStates: [GBASaveState]? = nil
 
 
     init(gameName: String, bookmark: Data, gameIcon: [UInt8], saveStates: [SaveState], lastPlayed: Date) {
@@ -34,7 +39,7 @@ class Game {
         self.saveStates = saveStates
     }
 
-    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>) -> Game? {
+    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>? = nil) -> (any Playable)? {
         let buffer = UnsafeBufferPointer(start: iconPtr, count: ICON_WIDTH * ICON_HEIGHT * 4)
 
         let pixelsArr = Array(buffer)
@@ -42,7 +47,7 @@ class Game {
         // store bookmark for later use
         if url.startAccessingSecurityScopedResource() {
             if let bookmark = try? url.bookmarkData(options: []) {
-                return Game(gameName: gameName, bookmark: bookmark, gameIcon: pixelsArr, saveStates: [], lastPlayed: Date.now)
+                return Game(gameName: gameName, bookmark: bookmark, gameIcon: pixelsArr, saveStates: [], lastPlayed: Date.now) as any Playable
             }
         }
 

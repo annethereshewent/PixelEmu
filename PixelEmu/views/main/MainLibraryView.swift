@@ -1,5 +1,5 @@
 //
-//  DSLibraryView.swift
+//  MainLibraryView.swift
 //  PixelEmu
 //
 //  Created by Anne Castrillon on 11/28/24.
@@ -8,23 +8,29 @@
 import SwiftUI
 
 import DSEmulatorMobile
+import GBAEmulatorMobile
+import GBCEmulatorMobile
 
-struct DSLibraryView: View {
+struct MainLibraryView: View {
     @Binding var recentColor: Color
     @Binding var allColor: Color
     @Binding var filter: LibraryFilter
 
     @Binding var romData: Data?
+    @Binding var gbaBiosData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
     @Binding var emulator: MobileEmulator?
+    @Binding var gbaEmulator: GBAEmulator?
+    @Binding var gbcEmulator: GBCMobileEmulator?
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
-    @Binding var game: Game?
+    @Binding var game: (any Playable)?
     @Binding var themeColor: Color
+    @Binding var isPaused: Bool
 
     var body: some View {
         VStack {
@@ -70,14 +76,17 @@ struct DSLibraryView: View {
                 bios7Data: $bios7Data,
                 bios9Data: $bios9Data,
                 firmwareData: $firmwareData,
+                gbaBios: $gbaBiosData,
                 isRunning: $isRunning,
                 workItem: $workItem,
                 emulator: $emulator,
+                gbaEmulator: $gbaEmulator,
                 gameUrl: $gameUrl,
                 path: $path,
                 game: $game,
                 filter: $filter,
-                themeColor: $themeColor
+                themeColor: $themeColor,
+                isPaused: $isPaused
             )
 
         }

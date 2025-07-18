@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 import GoogleSignIn
 
-struct DSSaveManagementView: View {
+struct MainSaveManagementView: View {
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
     @Binding var saveEntries: [SaveEntry]
@@ -78,12 +78,25 @@ struct DSSaveManagementView: View {
             }
             .onAppear {
                 if user != nil {
-                    loading = true
-                    Task {
-                        if let saveEntries = await cloudService?.getDsSaves(games: games) {
-                            self.saveEntries = saveEntries
+                    if games.count > 0 {
+                        loading = true
+                        Task {
+                            switch games[0].type {
+                            case .nds:
+                                if let saveEntries = await cloudService?.getDsSaves(games: games) {
+                                    self.saveEntries = saveEntries
+                                }
+                                loading = false
+                            case .gba:
+                                if let saveEntries = await cloudService?.getGbaSaves(games: games) {
+                                    self.saveEntries = saveEntries
+                                }
+                                loading = false
+                            case .gbc:
+                                break
+                            }
+
                         }
-                        loading = false
                     }
                 }
                 // get any local saves

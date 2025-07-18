@@ -118,7 +118,7 @@ struct LoadStatesView: View {
             ScrollView {
                 if let selectedGame = selectedGame {
                     LazyVGrid(columns: columns) {
-                        ForEach(selectedGame.saveStates.sorted { $0.compare($1) }) { saveState in
+                        ForEach(selectedGame.saveStates!.sorted { $0.compare($1) }) { saveState in
                             LoadStateEntryView(saveState: saveState, currentState: $currentState)
                         }
                     }

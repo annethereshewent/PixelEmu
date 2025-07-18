@@ -7,11 +7,16 @@
 
 import SwiftUI
 import GBAEmulatorMobile
+import DSEmulatorMobile
 
 struct GBAStateEntriesView: View {
     @Environment(\.modelContext) private var context
 
     @State private var currentState: GBASaveState? = nil
+    private let dsEmu: MobileEmulator? = nil
+    private let bios7Data: Data? = nil
+    private let bios9Data: Data? = nil
+    private let firmwareData: Data? = nil
 
     @Binding var emulator: GBAEmulator?
     @Binding var gameName: String
@@ -23,7 +28,7 @@ struct GBAStateEntriesView: View {
 
     @State private var action: SaveStateAction = .none
 
-    @State private var stateManager: GBAStateManager!
+    @State private var stateManager: StateManager!
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
@@ -42,7 +47,7 @@ struct GBAStateEntriesView: View {
             let saveName = "state_\(timestamp).save"
 
             do {
-                try stateManager.createSaveState(
+                try stateManager.createGbaSaveState(
                     data: data,
                     saveName: saveName,
                     timestamp: timestamp,
@@ -57,7 +62,7 @@ struct GBAStateEntriesView: View {
 
     private func loadSaveState() {
         do {
-            try stateManager.loadSaveState(currentState: currentState)
+            try stateManager.loadGbaSaveState(currentState: currentState)
         } catch {
             print(error)
         }
@@ -72,8 +77,8 @@ struct GBAStateEntriesView: View {
 
     private func deleteSaveState() {
         if let saveState = currentState, let game = game {
-            if let index = game.saveStates.firstIndex(of: saveState) {
-                game.saveStates.remove(at: index)
+            if let index = game.gbaSaveStates!.firstIndex(of: saveState) {
+                game.gbaSaveStates!.remove(at: index)
                 context.delete(saveState)
             }
         }
@@ -97,7 +102,7 @@ struct GBAStateEntriesView: View {
             ScrollView {
                 if let game = game {
                     LazyVGrid(columns: columns) {
-                        ForEach(game.saveStates.sorted { $0.compare($1) }) { saveState in
+                        ForEach(game.gbaSaveStates!.sorted { $0.compare($1) }) { saveState in
                             GBAStateView(
                                 saveState: saveState,
                                 action: $action,
@@ -111,12 +116,16 @@ struct GBAStateEntriesView: View {
         }
         .onAppear() {
             if let emu = emulator, let game = game, let biosData = biosData, let romData = romData {
-                stateManager = GBAStateManager(
-                    emu: emu,
+                stateManager = StateManager(
+                    emu: dsEmu,
+                    gbaEmu: emulator,
                     game: game,
                     context: context,
                     biosData: biosData,
-                    romData: romData
+                    bios7Data: bios7Data,
+                    bios9Data: bios9Data,
+                    romData: romData,
+                    firmwareData: firmwareData
                 )
             }
         }

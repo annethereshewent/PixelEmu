@@ -21,7 +21,7 @@ struct GameMenuView: View {
     @Binding var firmwareData: Data?
     @Binding var romData: Data?
     @Binding var shouldGoHome: Bool
-    @Binding var game: Game?
+    @Binding var game: (any Playable)?
     @Binding var isHoldButtonsPresented: Bool
     @Binding var isSoundOn: Bool
     @Binding var gameController: GameController?

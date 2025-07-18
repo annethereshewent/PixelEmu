@@ -10,12 +10,12 @@ import SwiftUI
 struct GameEntryViewWrapper: View {
     @Binding var showDeleteConfirmation: Bool
     @Binding var deleteAction: () -> Void
-    @Binding var gameToDelete: Game?
+    @Binding var gameToDelete: (any Playable)?
     @Binding var isLoadStatesPresented: Bool
-    @Binding var selectedGame: Game?
+    @Binding var selectedGame: (any Playable)?
 
 
-    let game: Game
+    let game: any Playable
 
     let callback: () -> Void
 

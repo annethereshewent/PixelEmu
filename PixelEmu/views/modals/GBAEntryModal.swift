@@ -31,7 +31,7 @@ struct GBAEntryModal: View {
 
     private func downloadCloudSave() {
         // download save for offline use
-        let saveName = getSaveName()
+        let saveName = ()
 
         loading = true
         Task {
@@ -100,7 +100,7 @@ struct GBAEntryModal: View {
         }
     }
 
-    private func getSaveName() -> String {
+    private func getGbaSaveName() -> String {
         if entry!.game.gameName.hasSuffix(".GBA") {
             return entry!.game.gameName.replacing(".GBA", with: ".sav")
         }

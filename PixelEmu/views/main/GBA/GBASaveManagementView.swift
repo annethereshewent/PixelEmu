@@ -23,8 +23,8 @@ struct GBASaveManagementView: View {
 
     @State private var deleteAction: () -> Void = {}
 
-    @Binding var saveEntries: [GBASaveEntry]
-    @Binding var cloudEntry: GBASaveEntry?
+    @Binding var saveEntries: [SaveEntry]
+    @Binding var cloudEntry: SaveEntry?
 
     @Binding var user: GIDGoogleUser?
     @Binding var loading: Bool
