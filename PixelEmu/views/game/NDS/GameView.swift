@@ -715,9 +715,6 @@ struct GameView: View {
                         addControllerEventListeners(gameController: gameController)
                     })
                 } else {
-                    if game?.type == .gba {
-                        resumeGame()
-                    }
                     if isSoundOn {
                         audioManager?.resumeAudio()
                     }
@@ -739,6 +736,7 @@ struct GameView: View {
                 if isPaused {
                     if let emu = emulator {
                         isPaused = false
+
                         emu.setPaused(false)
                         if isSoundOn {
                             audioManager?.resumeAudio()

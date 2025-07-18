@@ -101,9 +101,6 @@ struct GBAListView: View {
 
                                     let data = try Data(contentsOf: url)
 
-                                    // now load the rom and bios
-                                    emulator = GBAEmulatorWrapper(emu: GBAEmulator())
-
                                     romData = data
                                     gameUrl = url
 
@@ -160,8 +157,7 @@ struct GBAListView: View {
         }
         .onChange(of: settingChanged) {
             if resumeGame {
-                // this isn't working - pause from swift instead of rust for now
-                // emulator?.setPaused(false)
+                emulator?.setPaused(false)
                 path.append("GBAGameView")
             } else {
                 startNewGame()

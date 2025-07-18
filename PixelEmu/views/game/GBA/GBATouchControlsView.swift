@@ -156,22 +156,10 @@ struct GBATouchControlsView: View {
     }
 
     private func goHome() {
-        isPaused = true
-
-        // this isn't working
-        // emulator?.setPaused(true)
+        emulator?.setPaused(true)
         audioManager?.muteAudio()
 
-        workItem!.cancel()
-        workItem = nil
-
-        // this is a hack, otherwise when resuming game nothing seems to work for some reason
-        // seems like it's related to rust in some way and how it handles things.
-        // TODO: dig into this further
-        emulatorCopy = emulator
-        emulator = nil
-
-        shouldGoHome = true
+        presentationMode.wrappedValue.dismiss()
     }
 
     private func handleMiscButtons(point: CGPoint) {
