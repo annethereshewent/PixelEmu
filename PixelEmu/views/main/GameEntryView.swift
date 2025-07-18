@@ -75,6 +75,10 @@ struct GameEntryView: View {
                     }
                 }
             }
+            Text(removeExtension(game: game))
+                .frame(width: 80, height: 80)
+                .fixedSize(horizontal: false, vertical: true)
+                .font(.custom("Departure Mono", size: 10))
         }
     }
 }
