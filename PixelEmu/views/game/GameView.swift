@@ -159,8 +159,8 @@ struct GameView: View {
                     quickSaveLoadKeyPressed = true
 
                     if let emu = emulator {
-                        let dataPtr = emu.createSaveState()
-                        let dataSize = emu.compressedLength()
+                        let dataPtr = try! emu.createSaveState()
+                        let dataSize = try! emu.compressedLength()
 
                         let bufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(dataSize))
                         let data = Data(bufferPtr)
@@ -187,7 +187,7 @@ struct GameView: View {
     private func checkSaves() {
         if let emu = emulator {
             if emu.hasSaved() {
-                emu.setSaved(false)
+                try! emu.setSaved(false)
                 debounceTimer?.invalidate()
 
                 debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { _ in
@@ -563,7 +563,7 @@ struct GameView: View {
                     }
 
 
-                    switch (game.type) {
+                    switch game.type {
                     case .nds:
                         let aPixels = try! emu.getEngineAPicturePointer()
 

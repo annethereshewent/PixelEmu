@@ -61,7 +61,7 @@ struct LoadStatesView: View {
                                 romPtr = ptr
                             }
 
-                            emu.loadSaveState(dataPtr)
+                            try! emu.loadSaveState(dataPtr)
                             try! emu.reloadBios(bios7Ptr, bios9Ptr)
 
                             if let firmwareData = firmwareData {
@@ -77,7 +77,7 @@ struct LoadStatesView: View {
                                 try! emu.hleFirmware()
                             }
 
-                            emu.reloadRom(romPtr)
+                            try! emu.reloadRom(romPtr)
                             isPresented = false
 
                             workItem?.cancel()

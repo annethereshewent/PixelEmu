@@ -33,8 +33,8 @@ struct GBAStateEntriesView: View {
         // create a new save state
 
         if let emu = emulator {
-            let dataPtr = emu.createSaveState()
-            let compressedLength = emu.compressedLength()
+            let dataPtr = try! emu.createSaveState()
+            let compressedLength = try! emu.compressedLength()
 
             let unsafeBufferPtr = UnsafeBufferPointer<UInt8>(start: dataPtr, count: Int(compressedLength))
 

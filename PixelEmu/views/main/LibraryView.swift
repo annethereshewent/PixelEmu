@@ -44,25 +44,25 @@ struct LibraryView: View {
             Text("\(currentLibrary.uppercased()) library")
             TabView(selection: $currentLibrary) {
                 MainLibraryView(
-                    gameType: .nds,
+                    gameType: .gbc,
                     recentColor: $recentColor,
                     allColor: $allColor,
                     filter: $filter,
                     romData: $romData,
-                    gbaBiosData: $gbaBiosData,
-                    bios7Data: $bios7Data,
-                    bios9Data: $bios9Data,
-                    firmwareData: $firmwareData,
+                    gbaBiosData: .constant(nil),
+                    bios7Data: .constant(nil),
+                    bios9Data: .constant(nil),
+                    firmwareData: .constant(nil),
                     isRunning: $isRunning,
                     workItem: $workItem,
                     emulator: $emulator,
                     gameUrl: $gameUrl,
                     path: $path,
-                    game: $game,
+                    game: $gbaGame,
                     themeColor: $themeColor,
                     isPaused: $isPaused
                 )
-                .tag("nds")
+                .tag("gbc")
                 MainLibraryView(
                     gameType: .gba,
                     recentColor: $recentColor,
@@ -83,6 +83,26 @@ struct LibraryView: View {
                     isPaused: $isPaused
                 )
                 .tag("gba")
+                MainLibraryView(
+                    gameType: .nds,
+                    recentColor: $recentColor,
+                    allColor: $allColor,
+                    filter: $filter,
+                    romData: $romData,
+                    gbaBiosData: $gbaBiosData,
+                    bios7Data: $bios7Data,
+                    bios9Data: $bios9Data,
+                    firmwareData: $firmwareData,
+                    isRunning: $isRunning,
+                    workItem: $workItem,
+                    emulator: $emulator,
+                    gameUrl: $gameUrl,
+                    path: $path,
+                    game: $game,
+                    themeColor: $themeColor,
+                    isPaused: $isPaused
+                )
+                .tag("nds")
             }.tabViewStyle(.page)
 
         }

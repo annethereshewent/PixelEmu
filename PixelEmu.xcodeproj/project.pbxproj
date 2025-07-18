@@ -31,13 +31,14 @@
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
 		E8293CBE2E28AD240052BEA4 /* GBCEmulatorMobile in Frameworks */ = {isa = PBXBuildFile; productRef = E8293CBD2E28AD240052BEA4 /* GBCEmulatorMobile */; };
 		E8293CCA2E28B6C30052BEA4 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8293CC92E28B6B20052BEA4 /* Playable.swift */; };
-		E8293CCC2E29AC300052BEA4 /* DSListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8293CCB2E29AC300052BEA4 /* DSListView.swift */; };
 		E8293CCE2E2A05E00052BEA4 /* EmulatorWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8293CCD2E2A05DE0052BEA4 /* EmulatorWrapper.swift */; };
 		E82A46F82D9B41210059BB67 /* PixelEmu-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E82A46F72D9B41210059BB67 /* PixelEmu-Info.plist */; };
 		E82A46FA2D9B41380059BB67 /* PixelEmuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */; };
 		E84B3A8C2D016205003E0061 /* GBABackupFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84B3A8B2D016205003E0061 /* GBABackupFile.swift */; };
 		E84EE44F2D04024700CF15ED /* GBASaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EE44E2D04024700CF15ED /* GBASaveState.swift */; };
 		E84EE4512D0403B000CF15ED /* GBAStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EE4502D0403B000CF15ED /* GBAStateView.swift */; };
+		E88C68492E2AFEB500A7085E /* GBCGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88C68482E2AFEB500A7085E /* GBCGame.swift */; };
+		E88C684D2E2B017D00A7085E /* GamesListViewInner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88C684C2E2B017D00A7085E /* GamesListViewInner.swift */; };
 		E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681A62CD440CF00F7A316 /* StateManager.swift */; };
 		E89681A92CD561A100F7A316 /* ControllerMappingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */; };
 		E89681AD2CD6D68500F7A316 /* ControllerMappingButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */; };
@@ -57,7 +58,6 @@
 		E8BBBC682CF96AD10065EF4E /* GBAGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC672CF96AD10065EF4E /* GBAGame.swift */; };
 		E8BBBC6A2CF96AEA0065EF4E /* MainLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC692CF96AEA0065EF4E /* MainLibraryView.swift */; };
 		E8BBBC7E2CF981510065EF4E /* GBAEmulatorMobile in Frameworks */ = {isa = PBXBuildFile; productRef = E8BBBC7D2CF981510065EF4E /* GBAEmulatorMobile */; };
-		E8BBBC802CF9847B0065EF4E /* GBAListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC7F2CF9847B0065EF4E /* GBAListView.swift */; };
 		E8BBBC862CFA71A20065EF4E /* ArtworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */; };
 		E8BBBC882CFA91090065EF4E /* gba_bios.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8BBBC872CFA91090065EF4E /* gba_bios.bin */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
@@ -112,13 +112,14 @@
 		E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
 		E8293CC92E28B6B20052BEA4 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
-		E8293CCB2E29AC300052BEA4 /* DSListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSListView.swift; sourceTree = "<group>"; };
 		E8293CCD2E2A05DE0052BEA4 /* EmulatorWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorWrapper.swift; sourceTree = "<group>"; };
 		E82A46F72D9B41210059BB67 /* PixelEmu-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PixelEmu-Info.plist"; sourceTree = "<group>"; };
 		E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelEmuApp.swift; sourceTree = "<group>"; };
 		E84B3A8B2D016205003E0061 /* GBABackupFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBABackupFile.swift; sourceTree = "<group>"; };
 		E84EE44E2D04024700CF15ED /* GBASaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBASaveState.swift; sourceTree = "<group>"; };
 		E84EE4502D0403B000CF15ED /* GBAStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateView.swift; sourceTree = "<group>"; };
+		E88C68482E2AFEB500A7085E /* GBCGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBCGame.swift; sourceTree = "<group>"; };
+		E88C684C2E2B017D00A7085E /* GamesListViewInner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListViewInner.swift; sourceTree = "<group>"; };
 		E89681A62CD440CF00F7A316 /* StateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManager.swift; sourceTree = "<group>"; };
 		E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerMappingsView.swift; sourceTree = "<group>"; };
 		E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerMappingButtonView.swift; sourceTree = "<group>"; };
@@ -137,7 +138,6 @@
 		E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.otf; sourceTree = "<group>"; };
 		E8BBBC672CF96AD10065EF4E /* GBAGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAGame.swift; sourceTree = "<group>"; };
 		E8BBBC692CF96AEA0065EF4E /* MainLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLibraryView.swift; sourceTree = "<group>"; };
-		E8BBBC7F2CF9847B0065EF4E /* GBAListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAListView.swift; sourceTree = "<group>"; };
 		E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtworkService.swift; sourceTree = "<group>"; };
 		E8BBBC872CFA91090065EF4E /* gba_bios.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = gba_bios.bin; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
@@ -284,6 +284,7 @@
 				E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */,
 				E8C245F72CBE043B00B6DF67 /* SaveState.swift */,
 				E84EE44E2D04024700CF15ED /* GBASaveState.swift */,
+				E88C68482E2AFEB500A7085E /* GBCGame.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -342,29 +343,6 @@
 			path = GBC;
 			sourceTree = "<group>";
 		};
-		E8293CC62E28AED70052BEA4 /* GBC */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = GBC;
-			sourceTree = "<group>";
-		};
-		E8293CC72E28AEDC0052BEA4 /* GBA */ = {
-			isa = PBXGroup;
-			children = (
-				E8BBBC7F2CF9847B0065EF4E /* GBAListView.swift */,
-			);
-			path = GBA;
-			sourceTree = "<group>";
-		};
-		E8293CC82E28AEE10052BEA4 /* NDS */ = {
-			isa = PBXGroup;
-			children = (
-				E8293CCB2E29AC300052BEA4 /* DSListView.swift */,
-			);
-			path = NDS;
-			sourceTree = "<group>";
-		};
 		E8C245E72CBCAA5000B6DF67 /* bin */ = {
 			isa = PBXGroup;
 			children = (
@@ -396,9 +374,6 @@
 				E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */,
 				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
 				E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */,
-				E8293CC82E28AEE10052BEA4 /* NDS */,
-				E8293CC72E28AEDC0052BEA4 /* GBA */,
-				E8293CC62E28AED70052BEA4 /* GBC */,
 				E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */,
 				E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */,
 				E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */,
@@ -406,6 +381,7 @@
 				E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */,
 				E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */,
 				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
+				E88C684C2E2B017D00A7085E /* GamesListViewInner.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -593,7 +569,9 @@
 				E8EE5D862CC2216300CD77B6 /* CurrentView.swift in Sources */,
 				E8BBBC682CF96AD10065EF4E /* GBAGame.swift in Sources */,
 				E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */,
+				E88C684D2E2B017D00A7085E /* GamesListViewInner.swift in Sources */,
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
+				E88C68492E2AFEB500A7085E /* GBCGame.swift in Sources */,
 				E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */,
 				E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */,
 				E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */,
@@ -641,10 +619,8 @@
 				E8A334022CFABD6600765ABB /* GBATouchControlsView.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
-				E8293CCC2E29AC300052BEA4 /* DSListView.swift in Sources */,
 				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
 				E89681AD2CD6D68500F7A316 /* ControllerMappingButtonView.swift in Sources */,
-				E8BBBC802CF9847B0065EF4E /* GBAListView.swift in Sources */,
 				E8C245F62CBDBA4500B6DF67 /* GameMenuView.swift in Sources */,
 				E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */,
 			);

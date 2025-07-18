@@ -86,7 +86,7 @@ struct ImportGamesView: View {
                 emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr) as! EmulatorWrapper?
             }
         } else {
-            emu?.reloadRom(romPtr)
+            try! emu?.reloadRom(romPtr)
         }
 
         try! emu?.loadIcon()
