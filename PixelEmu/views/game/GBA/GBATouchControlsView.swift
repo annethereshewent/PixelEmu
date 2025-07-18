@@ -23,6 +23,7 @@ struct GBATouchControlsView: View {
     @Binding var isHoldButtonsPresented: Bool
     @Binding var heldButtons: Set<GBAButtonEvent>
     @Binding var isPaused: Bool
+    @Binding var shouldGoHome: Bool
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
@@ -161,7 +162,7 @@ struct GBATouchControlsView: View {
         // emulator?.setPaused(true)
         audioManager?.muteAudio()
 
-        workItem?.cancel()
+        workItem!.cancel()
         workItem = nil
 
         // this is a hack, otherwise when resuming game nothing seems to work for some reason
@@ -170,7 +171,7 @@ struct GBATouchControlsView: View {
         emulatorCopy = emulator
         emulator = nil
 
-        presentationMode.wrappedValue.dismiss()
+        shouldGoHome = true
     }
 
     private func handleMiscButtons(point: CGPoint) {

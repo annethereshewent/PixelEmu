@@ -19,7 +19,7 @@ struct GameView: View {
 
     @State private var debounceTimer: Timer? = nil
 
-    @State private var loading = false
+    @State private var loading = true
 
     @State private var homePressed = false
     @State private var controlStickKeyPressed = false

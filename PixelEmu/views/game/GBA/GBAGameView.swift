@@ -81,7 +81,7 @@ struct GBAGameView: View {
         workItem?.cancel()
         workItem = nil
 
-        // presentationMode.wrappedValue.dismiss()
+        presentationMode.wrappedValue.dismiss()
     }
 
     private func checkSaves() {
@@ -278,13 +278,13 @@ struct GBAGameView: View {
     }
 
     var body: some View {
-        if !loading {
-            ZStack {
-                if gameController?.controller?.extendedGamepad == nil {
-                    themeColor
-                } else {
-                    Color.black
-                }
+        ZStack {
+            if gameController?.controller?.extendedGamepad == nil {
+                themeColor
+            } else {
+                Color.black
+            }
+            if !loading {
                 VStack {
                     GBAScreenViewWrapper(
                         gameController: $gameController,
@@ -310,88 +310,13 @@ struct GBAGameView: View {
                             isMenuPresented: $isMenuPresented,
                             isHoldButtonsPresented: $isHoldButtonsPresented,
                             heldButtons: $heldButtons,
-                            isPaused: $isPaused
+                            isPaused: $isPaused,
+                            shouldGoHome: $shouldGoHome
                         )
                     }
                     Spacer()
                 }
-            }
-            .sheet(
-                isPresented: $isMenuPresented
-            ) {
-                GBAMenuView(
-                    emulator: $emulator,
-                    isRunning: $isRunning,
-                    workItem: $workItem,
-                    audioManager: $audioManager,
-                    isMenuPresented: $isMenuPresented,
-                    gameName: $gameName,
-                    biosData: $biosData,
-                    romData: $romData,
-                    shouldGoHome: $shouldGoHome,
-                    game: $game,
-                    isHoldButtonsPresented: $isHoldButtonsPresented,
-                    isSoundOn: $isSoundOn,
-                    gameController: $gameController
-                )
-            }
-            .onAppear {
-                UIApplication.shared.isIdleTimerDisabled = true
-
-                Task {
-                    if !isRunning {
-                        emulatorCopy = nil
-                        await run()
-                        gameController = GameController(closure: { gameController in
-                            addControllerEventListeners(gameController: gameController)
-                        })
-                    } else {
-                        resumeGame()
-                    }
-                }
-            }
-            .onDisappear {
-                UIApplication.shared.isIdleTimerDisabled = false
-            }
-            .onChange(of: shouldGoHome) {
-                if shouldGoHome {
-                    goHome()
-                }
-            }
-            .onChange(of: scenePhase) {
-                switch scenePhase {
-                case .active:
-                    if isPaused {
-                        if let emu = emulator {
-                            isPaused = false
-                            emu.setPaused(false)
-                            if isSoundOn {
-                                audioManager?.resumeAudio()
-                            }
-                        }
-                    }
-                    break
-                case .inactive:
-                    break
-                case .background:
-                    if let emu = emulator {
-                        isPaused = true
-                        emu.setPaused(true)
-                        audioManager?.muteAudio()
-                    }
-                    break
-                default:
-                    break
-                }
-            }
-            .navigationBarTitle("")
-            .navigationBarHidden(true)
-            .ignoresSafeArea(.all)
-            .edgesIgnoringSafeArea(.all)
-            .statusBarHidden()
-        } else {
-            ZStack {
-                themeColor
+            } else {
                 VStack {
                     Image("Launch Screen Logo")
                         .resizable()
@@ -399,11 +324,78 @@ struct GBAGameView: View {
                     ProgressView()
                 }
             }
-            .navigationBarTitle("")
-            .navigationBarHidden(true)
-            .ignoresSafeArea(.all)
-            .edgesIgnoringSafeArea(.all)
-            .statusBarHidden()
         }
+        .sheet(
+            isPresented: $isMenuPresented
+        ) {
+            GBAMenuView(
+                emulator: $emulator,
+                isRunning: $isRunning,
+                workItem: $workItem,
+                audioManager: $audioManager,
+                isMenuPresented: $isMenuPresented,
+                gameName: $gameName,
+                biosData: $biosData,
+                romData: $romData,
+                shouldGoHome: $shouldGoHome,
+                game: $game,
+                isHoldButtonsPresented: $isHoldButtonsPresented,
+                isSoundOn: $isSoundOn,
+                gameController: $gameController
+            )
+        }
+        .onAppear {
+            UIApplication.shared.isIdleTimerDisabled = true
+            Task {
+                if !isRunning && !isPaused {
+                    emulatorCopy = nil
+                    await run()
+                    gameController = GameController(closure: { gameController in
+                        addControllerEventListeners(gameController: gameController)
+                    })
+                } else {
+                    resumeGame()
+                }
+            }
+        }
+        .onDisappear {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
+        .onChange(of: shouldGoHome) {
+            if shouldGoHome {
+                goHome()
+            }
+        }
+        .onChange(of: scenePhase) {
+            switch scenePhase {
+            case .active:
+                if isPaused {
+                    if let emu = emulator {
+                        isPaused = false
+                        emu.setPaused(false)
+                        if isSoundOn {
+                            audioManager?.resumeAudio()
+                        }
+                    }
+                }
+                break
+            case .inactive:
+                break
+            case .background:
+                if let emu = emulator {
+                    isPaused = true
+                    emu.setPaused(true)
+                    audioManager?.muteAudio()
+                }
+                break
+            default:
+                break
+            }
+        }
+        .navigationBarTitle("")
+        .navigationBarHidden(true)
+        .ignoresSafeArea(.all)
+        .edgesIgnoringSafeArea(.all)
+        .statusBarHidden()
     }
 }

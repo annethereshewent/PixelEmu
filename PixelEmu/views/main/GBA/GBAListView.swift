@@ -20,12 +20,12 @@ struct GBAListView: View {
     @State private var gameToDelete: (any Playable)?
 
     @State private var showResumeDialog = false
-    @State private var resumeGame = false
     @State private var settingChanged = false
     @State private var isLoadStatesPresented = false
     @State private var selectedGame: (any Playable)?
     @State private var selectedGbaGame: GBAGame?
     @State private var gbaGame: GBAGame?
+    @State private var resumeGame: Bool = false
 
     @Binding var showGameError: Bool
     @Binding var gameUrl: URL?
@@ -40,6 +40,7 @@ struct GBAListView: View {
     @Binding var isRunning: Bool
     @Binding var path: NavigationPath
     @Binding var isPaused: Bool
+
 
     var filteredGames: [GBAGame]
 
@@ -121,6 +122,35 @@ struct GBAListView: View {
                     }
                 }
             }
+            if showResumeDialog {
+                ResumeGameDialog(
+                    showDialog: $showResumeDialog,
+                    resumeGame: $resumeGame,
+                    settingChanged: $settingChanged,
+                    themeColor: $themeColor
+                )
+            } else if showDeleteConfirmation {
+                DeleteDialog(
+                    showDialog: $showDeleteConfirmation,
+                    deleteAction: $deleteAction,
+                    themeColor: $themeColor,
+                    deleteMessage: "Are you sure you want to remove this game from your library?"
+                )
+            } else if showDeleteError {
+                AlertModal(
+                    alertTitle: "Oops!",
+                    text: "There was an error removing the game.",
+                    showAlert: $showDeleteError,
+                    themeColor: $themeColor
+                )
+            } else if showGameError {
+                AlertModal(
+                    alertTitle: "Oops!",
+                    text: "There was an error loading the specified game.",
+                    showAlert: $showGameError,
+                    themeColor: $themeColor
+                )
+            }
         }
         .onChange(of: game?.gameName) {
             gbaGame = game as! GBAGame?
@@ -130,8 +160,6 @@ struct GBAListView: View {
         }
         .onChange(of: settingChanged) {
             if resumeGame {
-                isPaused = false
-
                 // this isn't working - pause from swift instead of rust for now
                 // emulator?.setPaused(false)
                 path.append("GBAGameView")
@@ -147,35 +175,6 @@ struct GBAListView: View {
                     showDeleteError = true
                 }
             }
-        }
-        if showResumeDialog {
-            ResumeGameDialog(
-                showDialog: $showResumeDialog,
-                resumeGame: $resumeGame,
-                settingChanged: $settingChanged,
-                themeColor: $themeColor
-            )
-        } else if showDeleteConfirmation {
-            DeleteDialog(
-                showDialog: $showDeleteConfirmation,
-                deleteAction: $deleteAction,
-                themeColor: $themeColor,
-                deleteMessage: "Are you sure you want to remove this game from your library?"
-            )
-        } else if showDeleteError {
-            AlertModal(
-                alertTitle: "Oops!",
-                text: "There was an error removing the game.",
-                showAlert: $showDeleteError,
-                themeColor: $themeColor
-            )
-        } else if showGameError {
-            AlertModal(
-                alertTitle: "Oops!",
-                text: "There was an error loading the specified game.",
-                showAlert: $showGameError,
-                themeColor: $themeColor
-            )
         }
     }
 }
