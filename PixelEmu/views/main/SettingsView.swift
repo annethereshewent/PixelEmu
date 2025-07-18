@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 import GoogleSignIn
 import DSEmulatorMobile
 import GBAEmulatorMobile
+import GameController
 
 struct SettingsView: View {
     @Binding var bios7Data: Data?
@@ -174,6 +175,9 @@ struct SettingsView: View {
                 }
             }
             Spacer()
+        }
+        .onAppear() {
+            gameController = GameController() { _ in }
         }
         .font(.custom("Departure Mono", size: 20))
         .foregroundColor(Colors.primaryColor)
