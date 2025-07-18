@@ -14,8 +14,8 @@ struct ControllerMappingButtonView: View {
     var gbaEvent: GBAButtonEvent?
     @Binding var buttonMappings: [ButtonEvent:ButtonMapping]
     @Binding var gbaButtonMappings: [GBAButtonEvent:ButtonMapping]
-    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
-    @Binding var gbaButtonDict: [ButtonMapping:GBAButtonEvent]
+    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]?
+    @Binding var gbaButtonDict: [ButtonMapping:GBAButtonEvent]?
     @Binding var awaitingInput: [ButtonEvent:Bool]
     @Binding var gameController: GameController?
 
@@ -73,13 +73,13 @@ struct ControllerMappingButtonView: View {
                 while awaitingInput[event] ?? false {
                     if let button = detectButtonPressed() {
                         if button != .noButton {
-                            if let switchEvent = buttonEventDict[button], let oldButton = buttonMappings[event] {
+                            if let switchEvent = buttonEventDict?[button], let oldButton = buttonMappings[event] {
                                 buttonMappings[switchEvent] = oldButton
                             }
                             buttonMappings[event] = button
 
                             if let gbaEvent = gbaEvent {
-                                if let switchEvent = gbaButtonDict[button], let oldButton = gbaButtonMappings[gbaEvent] {
+                                if let switchEvent = gbaButtonDict?[button], let oldButton = gbaButtonMappings[gbaEvent] {
                                     gbaButtonMappings[switchEvent] = oldButton
                                 }
                                 gbaButtonMappings[gbaEvent] = button

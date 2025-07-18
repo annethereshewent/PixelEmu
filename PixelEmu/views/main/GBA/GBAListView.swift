@@ -34,7 +34,7 @@ struct GBAListView: View {
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
-    @Binding var emulator: GBAEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var game: (any Playable)?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
@@ -102,7 +102,7 @@ struct GBAListView: View {
                                     let data = try Data(contentsOf: url)
 
                                     // now load the rom and bios
-                                    emulator = GBAEmulator()
+                                    emulator = GBAEmulatorWrapper(emu: GBAEmulator())
 
                                     romData = data
                                     gameUrl = url

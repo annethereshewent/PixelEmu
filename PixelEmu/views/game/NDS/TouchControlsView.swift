@@ -12,7 +12,7 @@ struct TouchControlsView: View {
 
     @Environment(\.presentationMode) var presentationMode
 
-    @Binding var emulator: MobileEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var audioManager: AudioManager?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
@@ -122,17 +122,17 @@ struct TouchControlsView: View {
                         }
                     } else {
                         if heldButtons.contains(entry.key) {
-                            emu.updateInput(entry.key, false)
+                            try! emu.updateInput(entry.key, false)
                             // exactly one frame delay
                             Timer.scheduledTimer(withTimeInterval: 1 / 60, repeats: false) { _ in
-                                emu.updateInput(entry.key, true)
+                                try! emu.updateInput(entry.key, true)
                             }
                         } else {
-                            emu.updateInput(entry.key, true)
+                            try! emu.updateInput(entry.key, true)
                         }
                     }
                 } else if !heldButtons.contains(entry.key) {
-                    emu.updateInput(entry.key, false)
+                    try! emu.updateInput(entry.key, false)
                 }
             }
         }
@@ -140,10 +140,10 @@ struct TouchControlsView: View {
 
     private func releaseControlPad() {
         if let emu = emulator {
-            emu.updateInput(ButtonEvent.Up, false)
-            emu.updateInput(ButtonEvent.Left, false)
-            emu.updateInput(ButtonEvent.Right, false)
-            emu.updateInput(ButtonEvent.Down, false)
+            try! emu.updateInput(ButtonEvent.Up, false)
+            try! emu.updateInput(ButtonEvent.Left, false)
+            try! emu.updateInput(ButtonEvent.Right, false)
+            try! emu.updateInput(ButtonEvent.Down, false)
         }
     }
 
@@ -156,14 +156,14 @@ struct TouchControlsView: View {
         if let emu = emulator {
             for button in buttons {
                 if !heldButtons.contains(button) {
-                    emu.updateInput(button, false)
+                    try! emu.updateInput(button, false)
                 }
             }
         }
     }
 
     private func goHome() {
-        emulator?.setPause(true)
+        emulator?.setPaused(true)
         audioManager?.muteAudio()
 
         presentationMode.wrappedValue.dismiss()
@@ -174,7 +174,7 @@ struct TouchControlsView: View {
             if entry.value.contains(point) {
                 if entry.key != ButtonEvent.ButtonHome {
                     if let emu = emulator {
-                        emu.updateInput(entry.key, true)
+                        try! emu.updateInput(entry.key, true)
                     }
                 } else {
                     goHome()
@@ -182,7 +182,7 @@ struct TouchControlsView: View {
                 }
             } else if entry.key != ButtonEvent.ButtonHome {
                 if let emu = emulator {
-                    emu.updateInput(entry.key, false)
+                    try! emu.updateInput(entry.key, false)
                 }
             }
         }
@@ -190,8 +190,8 @@ struct TouchControlsView: View {
 
     private func releaseMiscButtons() {
         if let emu = emulator {
-            emu.updateInput(ButtonEvent.Start, false)
-            emu.updateInput(ButtonEvent.Select, false)
+            try! emu.updateInput(ButtonEvent.Start, false)
+            try! emu.updateInput(ButtonEvent.Select, false)
         }
     }
 
@@ -321,7 +321,7 @@ struct TouchControlsView: View {
                     Button() {
                         isMenuPresented = !isMenuPresented
                         if let emu = emulator {
-                            emu.setPause(isMenuPresented)
+                            emu.setPaused(isMenuPresented)
                         }
                     } label: {
                         Image("Red Button")
@@ -351,13 +351,13 @@ struct TouchControlsView: View {
         .onChange(of: heldButtons) {
             if let emu = emulator {
                 for button in heldButtons {
-                    emu.updateInput(button, true)
+                    try! emu.updateInput(button, true)
                 }
 
                 let difference = allButtons.subtracting(heldButtons)
 
                 for button in difference {
-                    emu.updateInput(button, false)
+                    try! emu.updateInput(button, false)
                 }
             }
         }

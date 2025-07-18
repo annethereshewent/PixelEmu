@@ -13,7 +13,7 @@ struct GBAScreenView: View {
     @Binding var image: CGImage?
     @Binding var isHoldButtonsPresented: Bool
     @Binding var themeColor: Color
-    @Binding var emulator: GBAEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var heldButtons: Set<GBAButtonEvent>
 
     @EnvironmentObject var orientationInfo: OrientationInfo

@@ -33,7 +33,7 @@ struct DSListView: View {
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
-    @Binding var emulator: MobileEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var game: (any Playable)?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
@@ -117,7 +117,7 @@ struct DSListView: View {
             }
             .onChange(of: settingChanged) {
                 if resumeGame {
-                    emulator?.setPause(false)
+                    emulator?.setPaused(false)
                     path.append("GameView")
                 } else {
                     startNewGame()

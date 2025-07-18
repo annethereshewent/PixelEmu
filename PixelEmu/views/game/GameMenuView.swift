@@ -12,8 +12,7 @@ import GBAEmulatorMobile
 struct GameMenuView: View {
     let gameType: GameType
     @Environment(\.colorScheme) private var colorScheme
-    @Binding var emulator: MobileEmulator?
-    @Binding var gbaEmulator: GBAEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
     @Binding var audioManager: AudioManager?
@@ -132,11 +131,7 @@ struct GameMenuView: View {
             }
             .onDisappear() {
                 if !isHoldButtonsPresented && !shouldGoHome {
-                    switch gameType {
-                    case .nds: emulator?.setPause(false)
-                    case .gba: gbaEmulator?.setPaused(false)
-                    case .gbc: break
-                    }
+                    emulator?.setPaused(false)
                     if isSoundOn {
                         audioManager?.resumeAudio()
                     }
@@ -162,7 +157,7 @@ struct GameMenuView: View {
                 )
             case .gba:
                 GBAStateEntriesView(
-                    emulator: $gbaEmulator,
+                    emulator: $emulator,
                     gameName: $gameName,
                     isMenuPresented: $isMenuPresented,
                     game: $game,

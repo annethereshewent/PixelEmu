@@ -11,8 +11,7 @@ import GBAEmulatorMobile
 import SwiftData
 
 class StateManager {
-    private let emu: MobileEmulator?
-    private let gbaEmu: GBAEmulator?
+    private let emu: (any EmulatorWrapper)?
     private var game: any Playable
     private let context: ModelContext
 
@@ -23,8 +22,7 @@ class StateManager {
     private let firmwareData: Data?
 
     init(
-        emu: MobileEmulator?,
-        gbaEmu: GBAEmulator?,
+        emu: (any EmulatorWrapper)?,
         game: any Playable,
         context: ModelContext,
         biosData: Data?,
@@ -34,7 +32,6 @@ class StateManager {
         firmwareData: Data?
     ) {
         self.emu = emu
-        self.gbaEmu = gbaEmu
         self.game = game
         self.context = context
 
@@ -222,7 +219,7 @@ class StateManager {
                 }
 
                 emu.loadSaveState(dataPtr)
-                emu.reloadBios(bios7Ptr, bios9Ptr)
+                try! emu.reloadBios(bios7Ptr, bios9Ptr)
 
                 if let firmwareData = firmwareData {
                     var firmwarePtr: UnsafeBufferPointer<UInt8>!
@@ -232,9 +229,9 @@ class StateManager {
                         firmwarePtr = ptr
                     }
 
-                    emu.reloadFirmware(firmwarePtr)
+                    try! emu.reloadFirmware(firmwarePtr)
                 } else {
-                    emu.hleFirmware()
+                    try! emu.hleFirmware()
                 }
                 emu.reloadRom(romPtr)
             }
@@ -272,7 +269,7 @@ class StateManager {
         } else {
             return
         }
-        if let emu = gbaEmu {
+        if let emu = emu {
             if let data = try? Array(Data(contentsOf: url)) {
                 if let biosData = biosData {
                     var dataPtr: UnsafeBufferPointer<UInt8>!
@@ -291,9 +288,10 @@ class StateManager {
                         biosPtr = ptr
                     }
 
-                    emu.loadSaveState(dataPtr)
-                    emu.loadBios(biosPtr)
+                    try! emu.loadBios(biosPtr)
                     emu.reloadRom(romPtr)
+                    emu.loadSaveState(dataPtr)
+
                 }
             }
         }
@@ -328,7 +326,7 @@ class StateManager {
 
         var screenshot: [UInt8]!
 
-        let picturePtr = gbaEmu?.getPicturePtr()
+        let picturePtr = try! emu?.getPicturePtr()
 
         let bufferPtr = UnsafeBufferPointer(start: picturePtr, count: GBA_SCREEN_WIDTH * GBA_SCREEN_HEIGHT * 4)
 
@@ -375,31 +373,20 @@ class StateManager {
             var screenshot: [UInt8]!
 
             if emu.isTopA() {
-                let topBufferPtr = UnsafeBufferPointer(start: emu.getEngineAPicturePointer(), count: SCREEN_WIDTH * SCREEN_HEIGHT * 4)
+                let topBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineAPicturePointer(), count: SCREEN_WIDTH * SCREEN_HEIGHT * 4)
                 screenshot = Array(topBufferPtr)
 
-                let bottomBufferPtr = UnsafeBufferPointer(start: emu.getEngineBPicturePointer(), count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
+                let bottomBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineBPicturePointer(), count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
 
                 screenshot.append(contentsOf: Array(bottomBufferPtr))
             } else {
-                let topBufferPtr = UnsafeBufferPointer(start: emu.getEngineBPicturePointer(), count: SCREEN_WIDTH * SCREEN_HEIGHT * 4)
+                let topBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineBPicturePointer(), count: SCREEN_WIDTH * SCREEN_HEIGHT * 4)
                 screenshot = Array(topBufferPtr)
 
-                let bottomBufferPtr = UnsafeBufferPointer(start: emu.getEngineAPicturePointer(), count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
+                let bottomBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineAPicturePointer(), count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
 
                 screenshot.append(contentsOf: Array(bottomBufferPtr))
             }
-
-            let date = Date()
-            let calendar = Calendar.current
-
-            let hour = calendar.component(.hour, from: date)
-            let minutes = calendar.component(.minute, from: date)
-            let seconds = calendar.component(.second, from: date)
-
-            let month = calendar.component(.month, from: date)
-            let day = calendar.component(.day, from: date)
-            let year = calendar.component(.year, from: date)
 
             saveNdsState(
                 game as! Game,

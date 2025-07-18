@@ -12,7 +12,7 @@ struct DualScreenViewWrapper: View {
     @Binding var gameController: GameController?
     @Binding var topImage: CGImage?
     @Binding var bottomImage: CGImage?
-    @Binding var emulator: MobileEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var buttonStarted: [ButtonEvent:Bool]
     @Binding var audioManager: AudioManager?
     @Binding var isSoundOn: Bool
@@ -135,11 +135,11 @@ struct DualScreenViewWrapper: View {
                                                 feedbackGenerator.impactOccurred()
                                                 buttonStarted[ButtonEvent.ButtonL] = true
                                             }
-                                            emulator?.updateInput(ButtonEvent.ButtonL, true)
+                                            try! emulator?.updateInput(ButtonEvent.ButtonL, true)
                                         }
                                         .onEnded() { result in
                                             buttonStarted[ButtonEvent.ButtonL] = false
-                                            emulator?.updateInput(ButtonEvent.ButtonL, false)
+                                            try! emulator?.updateInput(ButtonEvent.ButtonL, false)
                                         }
                                 )
                                 .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)
@@ -170,11 +170,11 @@ struct DualScreenViewWrapper: View {
                                                 feedbackGenerator.impactOccurred()
                                                 buttonStarted[ButtonEvent.ButtonR] = true
                                             }
-                                            emulator?.updateInput(ButtonEvent.ButtonR, true)
+                                            try! emulator?.updateInput(ButtonEvent.ButtonR, true)
                                         }
                                         .onEnded() { result in
                                             buttonStarted[ButtonEvent.ButtonR] = false
-                                            emulator?.updateInput(ButtonEvent.ButtonR, false)
+                                            try! emulator?.updateInput(ButtonEvent.ButtonR, false)
                                         }
                                 )
                                 .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)

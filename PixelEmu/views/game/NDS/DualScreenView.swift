@@ -14,7 +14,7 @@ struct DualScreenView: View {
     @Binding var bottomImage: CGImage?
     @Binding var isHoldButtonsPresented: Bool
     @Binding var themeColor: Color
-    @Binding var emulator: MobileEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var heldButtons: Set<ButtonEvent>
 
     @EnvironmentObject var orientationInfo: OrientationInfo
@@ -95,7 +95,7 @@ struct DualScreenView: View {
                     Button("Confirm") {
                         isHoldButtonsPresented = false
                         if let emu = emulator {
-                            emu.setPause(false)
+                            emu.setPaused(false)
                         }
                     }
                     .foregroundColor(themeColor)
@@ -123,9 +123,9 @@ struct DualScreenView: View {
                         {
                             let x = UInt16(Float(value.location.x) / screenRatio)
                             let y = UInt16(Float(value.location.y) / screenRatio)
-                            emulator?.touchScreen(x, y)
+                            try! emulator?.touchScreen(x, y)
                         } else {
-                            emulator?.releaseScreen()
+                            try! emulator?.releaseScreen()
                         }
                     }
                     .onEnded() { value in
@@ -136,15 +136,15 @@ struct DualScreenView: View {
                         {
                             let x = UInt16(Float(value.location.x) / screenRatio)
                             let y = UInt16(Float(value.location.y) / screenRatio)
-                            emulator?.touchScreen(x, y)
+                            try! emulator?.touchScreen(x, y)
                             DispatchQueue.global().async(execute: DispatchWorkItem {
                                 usleep(200)
                                 DispatchQueue.main.sync() {
-                                    emulator?.releaseScreen()
+                                    try! emulator?.releaseScreen()
                                 }
                             })
                         } else {
-                            emulator?.releaseScreen()
+                            try! emulator?.releaseScreen()
                         }
 
                     }

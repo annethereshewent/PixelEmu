@@ -18,7 +18,7 @@ struct GBAStateEntriesView: View {
     private let bios9Data: Data? = nil
     private let firmwareData: Data? = nil
 
-    @Binding var emulator: GBAEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
     @Binding var game: (any Playable)?
@@ -117,8 +117,7 @@ struct GBAStateEntriesView: View {
         .onAppear() {
             if let emu = emulator, let game = game, let biosData = biosData, let romData = romData {
                 stateManager = StateManager(
-                    emu: dsEmu,
-                    gbaEmu: emulator,
+                    emu: emu,
                     game: game,
                     context: context,
                     biosData: biosData,

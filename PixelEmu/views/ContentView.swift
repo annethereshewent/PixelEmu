@@ -32,9 +32,8 @@ struct ContentView: View {
     @State private var loggedInCloud = false
 
     @State private var path = NavigationPath()
-    @State private var emulator: MobileEmulator? = nil
-    @State private var gbaEmulator: GBAEmulator? = nil
-    @State private var gbaEmuCopy: GBAEmulator? = nil
+    @State private var emulator: (any EmulatorWrapper)? = nil
+    @State private var gbaEmulatorCopy: (any EmulatorWrapper)? = nil
     @State private var gameUrl: URL? = nil
 
     @State private var user: GIDGoogleUser? = nil
@@ -57,8 +56,8 @@ struct ContentView: View {
     @State private var backupFile: BackupFile? = nil
     @State private var gbaBackupFile: GBABackupFile? = nil
 
-    @State private var buttonEventDict: [ButtonMapping:ButtonEvent] = getDefaultMappings()
-    @State private var gbaButtonDict: [ButtonMapping:GBAButtonEvent] = getGBADefaultMappings()
+    @State private var buttonEventDict: [ButtonMapping:ButtonEvent]? = getDefaultMappings()
+    @State private var gbaButtonDict: [ButtonMapping:GBAButtonEvent]? = getGBADefaultMappings()
 
     @State private var isMenuPresented = false
 
@@ -204,8 +203,6 @@ struct ContentView: View {
                             isRunning: $isRunning,
                             workItem: $workItem,
                             emulator: $emulator,
-                            gbaEmulator: $gbaEmulator,
-                            gbcEmulator: $gbcEmulator,
                             gameUrl: $gameUrl,
                             path: $path,
                             game: $game,
@@ -267,10 +264,11 @@ struct ContentView: View {
                     GameView(
                         isMenuPresented: $isMenuPresented,
                         emulator: $emulator,
+                        emulatorCopy: .constant(nil),
                         bios7Data: $bios7Data,
                         bios9Data: $bios9Data,
                         firmwareData: $firmwareData,
-                        gbaBiosData: $gbaBiosData,
+                        gbaBiosData: .constant(nil),
                         romData: $romData,
                         gameUrl: $gameUrl,
                         user: $user,
@@ -280,20 +278,28 @@ struct ContentView: View {
                         themeColor: $themeColor,
                         gameName: $gameName,
                         backupFile: $backupFile,
+                        gbaBackupFile: $gbaBackupFile,
                         gameController: $gameController,
                         audioManager: $audioManager,
                         isRunning: $isRunning,
                         workItem: $workItem,
                         topImage: $topImage,
                         bottomImage: $bottomImage,
-                        buttonEventDict: $buttonEventDict
+                        image: .constant(nil),
+                        isPaused: $isPaused,
+                        buttonEventDict: $buttonEventDict,
+                        gbaButtonEventDict: $gbaButtonDict
+
                     )
                 } else if view == "GBAGameView" {
-                    GBAGameView(
+                    GameView(
                         isMenuPresented: $isMenuPresented,
-                        emulator: $gbaEmulator,
-                        emulatorCopy: $gbaEmuCopy,
-                        biosData: $gbaBiosData,
+                        emulator: $emulator,
+                        emulatorCopy: $gbaEmulatorCopy,
+                        bios7Data: .constant(nil),
+                        bios9Data: .constant(nil),
+                        firmwareData: .constant(nil),
+                        gbaBiosData: $gbaBiosData,
                         romData: $romData,
                         gameUrl: $gameUrl,
                         user: $user,
@@ -302,14 +308,18 @@ struct ContentView: View {
                         isSoundOn: $isSoundOn,
                         themeColor: $themeColor,
                         gameName: $gameName,
-                        backupFile: $gbaBackupFile,
+                        backupFile: $backupFile,
+                        gbaBackupFile: $gbaBackupFile,
                         gameController: $gameController,
                         audioManager: $audioManager,
                         isRunning: $isRunning,
                         workItem: $workItem,
+                        topImage: .constant(nil),
+                        bottomImage: .constant(nil),
                         image: $gbaImage,
                         isPaused: $isPaused,
-                        buttonEventDict: $gbaButtonDict
+                        buttonEventDict: .constant(nil),
+                        gbaButtonEventDict: $gbaButtonDict
                     )
                 }
             }

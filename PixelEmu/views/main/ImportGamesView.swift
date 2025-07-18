@@ -31,7 +31,7 @@ struct ImportGamesView: View {
     @Binding var gameUrl: URL?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
-    @Binding var emulator: MobileEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var gameName: String
     @Binding var currentView: CurrentView
     @Binding var themeColor: Color
@@ -40,7 +40,7 @@ struct ImportGamesView: View {
     @Binding var currentLibrary: String
 
 
-    private func storeGBAGame(data: Data, emu: MobileEmulator?, url: URL) async {
+    private func storeGBAGame(data: Data, emu: (any EmulatorWrapper)?, url: URL) async {
         if var game = GBAGame.storeGame(
             gameName: gameName,
             data: data,
@@ -56,7 +56,7 @@ struct ImportGamesView: View {
         }
     }
 
-    private func storeDSGame(data: Data, emu: MobileEmulator?, url: URL) async {
+    private func storeDSGame(data: Data, emu: (any EmulatorWrapper)?, url: URL) async {
         var emu = emu
         var romPtr: UnsafeBufferPointer<UInt8>!
 
@@ -83,18 +83,18 @@ struct ImportGamesView: View {
                     firmwareBytes = ptr
                 }
 
-                emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr)
+                emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr) as! EmulatorWrapper?
             }
         } else {
             emu?.reloadRom(romPtr)
         }
 
-        emu?.loadIcon()
+        try! emu?.loadIcon()
         if var game = Game.storeGame(
             gameName: gameName,
             data: romData!,
             url: url,
-            iconPtr: emu?.getGameIconPointer()
+            iconPtr: try! emu?.getGameIconPointer()
         ) {
             // check if album artwork exists before inserting game into DB
             if !gameNamesSet.contains(gameName) {
@@ -143,7 +143,7 @@ struct ImportGamesView: View {
                 allowsMultipleSelection: true
             ) { result in
                 do {
-                    var emu: MobileEmulator?
+                    var emu: (any EmulatorWrapper)?
                     let urls = try result.get()
                     loading = true
                     Task {

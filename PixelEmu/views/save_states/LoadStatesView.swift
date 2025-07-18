@@ -9,7 +9,7 @@ import SwiftUI
 import DSEmulatorMobile
 
 struct LoadStatesView: View {
-    @Binding var emulator: MobileEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var selectedGame: Game?
     @Binding var game: Game?
     @Binding var isPresented: Bool
@@ -62,7 +62,7 @@ struct LoadStatesView: View {
                             }
 
                             emu.loadSaveState(dataPtr)
-                            emu.reloadBios(bios7Ptr, bios9Ptr)
+                            try! emu.reloadBios(bios7Ptr, bios9Ptr)
 
                             if let firmwareData = firmwareData {
                                 var firmwarePtr: UnsafeBufferPointer<UInt8>!
@@ -72,9 +72,9 @@ struct LoadStatesView: View {
                                     firmwarePtr = ptr
                                 }
 
-                                emu.reloadFirmware(firmwarePtr)
+                                try! emu.reloadFirmware(firmwarePtr)
                             } else {
-                                emu.hleFirmware()
+                                try! emu.hleFirmware()
                             }
 
                             emu.reloadRom(romPtr)
@@ -161,7 +161,7 @@ struct LoadStatesView: View {
                             romPtr = ptr
                         }
 
-                        emulator = MobileEmulator(bios7Ptr, bios9Ptr, firmwarePtr, romPtr)
+                        emulator = MobileEmulator(bios7Ptr, bios9Ptr, firmwarePtr, romPtr) as! EmulatorWrapper?
                         loadSaveState()
                     } catch {
                         print(error)

@@ -21,7 +21,7 @@ struct SaveStateEntriesView: View {
 
     @State var currentState: SaveState? = nil
 
-    @Binding var emulator: MobileEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
     @Binding var game: (any Playable)?
@@ -123,7 +123,6 @@ struct SaveStateEntriesView: View {
             if let emu = emulator, let game = game, let bios7Data = bios7Data, let bios9Data = bios9Data, let romData = romData {
                 stateManager = StateManager(
                     emu: emu,
-                    gbaEmu: nil,
                     game: game,
                     context: context,
                     biosData: nil,

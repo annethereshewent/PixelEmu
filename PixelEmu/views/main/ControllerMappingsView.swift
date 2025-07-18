@@ -128,8 +128,8 @@ struct ControllerMappingsView: View {
     @Binding var themeColor: Color
     @Binding var isPresented: Bool
     @Binding var gameController: GameController?
-    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
-    @Binding var gbaButtonDict: [ButtonMapping:GBAButtonEvent]
+    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]?
+    @Binding var gbaButtonDict: [ButtonMapping:GBAButtonEvent]?
     @State private var buttonMappings: [ButtonEvent:ButtonMapping] = [:]
     @State private var gbaButtonMappings: [GBAButtonEvent:ButtonMapping] = [:]
 
@@ -343,11 +343,11 @@ struct ControllerMappingsView: View {
         .font(.custom("Departure Mono", size: 18))
         .foregroundColor(themeColor)
         .onAppear() {
-            for (key, value) in buttonEventDict {
+            for (key, value) in buttonEventDict! {
                 buttonMappings[value] = key
             }
 
-            for (key, value) in gbaButtonDict {
+            for (key, value) in gbaButtonDict! {
                 gbaButtonMappings[value] = key
             }
         }
@@ -358,10 +358,10 @@ struct ControllerMappingsView: View {
                 buttonEventDict = [:]
 
                 for (key, value) in buttonMappings {
-                    buttonEventDict[value] = key
+                    buttonEventDict?[value] = key
                 }
 
-                let toEncode = buttonEventDict.map{ key, value in (key, value.description) }
+                let toEncode = buttonEventDict!.map{ key, value in (key, value.description) }
 
                 let buttonMappingsEncoded = try JSONEncoder().encode(Dictionary(uniqueKeysWithValues: toEncode))
 

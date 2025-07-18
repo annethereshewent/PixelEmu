@@ -12,8 +12,8 @@ struct GBATouchControlsView: View {
 
     @Environment(\.presentationMode) var presentationMode
 
-    @Binding var emulator: GBAEmulator?
-    @Binding var emulatorCopy: GBAEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
+    @Binding var emulatorCopy: (any EmulatorWrapper)?
     @Binding var audioManager: AudioManager?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
@@ -115,17 +115,17 @@ struct GBATouchControlsView: View {
                         }
                     } else {
                         if heldButtons.contains(entry.key) {
-                            emu.updateInput(entry.key, false)
+                            try! emu.updateGBAInput(entry.key, false)
                             // exactly one frame delay
                             Timer.scheduledTimer(withTimeInterval: 1 / 60, repeats: false) { _ in
-                                emu.updateInput(entry.key, true)
+                                try! emu.updateGBAInput(entry.key, true)
                             }
                         } else {
-                            emu.updateInput(entry.key, true)
+                            try! emu.updateGBAInput(entry.key, true)
                         }
                     }
                 } else if !heldButtons.contains(entry.key) {
-                    emu.updateInput(entry.key, false)
+                    try! emu.updateGBAInput(entry.key, false)
                 }
             }
         }
@@ -133,10 +133,10 @@ struct GBATouchControlsView: View {
 
     private func releaseControlPad() {
         if let emu = emulator {
-            emu.updateInput(GBAButtonEvent.Up, false)
-            emu.updateInput(GBAButtonEvent.Left, false)
-            emu.updateInput(GBAButtonEvent.Right, false)
-            emu.updateInput(GBAButtonEvent.Down, false)
+            try! emu.updateGBAInput(GBAButtonEvent.Up, false)
+            try! emu.updateGBAInput(GBAButtonEvent.Left, false)
+            try! emu.updateGBAInput(GBAButtonEvent.Right, false)
+            try! emu.updateGBAInput(GBAButtonEvent.Down, false)
         }
     }
 
@@ -149,7 +149,7 @@ struct GBATouchControlsView: View {
         if let emu = emulator {
             for button in buttons {
                 if !heldButtons.contains(button) {
-                    emu.updateInput(button, false)
+                    try! emu.updateGBAInput(button, false)
                 }
             }
         }
@@ -180,11 +180,11 @@ struct GBATouchControlsView: View {
                 if entry.key == .ButtonHome {
                     goHome()
                 } else if let emu = emulator {
-                    emu.updateInput(entry.key, true)
+                    try! emu.updateGBAInput(entry.key, true)
                 }
             } else {
                 if let emu = emulator {
-                    emu.updateInput(entry.key, false)
+                    try! emu.updateGBAInput(entry.key, false)
                 }
             }
         }
@@ -192,8 +192,8 @@ struct GBATouchControlsView: View {
 
     private func releaseMiscButtons() {
         if let emu = emulator {
-            emu.updateInput(GBAButtonEvent.Start, false)
-            emu.updateInput(GBAButtonEvent.Select, false)
+            try! emu.updateGBAInput(GBAButtonEvent.Start, false)
+            try! emu.updateGBAInput(GBAButtonEvent.Select, false)
         }
     }
 
@@ -348,13 +348,13 @@ struct GBATouchControlsView: View {
         .onChange(of: heldButtons) {
             if let emu = emulator {
                 for button in heldButtons {
-                    emu.updateInput(button, true)
+                    try! emu.updateGBAInput(button, true)
                 }
 
                 let difference = allButtons.subtracting(heldButtons)
 
                 for button in difference {
-                    emu.updateInput(button, false)
+                    try! emu.updateGBAInput(button, false)
                 }
             }
         }

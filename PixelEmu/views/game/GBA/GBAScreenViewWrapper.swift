@@ -11,7 +11,7 @@ import GBAEmulatorMobile
 struct GBAScreenViewWrapper: View {
     @Binding var gameController: GameController?
     @Binding var image: CGImage?
-    @Binding var emulator: GBAEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var buttonStarted: [GBAButtonEvent:Bool]
     @Binding var audioManager: AudioManager?
     @Binding var isSoundOn: Bool
@@ -120,11 +120,11 @@ struct GBAScreenViewWrapper: View {
                                                 feedbackGenerator.impactOccurred()
                                                 buttonStarted[GBAButtonEvent.ButtonL] = true
                                             }
-                                            emulator?.updateInput(GBAButtonEvent.ButtonL, true)
+                                            try! emulator?.updateGBAInput(GBAButtonEvent.ButtonL, true)
                                         }
                                         .onEnded() { result in
                                             buttonStarted[GBAButtonEvent.ButtonL] = false
-                                            emulator?.updateInput(GBAButtonEvent.ButtonL, false)
+                                            try! emulator?.updateGBAInput(GBAButtonEvent.ButtonL, false)
                                         }
                                 )
                                 .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)
@@ -155,11 +155,11 @@ struct GBAScreenViewWrapper: View {
                                                 feedbackGenerator.impactOccurred()
                                                 buttonStarted[GBAButtonEvent.ButtonR] = true
                                             }
-                                            emulator?.updateInput(GBAButtonEvent.ButtonR, true)
+                                            try! emulator?.updateGBAInput(GBAButtonEvent.ButtonR, true)
                                         }
                                         .onEnded() { result in
                                             buttonStarted[GBAButtonEvent.ButtonR] = false
-                                            emulator?.updateInput(GBAButtonEvent.ButtonR, false)
+                                            try! emulator?.updateGBAInput(GBAButtonEvent.ButtonR, false)
                                         }
                                 )
                                 .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)

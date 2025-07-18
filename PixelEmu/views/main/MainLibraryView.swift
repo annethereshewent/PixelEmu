@@ -25,9 +25,7 @@ struct MainLibraryView: View {
     @Binding var firmwareData: Data?
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
-    @Binding var emulator: MobileEmulator?
-    @Binding var gbaEmulator: GBAEmulator?
-    @Binding var gbcEmulator: GBCMobileEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
     @Binding var game: (any Playable)?
@@ -83,7 +81,6 @@ struct MainLibraryView: View {
                 isRunning: $isRunning,
                 workItem: $workItem,
                 emulator: $emulator,
-                gbaEmulator: $gbaEmulator,
                 gameUrl: $gameUrl,
                 path: $path,
                 game: $game,
