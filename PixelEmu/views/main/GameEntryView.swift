@@ -58,6 +58,7 @@ struct GameEntryView: View {
                         Image("Cartridge")
                             .resizable()
                             .frame(width: 80, height: 80)
+                            .background(themeColor)
                         if let gameIcon = game.gameIcon{
                             VStack {
                                 if let image = graphicsParser.fromBytes(bytes: Array(gameIcon), width: 32, height: 32) {
