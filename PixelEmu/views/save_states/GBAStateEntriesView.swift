@@ -21,7 +21,7 @@ struct GBAStateEntriesView: View {
     @Binding var emulator: GBAEmulator?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
-    @Binding var game: GBAGame?
+    @Binding var game: (any Playable)?
 
     @Binding var biosData: Data?
     @Binding var romData: Data?
@@ -76,7 +76,7 @@ struct GBAStateEntriesView: View {
     }
 
     private func deleteSaveState() {
-        if let saveState = currentState, let game = game {
+        if let saveState = currentState, let game = game as! GBAGame? {
             if let index = game.gbaSaveStates!.firstIndex(of: saveState) {
                 game.gbaSaveStates!.remove(at: index)
                 context.delete(saveState)

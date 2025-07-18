@@ -42,7 +42,7 @@ struct GBAGameView: View {
     @Binding var gameUrl: URL?
     @Binding var user: GIDGoogleUser?
     @Binding var cloudService: CloudService?
-    @Binding var game: GBAGame?
+    @Binding var game: (any Playable)?
     @Binding var isSoundOn: Bool
     @Binding var themeColor: Color
 

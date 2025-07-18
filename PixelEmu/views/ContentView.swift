@@ -289,34 +289,11 @@ struct ContentView: View {
                         buttonEventDict: $buttonEventDict
                     )
                 } else if view == "GBAGameView" {
-//                    GameView(
-//                        isMenuPresented: $isMenuPresented,
-//                        emulator: $gbaEmulator,
-//                        biosData: $gbaBiosData,
-//                        romData: $romData,
-//                        gameUrl: $gameUrl,
-//                        user: $user,
-//                        cloudService: $cloudService,
-//                        game: $gbaGame,
-//                        isSoundOn: $isSoundOn,
-//                        themeColor: $themeColor,
-//                        gameName: $gameName,
-//                        backupFile: $gbaBackupFile,
-//                        gameController: $gameController,
-//                        audioManager: $audioManager,
-//                        isRunning: $isRunning,
-//                        workItem: $workItem,
-//                        image: $gbaImage,
-//                        isPaused: $isPaused,
-//                        buttonEventDict: $gbaButtonDict
-//                    )
-                    GameView(
+                    GBAGameView(
                         isMenuPresented: $isMenuPresented,
-                        emulator: $emulator,
-                        bios7Data: $bios7Data,
-                        bios9Data: $bios9Data,
-                        firmwareData: $firmwareData,
-                        gbaBiosData: $gbaBiosData,
+                        emulator: $gbaEmulator,
+                        emulatorCopy: $gbaEmuCopy,
+                        biosData: $gbaBiosData,
                         romData: $romData,
                         gameUrl: $gameUrl,
                         user: $user,
@@ -325,14 +302,14 @@ struct ContentView: View {
                         isSoundOn: $isSoundOn,
                         themeColor: $themeColor,
                         gameName: $gameName,
-                        backupFile: $backupFile,
+                        backupFile: $gbaBackupFile,
                         gameController: $gameController,
                         audioManager: $audioManager,
                         isRunning: $isRunning,
                         workItem: $workItem,
-                        topImage: $topImage,
-                        bottomImage: $bottomImage,
-                        buttonEventDict: $buttonEventDict
+                        image: $gbaImage,
+                        isPaused: $isPaused,
+                        buttonEventDict: $gbaButtonDict
                     )
                 }
             }

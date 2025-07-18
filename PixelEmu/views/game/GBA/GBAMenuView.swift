@@ -20,7 +20,7 @@ struct GBAMenuView: View {
     @Binding var biosData: Data?
     @Binding var romData: Data?
     @Binding var shouldGoHome: Bool
-    @Binding var game: GBAGame?
+    @Binding var game: (any Playable)?
     @Binding var isHoldButtonsPresented: Bool
     @Binding var isSoundOn: Bool
     @Binding var gameController: GameController?
