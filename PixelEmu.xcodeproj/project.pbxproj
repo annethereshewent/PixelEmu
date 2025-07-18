@@ -47,7 +47,6 @@
 		E8A334042CFACF8C00765ABB /* GBAScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334032CFACF8C00765ABB /* GBAScreenView.swift */; };
 		E8A334062CFAD03A00765ABB /* GBAScreenViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334052CFAD03A00765ABB /* GBAScreenViewWrapper.swift */; };
 		E8A5893E2D02C01C009D4337 /* MainSaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A5893D2D02C01C009D4337 /* MainSaveManagementView.swift */; };
-		E8A589422D02C389009D4337 /* GBASaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589412D02C389009D4337 /* GBASaveEntry.swift */; };
 		E8A589462D03EA8D009D4337 /* GBAMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589452D03EA8D009D4337 /* GBAMenuView.swift */; };
 		E8A589482D03ED2E009D4337 /* GBAStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589472D03ED2E009D4337 /* GBAStateEntriesView.swift */; };
 		E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */; };
@@ -130,7 +129,6 @@
 		E8A334032CFACF8C00765ABB /* GBAScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAScreenView.swift; sourceTree = "<group>"; };
 		E8A334052CFAD03A00765ABB /* GBAScreenViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAScreenViewWrapper.swift; sourceTree = "<group>"; };
 		E8A5893D2D02C01C009D4337 /* MainSaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSaveManagementView.swift; sourceTree = "<group>"; };
-		E8A589412D02C389009D4337 /* GBASaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBASaveEntry.swift; sourceTree = "<group>"; };
 		E8A589452D03EA8D009D4337 /* GBAMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAMenuView.swift; sourceTree = "<group>"; };
 		E8A589472D03ED2E009D4337 /* GBAStateEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateEntriesView.swift; sourceTree = "<group>"; };
 		E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDialog.swift; sourceTree = "<group>"; };
@@ -284,7 +282,6 @@
 				E8293CC92E28B6B20052BEA4 /* Playable.swift */,
 				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
 				E8BBBC672CF96AD10065EF4E /* GBAGame.swift */,
-				E8A589412D02C389009D4337 /* GBASaveEntry.swift */,
 				E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */,
 				E8C245F72CBE043B00B6DF67 /* SaveState.swift */,
 				E84EE44E2D04024700CF15ED /* GBASaveState.swift */,
@@ -617,7 +614,6 @@
 				E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */,
 				E82A46FA2D9B41380059BB67 /* PixelEmuApp.swift in Sources */,
 				E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */,
-				E8A589422D02C389009D4337 /* GBASaveEntry.swift in Sources */,
 				E84EE44F2D04024700CF15ED /* GBASaveState.swift in Sources */,
 				E8BBBC862CFA71A20065EF4E /* ArtworkService.swift in Sources */,
 				E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */,
