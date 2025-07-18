@@ -196,10 +196,45 @@ struct GameView: View {
     }
 
     private func saveGame() {
-        if let emu = emulator {
-            let ptr = try! emu.backupPointer();
+        if let game = game {
+            switch game.type {
+            case .nds: saveDsGame()
+            case .gba: saveGbaGame()
+            case .gbc: break
+            }
+        }
+    }
 
-            let backupLength = try! Int(emu.backupLength())
+    private func saveGbaGame() {
+        if let emu = emulator {
+            let ptr = emu.backupPointer()
+            let backupLength = Int(emu.backupLength())
+
+            if let cloudService = cloudService {
+                if let url = gameUrl {
+                    let buffer = UnsafeBufferPointer(start: ptr, count: backupLength)
+
+                    let data = Data(buffer)
+
+                    Task {
+                        await cloudService.uploadSave(
+                            saveName: BackupFile.getSaveName(gameUrl: url),
+                            data: data,
+                            saveType: .gba
+                        )
+                    }
+                }
+            } else {
+                backupFile?.saveGame(ptr: ptr, backupLength: backupLength)
+            }
+        }
+    }
+
+    private func saveDsGame() {
+        if let emu = emulator {
+            let ptr = emu.backupPointer();
+
+            let backupLength = Int(emu.backupLength())
 
             if let cloudService = cloudService {
                 if let url = gameUrl {
@@ -219,7 +254,6 @@ struct GameView: View {
                 backupFile?.saveGame(ptr: ptr, backupLength: backupLength)
             }
         }
-
     }
 
     private func updateEmuInput(_ mapping: ButtonMapping, _ defaultButton: ButtonEvent, _ pressed: Bool) {
@@ -375,7 +409,7 @@ struct GameView: View {
                 let ptr = BackupFile.getPointer(saveData)
                 try! emu.loadSave(ptr)
             } else {
-                gbaBackupFile = try! GBABackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupFileSize()))
+                gbaBackupFile = GBABackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupLength()))
                 if let ptr = gbaBackupFile!.createBackupFile() {
                     try! emu.loadSave(ptr)
                 }

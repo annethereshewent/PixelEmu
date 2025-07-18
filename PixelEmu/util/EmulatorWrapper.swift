@@ -17,8 +17,8 @@ protocol EmulatorWrapper {
     func hasSaved() -> Bool
     func setSaved(_ value: Bool)
     func setBackup(_ save_type: String, _ ram_capacity: UInt, _ bytes: UnsafeBufferPointer<UInt8>) throws
-    func backupPointer() throws -> UnsafePointer<UInt8> 
-    func backupLength() throws -> UInt
+    func backupPointer() -> UnsafePointer<UInt8>
+    func backupLength() -> UInt
     func updateInput(_ event: ButtonEvent, _ value: Bool) throws
     func updateGBAInput(_ event: GBAButtonEvent, _ value: Bool) throws
     func updateAudioBuffer(_ ptr: UnsafeBufferPointer<Float>) throws
@@ -43,7 +43,6 @@ protocol EmulatorWrapper {
     func loadIcon() throws
     func getGameIconPointer() throws -> UnsafePointer<UInt8>
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws
-    func backupFileSize() throws -> UInt
 }
 
 class DSEmulatorWrapper: EmulatorWrapper {
@@ -178,10 +177,6 @@ class DSEmulatorWrapper: EmulatorWrapper {
     }
 
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws {
-        throw "not implemented"
-    }
-
-    func backupFileSize() throws -> UInt {
         throw "not implemented"
     }
 }
@@ -319,8 +314,5 @@ class GBAEmulatorWrapper: EmulatorWrapper {
 
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws {
         emu.loadSave(ptr)
-    }
-    func backupFileSize() throws -> UInt {
-        return emu.backupFileSize()
     }
 }
