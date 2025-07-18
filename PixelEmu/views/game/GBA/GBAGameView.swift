@@ -173,6 +173,7 @@ struct GBAGameView: View {
 
             // this is a hack, otherwise things won't work right when resuming game from home screen.
             // TODO: figure out why
+            // Update: still haven't figured out why it's busted
             emulator = emu
             emulatorCopy = nil
 
