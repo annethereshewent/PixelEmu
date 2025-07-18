@@ -376,7 +376,7 @@ struct GameView: View {
                 try! emu.loadSave(ptr)
             } else {
                 gbaBackupFile = try! GBABackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupFileSize()))
-                if let ptr = backupFile!.createBackupFile() {
+                if let ptr = gbaBackupFile!.createBackupFile() {
                     try! emu.loadSave(ptr)
                 }
             }
@@ -645,68 +645,55 @@ struct GameView: View {
         .sheet(
             isPresented: $isMenuPresented
         ) {
-            switch game?.type ?? .nds {
-            case .nds:
-                GameMenuView(
-                    gameType: .nds,
-                    emulator: $emulator,
-                    isRunning: $isRunning,
-                    workItem: $workItem,
-                    audioManager: $audioManager,
-                    isMenuPresented: $isMenuPresented,
-                    gameName: $gameName,
-                    biosData: .constant(nil),
-                    bios7Data: $bios7Data,
-                    bios9Data: $bios9Data,
-                    firmwareData: $firmwareData,
-                    romData: $romData,
-                    shouldGoHome: $shouldGoHome,
-                    game: $game,
-                    isHoldButtonsPresented: $isHoldButtonsPresented,
-                    isSoundOn: $isSoundOn,
-                    gameController: $gameController
-                )
-            case .gba:
-                GameMenuView(
-                    gameType: .gba,
-                    emulator: $emulator,
-                    isRunning: $isRunning,
-                    workItem: $workItem,
-                    audioManager: $audioManager,
-                    isMenuPresented: $isMenuPresented,
-                    gameName: $gameName,
-                    biosData: $gbaBiosData,
-                    bios7Data: .constant(nil),
-                    bios9Data: .constant(nil),
-                    firmwareData: .constant(nil),
-                    romData: $romData,
-                    shouldGoHome: $shouldGoHome,
-                    game: $game,
-                    isHoldButtonsPresented: $isHoldButtonsPresented,
-                    isSoundOn: $isSoundOn,
-                    gameController: $gameController
-                )
-            case .gbc: Text("TODO: Not implemented")
+            if let game = game {
+                switch game.type {
+                case .nds:
+                    GameMenuView(
+                        gameType: .nds,
+                        emulator: $emulator,
+                        isRunning: $isRunning,
+                        workItem: $workItem,
+                        audioManager: $audioManager,
+                        isMenuPresented: $isMenuPresented,
+                        gameName: $gameName,
+                        biosData: .constant(nil),
+                        bios7Data: $bios7Data,
+                        bios9Data: $bios9Data,
+                        firmwareData: $firmwareData,
+                        romData: $romData,
+                        shouldGoHome: $shouldGoHome,
+                        game: $game,
+                        isHoldButtonsPresented: $isHoldButtonsPresented,
+                        isSoundOn: $isSoundOn,
+                        gameController: $gameController
+                    )
+                case .gba:
+                    GameMenuView(
+                        gameType: .gba,
+                        emulator: $emulator,
+                        isRunning: $isRunning,
+                        workItem: $workItem,
+                        audioManager: $audioManager,
+                        isMenuPresented: $isMenuPresented,
+                        gameName: $gameName,
+                        biosData: $gbaBiosData,
+                        bios7Data: .constant(nil),
+                        bios9Data: .constant(nil),
+                        firmwareData: .constant(nil),
+                        romData: $romData,
+                        shouldGoHome: $shouldGoHome,
+                        game: $game,
+                        isHoldButtonsPresented: $isHoldButtonsPresented,
+                        isSoundOn: $isSoundOn,
+                        gameController: $gameController
+                    )
+                case .gbc: Text("TODO: Not implemented")
+                }
             }
 
         }
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
-            if game?.type == .nds {
-                if let emu = emulator, let bios7Data = bios7Data, let bios9Data = bios9Data, let romData = romData, let game = game {
-                    stateManager = StateManager(
-                        emu: emu,
-                        game: game,
-                        context: context,
-                        biosData: nil,
-                        bios7Data: bios7Data,
-                        bios9Data: bios9Data,
-                        romData: romData,
-                        firmwareData: firmwareData
-                    )
-                }
-            }
-
             Task {
                 if !isRunning {
                     emulatorCopy = nil

@@ -288,10 +288,10 @@ class StateManager {
                         biosPtr = ptr
                     }
 
-                    try! emu.loadBios(biosPtr)
-                    emu.reloadRom(romPtr)
                     emu.loadSaveState(dataPtr)
+                    try! emu.loadBios(biosPtr)
 
+                    emu.reloadRom(romPtr)
                 }
             }
         }

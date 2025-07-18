@@ -14,9 +14,6 @@ struct GBAStateEntriesView: View {
 
     @State private var currentState: GBASaveState? = nil
     private let dsEmu: MobileEmulator? = nil
-    private let bios7Data: Data? = nil
-    private let bios9Data: Data? = nil
-    private let firmwareData: Data? = nil
 
     @Binding var emulator: (any EmulatorWrapper)?
     @Binding var gameName: String
@@ -121,10 +118,10 @@ struct GBAStateEntriesView: View {
                     game: game,
                     context: context,
                     biosData: biosData,
-                    bios7Data: bios7Data,
-                    bios9Data: bios9Data,
+                    bios7Data: nil,
+                    bios9Data: nil,
                     romData: romData,
-                    firmwareData: firmwareData
+                    firmwareData: nil
                 )
             }
         }

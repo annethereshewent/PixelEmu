@@ -330,7 +330,6 @@
 				E8C245EE2CBCC36F00B6DF67 /* DualScreenViewWrapper.swift */,
 				E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */,
 				E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */,
-				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
 				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
 			);
 			path = NDS;
@@ -380,6 +379,7 @@
 		E8C245F12CBCC54F00B6DF67 /* game */ = {
 			isa = PBXGroup;
 			children = (
+				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
 				E8C245F52CBDBA4500B6DF67 /* GameMenuView.swift */,
 				E8293CC32E28AE740052BEA4 /* GBC */,
 				E8293CC22E28AE6E0052BEA4 /* NDS */,
