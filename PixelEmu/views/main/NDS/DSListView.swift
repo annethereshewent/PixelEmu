@@ -77,6 +77,7 @@ struct DSListView: View {
                             gameToDelete: $gameToDelete,
                             isLoadStatesPresented: $isLoadStatesPresented,
                             selectedGame: $selectedGame,
+                            themeColor: $themeColor,
                             game: game
                         ) {
                             // refresh the url's bookmark

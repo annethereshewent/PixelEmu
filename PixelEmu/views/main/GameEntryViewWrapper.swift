@@ -13,14 +13,14 @@ struct GameEntryViewWrapper: View {
     @Binding var gameToDelete: (any Playable)?
     @Binding var isLoadStatesPresented: Bool
     @Binding var selectedGame: (any Playable)?
-
+    @Binding var themeColor: Color
 
     let game: any Playable
 
     let callback: () -> Void
 
     var body: some View {
-        GameEntryView(game: game) {
+        GameEntryView(game: game, themeColor: $themeColor) {
             callback()
         }
         .contextMenu {

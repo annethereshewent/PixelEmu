@@ -9,8 +9,8 @@ import SwiftUI
 
 struct GameEntryView: View {
     let game: any Playable
+    @Binding var themeColor: Color
     let callback: () -> Void
-
     private let graphicsParser = GraphicsParser()
 
     func getConsoleTitle(type: GameType) -> String {
@@ -53,31 +53,27 @@ struct GameEntryView: View {
                         .resizable()
                         .frame(width: 80, height: 80)
                         .scaledToFill()
-                } else if let gameIcon = game.gameIcon {
+                } else {
                     ZStack {
                         Image("Cartridge")
                             .resizable()
                             .frame(width: 80, height: 80)
-                        VStack {
-                            if let image = graphicsParser.fromBytes(bytes: Array(gameIcon), width: 32, height: 32) {
-                                let uiImage = UIImage(cgImage: image)
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .frame(width: 64, height: 64)
-                            } else {
-                                Text(getConsoleTitle(type: game.type))
+                        if let gameIcon = game.gameIcon{
+                            VStack {
+                                if let image = graphicsParser.fromBytes(bytes: Array(gameIcon), width: 32, height: 32) {
+                                    let uiImage = UIImage(cgImage: image)
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .frame(width: 64, height: 64)
+                                } else {
+                                    Text(getConsoleTitle(type: game.type))
+                                }
                             }
+                            Spacer()
                         }
-                        Spacer()
                     }
-                } else {
-                    
                 }
             }
-            Text(removeExtension(game: game))
-                .frame(width: 80, height: 80)
-                .fixedSize(horizontal: false, vertical: true)
-                .font(.custom("Departure Mono", size: 10))
         }
     }
 }

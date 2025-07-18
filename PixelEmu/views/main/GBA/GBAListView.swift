@@ -81,6 +81,7 @@ struct GBAListView: View {
                             gameToDelete: $gameToDelete,
                             isLoadStatesPresented: $isLoadStatesPresented,
                             selectedGame: $selectedGame,
+                            themeColor: $themeColor,
                             game: game
                         ) {
                             var isStale = false

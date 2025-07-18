@@ -41,7 +41,7 @@ struct MainSaveManagementView: View {
                         .foregroundColor(Colors.primaryColor)
                     LazyVGrid(columns: columns) {
                         ForEach(saveEntries, id: \.game.gameName) { saveEntry in
-                            GameEntryView(game: saveEntry.game) {
+                            GameEntryView(game: saveEntry.game, themeColor: $themeColor) {
                                 if cloudEntry == saveEntry {
                                     cloudEntry = nil
 
@@ -60,7 +60,7 @@ struct MainSaveManagementView: View {
                         .foregroundColor(Colors.primaryColor)
                     LazyVGrid(columns: columns) {
                         ForEach(localSaves, id: \.game.gameName) { saveEntry in
-                            GameEntryView(game: saveEntry.game) {
+                            GameEntryView(game: saveEntry.game, themeColor: $themeColor) {
                                 if localEntry == saveEntry {
                                     localEntry = nil
                                 } else {
