@@ -36,11 +36,8 @@ class GBCGame: Playable {
 
     static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>? = nil) -> (any Playable)? {
         // store bookmark for later use
-        print(gameName)
         if url.startAccessingSecurityScopedResource() {
-            print("in here!")
             let bookmark = try! url.bookmarkData(options: [])
-            print("great success!!!!!!")
             return GBCGame(gameName: gameName, bookmark: bookmark, lastPlayed: Date.now) as any Playable
         }
 

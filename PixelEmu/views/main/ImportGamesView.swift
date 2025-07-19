@@ -65,21 +65,23 @@ struct ImportGamesView: View {
             url: url
         ) {
             if !gameNamesSet.contains(gameName) {
-                print("got game \(game)")
-                var id = 0
-
-                if gameName.lowercased().contains(/\.gbc$/) {
-                    id = GBC_ID
-                } else {
-                    id = GB_ID
-                }
                 Task {
-                    if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: id) {
+                    var id = 0
+                    if game.gameName.lowercased().contains(/\.gbc$/) {
+                        id = GBC_ID
+                    } else {
+                        id = GB_ID
+                    }
+                    if let artwork = await artworkService.fetchArtwork(for: game.gameName, systemId: id) {
+                        print("got artwork for game \(game.gameName)")
+
                         game.albumArt = artwork
                     }
+
+                    context.insert(game as! GBCGame)
+                    gameNamesSet.insert(gameName)
                 }
-                context.insert(game as! GBCGame)
-                gameNamesSet.insert(gameName)
+
             }
         }
     }
@@ -142,7 +144,7 @@ struct ImportGamesView: View {
                 HStack {
                     Image("Import Cartridge")
                         .foregroundColor(themeColor)
-                    Text("Only .nds, .gba supported")
+                    Text(".nds, .gba, .gbc, and .gb supported")
                         .frame(width: 200, height: 60)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.custom("Departure Mono", size: 20))
@@ -193,11 +195,6 @@ struct ImportGamesView: View {
                                 .removingPercentEncoding
                                 .unsafelyUnwrapped
 
-//                                if url.pathExtension.lowercased() == "nds" {
-//                                    await storeDSGame(data: data, emu: emu, url: url)
-//                                } else {
-//                                    await storeGBAGame(data: data, emu: emu, url: url)
-//                                }
                                 switch url.pathExtension.lowercased() {
                                 case "nds": await storeDSGame(data: data, emu: emu, url: url)
                                 case "gba": await storeGBAGame(data: data, emu: emu, url: url)
