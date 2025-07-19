@@ -73,9 +73,10 @@ struct ImportGamesView: View {
                 } else {
                     id = GB_ID
                 }
-
-                if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: id) {
-                    game.albumArt = artwork
+                Task {
+                    if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: id) {
+                        game.albumArt = artwork
+                    }
                 }
                 context.insert(game as! GBCGame)
                 gameNamesSet.insert(gameName)

@@ -331,37 +331,38 @@ struct GamesListViewInner: View {
                         gameUrl: $gameUrl
                     )
                 }
-                if showResumeDialog {
-                    ResumeGameDialog(
-                        showDialog: $showResumeDialog,
-                        resumeGame: $resumeGame,
-                        settingChanged: $settingChanged,
-                        themeColor: $themeColor
-                    )
-                } else if showDeleteConfirmation {
-                    DeleteDialog(
-                        showDialog: $showDeleteConfirmation,
-                        deleteAction: $deleteAction,
-                        themeColor: $themeColor,
-                        deleteMessage: "Are you sure you want to remove this game from your library?"
-                    )
-                } else if showDeleteError {
-                    AlertModal(
-                        alertTitle: "Oops!",
-                        text: "There was an error removing the game.",
-                        showAlert: $showDeleteError,
-                        themeColor: $themeColor
-                    )
-                } else if showGameError {
-                    AlertModal(
-                        alertTitle: "Oops!",
-                        text: "There was an error loading the specified game.",
-                        showAlert: $showGameError,
-                        themeColor: $themeColor
-                    )
-                }
+            }
+            if showResumeDialog {
+                ResumeGameDialog(
+                    showDialog: $showResumeDialog,
+                    resumeGame: $resumeGame,
+                    settingChanged: $settingChanged,
+                    themeColor: $themeColor
+                )
+            } else if showDeleteConfirmation {
+                DeleteDialog(
+                    showDialog: $showDeleteConfirmation,
+                    deleteAction: $deleteAction,
+                    themeColor: $themeColor,
+                    deleteMessage: "Are you sure you want to remove this game from your library?"
+                )
+            } else if showDeleteError {
+                AlertModal(
+                    alertTitle: "Oops!",
+                    text: "There was an error removing the game.",
+                    showAlert: $showDeleteError,
+                    themeColor: $themeColor
+                )
+            } else if showGameError {
+                AlertModal(
+                    alertTitle: "Oops!",
+                    text: "There was an error loading the specified game.",
+                    showAlert: $showGameError,
+                    themeColor: $themeColor
+                )
             }
         }
+        
     }
 }
 
