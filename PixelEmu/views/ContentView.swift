@@ -364,6 +364,10 @@ struct ContentView: View {
                             (key, PressedButton(rawValue: Int(value) ?? 0) ?? .ButtonL)
                         }
                     )
+
+                    if buttonDict.count(where: { $0.value == .ButtonL }) == buttonDict.count {
+                        buttonDict = ContentView.getDefaultMappings()
+                    }
                 }
             } catch {
                 print(error)

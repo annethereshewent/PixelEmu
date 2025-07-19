@@ -121,6 +121,8 @@ struct GBScreenView: View {
         }
         if gameController?.controller?.extendedGamepad != nil {
             Spacer()
+            Spacer()
+            Spacer()
         }
     }
 }
