@@ -29,8 +29,8 @@ protocol EmulatorWrapper {
     func getEngineBPicturePointer() throws -> UnsafePointer<UInt8>
     func isTopA() -> Bool
     func getPicturePtr() throws -> UnsafePointer<UInt8>
-    func audioBufferLength() -> UInt
-    func audioBufferPtr() -> UnsafePointer<Float>
+    func audioBufferLength() throws -> UInt
+    func audioBufferPtr() throws -> UnsafePointer<Float>
     func touchScreen(_ x: UInt16, _ y: UInt16) throws
     func pressScreen() throws
     func releaseScreen() throws

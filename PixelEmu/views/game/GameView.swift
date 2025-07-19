@@ -564,11 +564,10 @@ struct GameView: View {
 
                     let playerPaused = audioManager?.playerPaused ?? true
 
-                    if !playerPaused && game.type != .gbc {
-                        let audioBufferLength = emu.audioBufferLength()
+                    if !playerPaused {
+                        let audioBufferPtr = try! emu.audioBufferPtr()
+                        let audioBufferLength = try! emu.audioBufferLength()
 
-                        let audioBufferPtr = emu.audioBufferPtr()
-                        
                         let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
                         self.audioManager?.updateBuffer(samples: audioSamples)
                     }

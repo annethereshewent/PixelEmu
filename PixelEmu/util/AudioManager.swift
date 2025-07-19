@@ -140,6 +140,12 @@ class AudioManager {
         if audioNode.isPlaying {
             nslock.lock()
             buffer.append(contentsOf: samples)
+
+
+            while buffer.count > 8192 * 2 {
+                buffer.popLast()
+            }
+
             nslock.unlock()
         }
     }

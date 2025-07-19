@@ -33,7 +33,7 @@ let GBC_SCREEN_RATIO: Float = 1.6
 let GBC_FULLSCREEN_RATIO: Float = 2.6
 
 let GBC_LANDSCAPE_RATIO: Float = 1.4
-let GBC_LANDSCAPE_FULLSCREEN_RATIO: Float = 2.4
+let GBC_LANDSCAPE_FULLSCREEN_RATIO: Float = 2.2
 
 class GraphicsParser {
     func fromPointer(ptr: UnsafePointer<UInt8>) -> CGImage? {
