@@ -140,14 +140,16 @@ class AudioManager {
         if audioNode.isPlaying {
             nslock.lock()
             buffer.append(contentsOf: samples)
-
-
-            while buffer.count > 8192 * 2 {
-                buffer.popLast()
-            }
-
             nslock.unlock()
         }
+    }
+
+    func popSamples(emu: EmulatorWrapper) {
+        nslock.lock()
+        while emu.hasSamples() {
+            try! buffer.append(emu.popSample())
+        }
+        nslock.unlock()
     }
 
     func toggleAudio() {
@@ -173,45 +175,29 @@ class AudioManager {
     }
 
     private func playAudio() {
-        if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.audioFormat!, frameCapacity: AVAudioFrameCount(8192)) {
+        if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.audioFormat!, frameCapacity: AVAudioFrameCount(8192 * 2)) {
             // we just need one inputBuffer
             if let floatBuffer = outputBuffer.floatChannelData {
-                var left = [Float]()
-                var right = [Float]()
-
                 var isEven = true
 
-                var numSamples = 0
+                var leftIndex = 0
+                var rightIndex = 0
 
                 nslock.lock()
                 while buffer.count > 0 {
                     let sample = buffer.removeFirst()
                     if isEven {
-                        left.append(sample)
+                        floatBuffer[0][leftIndex] = sample
+                        leftIndex += 1
                     } else {
-                        right.append(sample)
+                        floatBuffer[1][rightIndex] = sample
+                        rightIndex += 1
                     }
-                    numSamples += 1
                     isEven = !isEven
                 }
                 nslock.unlock()
 
-                var leftPtr: UnsafePointer<Float>? = nil
-
-                left.withUnsafeBufferPointer { ptr in
-                    leftPtr = ptr.baseAddress
-                }
-
-                var rightPtr: UnsafePointer<Float>? = nil
-
-                right.withUnsafeBufferPointer { ptr in
-                    rightPtr = ptr.baseAddress
-                }
-
-                memcpy(floatBuffer[0], leftPtr!, left.count * 4)
-                memcpy(floatBuffer[1], rightPtr!, right.count * 4)
-
-                let frameLength = AVAudioFrameCount(4096)
+                let frameLength = AVAudioFrameCount(8192)
                 outputBuffer.frameLength = frameLength
             }
 
