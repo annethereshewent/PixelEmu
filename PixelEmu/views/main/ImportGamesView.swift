@@ -73,8 +73,6 @@ struct ImportGamesView: View {
                         id = GB_ID
                     }
                     if let artwork = await artworkService.fetchArtwork(for: game.gameName, systemId: id) {
-                        print("got artwork for game \(game.gameName)")
-
                         game.albumArt = artwork
                     }
 
