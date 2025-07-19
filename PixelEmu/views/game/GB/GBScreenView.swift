@@ -1,5 +1,5 @@
 //
-//  GBAScreenView.swift
+//  GBScreenView.swift
 //  PixelEmu
 //
 //  Created by Anne Castrillon on 11/29/24.
@@ -8,7 +8,8 @@
 import SwiftUI
 import GBAEmulatorMobile
 
-struct GBAScreenView: View {
+struct GBScreenView: View {
+    let gameType: GameType
     @Binding var gameController: GameController?
     @Binding var image: CGImage?
     @Binding var isHoldButtonsPresented: Bool
@@ -22,18 +23,34 @@ struct GBAScreenView: View {
         switch orientationInfo.orientation {
         case .portrait:
             if gameController?.controller?.extendedGamepad == nil {
-                return GBA_SCREEN_RATIO
+                return gameType == .gba ? GBA_SCREEN_RATIO : GBC_SCREEN_RATIO
             }
 
-            return GBA_FULLSCREEN_RATIO
+            return gameType == .gba ? GBA_FULLSCREEN_RATIO : GBC_SCREEN_RATIO
         case .landscape:
             if gameController?.controller?.extendedGamepad == nil {
-                return GBA_LANDSCAPE_RATIO
+                return gameType == .gba ? GBA_LANDSCAPE_RATIO : GBC_LANDSCAPE_RATIO
             }
 
-            return GBA_LANDSCAPE_FULLSCREEN_RATIO
+            return gameType == .gba ? GBA_LANDSCAPE_FULLSCREEN_RATIO : GBC_LANDSCAPE_FULLSCREEN_RATIO
         }
 
+    }
+
+    private var screenWidth: CGFloat {
+        if gameType == .gba {
+            return CGFloat(GBA_SCREEN_WIDTH)
+        }
+
+        return CGFloat(GBC_SCREEN_WIDTH) * 1.3
+    }
+
+    private var screenHeight: CGFloat {
+        if gameType == .gba {
+            return CGFloat(GBA_SCREEN_HEIGHT)
+        }
+
+        return CGFloat(GBC_SCREEN_HEIGHT) * 1.3
     }
 
     private var currentHoldButtons: String {
@@ -74,8 +91,8 @@ struct GBAScreenView: View {
         ZStack {
             GameScreenView(image: $image)
                 .frame(
-                    width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),
-                    height: CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
+                    width: CGFloat(screenWidth) * CGFloat(screenRatio),
+                    height: CGFloat(screenHeight) * CGFloat(screenRatio)
                 )
             if isHoldButtonsPresented {
                 VStack {

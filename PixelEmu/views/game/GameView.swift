@@ -405,7 +405,7 @@ struct GameView: View {
     private func loadGbaSave() async {
         if let emu = emulator, let gameUrl = gameUrl {
             loading = true
-            if let saveData = await self.cloudService!.getSave(saveName: BackupFile.getSaveName(gameUrl: gameUrl), saveType: .gba) {
+            if let saveData = await self.cloudService?.getSave(saveName: BackupFile.getSaveName(gameUrl: gameUrl), saveType: .gba) {
                 let ptr = BackupFile.getPointer(saveData)
                 try! emu.loadSave(ptr)
             } else {
@@ -649,7 +649,7 @@ struct GameView: View {
                         }
                     case .gba:
                         VStack {
-                            GBAScreenViewWrapper(
+                            GBScreenViewWrapper(
                                 gameType: .gba,
                                 gameController: $gameController,
                                 image: $image,
@@ -663,7 +663,7 @@ struct GameView: View {
                             )
                             .padding(.top, screenPadding)
                             if gameController?.controller?.extendedGamepad == nil {
-                                GBATouchControlsView(
+                                GBTouchControlsView(
                                     gameType: .gba,
                                     emulator: $emulator,
                                     emulatorCopy: $emulatorCopy,
@@ -681,7 +681,7 @@ struct GameView: View {
                             }
                         }
                     case .gbc:
-                        GBAScreenViewWrapper(
+                        GBScreenViewWrapper(
                             gameType: .gbc,
                             gameController: $gameController,
                             image: $image,
@@ -695,7 +695,7 @@ struct GameView: View {
                         )
                         .padding(.top, screenPadding)
                         if gameController?.controller?.extendedGamepad == nil {
-                            GBATouchControlsView(
+                            GBTouchControlsView(
                                 gameType: .gbc,
                                 emulator: $emulator,
                                 emulatorCopy: $emulatorCopy,

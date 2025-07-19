@@ -1,5 +1,5 @@
 //
-//  GBAScreenViewWrapper.swift
+//  GBScreenViewWrapper.swift
 //  PixelEmu
 //
 //  Created by Anne Castrillon on 11/29/24.
@@ -8,7 +8,7 @@
 import SwiftUI
 import GBAEmulatorMobile
 
-struct GBAScreenViewWrapper: View {
+struct GBScreenViewWrapper: View {
     let gameType: GameType
     @Binding var gameController: GameController?
     @Binding var image: CGImage?
@@ -66,19 +66,22 @@ struct GBAScreenViewWrapper: View {
     }
 
     private var rectangleWidth: CGFloat {
+        let width = gameType == .gba ? GBA_SCREEN_WIDTH : GBC_SCREEN_WIDTH
         if orientationInfo.orientation == .portrait {
-            return CGFloat(GBA_SCREEN_WIDTH) * 1.8
+            return gameType == .gba ? CGFloat(width) * 1.7 : CGFloat(width) * 2.2
         }
 
-        return CGFloat(GBA_SCREEN_WIDTH) * 1.5
+        return gameType == .gba ? CGFloat(width) * 1.8 : CGFloat(width) * 2.0
     }
 
     private var rectangleHeight: CGFloat {
+        let height = gameType == .gba ? GBA_SCREEN_HEIGHT : GBC_SCREEN_WIDTH
+
         if orientationInfo.orientation == .portrait {
-            return CGFloat(GBA_SCREEN_HEIGHT) * 2.0
+            return gameType == .gba ? CGFloat(height) * 1.8 : CGFloat(height) * 2.0
         }
 
-        return CGFloat(GBA_SCREEN_WIDTH) * 1.1
+        return gameType == .gba ? CGFloat(height) * 1.8 : CGFloat(height) * 1.70
     }
 
     private var landscapeLeading: CGFloat {
@@ -98,7 +101,8 @@ struct GBAScreenViewWrapper: View {
             }
             VStack(spacing: 0) {
                 VStack {
-                    GBAScreenView(
+                    GBScreenView(
+                        gameType: gameType,
                         gameController: $gameController,
                         image: $image,
                         isHoldButtonsPresented: $isHoldButtonsPresented,
@@ -159,11 +163,11 @@ struct GBAScreenViewWrapper: View {
                                                     feedbackGenerator.impactOccurred()
                                                     buttonStarted[.ButtonR] = true
                                                 }
-                                                try! emulator?.updateInput(.ButtonR, true)
+                                                emulator?.updateInput(.ButtonR, true)
                                             }
                                             .onEnded() { result in
                                                 buttonStarted[.ButtonR] = false
-                                                try! emulator?.updateInput(.ButtonR, false)
+                                                emulator?.updateInput(.ButtonR, false)
                                             }
                                     )
                                     .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)

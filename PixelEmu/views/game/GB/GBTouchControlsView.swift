@@ -1,5 +1,5 @@
 //
-//  GBATouchControlsView.swift
+//  GBTouchControlsView.swift
 //  PixelEmu
 //
 //  Created by Anne Castrillon on 11/29/24.
@@ -8,7 +8,7 @@
 import SwiftUI
 import GBAEmulatorMobile
 
-struct GBATouchControlsView: View {
+struct GBTouchControlsView: View {
 
     let gameType: GameType
     @Environment(\.presentationMode) var presentationMode

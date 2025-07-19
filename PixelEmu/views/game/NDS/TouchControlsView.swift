@@ -122,17 +122,17 @@ struct TouchControlsView: View {
                         }
                     } else {
                         if heldButtons.contains(entry.key) {
-                            try! emu.updateInput(entry.key, false)
+                            emu.updateInput(entry.key, false)
                             // exactly one frame delay
                             Timer.scheduledTimer(withTimeInterval: 1 / 60, repeats: false) { _ in
-                                try! emu.updateInput(entry.key, true)
+                                emu.updateInput(entry.key, true)
                             }
                         } else {
-                            try! emu.updateInput(entry.key, true)
+                            emu.updateInput(entry.key, true)
                         }
                     }
                 } else if !heldButtons.contains(entry.key) {
-                    try! emu.updateInput(entry.key, false)
+                    emu.updateInput(entry.key, false)
                 }
             }
         }
@@ -140,10 +140,10 @@ struct TouchControlsView: View {
 
     private func releaseControlPad() {
         if let emu = emulator {
-            try! emu.updateInput(PressedButton.Up, false)
-            try! emu.updateInput(PressedButton.Left, false)
-            try! emu.updateInput(PressedButton.Right, false)
-            try! emu.updateInput(PressedButton.Down, false)
+            emu.updateInput(PressedButton.Up, false)
+            emu.updateInput(PressedButton.Left, false)
+            emu.updateInput(PressedButton.Right, false)
+            emu.updateInput(PressedButton.Down, false)
         }
     }
 
@@ -156,7 +156,7 @@ struct TouchControlsView: View {
         if let emu = emulator {
             for button in buttons {
                 if !heldButtons.contains(button) {
-                    try! emu.updateInput(button, false)
+                    emu.updateInput(button, false)
                 }
             }
         }
@@ -174,7 +174,7 @@ struct TouchControlsView: View {
             if entry.value.contains(point) {
                 if entry.key != PressedButton.HomeButton {
                     if let emu = emulator {
-                        try! emu.updateInput(entry.key, true)
+                        emu.updateInput(entry.key, true)
                     }
                 } else {
                     goHome()
@@ -182,7 +182,7 @@ struct TouchControlsView: View {
                 }
             } else if entry.key != PressedButton.HomeButton {
                 if let emu = emulator {
-                    try! emu.updateInput(entry.key, false)
+                    emu.updateInput(entry.key, false)
                 }
             }
         }
@@ -190,8 +190,8 @@ struct TouchControlsView: View {
 
     private func releaseMiscButtons() {
         if let emu = emulator {
-            try! emu.updateInput(PressedButton.Start, false)
-            try! emu.updateInput(PressedButton.Select, false)
+            emu.updateInput(PressedButton.Start, false)
+            emu.updateInput(PressedButton.Select, false)
         }
     }
 
@@ -351,13 +351,13 @@ struct TouchControlsView: View {
         .onChange(of: heldButtons) {
             if let emu = emulator {
                 for button in heldButtons {
-                    try! emu.updateInput(button, true)
+                    emu.updateInput(button, true)
                 }
 
                 let difference = allButtons.subtracting(heldButtons)
 
                 for button in difference {
-                    try! emu.updateInput(button, false)
+                    emu.updateInput(button, false)
                 }
             }
         }

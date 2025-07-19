@@ -45,9 +45,9 @@
 		E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E896C28C2CA67FFA008161AA /* AudioManager.swift */; };
 		E8A214ED2CD052B700173E06 /* OrientationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A214EC2CD052B700173E06 /* OrientationInfo.swift */; };
 		E8A214EF2CD0553800173E06 /* DualScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A214EE2CD0553800173E06 /* DualScreenView.swift */; };
-		E8A334022CFABD6600765ABB /* GBATouchControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334012CFABD6600765ABB /* GBATouchControlsView.swift */; };
-		E8A334042CFACF8C00765ABB /* GBAScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334032CFACF8C00765ABB /* GBAScreenView.swift */; };
-		E8A334062CFAD03A00765ABB /* GBAScreenViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334052CFAD03A00765ABB /* GBAScreenViewWrapper.swift */; };
+		E8A334022CFABD6600765ABB /* GBTouchControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334012CFABD6600765ABB /* GBTouchControlsView.swift */; };
+		E8A334042CFACF8C00765ABB /* GBScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334032CFACF8C00765ABB /* GBScreenView.swift */; };
+		E8A334062CFAD03A00765ABB /* GBScreenViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334052CFAD03A00765ABB /* GBScreenViewWrapper.swift */; };
 		E8A5893E2D02C01C009D4337 /* MainSaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A5893D2D02C01C009D4337 /* MainSaveManagementView.swift */; };
 		E8A589482D03ED2E009D4337 /* GBAStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589472D03ED2E009D4337 /* GBAStateEntriesView.swift */; };
 		E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */; };
@@ -126,9 +126,9 @@
 		E896C28C2CA67FFA008161AA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		E8A214EC2CD052B700173E06 /* OrientationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationInfo.swift; sourceTree = "<group>"; };
 		E8A214EE2CD0553800173E06 /* DualScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DualScreenView.swift; sourceTree = "<group>"; };
-		E8A334012CFABD6600765ABB /* GBATouchControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBATouchControlsView.swift; sourceTree = "<group>"; };
-		E8A334032CFACF8C00765ABB /* GBAScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAScreenView.swift; sourceTree = "<group>"; };
-		E8A334052CFAD03A00765ABB /* GBAScreenViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAScreenViewWrapper.swift; sourceTree = "<group>"; };
+		E8A334012CFABD6600765ABB /* GBTouchControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBTouchControlsView.swift; sourceTree = "<group>"; };
+		E8A334032CFACF8C00765ABB /* GBScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBScreenView.swift; sourceTree = "<group>"; };
+		E8A334052CFAD03A00765ABB /* GBScreenViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBScreenViewWrapper.swift; sourceTree = "<group>"; };
 		E8A5893D2D02C01C009D4337 /* MainSaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSaveManagementView.swift; sourceTree = "<group>"; };
 		E8A589472D03ED2E009D4337 /* GBAStateEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateEntriesView.swift; sourceTree = "<group>"; };
 		E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDialog.swift; sourceTree = "<group>"; };
@@ -314,14 +314,14 @@
 			path = json;
 			sourceTree = "<group>";
 		};
-		E8293CC12E28AE680052BEA4 /* GBA */ = {
+		E8293CC12E28AE680052BEA4 /* GB */ = {
 			isa = PBXGroup;
 			children = (
-				E8A334032CFACF8C00765ABB /* GBAScreenView.swift */,
-				E8A334052CFAD03A00765ABB /* GBAScreenViewWrapper.swift */,
-				E8A334012CFABD6600765ABB /* GBATouchControlsView.swift */,
+				E8A334032CFACF8C00765ABB /* GBScreenView.swift */,
+				E8A334052CFAD03A00765ABB /* GBScreenViewWrapper.swift */,
+				E8A334012CFABD6600765ABB /* GBTouchControlsView.swift */,
 			);
-			path = GBA;
+			path = GB;
 			sourceTree = "<group>";
 		};
 		E8293CC22E28AE6E0052BEA4 /* NDS */ = {
@@ -334,13 +334,6 @@
 				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
 			);
 			path = NDS;
-			sourceTree = "<group>";
-		};
-		E8293CC32E28AE740052BEA4 /* GBC */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = GBC;
 			sourceTree = "<group>";
 		};
 		E8C245E72CBCAA5000B6DF67 /* bin */ = {
@@ -359,9 +352,8 @@
 			children = (
 				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
 				E8C245F52CBDBA4500B6DF67 /* GameMenuView.swift */,
-				E8293CC32E28AE740052BEA4 /* GBC */,
 				E8293CC22E28AE6E0052BEA4 /* NDS */,
-				E8293CC12E28AE680052BEA4 /* GBA */,
+				E8293CC12E28AE680052BEA4 /* GB */,
 			);
 			path = game;
 			sourceTree = "<group>";
@@ -605,9 +597,9 @@
 				E8A214ED2CD052B700173E06 /* OrientationInfo.swift in Sources */,
 				E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */,
 				E8293CCE2E2A05E00052BEA4 /* EmulatorWrapper.swift in Sources */,
-				E8A334062CFAD03A00765ABB /* GBAScreenViewWrapper.swift in Sources */,
+				E8A334062CFAD03A00765ABB /* GBScreenViewWrapper.swift in Sources */,
 				E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */,
-				E8A334042CFACF8C00765ABB /* GBAScreenView.swift in Sources */,
+				E8A334042CFACF8C00765ABB /* GBScreenView.swift in Sources */,
 				E8293CCA2E28B6C30052BEA4 /* Playable.swift in Sources */,
 				E8C245EF2CBCC36F00B6DF67 /* DualScreenViewWrapper.swift in Sources */,
 				E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */,
@@ -616,7 +608,7 @@
 				E8EE5D972CC3491A00CD77B6 /* Colors.swift in Sources */,
 				E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */,
 				E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */,
-				E8A334022CFABD6600765ABB /* GBATouchControlsView.swift in Sources */,
+				E8A334022CFABD6600765ABB /* GBTouchControlsView.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
 				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
