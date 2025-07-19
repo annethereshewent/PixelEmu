@@ -8,6 +8,7 @@
 import SwiftUI
 import DSEmulatorMobile
 import GBAEmulatorMobile
+import GBCEmulatorMobile
 import GoogleSignIn
 import GameController
 
@@ -26,18 +27,15 @@ struct GameView: View {
     @State private var controlStickKeyPressed = false
     @State private var shouldGoHome = false
 
-    @State private var buttonStarted: [ButtonEvent:Bool] = [ButtonEvent:Bool]()
+    @State private var buttonStarted: [PressedButton:Bool] = [PressedButton:Bool]()
 
     @State private var isHoldButtonsPresented = false
-    @State private var heldButtons: Set<ButtonEvent> = []
+    @State private var heldButtons: Set<PressedButton> = []
 
     @State private var stateManager: StateManager?
 
     @State private var useControlStick = false
     @State private var quickSaveLoadKeyPressed = false
-
-    @State private var gbaButtonStarted: [GBAButtonEvent:Bool] = [:]
-    @State private var heldGbaButtons: Set<GBAButtonEvent> = []
 
     @State private var controller: GCController? = GCController.controllers().first
 
@@ -70,9 +68,7 @@ struct GameView: View {
     @Binding var image: CGImage?
 
     @Binding var isPaused: Bool
-    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]?
-    @Binding var gbaButtonEventDict: [ButtonMapping:GBAButtonEvent]?
-
+    @Binding var buttonDict: [ButtonMapping:PressedButton]
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
@@ -99,7 +95,7 @@ struct GameView: View {
     }
 
     private func checkIfHotKey(_ mapping: ButtonMapping, _ pressed: Bool) -> Bool {
-        if let value = buttonEventDict?[mapping] {
+        if let value = buttonDict[mapping] {
             switch value {
             case .MainMenu:
                 if pressed && !homePressed {
@@ -187,7 +183,9 @@ struct GameView: View {
     private func checkSaves() {
         if let emu = emulator {
             if emu.hasSaved() {
-                try! emu.setSaved(false)
+                if game!.type != .gbc {
+                    try! emu.setSaved(false)
+                }
                 debounceTimer?.invalidate()
 
                 debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { _ in
@@ -202,7 +200,7 @@ struct GameView: View {
             switch game.type {
             case .nds: saveDsGame()
             case .gba: saveGbaGame()
-            case .gbc: break
+            case .gbc: print("warning, save game not implemented")
             }
         }
     }
@@ -258,25 +256,14 @@ struct GameView: View {
         }
     }
 
-    // TODO: refactor these into just one method
-    private func updateDSInput(_ mapping: ButtonMapping, _ defaultButton: ButtonEvent, _ pressed: Bool) {
+    private func updateInput(_ mapping: ButtonMapping, _ defaultButton: PressedButton, _ pressed: Bool) {
         if let emu = emulator {
-            if let value = buttonEventDict?[mapping] {
+            if let value = buttonDict[mapping] {
                 if value != .MainMenu {
-                    try! emu.updateInput(value, pressed)
+                    emu.updateInput(value, pressed)
                 }
             } else {
-                try! emu.updateInput(defaultButton, pressed)
-            }
-        }
-    }
-
-    private func updateGBAInput(_ mapping: ButtonMapping, _ defaultButton: GBAButtonEvent, _ pressed: Bool) {
-        if let emu = emulator {
-            if let value = gbaButtonEventDict?[mapping] {
-                try! emu.updateGBAInput(value, pressed)
-            } else {
-                try! emu.updateGBAInput(defaultButton, pressed)
+                emu.updateInput(defaultButton, pressed)
             }
         }
     }
@@ -285,78 +272,78 @@ struct GameView: View {
         if let controller = controller.extendedGamepad {
             controller.buttonB.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.b, pressed) {
-                    updateDSInput(.b, .ButtonA, pressed)
+                    updateInput(.b, .ButtonCross, pressed)
                 }
             }
             controller.buttonA.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.a, pressed) {
-                    updateDSInput(.a, .ButtonB, pressed)
+                    updateInput(.a, .ButtonCircle, pressed)
                 }
             }
             controller.buttonX.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.x, pressed) {
-                    updateDSInput(.x, .ButtonY, pressed)
+                    updateInput(.x, .ButtonTriangle, pressed)
                 }
             }
             controller.buttonY.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.y, pressed) {
-                    updateDSInput(.y, .ButtonX, pressed)
+                    updateInput(.y, .ButtonSquare, pressed)
                 }
             }
             controller.leftShoulder.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.leftShoulder, pressed) {
-                    updateDSInput(.leftShoulder, .ButtonL, pressed)
+                    updateInput(.leftShoulder, .ButtonL, pressed)
                 }
             }
             controller.rightShoulder.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.rightShoulder, pressed) {
-                    updateDSInput(.rightShoulder, .ButtonR, pressed)
+                    updateInput(.rightShoulder, .ButtonR, pressed)
                 }
             }
             controller.buttonMenu.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.menu, pressed) {
-                    updateDSInput(.menu, .Start, pressed)
+                    updateInput(.menu, .Start, pressed)
                 }
             }
             controller.buttonOptions?.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.options, pressed) {
-                    updateDSInput(.options, .Select, pressed)
+                    updateInput(.options, .Select, pressed)
                 }
             }
             controller.dpad.up.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.up, pressed) {
-                    updateDSInput(.up, .Up, pressed)
+                    updateInput(.up, .Up, pressed)
                 }
             }
             controller.dpad.down.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.down, pressed) {
-                    updateDSInput(.down, .Down, pressed)
+                    updateInput(.down, .Down, pressed)
                 }
             }
             controller.dpad.left.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.left, pressed) {
-                    updateDSInput(.left, .Left, pressed)
+                    updateInput(.left, .Left, pressed)
                 }
             }
             controller.dpad.right.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.right, pressed) {
-                    updateDSInput(.right, .Right, pressed)
+                    updateInput(.right, .Right, pressed)
                 }
             }
             controller.buttonHome?.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.home, pressed) {
-                    updateDSInput(.home, .MainMenu, pressed)
+                    updateInput(.home, .MainMenu, pressed)
                 }
             }
             controller.leftThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.leftThumbstick, pressed) {
-                    updateDSInput(.leftThumbstick, .QuickSave, pressed)
+                    updateInput(.leftThumbstick, .QuickSave, pressed)
                 }
             }
 
             controller.rightThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.rightThumbstick, pressed) {
-                    updateDSInput(.rightThumbstick, .QuickLoad, pressed)
+                    updateInput(.rightThumbstick, .QuickLoad, pressed)
                 }
             }
 
@@ -370,13 +357,13 @@ struct GameView: View {
 
             controller.leftTrigger.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.leftTrigger, pressed) {
-                    updateDSInput(.leftTrigger, .ControlStick, pressed)
+                    updateInput(.leftTrigger, .ControlStick, pressed)
                 }
             }
 
             controller.rightTrigger.pressedChangedHandler = { (button, value, pressed) in
                 if !checkIfHotKey(.rightTrigger, pressed) {
-                    updateDSInput(.rightTrigger, .ControlStick, pressed)
+                    updateInput(.rightTrigger, .ControlStick, pressed)
                 }
             }
         }
@@ -411,41 +398,6 @@ struct GameView: View {
                         print(error)
                     }
                 }
-            }
-        }
-    }
-
-    private func addGBAControllerEventListeners(_ controller: GCController) {
-        if let controller = controller.extendedGamepad {
-            controller.buttonB.pressedChangedHandler = { (button, value, pressed) in
-                updateGBAInput(.b, .ButtonA, pressed)
-            }
-            controller.buttonA.pressedChangedHandler = { (button, value, pressed) in
-                updateGBAInput(.a, .ButtonB, pressed)
-            }
-            controller.leftShoulder.pressedChangedHandler = { (button, value, pressed) in
-                updateGBAInput(.leftShoulder, .ButtonL, pressed)
-            }
-            controller.rightShoulder.pressedChangedHandler = { (button, value, pressed) in
-                updateGBAInput(.rightShoulder, .ButtonR, pressed)
-            }
-            controller.buttonMenu.pressedChangedHandler = { (button, value, pressed) in
-                updateGBAInput(.menu, .Start, pressed)
-            }
-            controller.buttonOptions?.pressedChangedHandler = { (button, value, pressed) in
-                updateGBAInput(.options, .Select, pressed)
-            }
-            controller.dpad.up.pressedChangedHandler = { (button, value, pressed) in
-                updateGBAInput(.up, .Up, pressed)
-            }
-            controller.dpad.down.pressedChangedHandler = { (button, value, pressed) in
-                updateGBAInput(.down, .Down, pressed)
-            }
-            controller.dpad.left.pressedChangedHandler = { (button, value, pressed) in
-                updateGBAInput(.left, .Left, pressed)
-            }
-            controller.dpad.right.pressedChangedHandler = { (button, value, pressed) in
-                updateGBAInput(.right, .Right, pressed)
             }
         }
     }
@@ -520,7 +472,12 @@ struct GameView: View {
                     try! emulator!.load(romPtr)
                 }
                 try! emulator!.loadBios(biosPtr)
-            case .gbc: break
+            case .gbc:
+                if let romPtr = romPtr {
+                    emulator = GBCEmulatorWrapper(emu: GBCMobileEmulator())
+
+                    try! emulator!.load(romPtr)
+                }
             }
         }
 
@@ -528,13 +485,17 @@ struct GameView: View {
             switch game.type {
             case .nds: await loadNdsSave(game as! Game)
             case .gba: await loadGbaSave()
-            case .gbc: break
+            case .gbc: print("Warning, load save not implemented")
             }
             isRunning = true
 
             audioManager = AudioManager()
 
-            audioManager!.startMicrophoneAndAudio()
+            if game.type == .nds {
+                audioManager!.startMicrophoneAndAudio()
+            } else {
+                audioManager!.startAudio()
+            }
 
             if !isSoundOn {
                 audioManager?.muteAudio()
@@ -554,9 +515,9 @@ struct GameView: View {
                 DispatchQueue.main.sync {
                     emu.stepFrame()
 
-                    if let player = audioManager {
-                        if let bufferPtr = player.getBufferPtr() {
-                            if game.type == .nds {
+                    if game.type == .nds {
+                        if let player = audioManager {
+                            if let bufferPtr = player.getBufferPtr() {
                                 try! emu.updateAudioBuffer(bufferPtr)
                             }
                         }
@@ -593,16 +554,21 @@ struct GameView: View {
                         if let image = graphicsParser.fromGBAPointer(ptr: pixels) {
                             self.image = image
                         }
-                    case .gbc: break
+                    case .gbc:
+                        let pixels = try! emu.getPicturePtr()
+
+                        if let image = graphicsParser.fromGBCPointer(ptr: pixels) {
+                            self.image = image
+                        }
                     }
-
-                    let audioBufferLength = emu.audioBufferLength()
-
-                    let audioBufferPtr = emu.audioBufferPtr()
 
                     let playerPaused = audioManager?.playerPaused ?? true
 
-                    if !playerPaused {
+                    if !playerPaused && game.type != .gbc {
+                        let audioBufferLength = emu.audioBufferLength()
+
+                        let audioBufferPtr = emu.audioBufferPtr()
+                        
                         let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
                         self.audioManager?.updateBuffer(samples: audioSamples)
                     }
@@ -684,35 +650,67 @@ struct GameView: View {
                     case .gba:
                         VStack {
                             GBAScreenViewWrapper(
+                                gameType: .gba,
                                 gameController: $gameController,
                                 image: $image,
                                 emulator: $emulator,
-                                buttonStarted: $gbaButtonStarted,
+                                buttonStarted: $buttonStarted,
                                 audioManager: $audioManager,
                                 isSoundOn: $isSoundOn,
                                 isHoldButtonsPresented: $isHoldButtonsPresented,
-                                heldButtons: $heldGbaButtons,
+                                heldButtons: $heldButtons,
                                 themeColor: $themeColor
                             )
                             .padding(.top, screenPadding)
                             if gameController?.controller?.extendedGamepad == nil {
                                 GBATouchControlsView(
+                                    gameType: .gba,
                                     emulator: $emulator,
                                     emulatorCopy: $emulatorCopy,
                                     audioManager: $audioManager,
                                     workItem: $workItem,
                                     isRunning: $isRunning,
-                                    buttonStarted: $gbaButtonStarted,
+                                    buttonStarted: $buttonStarted,
                                     gameName: $gameName,
                                     isMenuPresented: $isMenuPresented,
                                     isHoldButtonsPresented: $isHoldButtonsPresented,
-                                    heldButtons: $heldGbaButtons,
+                                    heldButtons: $heldButtons,
                                     isPaused: $isPaused,
                                     shouldGoHome: $shouldGoHome
                                 )
                             }
                         }
-                    case .gbc: Text("Not implemented")
+                    case .gbc:
+                        GBAScreenViewWrapper(
+                            gameType: .gbc,
+                            gameController: $gameController,
+                            image: $image,
+                            emulator: $emulator,
+                            buttonStarted: $buttonStarted,
+                            audioManager: $audioManager,
+                            isSoundOn: $isSoundOn,
+                            isHoldButtonsPresented: $isHoldButtonsPresented,
+                            heldButtons: $heldButtons,
+                            themeColor: $themeColor
+                        )
+                        .padding(.top, screenPadding)
+                        if gameController?.controller?.extendedGamepad == nil {
+                            GBATouchControlsView(
+                                gameType: .gbc,
+                                emulator: $emulator,
+                                emulatorCopy: $emulatorCopy,
+                                audioManager: $audioManager,
+                                workItem: $workItem,
+                                isRunning: $isRunning,
+                                buttonStarted: $buttonStarted,
+                                gameName: $gameName,
+                                isMenuPresented: $isMenuPresented,
+                                isHoldButtonsPresented: $isHoldButtonsPresented,
+                                heldButtons: $heldButtons,
+                                isPaused: $isPaused,
+                                shouldGoHome: $shouldGoHome
+                            )
+                        }
                     }
                 }
             } else {
@@ -781,11 +779,7 @@ struct GameView: View {
                     emulatorCopy = nil
                     if let game = game {
                         gameController = GameController() { controller in
-                            switch game.type {
-                            case .nds: addControllerEventListeners(controller)
-                            case .gba: addGBAControllerEventListeners(controller)
-                            case .gbc: break
-                            }
+                            addControllerEventListeners(controller)
                         }
 
                     }

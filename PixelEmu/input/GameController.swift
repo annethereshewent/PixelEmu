@@ -9,6 +9,26 @@ import Foundation
 import GameController
 import DSEmulatorMobile
 
+enum PressedButton: Int {
+    case ButtonCross = 0
+    case ButtonCircle = 1
+    case ButtonSquare = 2
+    case ButtonTriangle = 3
+    case Select = 4
+    case Start = 6
+    case ButtonL = 9
+    case ButtonR = 10
+    case Up = 12
+    case Down = 13
+    case Left = 14
+    case Right = 15
+    case QuickSave = 16
+    case QuickLoad = 17
+    case MainMenu = 18
+    case HomeButton = 19
+    case ControlStick = 20
+}
+
 @Observable
 class GameController {
     let eventListenerClosure: (GCController) -> Void

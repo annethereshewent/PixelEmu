@@ -9,14 +9,15 @@ import SwiftUI
 import GBAEmulatorMobile
 
 struct GBAScreenViewWrapper: View {
+    let gameType: GameType
     @Binding var gameController: GameController?
     @Binding var image: CGImage?
     @Binding var emulator: (any EmulatorWrapper)?
-    @Binding var buttonStarted: [GBAButtonEvent:Bool]
+    @Binding var buttonStarted: [PressedButton:Bool]
     @Binding var audioManager: AudioManager?
     @Binding var isSoundOn: Bool
     @Binding var isHoldButtonsPresented: Bool
-    @Binding var heldButtons: Set<GBAButtonEvent>
+    @Binding var heldButtons: Set<PressedButton>
     @Binding var themeColor: Color
 
     @EnvironmentObject var orientationInfo: OrientationInfo
@@ -111,23 +112,25 @@ struct GBAScreenViewWrapper: View {
                     VStack(spacing: 0) {
                         HStack {
                             Spacer()
-                            Image("L Button")
-                                .resizable()
-                                .simultaneousGesture(
-                                    DragGesture(minimumDistance: 0)
-                                        .onChanged() { result in
-                                            if !buttonStarted[GBAButtonEvent.ButtonL]! {
-                                                feedbackGenerator.impactOccurred()
-                                                buttonStarted[GBAButtonEvent.ButtonL] = true
+                            if gameType != .gbc {
+                                Image("L Button")
+                                    .resizable()
+                                    .simultaneousGesture(
+                                        DragGesture(minimumDistance: 0)
+                                            .onChanged() { result in
+                                                if !buttonStarted[PressedButton.ButtonL]! {
+                                                    feedbackGenerator.impactOccurred()
+                                                    buttonStarted[PressedButton.ButtonL] = true
+                                                }
+                                                emulator?.updateInput(PressedButton.ButtonL, true)
                                             }
-                                            try! emulator?.updateGBAInput(GBAButtonEvent.ButtonL, true)
-                                        }
-                                        .onEnded() { result in
-                                            buttonStarted[GBAButtonEvent.ButtonL] = false
-                                            try! emulator?.updateGBAInput(GBAButtonEvent.ButtonL, false)
-                                        }
-                                )
-                                .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)
+                                            .onEnded() { result in
+                                                buttonStarted[PressedButton.ButtonL] = false
+                                                emulator?.updateInput(PressedButton.ButtonL, false)
+                                            }
+                                    )
+                                    .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)
+                            }
                             Spacer()
                             Button {
                                 if let manager = audioManager {
@@ -146,23 +149,25 @@ struct GBAScreenViewWrapper: View {
                                     .frame(width: volumeButton!.size.width * buttonScale, height: volumeButton!.size.height * buttonScale)
                             }
                             Spacer()
-                            Image("R Button")
-                                .resizable()
-                                .simultaneousGesture(
-                                    DragGesture(minimumDistance: 0)
-                                        .onChanged() { result in
-                                            if !buttonStarted[GBAButtonEvent.ButtonR]! {
-                                                feedbackGenerator.impactOccurred()
-                                                buttonStarted[GBAButtonEvent.ButtonR] = true
+                            if gameType != .gbc {
+                                Image("R Button")
+                                    .resizable()
+                                    .simultaneousGesture(
+                                        DragGesture(minimumDistance: 0)
+                                            .onChanged() { result in
+                                                if !buttonStarted[.ButtonR]! {
+                                                    feedbackGenerator.impactOccurred()
+                                                    buttonStarted[.ButtonR] = true
+                                                }
+                                                try! emulator?.updateInput(.ButtonR, true)
                                             }
-                                            try! emulator?.updateGBAInput(GBAButtonEvent.ButtonR, true)
-                                        }
-                                        .onEnded() { result in
-                                            buttonStarted[GBAButtonEvent.ButtonR] = false
-                                            try! emulator?.updateGBAInput(GBAButtonEvent.ButtonR, false)
-                                        }
-                                )
-                                .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)
+                                            .onEnded() { result in
+                                                buttonStarted[.ButtonR] = false
+                                                try! emulator?.updateInput(.ButtonR, false)
+                                            }
+                                    )
+                                    .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)
+                            }
                             Spacer()
                         }
                     }

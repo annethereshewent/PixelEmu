@@ -14,7 +14,7 @@ struct GBAScreenView: View {
     @Binding var isHoldButtonsPresented: Bool
     @Binding var themeColor: Color
     @Binding var emulator: (any EmulatorWrapper)?
-    @Binding var heldButtons: Set<GBAButtonEvent>
+    @Binding var heldButtons: Set<PressedButton>
 
     @EnvironmentObject var orientationInfo: OrientationInfo
 
@@ -40,9 +40,9 @@ struct GBAScreenView: View {
         var buttons: [String] = []
         for button in heldButtons {
             switch button {
-            case .ButtonA:
+            case .ButtonCircle:
                 buttons.append("A")
-            case .ButtonB:
+            case .ButtonCross:
                 buttons.append("B")
             case .ButtonL:
                 buttons.append("L")

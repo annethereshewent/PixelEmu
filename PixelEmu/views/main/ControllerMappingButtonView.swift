@@ -10,13 +10,10 @@ import DSEmulatorMobile
 import GBAEmulatorMobile
 
 struct ControllerMappingButtonView: View {
-    var event: ButtonEvent
-    var gbaEvent: GBAButtonEvent?
-    @Binding var buttonMappings: [ButtonEvent:ButtonMapping]
-    @Binding var gbaButtonMappings: [GBAButtonEvent:ButtonMapping]
-    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]?
-    @Binding var gbaButtonDict: [ButtonMapping:GBAButtonEvent]?
-    @Binding var awaitingInput: [ButtonEvent:Bool]
+    var pressedButton: PressedButton
+    @Binding var buttonMappings: [PressedButton:ButtonMapping]
+    @Binding var buttonDict: [ButtonMapping:PressedButton]
+    @Binding var awaitingInput: [PressedButton:Bool]
     @Binding var gameController: GameController?
 
     var defaultButton: String
@@ -68,36 +65,29 @@ struct ControllerMappingButtonView: View {
 
     var body: some View {
         Button {
-            awaitingInput[event] = true
+            awaitingInput[pressedButton] = true
             DispatchQueue.global().async {
-                while awaitingInput[event] ?? false {
+                while awaitingInput[pressedButton] ?? false {
                     if let button = detectButtonPressed() {
                         if button != .noButton {
-                            if let switchEvent = buttonEventDict?[button], let oldButton = buttonMappings[event] {
+                            if let switchEvent = buttonDict[button], let oldButton = buttonMappings[pressedButton] {
                                 buttonMappings[switchEvent] = oldButton
                             }
-                            buttonMappings[event] = button
-
-                            if let gbaEvent = gbaEvent {
-                                if let switchEvent = gbaButtonDict?[button], let oldButton = gbaButtonMappings[gbaEvent] {
-                                    gbaButtonMappings[switchEvent] = oldButton
-                                }
-                                gbaButtonMappings[gbaEvent] = button
-                            }
+                            buttonMappings[pressedButton] = button
                         }
-                        awaitingInput[event] = false
+                        awaitingInput[pressedButton] = false
                     }
                 }
             }
         } label: {
             HStack {
                 Text(buttonText)
-                if awaitingInput[event] ?? false {
+                if awaitingInput[pressedButton] ?? false {
                     Spacer()
                     ProgressView()
                 } else {
                     Spacer()
-                    Text(buttonMappings[event]?.description ?? defaultButton)
+                    Text(buttonMappings[pressedButton]?.description ?? defaultButton)
                         .foregroundColor(Colors.primaryColor)
                 }
 

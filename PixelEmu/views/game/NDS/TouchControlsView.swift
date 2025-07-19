@@ -16,7 +16,7 @@ struct TouchControlsView: View {
     @Binding var audioManager: AudioManager?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
-    @Binding var buttonStarted: [ButtonEvent:Bool]
+    @Binding var buttonStarted: [PressedButton:Bool]
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
@@ -24,13 +24,13 @@ struct TouchControlsView: View {
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
     @Binding var isHoldButtonsPresented: Bool
-    @Binding var heldButtons: Set<ButtonEvent>
+    @Binding var heldButtons: Set<PressedButton>
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
-    @State private var buttons: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
-    @State private var controlPad: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
-    @State private var buttonsMisc: [ButtonEvent:CGRect] = [ButtonEvent:CGRect]()
+    @State private var buttons: [PressedButton:CGRect] = [PressedButton:CGRect]()
+    @State private var controlPad: [PressedButton:CGRect] = [PressedButton:CGRect]()
+    @State private var buttonsMisc: [PressedButton:CGRect] = [PressedButton:CGRect]()
 
     @EnvironmentObject var orientationInfo: OrientationInfo
 
@@ -40,19 +40,19 @@ struct TouchControlsView: View {
     private let miscButtons = UIImage(named: "Buttons Misc")
     private let redButton = UIImage(named: "Red Button")
 
-    private let allButtons: Set<ButtonEvent> = [
-        ButtonEvent.ButtonA,
-        ButtonEvent.ButtonB,
-        ButtonEvent.ButtonL,
-        ButtonEvent.ButtonR,
-        ButtonEvent.ButtonX,
-        ButtonEvent.ButtonY,
-        ButtonEvent.Down,
-        ButtonEvent.Left,
-        ButtonEvent.Right,
-        ButtonEvent.Down,
-        ButtonEvent.Select,
-        ButtonEvent.Start
+    private let allButtons: Set<PressedButton> = [
+        PressedButton.ButtonCircle,
+        PressedButton.ButtonCross,
+        PressedButton.ButtonL,
+        PressedButton.ButtonR,
+        PressedButton.ButtonTriangle,
+        PressedButton.ButtonSquare,
+        PressedButton.Down,
+        PressedButton.Left,
+        PressedButton.Right,
+        PressedButton.Down,
+        PressedButton.Select,
+        PressedButton.Start
     ]
 
     private var buttonScale: CGFloat {
@@ -70,13 +70,13 @@ struct TouchControlsView: View {
     }
 
     private func releaseHapticFeedback() {
-        buttonStarted[ButtonEvent.ButtonA] = false
-        buttonStarted[ButtonEvent.ButtonB] = false
-        buttonStarted[ButtonEvent.ButtonY] = false
-        buttonStarted[ButtonEvent.ButtonX] = false
+        buttonStarted[PressedButton.ButtonCircle] = false
+        buttonStarted[PressedButton.ButtonCross] = false
+        buttonStarted[PressedButton.ButtonSquare] = false
+        buttonStarted[PressedButton.ButtonTriangle] = false
     }
 
-    private func checkForHapticFeedback(point: CGPoint, entries: [ButtonEvent:CGRect]) {
+    private func checkForHapticFeedback(point: CGPoint, entries: [PressedButton:CGRect]) {
         for entry in entries {
             if entry.value.contains(point) && !buttonStarted[entry.key]! {
                 feedbackGenerator.impactOccurred()
@@ -87,30 +87,30 @@ struct TouchControlsView: View {
     }
 
     private func initButtonState() {
-        self.buttonStarted[ButtonEvent.Up] = false
-        self.buttonStarted[ButtonEvent.Down] = false
-        self.buttonStarted[ButtonEvent.Left] = false
-        self.buttonStarted[ButtonEvent.Right] = false
+        self.buttonStarted[PressedButton.Up] = false
+        self.buttonStarted[PressedButton.Down] = false
+        self.buttonStarted[PressedButton.Left] = false
+        self.buttonStarted[PressedButton.Right] = false
 
-        self.buttonStarted[ButtonEvent.ButtonA] = false
-        self.buttonStarted[ButtonEvent.ButtonB] = false
-        self.buttonStarted[ButtonEvent.ButtonY] = false
-        self.buttonStarted[ButtonEvent.ButtonX] = false
+        self.buttonStarted[PressedButton.ButtonCircle] = false
+        self.buttonStarted[PressedButton.ButtonCross] = false
+        self.buttonStarted[PressedButton.ButtonSquare] = false
+        self.buttonStarted[PressedButton.ButtonTriangle] = false
 
-        self.buttonStarted[ButtonEvent.ButtonL] = false
-        self.buttonStarted[ButtonEvent.ButtonR] = false
+        self.buttonStarted[PressedButton.ButtonL] = false
+        self.buttonStarted[PressedButton.ButtonR] = false
 
-        self.buttonStarted[ButtonEvent.Start] = false
-        self.buttonStarted[ButtonEvent.Select] = false
+        self.buttonStarted[PressedButton.Start] = false
+        self.buttonStarted[PressedButton.Select] = false
 
-        self.buttonStarted[ButtonEvent.ButtonHome] = false
+        self.buttonStarted[PressedButton.HomeButton] = false
     }
 
     private func handleControlPad(point: CGPoint) {
         self.handleInput(point: point, entries: controlPad)
     }
 
-    private func handleInput(point: CGPoint, entries: [ButtonEvent:CGRect]) {
+    private func handleInput(point: CGPoint, entries: [PressedButton:CGRect]) {
         if let emu = emulator {
             for entry in entries {
                 if entry.value.contains(point) {
@@ -140,10 +140,10 @@ struct TouchControlsView: View {
 
     private func releaseControlPad() {
         if let emu = emulator {
-            try! emu.updateInput(ButtonEvent.Up, false)
-            try! emu.updateInput(ButtonEvent.Left, false)
-            try! emu.updateInput(ButtonEvent.Right, false)
-            try! emu.updateInput(ButtonEvent.Down, false)
+            try! emu.updateInput(PressedButton.Up, false)
+            try! emu.updateInput(PressedButton.Left, false)
+            try! emu.updateInput(PressedButton.Right, false)
+            try! emu.updateInput(PressedButton.Down, false)
         }
     }
 
@@ -152,7 +152,7 @@ struct TouchControlsView: View {
     }
 
     private func releaseButtons() {
-        let buttons = [ButtonEvent.ButtonA, ButtonEvent.ButtonB, ButtonEvent.ButtonY, ButtonEvent.ButtonX]
+        let buttons = [PressedButton.ButtonCircle, PressedButton.ButtonCross, PressedButton.ButtonSquare, PressedButton.ButtonTriangle]
         if let emu = emulator {
             for button in buttons {
                 if !heldButtons.contains(button) {
@@ -172,7 +172,7 @@ struct TouchControlsView: View {
     private func handleMiscButtons(point: CGPoint) {
         for entry in buttonsMisc {
             if entry.value.contains(point) {
-                if entry.key != ButtonEvent.ButtonHome {
+                if entry.key != PressedButton.HomeButton {
                     if let emu = emulator {
                         try! emu.updateInput(entry.key, true)
                     }
@@ -180,7 +180,7 @@ struct TouchControlsView: View {
                     goHome()
                     break
                 }
-            } else if entry.key != ButtonEvent.ButtonHome {
+            } else if entry.key != PressedButton.HomeButton {
                 if let emu = emulator {
                     try! emu.updateInput(entry.key, false)
                 }
@@ -190,8 +190,8 @@ struct TouchControlsView: View {
 
     private func releaseMiscButtons() {
         if let emu = emulator {
-            try! emu.updateInput(ButtonEvent.Start, false)
-            try! emu.updateInput(ButtonEvent.Select, false)
+            try! emu.updateInput(PressedButton.Start, false)
+            try! emu.updateInput(PressedButton.Select, false)
         }
     }
 
@@ -212,10 +212,10 @@ struct TouchControlsView: View {
         let right = CGRect(x: (width / 3) * 2, y: 0, width: width / 3, height: height)
         let left = CGRect(x: 0, y: 0, width: width / 3, height: height)
 
-        controlPad[ButtonEvent.Up] = up
-        controlPad[ButtonEvent.Down] = down
-        controlPad[ButtonEvent.Left] = left
-        controlPad[ButtonEvent.Right] = right
+        controlPad[PressedButton.Up] = up
+        controlPad[PressedButton.Down] = down
+        controlPad[PressedButton.Left] = left
+        controlPad[PressedButton.Right] = right
     }
 
     private func calculateMiscButtons() {
@@ -236,9 +236,9 @@ struct TouchControlsView: View {
         let selectButton = CGRect(x: 0, y: selectY, width: width, height: height)
         let homeButton = CGRect(x:0, y: homeY, width: width, height: height)
 
-        buttonsMisc[ButtonEvent.Start] = startButton
-        buttonsMisc[ButtonEvent.Select] = selectButton
-        buttonsMisc[ButtonEvent.ButtonHome] = homeButton
+        buttonsMisc[PressedButton.Start] = startButton
+        buttonsMisc[PressedButton.Select] = selectButton
+        buttonsMisc[PressedButton.HomeButton] = homeButton
 
     }
 
@@ -253,10 +253,10 @@ struct TouchControlsView: View {
         let aButton = CGRect(x: imageHeight * 0.69, y: imageHeight * 0.35, width: width, height: height)
         let bButton = CGRect(x: imageWidth * 0.35, y: imageHeight * 0.69, width: width, height: height)
 
-        buttons[ButtonEvent.ButtonA] = aButton
-        buttons[ButtonEvent.ButtonX] = xButton
-        buttons[ButtonEvent.ButtonY] = yButton
-        buttons[ButtonEvent.ButtonB] = bButton
+        buttons[PressedButton.ButtonCircle] = aButton
+        buttons[PressedButton.ButtonTriangle] = xButton
+        buttons[PressedButton.ButtonSquare] = yButton
+        buttons[PressedButton.ButtonCross] = bButton
     }
 
     var body: some View {
@@ -276,10 +276,10 @@ struct TouchControlsView: View {
                                     let right = CGRect(x: (frame.maxX / 3) * 2, y: frame.minY, width: frame.width / 3, height: frame.height)
                                     let left = CGRect(x: frame.minX, y: frame.minY, width: frame.width / 3, height: frame.height)
 
-                                    controlPad[ButtonEvent.Up] = up
-                                    controlPad[ButtonEvent.Down] = down
-                                    controlPad[ButtonEvent.Left] = left
-                                    controlPad[ButtonEvent.Right] = right
+                                    controlPad[PressedButton.Up] = up
+                                    controlPad[PressedButton.Down] = down
+                                    controlPad[PressedButton.Left] = left
+                                    controlPad[PressedButton.Right] = right
                                 }
                         }
                     )
@@ -288,14 +288,14 @@ struct TouchControlsView: View {
                             .onChanged() { result in
                                 // you can use any of the control pad buttons here and it'll work ok
                                 // the choice to use up is arbitrary
-                                if !buttonStarted[ButtonEvent.Up]! {
+                                if !buttonStarted[PressedButton.Up]! {
                                     feedbackGenerator.impactOccurred()
-                                    buttonStarted[ButtonEvent.Up] = true
+                                    buttonStarted[PressedButton.Up] = true
                                 }
                                 handleControlPad(point: result.location)
                             }
                             .onEnded() { result in
-                                buttonStarted[ButtonEvent.Up] = false
+                                buttonStarted[PressedButton.Up] = false
                                 releaseControlPad()
                             }
                     )
@@ -311,9 +311,9 @@ struct TouchControlsView: View {
                                     handleMiscButtons(point: result.location)
                                 }
                                 .onEnded() { result in
-                                    buttonStarted[ButtonEvent.Start] = false
-                                    buttonStarted[ButtonEvent.Select] = false
-                                    buttonStarted[ButtonEvent.ButtonHome] = false
+                                    buttonStarted[PressedButton.Start] = false
+                                    buttonStarted[PressedButton.Select] = false
+                                    buttonStarted[PressedButton.HomeButton] = false
 
                                     releaseMiscButtons()
                                 }

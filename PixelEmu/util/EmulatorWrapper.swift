@@ -20,8 +20,7 @@ protocol EmulatorWrapper {
     func setBackup(_ save_type: String, _ ram_capacity: UInt, _ bytes: UnsafeBufferPointer<UInt8>) throws
     func backupPointer() -> UnsafePointer<UInt8>
     func backupLength() -> UInt
-    func updateInput(_ event: ButtonEvent, _ value: Bool) throws
-    func updateGBAInput(_ event: GBAButtonEvent, _ value: Bool) throws
+    func updateInput(_ button: PressedButton, _ value: Bool)
     func updateAudioBuffer(_ ptr: UnsafeBufferPointer<Float>) throws
     func getGameCode() throws -> UInt32
     func load(_ ptr: UnsafeBufferPointer<UInt8>) throws
@@ -109,13 +108,8 @@ class DSEmulatorWrapper: EmulatorWrapper {
         emu.setBackup(save_type, ram_capacity, bytes)
     }
 
-    func updateInput(_ event: ButtonEvent, _ value: Bool) {
-        emu.updateInput(event, value)
-    }
-
-    func updateGBAInput(_ event: GBAButtonEvent, _ value: Bool) throws {
-        // do nothing
-        throw "not implemented"
+    func updateInput(_ button: PressedButton, _ value: Bool) {
+        emu.updateInput(UInt(button.rawValue), value)
     }
 
     func updateAudioBuffer(_ ptr: UnsafeBufferPointer<Float>) {
@@ -242,13 +236,8 @@ class GBAEmulatorWrapper: EmulatorWrapper {
         throw "not implemented"
     }
 
-    func updateInput(_ event: ButtonEvent, _ value: Bool) throws {
-        // do nothing
-        throw "not implemented"
-    }
-
-    func updateGBAInput(_ event: GBAButtonEvent, _ value: Bool) throws {
-        emu.updateInput(event, value)
+    func updateInput(_ button: PressedButton, _ value: Bool) {
+        emu.updateInput(UInt(button.rawValue), value)
     }
 
     func updateAudioBuffer(_ ptr: UnsafeBufferPointer<Float>) throws {
@@ -378,13 +367,8 @@ class GBCEmulatorWrapper : EmulatorWrapper {
         throw "not implemented"
     }
 
-    func updateInput(_ event: ButtonEvent, _ value: Bool) throws {
-        // do nothing
-        emu.updateInput(0, value)
-    }
-
-    func updateGBAInput(_ event: GBAButtonEvent, _ value: Bool) throws {
-        throw "not implemented"
+    func updateInput(_ button: PressedButton, _ value: Bool) {
+        emu.updateInput(UInt(button.rawValue), value)
     }
 
     func updateAudioBuffer(_ ptr: UnsafeBufferPointer<Float>) throws {

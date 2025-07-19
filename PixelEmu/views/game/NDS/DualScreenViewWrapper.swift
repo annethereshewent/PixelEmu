@@ -13,11 +13,11 @@ struct DualScreenViewWrapper: View {
     @Binding var topImage: CGImage?
     @Binding var bottomImage: CGImage?
     @Binding var emulator: (any EmulatorWrapper)?
-    @Binding var buttonStarted: [ButtonEvent:Bool]
+    @Binding var buttonStarted: [PressedButton:Bool]
     @Binding var audioManager: AudioManager?
     @Binding var isSoundOn: Bool
     @Binding var isHoldButtonsPresented: Bool
-    @Binding var heldButtons: Set<ButtonEvent>
+    @Binding var heldButtons: Set<PressedButton>
     @Binding var themeColor: Color
 
     @EnvironmentObject var orientationInfo: OrientationInfo
@@ -131,15 +131,15 @@ struct DualScreenViewWrapper: View {
                                 .simultaneousGesture(
                                     DragGesture(minimumDistance: 0)
                                         .onChanged() { result in
-                                            if !buttonStarted[ButtonEvent.ButtonL]! {
+                                            if !buttonStarted[PressedButton.ButtonL]! {
                                                 feedbackGenerator.impactOccurred()
-                                                buttonStarted[ButtonEvent.ButtonL] = true
+                                                buttonStarted[PressedButton.ButtonL] = true
                                             }
-                                            try! emulator?.updateInput(ButtonEvent.ButtonL, true)
+                                            emulator?.updateInput(PressedButton.ButtonL, true)
                                         }
                                         .onEnded() { result in
-                                            buttonStarted[ButtonEvent.ButtonL] = false
-                                            try! emulator?.updateInput(ButtonEvent.ButtonL, false)
+                                            buttonStarted[PressedButton.ButtonL] = false
+                                            emulator?.updateInput(PressedButton.ButtonL, false)
                                         }
                                 )
                                 .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)
@@ -166,15 +166,15 @@ struct DualScreenViewWrapper: View {
                                 .simultaneousGesture(
                                     DragGesture(minimumDistance: 0)
                                         .onChanged() { result in
-                                            if !buttonStarted[ButtonEvent.ButtonR]! {
+                                            if !buttonStarted[PressedButton.ButtonR]! {
                                                 feedbackGenerator.impactOccurred()
-                                                buttonStarted[ButtonEvent.ButtonR] = true
+                                                buttonStarted[PressedButton.ButtonR] = true
                                             }
-                                            try! emulator?.updateInput(ButtonEvent.ButtonR, true)
+                                            emulator?.updateInput(PressedButton.ButtonR, true)
                                         }
                                         .onEnded() { result in
-                                            buttonStarted[ButtonEvent.ButtonR] = false
-                                            try! emulator?.updateInput(ButtonEvent.ButtonR, false)
+                                            buttonStarted[PressedButton.ButtonR] = false
+                                            emulator?.updateInput(PressedButton.ButtonR, false)
                                         }
                                 )
                                 .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)

@@ -51,14 +51,13 @@ struct ContentView: View {
     @State private var bottomImage: CGImage?
 
     @State private var gbaImage: CGImage? = nil
-
+    @State private var gbcImage: CGImage? = nil
 
     @State private var gameName = ""
     @State private var backupFile: BackupFile? = nil
     @State private var gbaBackupFile: GBABackupFile? = nil
 
-    @State private var buttonEventDict: [ButtonMapping:ButtonEvent]? = getDefaultMappings()
-    @State private var gbaButtonDict: [ButtonMapping:GBAButtonEvent]? = getGBADefaultMappings()
+    @State private var buttonDict: [ButtonMapping:PressedButton] = getDefaultMappings()
 
     @State private var isMenuPresented = false
 
@@ -83,12 +82,12 @@ struct ContentView: View {
         self.checkForBinaries(currentFile: .gba)
     }
 
-    static func getDefaultMappings() -> [ButtonMapping:ButtonEvent] {
+    static func getDefaultMappings() -> [ButtonMapping:PressedButton] {
         return [
-            .a: .ButtonB,
-            .b: .ButtonA,
-            .x: .ButtonY,
-            .y: .ButtonX,
+            .a: .ButtonCircle,
+            .b: .ButtonCross,
+            .x: .ButtonTriangle,
+            .y: .ButtonSquare,
             .leftShoulder: .ButtonL,
             .rightShoulder: .ButtonR,
             .menu: .Start,
@@ -103,23 +102,7 @@ struct ContentView: View {
             .leftTrigger: .ControlStick
         ]
     }
-
-    static func getGBADefaultMappings() -> [ButtonMapping:GBAButtonEvent] {
-        return [
-            .a: .ButtonB,
-            .b: .ButtonA,
-            .leftShoulder: .ButtonL,
-            .rightShoulder: .ButtonR,
-            .menu: .Start,
-            .options: .Select,
-            .up: .Up,
-            .down: .Down,
-            .left: .Left,
-            .right: .Right,
-            .home: .ButtonHome,
-        ]
-    }
-
+    
     mutating func checkForBinaries(currentFile: CurrentFile) {
         if let applicationUrl = try? FileManager.default.url(
             for: .applicationSupportDirectory,
@@ -250,8 +233,7 @@ struct ContentView: View {
                             gbaBiosLoaded: $gbaBiosLoaded,
                             themeColor: $themeColor,
                             gameController: $gameController,
-                            buttonEventDict: $buttonEventDict,
-                            gbaButtonDict: $gbaButtonDict
+                            buttonDict: $buttonDict
                         )
                     }
                     if loading {
@@ -262,7 +244,8 @@ struct ContentView: View {
                 }
             }
             .navigationDestination(for: String.self) { view in
-                if view == "GameView" {
+                switch view {
+                case "GameView":
                     GameView(
                         isMenuPresented: $isMenuPresented,
                         emulator: $emulator,
@@ -289,11 +272,9 @@ struct ContentView: View {
                         bottomImage: $bottomImage,
                         image: .constant(nil),
                         isPaused: $isPaused,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonEventDict: $gbaButtonDict
-
+                        buttonDict: $buttonDict
                     )
-                } else if view == "GBAGameView" {
+                case "GBAGameView":
                     GameView(
                         isMenuPresented: $isMenuPresented,
                         emulator: $emulator,
@@ -320,9 +301,38 @@ struct ContentView: View {
                         bottomImage: .constant(nil),
                         image: $gbaImage,
                         isPaused: $isPaused,
-                        buttonEventDict: .constant(nil),
-                        gbaButtonEventDict: $gbaButtonDict
+                        buttonDict: $buttonDict
                     )
+                case "GBCGameView":
+                    GameView(
+                        isMenuPresented: $isMenuPresented,
+                        emulator: $emulator,
+                        emulatorCopy: .constant(nil),
+                        bios7Data: .constant(nil),
+                        bios9Data: .constant(nil),
+                        firmwareData: .constant(nil),
+                        gbaBiosData: .constant(nil),
+                        romData: $romData,
+                        gameUrl: $gameUrl,
+                        user: $user,
+                        cloudService: $cloudService,
+                        game: $gbcGame,
+                        isSoundOn: $isSoundOn,
+                        themeColor: $themeColor,
+                        gameName: $gameName,
+                        backupFile: $backupFile,
+                        gbaBackupFile: .constant(nil),
+                        gameController: $gameController,
+                        audioManager: $audioManager,
+                        isRunning: $isRunning,
+                        workItem: $workItem,
+                        topImage: .constant(nil),
+                        bottomImage: .constant(nil),
+                        image: $gbcImage,
+                        isPaused: $isPaused,
+                        buttonDict: $buttonDict
+                    )
+                default: Text("UNSUPPORTED")
                 }
             }
         }
@@ -349,9 +359,9 @@ struct ContentView: View {
                     let decodedButtonMappings = try JSONDecoder()
                         .decode([ButtonMapping:String].self, from: data)
 
-                    buttonEventDict = Dictionary(
+                    buttonDict = Dictionary(
                         uniqueKeysWithValues: decodedButtonMappings.map{ key, value in
-                            (key, ButtonEvent.descriptionToEnum(value))
+                            (key, PressedButton(rawValue: Int(value) ?? 0) ?? .ButtonL)
                         }
                     )
                 }

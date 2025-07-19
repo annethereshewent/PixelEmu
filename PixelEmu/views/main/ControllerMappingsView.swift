@@ -77,207 +77,121 @@ enum ButtonMapping: Codable {
     }
 }
 
-extension ButtonEvent {
-    var description: String {
-        switch self {
-        case .ButtonA: return "A"
-        case .ButtonB: return "B"
-        case .ButtonX: return "X"
-        case .ButtonY: return "Y"
-        case .ButtonHome: return "Home"
-        case .ButtonL: return "L"
-        case .ButtonR: return "R"
-        case .Up: return "Up"
-        case .Down: return "Down"
-        case .Left: return "Left"
-        case .Right: return "Right"
-        case .QuickLoad: return "Load"
-        case .QuickSave: return "Save"
-        case .ControlStick: return "Control stick"
-        case .Select: return "Select"
-        case .Start: return "Start"
-        case .MainMenu: return "Main menu"
-        }
-    }
-
-    static func descriptionToEnum(_ description: String) -> Self {
-        switch description {
-        case "A": return .ButtonA
-        case "B": return .ButtonB
-        case "X": return .ButtonX
-        case "Y": return .ButtonY
-        case "Home": return .ButtonHome
-        case "L": return .ButtonL
-        case "R": return .ButtonR
-        case "Up": return .Up
-        case "Down": return .Down
-        case "Left": return .Left
-        case "Right": return .Right
-        case "Load": return .QuickLoad
-        case "Save": return .QuickSave
-        case "Control stick": return .ControlStick
-        case "Select": return .Select
-        case "Start": return .Start
-        case "Main menu": return .MainMenu
-        default: return .MainMenu
-        }
-    }
-}
-
 struct ControllerMappingsView: View {
     @Binding var themeColor: Color
     @Binding var isPresented: Bool
     @Binding var gameController: GameController?
-    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]?
-    @Binding var gbaButtonDict: [ButtonMapping:GBAButtonEvent]?
-    @State private var buttonMappings: [ButtonEvent:ButtonMapping] = [:]
-    @State private var gbaButtonMappings: [GBAButtonEvent:ButtonMapping] = [:]
-
-    @State private var awaitingInput: [ButtonEvent:Bool] = [:]
+    @Binding var buttonDict: [ButtonMapping:PressedButton]
+    @State private var buttonMappings: [PressedButton:ButtonMapping] = [:]
+    @State private var awaitingInput: [PressedButton:Bool] = [:]
 
     var body: some View {
         VStack {
             List {
                 Section(header: Text("Joypad mappings").foregroundColor(Colors.primaryColor)) {
                     ControllerMappingButtonView(
-                        event: .Up,
-                        gbaEvent: .Up,
+                        pressedButton: .Up,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Up",
                         buttonText: "Up"
                     )
                     ControllerMappingButtonView(
-                        event: .Down,
-                        gbaEvent: .Down,
+                        pressedButton: .Down,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Down",
                         buttonText: "Down"
                     )
                     ControllerMappingButtonView(
-                        event: .Left,
-                        gbaEvent: .Left,
+                        pressedButton: .Left,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left",
                         buttonText: "Left"
                     )
                     ControllerMappingButtonView(
-                        event: .Right,
-                        gbaEvent: .Right,
+                        pressedButton: .Right,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Right",
                         buttonText: "Right"
                     )
                     ControllerMappingButtonView(
-                        event: .ButtonA,
-                        gbaEvent: .ButtonA,
+                        pressedButton: .ButtonCross,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "B",
                         buttonText: "A button"
                     )
                     ControllerMappingButtonView(
-                        event: .ButtonB,
-                        gbaEvent: .ButtonB,
+                        pressedButton: .ButtonCircle,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "A",
                         buttonText: "B button"
                     )
                     ControllerMappingButtonView(
-                        event: .ButtonY,
-                        gbaEvent: nil,
+                        pressedButton: .ButtonTriangle,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "X",
                         buttonText: "Y button"
                     )
                     ControllerMappingButtonView(
-                        event: .ButtonX,
-                        gbaEvent: nil,
+                        pressedButton: .ButtonSquare,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Y",
                         buttonText: "X button"
                     )
                     ControllerMappingButtonView(
-                        event: .ButtonL,
-                        gbaEvent: .ButtonL,
+                        pressedButton: .ButtonL,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left shoulder",
                         buttonText: "L button"
                     )
                     ControllerMappingButtonView(
-                        event: .ButtonR,
-                        gbaEvent: .ButtonR,
+                        pressedButton: .ButtonR,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Right shoulder",
                         buttonText: "R button"
                     )
                     ControllerMappingButtonView(
-                        event: .Start,
-                        gbaEvent: .Start,
+                        pressedButton: .Start,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Menu",
                         buttonText: "Start"
                     )
                     ControllerMappingButtonView(
-                        event: .Select,
-                        gbaEvent: .Select,
+                        pressedButton: .Select,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Options",
@@ -286,48 +200,36 @@ struct ControllerMappingsView: View {
                 }
                 Section(header: Text("Hotkey mappings").foregroundColor(Colors.primaryColor)) {
                     ControllerMappingButtonView(
-                        event: .MainMenu,
-                        gbaEvent: .GameMenu,
+                        pressedButton: .MainMenu,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Home",
                         buttonText: "Main menu"
                     )
                     ControllerMappingButtonView(
-                        event: .ControlStick,
-                        gbaEvent: nil,
+                        pressedButton: .ControlStick,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left trigger",
                         buttonText: "Control stick mode (SM64 DS only)"
                     )
                     ControllerMappingButtonView(
-                        event: .QuickSave,
-                        gbaEvent: .QuickSave,
+                        pressedButton: .QuickSave,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Left thumbstick",
                         buttonText: "Quick save"
                     )
                     ControllerMappingButtonView(
-                        event: .QuickLoad,
-                        gbaEvent: .QuickLoad,
+                        pressedButton: .QuickLoad,
                         buttonMappings: $buttonMappings,
-                        gbaButtonMappings: $gbaButtonMappings,
-                        buttonEventDict: $buttonEventDict,
-                        gbaButtonDict: $gbaButtonDict,
+                        buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
                         gameController: $gameController,
                         defaultButton: "Right thumbstick",
@@ -343,25 +245,21 @@ struct ControllerMappingsView: View {
         .font(.custom("Departure Mono", size: 18))
         .foregroundColor(themeColor)
         .onAppear() {
-            for (key, value) in buttonEventDict! {
+            for (key, value) in buttonDict {
                 buttonMappings[value] = key
-            }
-
-            for (key, value) in gbaButtonDict! {
-                gbaButtonMappings[value] = key
             }
         }
         .onChange(of: buttonMappings) {
             do {
                 let defaults = UserDefaults.standard
 
-                buttonEventDict = [:]
+                buttonDict = [:]
 
                 for (key, value) in buttonMappings {
-                    buttonEventDict?[value] = key
+                    buttonDict[value] = key
                 }
 
-                let toEncode = buttonEventDict!.map{ key, value in (key, value.description) }
+                let toEncode = buttonDict.map{ key, value in (key, value.rawValue) }
 
                 let buttonMappingsEncoded = try JSONEncoder().encode(Dictionary(uniqueKeysWithValues: toEncode))
 

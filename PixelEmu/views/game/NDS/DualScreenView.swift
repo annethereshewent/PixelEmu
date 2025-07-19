@@ -15,7 +15,7 @@ struct DualScreenView: View {
     @Binding var isHoldButtonsPresented: Bool
     @Binding var themeColor: Color
     @Binding var emulator: (any EmulatorWrapper)?
-    @Binding var heldButtons: Set<ButtonEvent>
+    @Binding var heldButtons: Set<PressedButton>
 
     @EnvironmentObject var orientationInfo: OrientationInfo
 
@@ -41,17 +41,17 @@ struct DualScreenView: View {
         var buttons: [String] = []
         for button in heldButtons {
             switch button {
-            case .ButtonA:
+            case .ButtonCircle:
                 buttons.append("A")
-            case .ButtonB:
+            case .ButtonCross:
                 buttons.append("B")
             case .ButtonL:
                 buttons.append("L")
             case .ButtonR:
                 buttons.append("R")
-            case .ButtonX:
+            case .ButtonTriangle:
                 buttons.append("X")
-            case .ButtonY:
+            case .ButtonSquare:
                 buttons.append("Y")
             case .Down:
                 buttons.append("Down")

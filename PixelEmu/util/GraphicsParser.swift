@@ -15,6 +15,9 @@ let SCREEN_HEIGHT = 192
 let GBA_SCREEN_WIDTH = 240
 let GBA_SCREEN_HEIGHT = 160
 
+let GBC_SCREEN_WIDTH = 160
+let GBC_SCREEN_HEIGHT = 144
+
 let SCREEN_RATIO: Float = 1.4
 let FULLSCREEN_RATIO: Float = 1.6
 let LANDSCAPE_RATIO: Float = 1.20
@@ -41,6 +44,32 @@ class GraphicsParser {
         let pixelsArr = Array(buffer)
 
         return fromBytes(bytes: pixelsArr, width: GBA_SCREEN_WIDTH, height: GBA_SCREEN_HEIGHT)
+    }
+
+    func fromGBCPointer(ptr: UnsafePointer<UInt8>) -> CGImage? {
+        let buffer = UnsafeBufferPointer(start: ptr, count: GBC_SCREEN_HEIGHT * GBC_SCREEN_WIDTH * 3)
+
+        let pixelsArr = Array(buffer)
+
+        return fromBytes(bytes: convertArr(pixelsArr), width: GBC_SCREEN_WIDTH, height: GBC_SCREEN_HEIGHT)
+    }
+
+    func convertArr(_ arr: [UInt8]) -> [UInt8] {
+        var newArr: [UInt8] = Array(repeating: 0, count: GBC_SCREEN_WIDTH * GBC_SCREEN_HEIGHT * 4)
+
+        for y in 0..<GBC_SCREEN_HEIGHT {
+            for x in 0..<GBC_SCREEN_WIDTH {
+                let newIndex = (x + y * GBC_SCREEN_WIDTH) * 4
+                let index = (x + y * GBC_SCREEN_WIDTH) * 3
+
+                newArr[newIndex] = arr[index]
+                newArr[newIndex + 1] = arr[index + 1]
+                newArr[newIndex + 2] = arr[index + 2]
+                newArr[newIndex + 3] = 0xff
+            }
+        }
+
+        return newArr
     }
 
     func fromBytes(bytes: [UInt8], width: Int, height: Int) -> CGImage? {
