@@ -9,6 +9,8 @@ import Foundation
 
 let GBA_ID = 12
 let DS_ID = 15
+let GBC_ID = 10
+let GB_ID = 9
 
 class GameInfo : Decodable {
     var success: Bool

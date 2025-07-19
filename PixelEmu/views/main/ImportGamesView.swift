@@ -23,6 +23,8 @@ struct ImportGamesView: View {
 
     let ndsType = UTType(filenameExtension: "nds", conformingTo: .data)
     let gbaType = UTType(filenameExtension: "gba", conformingTo: .data)
+    let gbType = UTType(filenameExtension: "gb", conformingTo: .data)
+    let gbcType = UTType(filenameExtension: "gbc", conformingTo: .data)
 
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
@@ -51,6 +53,31 @@ struct ImportGamesView: View {
                     game.albumArt = artwork
                 }
                 context.insert(game as! GBAGame)
+                gameNamesSet.insert(gameName)
+            }
+        }
+    }
+
+    private func storeGBCGame(data: Data, emu: (any EmulatorWrapper)?, url: URL) async {
+        if var game = GBCGame.storeGame(
+            gameName: gameName,
+            data: data,
+            url: url
+        ) {
+            if !gameNamesSet.contains(gameName) {
+                print("got game \(game)")
+                var id = 0
+
+                if gameName.lowercased().contains(/\.gbc$/) {
+                    id = GBC_ID
+                } else {
+                    id = GB_ID
+                }
+
+                if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: id) {
+                    game.albumArt = artwork
+                }
+                context.insert(game as! GBCGame)
                 gameNamesSet.insert(gameName)
             }
         }
@@ -139,7 +166,7 @@ struct ImportGamesView: View {
             .foregroundColor(Colors.primaryColor)
             .fileImporter(
                 isPresented: $showRomDialog,
-                allowedContentTypes: [ndsType!, gbaType!],
+                allowedContentTypes: [ndsType!, gbaType!, gbType!, gbcType!],
                 allowsMultipleSelection: true
             ) { result in
                 do {
@@ -165,21 +192,25 @@ struct ImportGamesView: View {
                                 .removingPercentEncoding
                                 .unsafelyUnwrapped
 
-                                if url.pathExtension.lowercased() == "nds" {
-                                    await storeDSGame(data: data, emu: emu, url: url)
-                                } else {
-                                    await storeGBAGame(data: data, emu: emu, url: url)
+//                                if url.pathExtension.lowercased() == "nds" {
+//                                    await storeDSGame(data: data, emu: emu, url: url)
+//                                } else {
+//                                    await storeGBAGame(data: data, emu: emu, url: url)
+//                                }
+                                switch url.pathExtension.lowercased() {
+                                case "nds": await storeDSGame(data: data, emu: emu, url: url)
+                                case "gba": await storeGBAGame(data: data, emu: emu, url: url)
+                                case "gbc": await storeGBCGame(data: data, emu: emu, url: url)
+                                case "gb": await storeGBCGame(data: data, emu: emu, url: url)
+                                default: break
                                 }
                             }
                         }
                         // once done processing all games, return back to library view
                         currentView = .library
                         loading = false
-                        if urls[0].pathExtension.lowercased() == "nds" {
-                            currentLibrary = "nds"
-                        } else {
-                            currentLibrary = "gba"
-                        }
+
+                        currentLibrary = urls[0].pathExtension.lowercased()
 
                         let defaults = UserDefaults.standard
 
