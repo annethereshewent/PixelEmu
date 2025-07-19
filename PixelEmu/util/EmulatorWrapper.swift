@@ -43,6 +43,8 @@ protocol EmulatorWrapper {
     func loadIcon() throws
     func getGameIconPointer() throws -> UnsafePointer<UInt8>
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws
+    func hasSamples() -> Bool
+    func popSample() throws -> Float
 }
 
 class DSEmulatorWrapper: EmulatorWrapper {
@@ -50,6 +52,14 @@ class DSEmulatorWrapper: EmulatorWrapper {
 
     init (emu: MobileEmulator) {
         self.emu = emu
+    }
+
+    func hasSamples() -> Bool {
+        false
+    }
+
+    func popSample() throws -> Float {
+        throw "not implemented"
     }
 
     func loadIcon() throws {
@@ -183,6 +193,14 @@ class GBAEmulatorWrapper: EmulatorWrapper {
         self.emu = emu
     }
 
+    func hasSamples() -> Bool {
+        false
+    }
+
+    func popSample() throws -> Float {
+        throw "not implemented"
+    }
+
     func loadIcon() throws {
         throw "not implemented"
     }
@@ -312,6 +330,14 @@ class GBCEmulatorWrapper : EmulatorWrapper {
 
     init (emu: GBCMobileEmulator) {
         self.emu = emu
+    }
+
+    func hasSamples() -> Bool {
+       return self.emu.hasSamples()
+    }
+
+    func popSample() throws -> Float {
+        return self.emu.popSample()
     }
 
     func loadIcon() throws {

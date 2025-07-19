@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import UniformTypeIdentifiers
 import DSEmulatorMobile
+import ZIPFoundation
 
 struct ImportGamesView: View {
     @State private var showRomDialog = false
@@ -25,6 +26,7 @@ struct ImportGamesView: View {
     let gbaType = UTType(filenameExtension: "gba", conformingTo: .data)
     let gbType = UTType(filenameExtension: "gb", conformingTo: .data)
     let gbcType = UTType(filenameExtension: "gbc", conformingTo: .data)
+    let zipType = UTType(filenameExtension: "zip", conformingTo: .data)
 
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
@@ -167,7 +169,7 @@ struct ImportGamesView: View {
             .foregroundColor(Colors.primaryColor)
             .fileImporter(
                 isPresented: $showRomDialog,
-                allowedContentTypes: [ndsType!, gbaType!, gbType!, gbcType!],
+                allowedContentTypes: [ndsType!, gbaType!, gbType!, gbcType!, zipType!],
                 allowsMultipleSelection: true
             ) { result in
                 do {
@@ -180,6 +182,26 @@ struct ImportGamesView: View {
                                 defer {
                                     url.stopAccessingSecurityScopedResource()
                                 }
+                                if url.pathExtension == "zip" {
+                                    let fileManager = FileManager()
+
+                                    let currDirectory = fileManager.currentDirectoryPath
+
+                                    let destinationUrl = URL(fileURLWithPath: currDirectory)
+
+                                    do {
+                                        try fileManager.unzipItem(at: url, to: destinationUrl)
+
+                                        let contents = try fileManager.contentsOfDirectory(at: destinationUrl, includingPropertiesForKeys: nil)
+
+                                        print(contents)
+                                    } catch {
+                                        print(error)
+                                    }
+                                    throw "testing 123...."
+                                }
+
+
                                 let data = try Data(contentsOf: url)
 
                                 romData = data

@@ -8,14 +8,15 @@ target 'PixelEmu' do
   # Pods for PixelEmu
   pod 'GoogleSignIn'
   pod 'GoogleSignInSwiftSupport'
+  pod 'ZIPFoundation', '~> 0.9'
 
-  target 'PixelEmuTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
-  target 'PixelEmuUITests' do
-    # Pods for testing
-  end
+#  target 'PixelEmuTests' do
+#    inherit! :search_paths
+#    # Pods for testing
+#  end
+#
+#  target 'PixelEmuUITests' do
+#    # Pods for testing
+#  end
 
 end

@@ -30,10 +30,12 @@ PODS:
     - GTMSessionFetcher/Core (< 4.0, >= 3.3)
   - GTMSessionFetcher/Core (3.5.0)
   - PromisesObjC (2.4.0)
+  - ZIPFoundation (0.9.19)
 
 DEPENDENCIES:
   - GoogleSignIn
   - GoogleSignInSwiftSupport
+  - ZIPFoundation (~> 0.9)
 
 SPEC REPOS:
   trunk:
@@ -45,6 +47,7 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - PromisesObjC
+    - ZIPFoundation
 
 SPEC CHECKSUMS:
   AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
@@ -55,7 +58,8 @@ SPEC CHECKSUMS:
   GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
+  ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
 
-PODFILE CHECKSUM: 10708c8d333629594a3bb543ca2e125537541a20
+PODFILE CHECKSUM: a22840c3a1e04b22c2ba99b26321cad90756c198
 
 COCOAPODS: 1.15.2

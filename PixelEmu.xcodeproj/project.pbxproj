@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B580D3BD94A71D8FFE5F6C8 /* Pods_PixelEmu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9E28C1D7CA0DA17FA63E1F6 /* Pods_PixelEmu.framework */; };
 		E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806E9F92C97E1B10081D3E8 /* ContentView.swift */; };
 		E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */; };
 		E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E806E9FE2C97E1B20081D3E8 /* Preview Assets.xcassets */; };
@@ -89,6 +90,7 @@
 		86E4C2EF5B29D1271A65F62E /* Pods-PixelEmu-PixelEmuUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu-PixelEmuUITests.release.xcconfig"; path = "Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests.release.xcconfig"; sourceTree = "<group>"; };
 		886027EC5BD62B0B85C87910 /* Pods-PixelEmuTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmuTests.release.xcconfig"; path = "Target Support Files/Pods-PixelEmuTests/Pods-PixelEmuTests.release.xcconfig"; sourceTree = "<group>"; };
 		A4606BE077067A560D847119 /* Pods-PixelEmuTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmuTests.debug.xcconfig"; path = "Target Support Files/Pods-PixelEmuTests/Pods-PixelEmuTests.debug.xcconfig"; sourceTree = "<group>"; };
+		D9E28C1D7CA0DA17FA63E1F6 /* Pods_PixelEmu.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PixelEmu.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E806E9F42C97E1B10081D3E8 /* PixelEmu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PixelEmu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E806E9F92C97E1B10081D3E8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 				E8BBBC7E2CF981510065EF4E /* GBAEmulatorMobile in Frameworks */,
 				E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */,
 				E8293CBE2E28AD240052BEA4 /* GBCEmulatorMobile in Frameworks */,
+				0B580D3BD94A71D8FFE5F6C8 /* Pods_PixelEmu.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,6 +184,7 @@
 		19D49655ECDEBBE8636FE769 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D9E28C1D7CA0DA17FA63E1F6 /* Pods_PixelEmu.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

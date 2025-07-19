@@ -513,7 +513,29 @@ struct GameView: View {
         if let emu = emulator, let game = game {
             while true {
                 DispatchQueue.main.sync {
-                    emu.stepFrame()
+                    emu.stepFrame() 
+                    let playerPaused = audioManager?.playerPaused ?? true
+
+                    if !playerPaused {
+                        var audioBufferPtr: UnsafePointer<Float>!
+                        var audioBufferLength: UInt!
+
+                        switch game.type {
+                        case .nds:
+                            audioBufferLength = try! emu.audioBufferLength()
+                            audioBufferPtr = try! emu.audioBufferPtr()
+
+                            let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
+
+                            self.audioManager?.updateBuffer(samples: audioSamples)
+                        case .gba, .gbc:
+                            audioBufferPtr = try! emu.audioBufferPtr()
+                            audioBufferLength = try! emu.audioBufferLength()
+
+                            let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
+                            self.audioManager?.updateBuffer(samples: audioSamples)
+                        }
+                    }
 
                     if game.type == .nds {
                         if let player = audioManager {
@@ -560,16 +582,6 @@ struct GameView: View {
                         if let image = graphicsParser.fromGBCPointer(ptr: pixels) {
                             self.image = image
                         }
-                    }
-
-                    let playerPaused = audioManager?.playerPaused ?? true
-
-                    if !playerPaused {
-                        let audioBufferPtr = try! emu.audioBufferPtr()
-                        let audioBufferLength = try! emu.audioBufferLength()
-
-                        let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
-                        self.audioManager?.updateBuffer(samples: audioSamples)
                     }
 
                     self.checkSaves()
