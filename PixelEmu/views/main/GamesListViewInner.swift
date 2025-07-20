@@ -172,7 +172,6 @@ struct GamesListViewInner: View {
                 }
                 .onChange(of: settingChanged) {
                     if resumeGame {
-                        print("resuming game sista!")
                         emulator?.setPaused(false)
                         switch gameType {
                         case .nds: path.append("NDSGameView")

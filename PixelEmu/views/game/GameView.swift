@@ -41,7 +41,6 @@ struct GameView: View {
 
     @Binding var isMenuPresented: Bool
     @Binding var emulator: (any EmulatorWrapper)?
-    @Binding var emulatorCopy: (any EmulatorWrapper)?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
@@ -654,7 +653,6 @@ struct GameView: View {
                                 GBTouchControlsView(
                                     gameType: .gba,
                                     emulator: $emulator,
-                                    emulatorCopy: $emulatorCopy,
                                     audioManager: $audioManager,
                                     workItem: $workItem,
                                     isRunning: $isRunning,
@@ -687,7 +685,6 @@ struct GameView: View {
                             GBTouchControlsView(
                                 gameType: .gbc,
                                 emulator: $emulator,
-                                emulatorCopy: $emulatorCopy,
                                 audioManager: $audioManager,
                                 workItem: $workItem,
                                 isRunning: $isRunning,
@@ -784,7 +781,6 @@ struct GameView: View {
             UIApplication.shared.isIdleTimerDisabled = true
             Task {
                 if !isRunning {
-                    emulatorCopy = nil
                     gameController = GameController() { controller in
                         addControllerEventListeners(controller)
                     }

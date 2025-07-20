@@ -261,8 +261,6 @@ struct ImportGamesView: View {
                                 .removingPercentEncoding
                                 .unsafelyUnwrapped
 
-                                print(actualUrl.pathExtension.lowercased())
-
                                 switch actualUrl.pathExtension.lowercased() {
                                 case "nds": await storeDSGame(data: data, emu: emu, url: actualUrl, isZip)
                                 case "gba": await storeGBAGame(data: data, emu: emu, url: actualUrl, isZip)

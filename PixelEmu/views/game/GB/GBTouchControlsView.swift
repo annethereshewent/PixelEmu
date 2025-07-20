@@ -14,7 +14,6 @@ struct GBTouchControlsView: View {
     @Environment(\.presentationMode) var presentationMode
 
     @Binding var emulator: (any EmulatorWrapper)?
-    @Binding var emulatorCopy: (any EmulatorWrapper)?
     @Binding var audioManager: AudioManager?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool

@@ -33,7 +33,6 @@ struct ContentView: View {
 
     @State private var path = NavigationPath()
     @State private var emulator: (any EmulatorWrapper)? = nil
-    @State private var gbaEmulatorCopy: (any EmulatorWrapper)? = nil
     @State private var gameUrl: URL? = nil
 
     @State private var user: GIDGoogleUser? = nil
@@ -251,7 +250,6 @@ struct ContentView: View {
                     GameView(
                         isMenuPresented: $isMenuPresented,
                         emulator: $emulator,
-                        emulatorCopy: .constant(nil),
                         bios7Data: $bios7Data,
                         bios9Data: $bios9Data,
                         firmwareData: $firmwareData,
@@ -282,7 +280,6 @@ struct ContentView: View {
                     GameView(
                         isMenuPresented: $isMenuPresented,
                         emulator: $emulator,
-                        emulatorCopy: $gbaEmulatorCopy,
                         bios7Data: .constant(nil),
                         bios9Data: .constant(nil),
                         firmwareData: .constant(nil),
@@ -313,7 +310,6 @@ struct ContentView: View {
                     GameView(
                         isMenuPresented: $isMenuPresented,
                         emulator: $emulator,
-                        emulatorCopy: .constant(nil),
                         bios7Data: .constant(nil),
                         bios9Data: .constant(nil),
                         firmwareData: .constant(nil),
