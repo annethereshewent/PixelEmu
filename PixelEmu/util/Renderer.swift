@@ -36,8 +36,6 @@ class Renderer: NSObject, MTKViewDelegate {
         self.device = mtkView.device!
         let library = device.makeDefaultLibrary()!
 
-        self.renderingData.mtkView = mtkView
-
         quadBuffer = device.makeBuffer(bytes: fullscreenQuad,
            length: fullscreenQuad.count * MemoryLayout<TexturedVertex>.stride,
            options: []

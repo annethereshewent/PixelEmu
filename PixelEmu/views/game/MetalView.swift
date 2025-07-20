@@ -8,7 +8,6 @@
 class RenderingData {
     var framebuffer: [UInt8]? = nil
     var shouldStep = true
-    var mtkView: MTKView? = nil
     var width: Int
     var height: Int
 
@@ -24,7 +23,6 @@ import MetalKit
 struct MetalView: UIViewRepresentable {
     var renderingData: RenderingData
     func makeUIView(context: Context) -> MTKView {
-        print("im being created!")
         guard let device = MTLCreateSystemDefaultDevice() else {
             fatalError("Metal is not supported on this device")
         }
@@ -43,7 +41,7 @@ struct MetalView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: MTKView, context: Context) {
-        print("updating UI view!!")
+
     }
 
     func makeCoordinator() -> Coordinator {

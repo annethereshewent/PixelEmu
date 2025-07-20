@@ -579,27 +579,6 @@ struct GameView: View {
         }
     }
 
-    private func resumeGame() {
-        if let emu = emulatorCopy {
-            isPaused = false
-
-            // this is a hack, otherwise things won't work right when resuming game from home screen.
-            // TODO: figure out why
-            // Update: still haven't figured out why it's busted
-            emulator = emu
-            emulatorCopy = nil
-
-            if isSoundOn {
-                audioManager?.resumeAudio()
-            }
-            workItem = DispatchWorkItem {
-                mainGameLoop()
-            }
-
-            DispatchQueue.global().async(execute: workItem!)
-        }
-    }
-
     var body: some View {
         ZStack {
             if gameController?.controller?.extendedGamepad == nil {
