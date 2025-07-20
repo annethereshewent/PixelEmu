@@ -70,8 +70,8 @@ struct GameView: View {
     @Binding var isPaused: Bool
     @Binding var buttonDict: [ButtonMapping:PressedButton]
 
-    var renderingData = RenderingData()
-    var renderingDataBottom = RenderingData()
+    @Binding var renderingData: RenderingData
+    @Binding var renderingDataBottom: RenderingData
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
@@ -93,7 +93,7 @@ struct GameView: View {
         switch game.type {
         case .gba: GBA_SCREEN_WIDTH
         case .gbc: GBC_SCREEN_WIDTH
-        case .nds: SCREEN_WIDTH
+        case .nds: NDS_SCREEN_WIDTH
         }
     }
 
@@ -101,7 +101,7 @@ struct GameView: View {
         switch game.type {
         case .gba: GBA_SCREEN_HEIGHT
         case .gbc: GBC_SCREEN_HEIGHT
-        case .nds: SCREEN_HEIGHT
+        case .nds: NDS_SCREEN_HEIGHT
         }
     }
 
@@ -543,8 +543,8 @@ struct GameView: View {
                         let aPixels = try! emu.getEngineAPicturePointer()
                         let bPixels = try! emu.getEngineBPicturePointer()
 
-                        let aBuffer = Array(UnsafeBufferPointer(start: aPixels, count: SCREEN_WIDTH * SCREEN_HEIGHT * 4))
-                        let bBuffer = Array(UnsafeBufferPointer(start: bPixels, count: SCREEN_WIDTH * SCREEN_HEIGHT * 4))
+                        let aBuffer = Array(UnsafeBufferPointer(start: aPixels, count: NDS_SCREEN_WIDTH * NDS_SCREEN_HEIGHT * 4))
+                        let bBuffer = Array(UnsafeBufferPointer(start: bPixels, count: NDS_SCREEN_WIDTH * NDS_SCREEN_HEIGHT * 4))
 
                         if emu.isTopA() {
                             renderingData.framebuffer = aBuffer

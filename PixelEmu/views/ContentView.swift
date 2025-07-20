@@ -69,6 +69,9 @@ struct ContentView: View {
 
     @State private var gbcEmulator: GBCMobileEmulator? = nil
 
+    @State private var renderingData = RenderingData()
+    @State private var renderingDataBottom = RenderingData()
+
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
     init() {
@@ -271,7 +274,9 @@ struct ContentView: View {
                         bottomImage: $bottomImage,
                         image: .constant(nil),
                         isPaused: $isPaused,
-                        buttonDict: $buttonDict
+                        buttonDict: $buttonDict,
+                        renderingData: $renderingData,
+                        renderingDataBottom: $renderingDataBottom
                     )
                 case "GBAGameView":
                     GameView(
@@ -300,7 +305,9 @@ struct ContentView: View {
                         bottomImage: .constant(nil),
                         image: $gbaImage,
                         isPaused: $isPaused,
-                        buttonDict: $buttonDict
+                        buttonDict: $buttonDict,
+                        renderingData: $renderingData,
+                        renderingDataBottom: $renderingDataBottom
                     )
                 case "GBCGameView":
                     GameView(
@@ -329,7 +336,9 @@ struct ContentView: View {
                         bottomImage: .constant(nil),
                         image: $gbcImage,
                         isPaused: $isPaused,
-                        buttonDict: $buttonDict
+                        buttonDict: $buttonDict,
+                        renderingData: $renderingData,
+                        renderingDataBottom: $renderingDataBottom
                     )
                 default: Text("UNSUPPORTED")
                 }

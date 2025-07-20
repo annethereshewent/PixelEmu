@@ -21,9 +21,13 @@ struct MetalView: UIViewRepresentable {
             fatalError("Metal is not supported on this device")
         }
 
+        print("initializing MetalView")
+
         let mtkView = MTKView(frame: .zero, device: device)
         mtkView.clearColor = MTLClearColorMake(0.2, 0.2, 0.4, 1.0) // dark blue-ish
         mtkView.colorPixelFormat = .rgba8Unorm
+
+        print("render width \(width) height \(height)")
 
         let renderer = Renderer(mtkView: mtkView, renderingData: renderingData, width: width, height: height)
         mtkView.delegate = renderer

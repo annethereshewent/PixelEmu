@@ -81,10 +81,10 @@ struct DualScreenView: View {
             Spacer()
         }
         ZStack {
-            MetalView(renderingData: renderingData, width: SCREEN_WIDTH, height: SCREEN_HEIGHT)
+            MetalView(renderingData: renderingData, width: NDS_SCREEN_WIDTH, height: NDS_SCREEN_HEIGHT)
                 .frame(
-                    width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),
-                    height: CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
+                    width: CGFloat(NDS_SCREEN_WIDTH) * CGFloat(screenRatio),
+                    height: CGFloat(NDS_SCREEN_HEIGHT) * CGFloat(screenRatio)
                 )
             if isHoldButtonsPresented {
                 VStack {
@@ -111,18 +111,18 @@ struct DualScreenView: View {
                 .opacity(0.9)
             }
         }
-        MetalView(renderingData: renderingDataBottom, width: SCREEN_WIDTH, height: SCREEN_HEIGHT)
+        MetalView(renderingData: renderingDataBottom, width: NDS_SCREEN_WIDTH, height: NDS_SCREEN_HEIGHT)
             .frame(
-                width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),
-                height: CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
+                width: CGFloat(NDS_SCREEN_WIDTH) * CGFloat(screenRatio),
+                height: CGFloat(NDS_SCREEN_HEIGHT) * CGFloat(screenRatio)
             )
             .simultaneousGesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged() { value in
                         if value.location.x >= 0 &&
                             value.location.y >= 0 &&
-                            value.location.x < CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio) &&
-                            value.location.y < CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
+                            value.location.x < CGFloat(NDS_SCREEN_WIDTH) * CGFloat(screenRatio) &&
+                            value.location.y < CGFloat(NDS_SCREEN_HEIGHT) * CGFloat(screenRatio)
                         {
                             let x = UInt16(Float(value.location.x) / screenRatio)
                             let y = UInt16(Float(value.location.y) / screenRatio)
@@ -134,8 +134,8 @@ struct DualScreenView: View {
                     .onEnded() { value in
                         if value.location.x >= 0 &&
                             value.location.y >= 0 &&
-                            value.location.x < CGFloat(SCREEN_WIDTH) &&
-                            value.location.y < CGFloat(SCREEN_HEIGHT)
+                            value.location.x < CGFloat(NDS_SCREEN_WIDTH) &&
+                            value.location.y < CGFloat(NDS_SCREEN_HEIGHT)
                         {
                             let x = UInt16(Float(value.location.x) / screenRatio)
                             let y = UInt16(Float(value.location.y) / screenRatio)

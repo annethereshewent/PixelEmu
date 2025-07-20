@@ -112,7 +112,7 @@ struct ImportGamesView: View {
                     firmwareBytes = ptr
                 }
 
-                emu = MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr) as! EmulatorWrapper?
+                emu = DSEmulatorWrapper(emu: MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr))
             }
         } else {
             try! emu?.reloadRom(romPtr)

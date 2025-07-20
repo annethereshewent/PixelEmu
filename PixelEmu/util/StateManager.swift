@@ -373,17 +373,17 @@ class StateManager {
             var screenshot: [UInt8]!
 
             if emu.isTopA() {
-                let topBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineAPicturePointer(), count: SCREEN_WIDTH * SCREEN_HEIGHT * 4)
+                let topBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineAPicturePointer(), count: NDS_SCREEN_WIDTH * NDS_SCREEN_HEIGHT * 4)
                 screenshot = Array(topBufferPtr)
 
-                let bottomBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineBPicturePointer(), count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
+                let bottomBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineBPicturePointer(), count: NDS_SCREEN_HEIGHT * NDS_SCREEN_WIDTH * 4)
 
                 screenshot.append(contentsOf: Array(bottomBufferPtr))
             } else {
-                let topBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineBPicturePointer(), count: SCREEN_WIDTH * SCREEN_HEIGHT * 4)
+                let topBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineBPicturePointer(), count: NDS_SCREEN_WIDTH * NDS_SCREEN_HEIGHT * 4)
                 screenshot = Array(topBufferPtr)
 
-                let bottomBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineAPicturePointer(), count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
+                let bottomBufferPtr = UnsafeBufferPointer(start: try! emu.getEngineAPicturePointer(), count: NDS_SCREEN_HEIGHT * NDS_SCREEN_WIDTH * 4)
 
                 screenshot.append(contentsOf: Array(bottomBufferPtr))
             }

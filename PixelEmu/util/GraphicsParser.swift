@@ -9,8 +9,8 @@ import Foundation
 import CoreGraphics
 import UIKit
 
-let SCREEN_WIDTH = 256
-let SCREEN_HEIGHT = 192
+let NDS_SCREEN_WIDTH = 256
+let NDS_SCREEN_HEIGHT = 192
 
 let GBA_SCREEN_WIDTH = 240
 let GBA_SCREEN_HEIGHT = 160
@@ -37,11 +37,11 @@ let GBC_LANDSCAPE_FULLSCREEN_RATIO: Float = 2.6
 
 class GraphicsParser {
     func fromPointer(ptr: UnsafePointer<UInt8>) -> CGImage? {
-        let buffer = UnsafeBufferPointer(start: ptr, count: SCREEN_HEIGHT * SCREEN_WIDTH * 4)
+        let buffer = UnsafeBufferPointer(start: ptr, count: NDS_SCREEN_HEIGHT * NDS_SCREEN_WIDTH * 4)
 
         let pixelsArr = Array(buffer)
 
-        return fromBytes(bytes: pixelsArr, width: SCREEN_WIDTH, height: SCREEN_HEIGHT)
+        return fromBytes(bytes: pixelsArr, width: NDS_SCREEN_WIDTH, height: NDS_SCREEN_HEIGHT)
     }
 
     func fromGBAPointer(ptr: UnsafePointer<UInt8>) -> CGImage? {

@@ -94,10 +94,10 @@ struct GamesListViewInner: View {
             if let game = game as! GBAGame? {
                 self.game = game
                 game.lastPlayed = Date.now
-                path.append("NDSGBAGameView")
+                path.append("GBAGameView")
             } else if let game = self.game as! GBAGame? {
                 game.lastPlayed = Date.now
-                path.append("NDSGBAGameView")
+                path.append("GBAGameView")
             } else {
                 showGameError = true
             }
@@ -105,10 +105,10 @@ struct GamesListViewInner: View {
             if let game = game as! GBCGame? {
                 self.game = game
                 game.lastPlayed = Date.now
-                path.append("NDSGBCGameView")
+                path.append("GBCGameView")
             } else if let game = self.game as! GBCGame? {
                 game.lastPlayed = Date.now
-                path.append("NDSGBCGameView")
+                path.append("GBCGameView")
             } else {
                 showGameError = true
             }
@@ -172,6 +172,7 @@ struct GamesListViewInner: View {
                 }
                 .onChange(of: settingChanged) {
                     if resumeGame {
+                        print("resuming game sista!")
                         emulator?.setPaused(false)
                         switch gameType {
                         case .nds: path.append("NDSGameView")
