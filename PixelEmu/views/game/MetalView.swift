@@ -7,14 +7,6 @@
 
 class RenderingData {
     var framebuffer: [UInt8]? = nil
-    var shouldStep = true
-    var width: Int
-    var height: Int
-
-    init(_ width: Int, _ height: Int) {
-        self.width = width
-        self.height = height
-    }
 }
 
 import SwiftUI
@@ -22,6 +14,8 @@ import MetalKit
 
 struct MetalView: UIViewRepresentable {
     var renderingData: RenderingData
+    var width: Int
+    var height: Int
     func makeUIView(context: Context) -> MTKView {
         guard let device = MTLCreateSystemDefaultDevice() else {
             fatalError("Metal is not supported on this device")
@@ -31,7 +25,7 @@ struct MetalView: UIViewRepresentable {
         mtkView.clearColor = MTLClearColorMake(0.2, 0.2, 0.4, 1.0) // dark blue-ish
         mtkView.colorPixelFormat = .rgba8Unorm
 
-        let renderer = Renderer(mtkView: mtkView, renderingData: renderingData)
+        let renderer = Renderer(mtkView: mtkView, renderingData: renderingData, width: width, height: height)
         mtkView.delegate = renderer
         context.coordinator.renderer = renderer // retain the renderer
 

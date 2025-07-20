@@ -74,7 +74,6 @@ struct GBTouchControlsView: View {
 
     private func checkForHapticFeedback(point: CGPoint, entries: [PressedButton:CGRect]) {
         for entry in entries {
-            print(entry.key)
             if entry.value.contains(point) && !buttonStarted[entry.key]! {
                 feedbackGenerator.impactOccurred()
                 buttonStarted[entry.key] = true

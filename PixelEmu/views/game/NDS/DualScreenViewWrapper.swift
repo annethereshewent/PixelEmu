@@ -20,6 +20,9 @@ struct DualScreenViewWrapper: View {
     @Binding var heldButtons: Set<PressedButton>
     @Binding var themeColor: Color
 
+    var renderingData: RenderingData
+    var renderingDataBottom: RenderingData
+
     @EnvironmentObject var orientationInfo: OrientationInfo
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
@@ -103,7 +106,9 @@ struct DualScreenViewWrapper: View {
                             isHoldButtonsPresented: $isHoldButtonsPresented,
                             themeColor: $themeColor,
                             emulator: $emulator,
-                            heldButtons: $heldButtons
+                            heldButtons: $heldButtons,
+                            renderingData: renderingData,
+                            renderingDataBottom: renderingDataBottom
                         )
                     }
                     .padding(.top, padding)
@@ -116,7 +121,9 @@ struct DualScreenViewWrapper: View {
                             isHoldButtonsPresented: $isHoldButtonsPresented,
                             themeColor: $themeColor,
                             emulator: $emulator,
-                            heldButtons: $heldButtons
+                            heldButtons: $heldButtons,
+                            renderingData: renderingData,
+                            renderingDataBottom: renderingDataBottom
                         )
                     }
                     .padding(.top, landscapePadding)

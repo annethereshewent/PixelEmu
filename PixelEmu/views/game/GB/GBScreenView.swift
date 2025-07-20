@@ -36,23 +36,22 @@ struct GBScreenView: View {
 
             return gameType == .gba ? GBA_LANDSCAPE_FULLSCREEN_RATIO : GBC_LANDSCAPE_FULLSCREEN_RATIO
         }
-
     }
 
-    private var screenWidth: CGFloat {
+    private var screenWidth: Int {
         if gameType == .gba {
-            return CGFloat(GBA_SCREEN_WIDTH)
+            return GBA_SCREEN_WIDTH
         }
 
-        return CGFloat(GBC_SCREEN_WIDTH) * 1.3
+        return GBC_SCREEN_WIDTH
     }
 
-    private var screenHeight: CGFloat {
+    private var screenHeight: Int {
         if gameType == .gba {
-            return CGFloat(GBA_SCREEN_HEIGHT)
+            return GBA_SCREEN_HEIGHT
         }
 
-        return CGFloat(GBC_SCREEN_HEIGHT) * 1.3
+        return GBC_SCREEN_HEIGHT
     }
 
     private var currentHoldButtons: String {
@@ -91,7 +90,7 @@ struct GBScreenView: View {
             Spacer()
         }
         ZStack {
-            MetalView(renderingData: renderingData)
+            MetalView(renderingData: renderingData, width: screenWidth, height: screenHeight)
                 .frame(
                     width: CGFloat(screenWidth) * CGFloat(screenRatio),
                     height: CGFloat(screenHeight) * CGFloat(screenRatio)

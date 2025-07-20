@@ -70,7 +70,8 @@ struct GameView: View {
     @Binding var isPaused: Bool
     @Binding var buttonDict: [ButtonMapping:PressedButton]
 
-    @Binding var renderingData: RenderingData?
+    var renderingData = RenderingData()
+    var renderingDataBottom = RenderingData()
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
@@ -503,7 +504,7 @@ struct GameView: View {
         if let emu = emulator, let game = game {
             while true {
                 DispatchQueue.main.sync {
-                    emu.stepFrame() 
+                    emu.stepFrame()
                     let playerPaused = audioManager?.playerPaused ?? true
 
                     if !playerPaused {
@@ -523,6 +524,7 @@ struct GameView: View {
                             audioBufferLength = try! emu.audioBufferLength()
 
                             let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
+
                             self.audioManager?.updateBuffer(samples: audioSamples)
                         }
                     }
@@ -539,34 +541,25 @@ struct GameView: View {
                     switch game.type {
                     case .nds:
                         let aPixels = try! emu.getEngineAPicturePointer()
-
-                        var imageA: CGImage? = nil
-                        var imageB: CGImage? = nil
-
-                        if let image = graphicsParser.fromPointer(ptr: aPixels) {
-                            imageA = image
-                        }
-
                         let bPixels = try! emu.getEngineBPicturePointer()
 
-                        if let image = graphicsParser.fromPointer(ptr: bPixels) {
-                            imageB = image
-                        }
+                        let aBuffer = Array(UnsafeBufferPointer(start: aPixels, count: SCREEN_WIDTH * SCREEN_HEIGHT * 4))
+                        let bBuffer = Array(UnsafeBufferPointer(start: bPixels, count: SCREEN_WIDTH * SCREEN_HEIGHT * 4))
 
                         if emu.isTopA() {
-                            topImage = imageA
-                            bottomImage = imageB
+                            renderingData.framebuffer = aBuffer
+                            renderingDataBottom.framebuffer = bBuffer
                         } else {
-                            topImage = imageB
-                            bottomImage = imageA
+                            renderingData.framebuffer = bBuffer
+                            renderingDataBottom.framebuffer = aBuffer
                         }
                     case .gba:
                         let arr = try! Array(UnsafeBufferPointer(start: emu.getPicturePtr(), count: GBA_SCREEN_HEIGHT * GBA_SCREEN_WIDTH * 3))
 
-                        renderingData!.framebuffer = graphicsParser.convertArr(arr, GBA_SCREEN_WIDTH, GBA_SCREEN_HEIGHT)
+                        renderingData.framebuffer = graphicsParser.convertArr(arr, GBA_SCREEN_WIDTH, GBA_SCREEN_HEIGHT)
                     case .gbc:
                         let arr = try! Array(UnsafeBufferPointer(start: emu.getPicturePtr(), count: GBC_SCREEN_WIDTH * GBC_SCREEN_HEIGHT * 3))
-                        renderingData!.framebuffer = graphicsParser.convertArr(arr, GBC_SCREEN_WIDTH, GBC_SCREEN_HEIGHT)
+                        renderingData.framebuffer = graphicsParser.convertArr(arr, GBC_SCREEN_WIDTH, GBC_SCREEN_HEIGHT)
                     }
 
                     self.checkSaves()
@@ -603,7 +596,9 @@ struct GameView: View {
                             isSoundOn: $isSoundOn,
                             isHoldButtonsPresented: $isHoldButtonsPresented,
                             heldButtons: $heldButtons,
-                            themeColor: $themeColor
+                            themeColor: $themeColor,
+                            renderingData: renderingData,
+                            renderingDataBottom: renderingDataBottom
                         )
                         if gameController?.controller?.extendedGamepad == nil {
                             TouchControlsView(
@@ -635,7 +630,7 @@ struct GameView: View {
                                 isHoldButtonsPresented: $isHoldButtonsPresented,
                                 heldButtons: $heldButtons,
                                 themeColor: $themeColor,
-                                renderingData: renderingData!
+                                renderingData: renderingData
                             )
                             .padding(.top, screenPadding)
                             if gameController?.controller?.extendedGamepad == nil {
@@ -668,7 +663,7 @@ struct GameView: View {
                             isHoldButtonsPresented: $isHoldButtonsPresented,
                             heldButtons: $heldButtons,
                             themeColor: $themeColor,
-                            renderingData: renderingData!
+                            renderingData: renderingData
                         )
                         .padding(.top, screenPadding)
                         if gameController?.controller?.extendedGamepad == nil {

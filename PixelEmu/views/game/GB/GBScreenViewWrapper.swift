@@ -72,14 +72,14 @@ struct GBScreenViewWrapper: View {
             return gameType == .gba ? CGFloat(width) * 1.7 : CGFloat(width) * 2.2
         }
 
-        return gameType == .gba ? CGFloat(width) * 1.8 : CGFloat(width) * 2.0
+        return gameType == .gba ? CGFloat(width) * 1.8 : CGFloat(width) * 1.95
     }
 
     private var rectangleHeight: CGFloat {
         let height = gameType == .gba ? GBA_SCREEN_HEIGHT : GBC_SCREEN_WIDTH
 
         if orientationInfo.orientation == .portrait {
-            return gameType == .gba ? CGFloat(height) * 1.8 : CGFloat(height) * 2.0
+            return gameType == .gba ? CGFloat(height) * 1.8 : CGFloat(height) * 1.97
         }
 
         return gameType == .gba ? CGFloat(height) * 1.8 : CGFloat(height) * 1.70

@@ -17,6 +17,9 @@ struct DualScreenView: View {
     @Binding var emulator: (any EmulatorWrapper)?
     @Binding var heldButtons: Set<PressedButton>
 
+    var renderingData: RenderingData
+    var renderingDataBottom: RenderingData
+
     @EnvironmentObject var orientationInfo: OrientationInfo
 
     private var screenRatio: Float {
@@ -78,7 +81,7 @@ struct DualScreenView: View {
             Spacer()
         }
         ZStack {
-            GameScreenView(image: $topImage)
+            MetalView(renderingData: renderingData, width: SCREEN_WIDTH, height: SCREEN_HEIGHT)
                 .frame(
                     width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),
                     height: CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
@@ -108,7 +111,7 @@ struct DualScreenView: View {
                 .opacity(0.9)
             }
         }
-        GameScreenView(image: $bottomImage)
+        MetalView(renderingData: renderingDataBottom, width: SCREEN_WIDTH, height: SCREEN_HEIGHT)
             .frame(
                 width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),
                 height: CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)

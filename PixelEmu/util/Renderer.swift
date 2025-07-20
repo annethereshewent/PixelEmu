@@ -31,7 +31,13 @@ class Renderer: NSObject, MTKViewDelegate {
 
     var renderingData: RenderingData
 
-    init(mtkView: MTKView, renderingData: RenderingData) {
+    let width: Int
+    let height: Int
+
+    init(mtkView: MTKView, renderingData: RenderingData, width: Int, height: Int) {
+        self.width = width
+        self.height = height
+        
         self.renderingData = renderingData
         self.device = mtkView.device!
         let library = device.makeDefaultLibrary()!
@@ -68,8 +74,8 @@ class Renderer: NSObject, MTKViewDelegate {
 
         let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
             pixelFormat: .rgba8Unorm,
-            width: renderingData.width,
-            height: renderingData.height,
+            width: width,
+            height: height,
             mipmapped: false
         )
         textureDescriptor.usage = [.shaderWrite, .shaderRead]
@@ -89,7 +95,6 @@ class Renderer: NSObject, MTKViewDelegate {
 
     func draw(in view: MTKView) {
         if let framebuffer = renderingData.framebuffer {
-            renderingData.shouldStep = true
             guard let drawable = view.currentDrawable,
                   let renderPass = view.currentRenderPassDescriptor,
                   let commandBuffer = commandQueue.makeCommandBuffer() else {
@@ -100,13 +105,13 @@ class Renderer: NSObject, MTKViewDelegate {
                 return
             }
 
-            let region = MTLRegionMake2D(0, 0, renderingData.width, renderingData.height)
+            let region = MTLRegionMake2D(0, 0, width, height)
 
             outputTexture.replace(
                 region: region,
                 mipmapLevel: 0,
                 withBytes: framebuffer,
-                bytesPerRow: renderingData.width * 4
+                bytesPerRow: width * 4
             )
 
             renderEncoder.setRenderPipelineState(quadPipelineState)

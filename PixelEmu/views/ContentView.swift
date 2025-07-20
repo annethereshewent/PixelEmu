@@ -69,8 +69,6 @@ struct ContentView: View {
 
     @State private var gbcEmulator: GBCMobileEmulator? = nil
 
-    @State private var renderingData: RenderingData? = nil
-
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
     init() {
@@ -195,8 +193,7 @@ struct ContentView: View {
                             gbcGame: $gbcGame,
                             themeColor: $themeColor,
                             isPaused: $isPaused,
-                            currentLibrary: $currentLibrary,
-                            renderingData: $renderingData
+                            currentLibrary: $currentLibrary
                         )
                     case .importGames:
                         ImportGamesView(
@@ -274,8 +271,7 @@ struct ContentView: View {
                         bottomImage: $bottomImage,
                         image: .constant(nil),
                         isPaused: $isPaused,
-                        buttonDict: $buttonDict,
-                        renderingData: $renderingData
+                        buttonDict: $buttonDict
                     )
                 case "GBAGameView":
                     GameView(
@@ -304,8 +300,7 @@ struct ContentView: View {
                         bottomImage: .constant(nil),
                         image: $gbaImage,
                         isPaused: $isPaused,
-                        buttonDict: $buttonDict,
-                        renderingData: $renderingData
+                        buttonDict: $buttonDict
                     )
                 case "GBCGameView":
                     GameView(
@@ -334,8 +329,7 @@ struct ContentView: View {
                         bottomImage: .constant(nil),
                         image: $gbcImage,
                         isPaused: $isPaused,
-                        buttonDict: $buttonDict,
-                        renderingData: $renderingData
+                        buttonDict: $buttonDict
                     )
                 default: Text("UNSUPPORTED")
                 }
