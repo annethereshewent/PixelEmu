@@ -65,16 +65,15 @@ struct ControllerMappingButtonView: View {
         Button {
             awaitingInput[pressedButton] = true
             DispatchQueue.global().async {
-                while awaitingInput[pressedButton] ?? false {
+                while awaitingInput[pressedButton]! {
                     let button = detectButtonPressed()
                     if button != .noButton {
                         if let switchEvent = buttonDict[button], let oldButton = buttonMappings[pressedButton] {
                             buttonMappings[switchEvent] = oldButton
                         }
                         buttonMappings[pressedButton] = button
+                        awaitingInput[pressedButton] = false
                     }
-                    awaitingInput[pressedButton] = false
-
                 }
             }
         } label: {

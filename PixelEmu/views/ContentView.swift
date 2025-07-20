@@ -365,7 +365,9 @@ struct ContentView: View {
                     )
                 }
             } catch {
-                print(error)
+                buttonDict = ContentView.getDefaultMappings()
+                defaults.removeObject(forKey: "buttonMappings")
+                print("error while decoding button mappings: \(error)")
             }
 
             GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in

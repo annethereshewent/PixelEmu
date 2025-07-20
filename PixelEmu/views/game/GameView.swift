@@ -50,7 +50,7 @@ struct GameView: View {
     @Binding var gameUrl: URL?
     @Binding var user: GIDGoogleUser?
     @Binding var cloudService: CloudService?
-    @Binding var game: (any Playable)?
+    @Binding var game: (any Playable)!
     @Binding var isSoundOn: Bool
     @Binding var themeColor: Color
 
@@ -90,7 +90,7 @@ struct GameView: View {
     }
 
     private func getWidth() -> Int {
-        switch game!.type {
+        switch game.type {
         case .gba: GBA_SCREEN_WIDTH
         case .gbc: GBC_SCREEN_WIDTH
         case .nds: SCREEN_WIDTH
@@ -98,7 +98,7 @@ struct GameView: View {
     }
 
     private func getHeight() -> Int {
-        switch game!.type {
+        switch game.type {
         case .gba: GBA_SCREEN_HEIGHT
         case .gbc: GBC_SCREEN_HEIGHT
         case .nds: SCREEN_HEIGHT
@@ -134,7 +134,7 @@ struct GameView: View {
                 }
                 return true
             case .ControlStickMode:
-                if pressed && !controlStickKeyPressed {
+                if game.type == .nds && pressed && !controlStickKeyPressed {
                     controlStickKeyPressed = true
 
                     useControlStick = !useControlStick
@@ -202,14 +202,14 @@ struct GameView: View {
     private func checkSaves() {
         if let emu = emulator {
             if emu.hasSaved() {
-                if game!.type != .gbc {
+                if game.type != .gbc {
                     try! emu.setSaved(false)
                 }
                 debounceTimer?.invalidate()
 
                 debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { _ in
                     var saveType: SaveType!
-                    switch game!.type {
+                    switch game.type {
                         case .nds: saveType = .nds
                         case .gbc: saveType = .gbc
                         case .gba: saveType = .gba
@@ -417,7 +417,7 @@ struct GameView: View {
         }
 
         if emulator == nil {
-            switch game!.type {
+            switch game.type {
             case .nds:
                 let bios7Arr: [UInt8] = Array(bios7Data!)
                 let bios9Arr: [UInt8] = Array(bios9Data!)
@@ -584,7 +584,7 @@ struct GameView: View {
                     if orientationInfo.orientation == .portrait {
                         Spacer()
                     }
-                    switch game?.type ?? .nds {
+                    switch game.type {
                     case .nds:
                         DualScreenViewWrapper(
                             gameController: $gameController,
