@@ -117,7 +117,7 @@ class CloudService {
                     case "gbc-saves":
                         self.gbcFolderId = driveResponse.files[0].id
                         defaults.set(self.gbcFolderId, forKey: "gbcFolderId")
-                    default: break
+                    default: print("Warning: unknown folder received: \(folderName)")
                     }
 
                     return driveResponse.files[0].id
