@@ -75,7 +75,6 @@ struct GameView: View {
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
-
     private let graphicsParser = GraphicsParser()
 
     private var screenPadding: CGFloat {
@@ -554,12 +553,30 @@ struct GameView: View {
                             renderingDataBottom.framebuffer = aBuffer
                         }
                     case .gba:
-                        let arr = try! Array(UnsafeBufferPointer(start: emu.getPicturePtr(), count: GBA_SCREEN_HEIGHT * GBA_SCREEN_WIDTH * 3))
+                        let ptr = try! emu.getPicturePtr()
+                        let arr = Array(UnsafeBufferPointer(start: ptr,  count: GBA_SCREEN_HEIGHT * GBA_SCREEN_WIDTH * 4))
 
-                        renderingData.framebuffer = graphicsParser.convertArr(arr, GBA_SCREEN_WIDTH, GBA_SCREEN_HEIGHT)
+                        var arrCopy:  [UInt8] = []
+
+                        for el in arr {
+                            arrCopy.append(el)
+                        }
+
+                        // cloning array because metal doesn't like the pointer above for some reason
+                        renderingData.framebuffer = arrCopy
                     case .gbc:
-                        let arr = try! Array(UnsafeBufferPointer(start: emu.getPicturePtr(), count: GBC_SCREEN_WIDTH * GBC_SCREEN_HEIGHT * 3))
-                        renderingData.framebuffer = graphicsParser.convertArr(arr, GBC_SCREEN_WIDTH, GBC_SCREEN_HEIGHT)
+                        let ptr = try! emu.getPicturePtr()
+
+                        let arr = Array(UnsafeBufferPointer(start: ptr, count: GBC_SCREEN_WIDTH * GBC_SCREEN_HEIGHT * 4))
+
+                        var arrCopy: [UInt8] = []
+
+                        // see above comment
+                        for el in arr {
+                            arrCopy.append(el)
+                        }
+
+                        renderingData.framebuffer = arrCopy
                     }
 
                     self.checkSaves()
