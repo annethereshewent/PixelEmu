@@ -152,16 +152,30 @@ class BackupFile {
 
             for game in games {
                 var actualGameName = ""
-                if game.type == .nds {
-                    actualGameName = game.gameName.replacing(".nds", with: ".sav")
-                } else if game.type == .gba {
+//                if game.type == .nds {
+//                    actualGameName = game.gameName.replacing(".nds", with: ".sav")
+//                } else if game.type == .gba {
+//                    if game.gameName.contains(".GBA") {
+//                        actualGameName = game.gameName.replacing(".GBA", with: ".sav")
+//                    } else if game.gameName.contains(".gba") {
+//                        actualGameName = game.gameName.replacing(".gba", with: ".sav")
+//                    }
+//                }
+                switch game.type {
+                case .nds: actualGameName = game.gameName.replacing(".nds", with: ".sav")
+                case .gba:
                     if game.gameName.contains(".GBA") {
                         actualGameName = game.gameName.replacing(".GBA", with: ".sav")
                     } else if game.gameName.contains(".gba") {
                         actualGameName = game.gameName.replacing(".gba", with: ".sav")
                     }
+                case .gbc:
+                    if game.gameName.contains(".gbc") {
+                        actualGameName = game.gameName.replacing(".gbc", with: ".sav")
+                    } else if game.gameName.contains(".gb") {
+                        actualGameName = game.gameName.replacing(".gb", with: ".sav")
+                    }
                 }
-
                 if actualGameName != "" {
                     gameDictionary[actualGameName] = game
                 }
