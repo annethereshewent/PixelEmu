@@ -335,7 +335,7 @@ struct GameView: View {
             }
 
             controller.leftThumbstick.valueChangedHandler = { (controller, x, y) in
-                if useControlStick {
+                if useControlStick && game.type == .nds {
                     if let emu = emulator {
                         try! emu.touchScreenController(x, -y)
                     }
@@ -557,11 +557,11 @@ struct GameView: View {
 
                         var arrCopy:  [UInt8] = []
 
+                        // cloning array because metal doesn't like the pointer above for some reason
                         for el in arr {
                             arrCopy.append(el)
                         }
 
-                        // cloning array because metal doesn't like the pointer above for some reason
                         renderingData.framebuffer = arrCopy
                     case .gbc:
                         let ptr = try! emu.getPicturePtr()
@@ -701,7 +701,7 @@ struct GameView: View {
                 }
             } else {
                 VStack {
-                    Image("Launch Screen Logo")
+                    Image("LoadingIcon")
                         .resizable()
                         .frame(maxWidth: 342, maxHeight: 272)
                     ProgressView()
