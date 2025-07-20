@@ -10,19 +10,19 @@ import DSEmulatorMobile
 import GBAEmulatorMobile
 
 enum ButtonMapping: Codable {
-    case a
-    case b
-    case x
-    case y
-    case menu
-    case options
+    case cross
+    case square
+    case circle
+    case triangle
+    case start
+    case select
     case home
-    case leftShoulder
-    case rightShoulder
-    case leftTrigger
-    case rightTrigger
-    case leftThumbstick
-    case rightThumbstick
+    case l1
+    case r1
+    case leftStick
+    case rightStick
+    case l2
+    case r2
     case up
     case down
     case left
@@ -31,48 +31,24 @@ enum ButtonMapping: Codable {
 
     var description: String {
         switch self {
-        case .a: return "A"
-        case .b: return "B"
-        case .x: return "X"
-        case .y: return "Y"
-        case .menu: return "Menu"
-        case .options: return "Options"
+        case .cross: return "Cross"
+        case .circle: return "Circle"
+        case .triangle: return "Triangle"
+        case .square: return "Square"
+        case .start: return "Start"
+        case .select: return "Select"
         case .home: return "Home"
-        case .leftShoulder: return "Left shoulder"
-        case .rightShoulder: return "Right shoulder"
-        case .leftTrigger: return "Left trigger"
-        case .rightTrigger: return "Right trigger"
-        case .rightThumbstick: return "Right thumbstick"
-        case .leftThumbstick: return "Left thumbstick"
+        case .l1: return "L1"
+        case .l2: return "L2"
+        case .leftStick: return "Left Stick"
+        case .rightStick: return "Right Stick"
         case .down: return "Down"
         case .left: return "Left"
         case .right: return "Right"
         case .up: return "Up"
         case .noButton: return "Default"
-        }
-    }
-
-    static func descriptionToEnum(_ description: String) -> Self {
-        switch description {
-        case "A": return .a
-        case "B": return .b
-        case "X": return .x
-        case "Y": return .y
-        case "Menu": return .menu
-        case "Options": return .options
-        case "Home": return .home
-        case "Left shoulder": return .leftShoulder
-        case "Right shoulder": return .rightShoulder
-        case "Left trigger": return .leftTrigger
-        case "Right trigger": return .rightTrigger
-        case "Right thumbstick": return .rightThumbstick
-        case "Left thumbstick": return .leftThumbstick
-        case "Down": return .down
-        case "Left": return .left
-        case "Right": return .right
-        case "Up": return .up
-        case "Default": return .noButton
-        default: return .noButton
+        case .r1: return "R1"
+        case .r2: return "R2"
         }
     }
 }
@@ -126,7 +102,7 @@ struct ControllerMappingsView: View {
                         buttonText: "Right"
                     )
                     ControllerMappingButtonView(
-                        pressedButton: .ButtonCross,
+                        pressedButton: .ButtonA,
                         buttonMappings: $buttonMappings,
                         buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
@@ -135,7 +111,7 @@ struct ControllerMappingsView: View {
                         buttonText: "A button"
                     )
                     ControllerMappingButtonView(
-                        pressedButton: .ButtonCircle,
+                        pressedButton: .ButtonB,
                         buttonMappings: $buttonMappings,
                         buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
@@ -144,7 +120,7 @@ struct ControllerMappingsView: View {
                         buttonText: "B button"
                     )
                     ControllerMappingButtonView(
-                        pressedButton: .ButtonTriangle,
+                        pressedButton: .ButtonY,
                         buttonMappings: $buttonMappings,
                         buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
@@ -153,7 +129,7 @@ struct ControllerMappingsView: View {
                         buttonText: "Y button"
                     )
                     ControllerMappingButtonView(
-                        pressedButton: .ButtonSquare,
+                        pressedButton: .ButtonX,
                         buttonMappings: $buttonMappings,
                         buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,
@@ -209,7 +185,7 @@ struct ControllerMappingsView: View {
                         buttonText: "Main menu"
                     )
                     ControllerMappingButtonView(
-                        pressedButton: .ControlStick,
+                        pressedButton: .ControlStickMode,
                         buttonMappings: $buttonMappings,
                         buttonDict: $buttonDict,
                         awaitingInput: $awaitingInput,

@@ -19,34 +19,34 @@ struct ControllerMappingButtonView: View {
     var defaultButton: String
     var buttonText: String
 
-    private func detectButtonPressed() -> ButtonMapping? {
+    private func detectButtonPressed() -> ButtonMapping {
         if let gamepad = gameController?.controller?.extendedGamepad {
             if gamepad.buttonA.isPressed {
-                return .a
+                return .cross
             } else if gamepad.buttonB.isPressed {
-                return .b
+                return .circle
             } else if gamepad.buttonX.isPressed {
-                return .x
+                return .square
             } else if gamepad.buttonY.isPressed {
-                return .y
+                return .triangle
             } else if gamepad.buttonMenu.isPressed {
-                return .menu
+                return .start
             } else if gamepad.buttonOptions?.isPressed ?? false {
-                return .options
+                return .select
             } else if gamepad.buttonHome?.isPressed ?? false {
                 return .home
             } else if gamepad.leftShoulder.isPressed {
-                return .leftShoulder
+                return .l1
             } else if gamepad.rightShoulder.isPressed {
-                return .rightShoulder
+                return .r1
             } else if gamepad.leftTrigger.isPressed {
-                return .leftTrigger
+                return .l2
             } else if gamepad.rightTrigger.isPressed {
-                return .rightTrigger
+                return .r2
             } else if gamepad.leftThumbstickButton?.isPressed ?? false {
-                return .leftThumbstick
+                return .leftStick
             } else if gamepad.rightThumbstickButton?.isPressed ?? false {
-                return .rightThumbstick
+                return .rightStick
             } else if gamepad.dpad.up.isPressed {
                 return .up
             } else if gamepad.dpad.down.isPressed {
@@ -56,11 +56,9 @@ struct ControllerMappingButtonView: View {
             } else if gamepad.dpad.right.isPressed {
                 return .right
             }
-
-            return nil
-        } else {
-            return .noButton
         }
+
+        return .noButton
     }
 
     var body: some View {
@@ -68,15 +66,15 @@ struct ControllerMappingButtonView: View {
             awaitingInput[pressedButton] = true
             DispatchQueue.global().async {
                 while awaitingInput[pressedButton] ?? false {
-                    if let button = detectButtonPressed() {
-                        if button != .noButton {
-                            if let switchEvent = buttonDict[button], let oldButton = buttonMappings[pressedButton] {
-                                buttonMappings[switchEvent] = oldButton
-                            }
-                            buttonMappings[pressedButton] = button
+                    let button = detectButtonPressed()
+                    if button != .noButton {
+                        if let switchEvent = buttonDict[button], let oldButton = buttonMappings[pressedButton] {
+                            buttonMappings[switchEvent] = oldButton
                         }
-                        awaitingInput[pressedButton] = false
+                        buttonMappings[pressedButton] = button
                     }
+                    awaitingInput[pressedButton] = false
+
                 }
             }
         } label: {

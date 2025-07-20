@@ -10,12 +10,14 @@ import GameController
 import DSEmulatorMobile
 
 enum PressedButton: Int {
-    case ButtonCross = 0
-    case ButtonCircle = 1
-    case ButtonSquare = 2
-    case ButtonTriangle = 3
+    case ButtonB = 0
+    case ButtonA = 1
+    case ButtonY = 2
+    case ButtonX = 3
     case Select = 4
     case Start = 6
+    case LeftStick = 7
+    case RightStick = 8
     case ButtonL = 9
     case ButtonR = 10
     case Up = 12
@@ -24,9 +26,9 @@ enum PressedButton: Int {
     case Right = 15
     case QuickSave = 16
     case QuickLoad = 17
-    case MainMenu = 18
-    case HomeButton = 19
-    case ControlStick = 20
+    case ControlStickMode = 18
+    case MainMenu = 19
+    case Home = 20
 }
 
 @Observable

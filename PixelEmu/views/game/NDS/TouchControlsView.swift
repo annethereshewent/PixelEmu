@@ -41,12 +41,12 @@ struct TouchControlsView: View {
     private let redButton = UIImage(named: "Red Button")
 
     private let allButtons: Set<PressedButton> = [
-        PressedButton.ButtonCircle,
-        PressedButton.ButtonCross,
+        PressedButton.ButtonA,
+        PressedButton.ButtonB,
         PressedButton.ButtonL,
         PressedButton.ButtonR,
-        PressedButton.ButtonTriangle,
-        PressedButton.ButtonSquare,
+        PressedButton.ButtonX,
+        PressedButton.ButtonY,
         PressedButton.Down,
         PressedButton.Left,
         PressedButton.Right,
@@ -70,10 +70,10 @@ struct TouchControlsView: View {
     }
 
     private func releaseHapticFeedback() {
-        buttonStarted[PressedButton.ButtonCircle] = false
-        buttonStarted[PressedButton.ButtonCross] = false
-        buttonStarted[PressedButton.ButtonSquare] = false
-        buttonStarted[PressedButton.ButtonTriangle] = false
+        buttonStarted[PressedButton.ButtonA] = false
+        buttonStarted[PressedButton.ButtonB] = false
+        buttonStarted[PressedButton.ButtonY] = false
+        buttonStarted[PressedButton.ButtonX] = false
     }
 
     private func checkForHapticFeedback(point: CGPoint, entries: [PressedButton:CGRect]) {
@@ -92,10 +92,10 @@ struct TouchControlsView: View {
         self.buttonStarted[PressedButton.Left] = false
         self.buttonStarted[PressedButton.Right] = false
 
-        self.buttonStarted[PressedButton.ButtonCircle] = false
-        self.buttonStarted[PressedButton.ButtonCross] = false
-        self.buttonStarted[PressedButton.ButtonSquare] = false
-        self.buttonStarted[PressedButton.ButtonTriangle] = false
+        self.buttonStarted[PressedButton.ButtonA] = false
+        self.buttonStarted[PressedButton.ButtonB] = false
+        self.buttonStarted[PressedButton.ButtonY] = false
+        self.buttonStarted[PressedButton.ButtonX] = false
 
         self.buttonStarted[PressedButton.ButtonL] = false
         self.buttonStarted[PressedButton.ButtonR] = false
@@ -103,7 +103,7 @@ struct TouchControlsView: View {
         self.buttonStarted[PressedButton.Start] = false
         self.buttonStarted[PressedButton.Select] = false
 
-        self.buttonStarted[PressedButton.HomeButton] = false
+        self.buttonStarted[PressedButton.Home] = false
     }
 
     private func handleControlPad(point: CGPoint) {
@@ -152,7 +152,7 @@ struct TouchControlsView: View {
     }
 
     private func releaseButtons() {
-        let buttons = [PressedButton.ButtonCircle, PressedButton.ButtonCross, PressedButton.ButtonSquare, PressedButton.ButtonTriangle]
+        let buttons = [PressedButton.ButtonA, PressedButton.ButtonB, PressedButton.ButtonY, PressedButton.ButtonX]
         if let emu = emulator {
             for button in buttons {
                 if !heldButtons.contains(button) {
@@ -172,7 +172,7 @@ struct TouchControlsView: View {
     private func handleMiscButtons(point: CGPoint) {
         for entry in buttonsMisc {
             if entry.value.contains(point) {
-                if entry.key != PressedButton.HomeButton {
+                if entry.key != PressedButton.Home {
                     if let emu = emulator {
                         emu.updateInput(entry.key, true)
                     }
@@ -180,7 +180,7 @@ struct TouchControlsView: View {
                     goHome()
                     break
                 }
-            } else if entry.key != PressedButton.HomeButton {
+            } else if entry.key != PressedButton.Home {
                 if let emu = emulator {
                     emu.updateInput(entry.key, false)
                 }
@@ -238,7 +238,7 @@ struct TouchControlsView: View {
 
         buttonsMisc[PressedButton.Start] = startButton
         buttonsMisc[PressedButton.Select] = selectButton
-        buttonsMisc[PressedButton.HomeButton] = homeButton
+        buttonsMisc[PressedButton.Home] = homeButton
 
     }
 
@@ -253,10 +253,10 @@ struct TouchControlsView: View {
         let aButton = CGRect(x: imageHeight * 0.69, y: imageHeight * 0.35, width: width, height: height)
         let bButton = CGRect(x: imageWidth * 0.35, y: imageHeight * 0.69, width: width, height: height)
 
-        buttons[PressedButton.ButtonCircle] = aButton
-        buttons[PressedButton.ButtonTriangle] = xButton
-        buttons[PressedButton.ButtonSquare] = yButton
-        buttons[PressedButton.ButtonCross] = bButton
+        buttons[PressedButton.ButtonA] = aButton
+        buttons[PressedButton.ButtonX] = xButton
+        buttons[PressedButton.ButtonY] = yButton
+        buttons[PressedButton.ButtonB] = bButton
     }
 
     var body: some View {
@@ -313,7 +313,7 @@ struct TouchControlsView: View {
                                 .onEnded() { result in
                                     buttonStarted[PressedButton.Start] = false
                                     buttonStarted[PressedButton.Select] = false
-                                    buttonStarted[PressedButton.HomeButton] = false
+                                    buttonStarted[PressedButton.Home] = false
 
                                     releaseMiscButtons()
                                 }

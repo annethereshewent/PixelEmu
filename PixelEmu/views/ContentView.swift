@@ -86,22 +86,21 @@ struct ContentView: View {
 
     static func getDefaultMappings() -> [ButtonMapping:PressedButton] {
         return [
-            .b: .ButtonCircle,
-            .a: .ButtonCross,
-            .y: .ButtonTriangle,
-            .x: .ButtonSquare,
-            .leftShoulder: .ButtonL,
-            .rightShoulder: .ButtonR,
-            .menu: .Start,
-            .options: .Select,
+            .cross: .ButtonB,
+            .circle: .ButtonA,
+            .square: .ButtonY,
+            .triangle: .ButtonX,
+            .l1: .ButtonL,
+            .r1: .ButtonR,
+            .start: .Start,
+            .select: .Select,
             .up: .Up,
             .down: .Down,
             .left: .Left,
             .right: .Right,
-            .leftThumbstick: .QuickSave,
-            .rightThumbstick: .QuickLoad,
-            .home: .MainMenu,
-            .leftTrigger: .ControlStick
+            .leftStick: .QuickSave,
+            .rightStick: .QuickLoad,
+            .l2: .ControlStickMode
         ]
     }
     
@@ -360,20 +359,20 @@ struct ContentView: View {
                 self.themeColor = themeColor
             }
 
-//            do {
-//                if let data = defaults.object(forKey: "buttonMappings") as? Data {
-//                    let decodedButtonMappings = try JSONDecoder()
-//                        .decode([ButtonMapping:String].self, from: data)
-//
-//                    buttonDict = Dictionary(
-//                        uniqueKeysWithValues: decodedButtonMappings.map{ key, value in
-//                            (key, PressedButton(rawValue: Int(value) ?? 0) ?? .ButtonL)
-//                        }
-//                    )
-//                }
-//            } catch {
-//                print(error)
-//            }
+            do {
+                if let data = defaults.object(forKey: "buttonMappings") as? Data {
+                    let decodedButtonMappings = try JSONDecoder()
+                        .decode([ButtonMapping:String].self, from: data)
+
+                    buttonDict = Dictionary(
+                        uniqueKeysWithValues: decodedButtonMappings.map{ key, value in
+                            (key, PressedButton(rawValue: Int(value) ?? 0) ?? .ButtonL)
+                        }
+                    )
+                }
+            } catch {
+                print(error)
+            }
 
             GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
                 if let signedInUser = user {

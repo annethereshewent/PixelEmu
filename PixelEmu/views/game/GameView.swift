@@ -132,7 +132,7 @@ struct GameView: View {
                     }
                 }
                 return true
-            case .ControlStick:
+            case .ControlStickMode:
                 if pressed && !controlStickKeyPressed {
                     controlStickKeyPressed = true
 
@@ -259,43 +259,43 @@ struct GameView: View {
     private func addControllerEventListeners(_ controller: GCController) {
         if let controller = controller.extendedGamepad {
             controller.buttonB.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.b, pressed) {
-                    updateInput(.b, .ButtonCross, pressed)
+                if !checkIfHotKey(.circle, pressed) {
+                    updateInput(.circle, .ButtonA, pressed)
                 }
             }
             controller.buttonA.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.a, pressed) {
-                    updateInput(.a, .ButtonCircle, pressed)
+                if !checkIfHotKey(.cross, pressed) {
+                    updateInput(.cross, .ButtonB, pressed)
                 }
             }
             controller.buttonX.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.x, pressed) {
-                    updateInput(.x, .ButtonTriangle, pressed)
+                if !checkIfHotKey(.square, pressed) {
+                    updateInput(.square, .ButtonY, pressed)
                 }
             }
             controller.buttonY.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.y, pressed) {
-                    updateInput(.y, .ButtonSquare, pressed)
+                if !checkIfHotKey(.triangle, pressed) {
+                    updateInput(.triangle, .ButtonX, pressed)
                 }
             }
             controller.leftShoulder.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.leftShoulder, pressed) {
-                    updateInput(.leftShoulder, .ButtonL, pressed)
+                if !checkIfHotKey(.l1, pressed) {
+                    updateInput(.l1, .ButtonL, pressed)
                 }
             }
             controller.rightShoulder.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.rightShoulder, pressed) {
-                    updateInput(.rightShoulder, .ButtonR, pressed)
+                if !checkIfHotKey(.r1, pressed) {
+                    updateInput(.r1, .ButtonR, pressed)
                 }
             }
             controller.buttonMenu.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.menu, pressed) {
-                    updateInput(.menu, .Start, pressed)
+                if !checkIfHotKey(.start, pressed) {
+                    updateInput(.start, .Start, pressed)
                 }
             }
             controller.buttonOptions?.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.options, pressed) {
-                    updateInput(.options, .Select, pressed)
+                if !checkIfHotKey(.select, pressed) {
+                    updateInput(.select, .Select, pressed)
                 }
             }
             controller.dpad.up.pressedChangedHandler = { (button, value, pressed) in
@@ -324,14 +324,14 @@ struct GameView: View {
                 }
             }
             controller.leftThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.leftThumbstick, pressed) {
-                    updateInput(.leftThumbstick, .QuickSave, pressed)
+                if !checkIfHotKey(.leftStick, pressed) {
+                    updateInput(.leftStick, .QuickSave, pressed)
                 }
             }
 
             controller.rightThumbstickButton?.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.rightThumbstick, pressed) {
-                    updateInput(.rightThumbstick, .QuickLoad, pressed)
+                if !checkIfHotKey(.rightStick, pressed) {
+                    updateInput(.rightStick, .QuickLoad, pressed)
                 }
             }
 
@@ -344,14 +344,14 @@ struct GameView: View {
             }
 
             controller.leftTrigger.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.leftTrigger, pressed) {
-                    updateInput(.leftTrigger, .ControlStick, pressed)
+                if !checkIfHotKey(.l2, pressed) {
+                    updateInput(.l2, .ControlStickMode, pressed)
                 }
             }
 
             controller.rightTrigger.pressedChangedHandler = { (button, value, pressed) in
-                if !checkIfHotKey(.rightTrigger, pressed) {
-                    updateInput(.rightTrigger, .ControlStick, pressed)
+                if !checkIfHotKey(.r2, pressed) {
+                    updateInput(.r2, .ControlStickMode, pressed)
                 }
             }
         }

@@ -59,9 +59,9 @@ struct GBScreenView: View {
         var buttons: [String] = []
         for button in heldButtons {
             switch button {
-            case .ButtonCircle:
+            case .ButtonA:
                 buttons.append("A")
-            case .ButtonCross:
+            case .ButtonB:
                 buttons.append("B")
             case .ButtonL:
                 buttons.append("L")

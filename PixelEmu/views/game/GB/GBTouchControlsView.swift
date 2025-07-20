@@ -41,8 +41,8 @@ struct GBTouchControlsView: View {
     private let redButton = UIImage(named: "Red Button")
 
     private let allButtons: Set<PressedButton> = [
-        .ButtonCircle,
-        .ButtonCross,
+        .ButtonA,
+        .ButtonB,
         .ButtonL,
         .ButtonR,
         .Down,
@@ -68,12 +68,13 @@ struct GBTouchControlsView: View {
     }
 
     private func releaseHapticFeedback() {
-        buttonStarted[PressedButton.ButtonCircle] = false
-        buttonStarted[PressedButton.ButtonCross] = false
+        buttonStarted[PressedButton.ButtonA] = false
+        buttonStarted[PressedButton.ButtonB] = false
     }
 
     private func checkForHapticFeedback(point: CGPoint, entries: [PressedButton:CGRect]) {
         for entry in entries {
+            print(entry.key)
             if entry.value.contains(point) && !buttonStarted[entry.key]! {
                 feedbackGenerator.impactOccurred()
                 buttonStarted[entry.key] = true
@@ -88,8 +89,8 @@ struct GBTouchControlsView: View {
         self.buttonStarted[PressedButton.Left] = false
         self.buttonStarted[PressedButton.Right] = false
 
-        self.buttonStarted[PressedButton.ButtonCircle] = false
-        self.buttonStarted[PressedButton.ButtonCross] = false
+        self.buttonStarted[PressedButton.ButtonA] = false
+        self.buttonStarted[PressedButton.ButtonB] = false
 
         self.buttonStarted[PressedButton.ButtonL] = false
         self.buttonStarted[PressedButton.ButtonR] = false
@@ -97,7 +98,8 @@ struct GBTouchControlsView: View {
         self.buttonStarted[PressedButton.Start] = false
         self.buttonStarted[PressedButton.Select] = false
 
-        self.buttonStarted[PressedButton.HomeButton] = false
+        self.buttonStarted[PressedButton.MainMenu] = false
+        self.buttonStarted[PressedButton.Home] = false
     }
 
     private func handleControlPad(point: CGPoint) {
@@ -149,7 +151,7 @@ struct GBTouchControlsView: View {
     }
 
     private func releaseButtons() {
-        let buttons = [PressedButton.ButtonCircle, PressedButton.ButtonCross]
+        let buttons = [PressedButton.ButtonA, PressedButton.ButtonB]
         if let emu = emulator {
             for button in buttons {
                 if !heldButtons.contains(button) {
@@ -169,7 +171,7 @@ struct GBTouchControlsView: View {
     private func handleMiscButtons(point: CGPoint) {
         for entry in buttonsMisc {
             if entry.value.contains(point) {
-                if entry.key == .HomeButton {
+                if entry.key == .Home {
                     goHome()
                 } else if let emu = emulator {
                     emu.updateInput(entry.key, true)
@@ -232,7 +234,7 @@ struct GBTouchControlsView: View {
 
         buttonsMisc[PressedButton.Start] = startButton
         buttonsMisc[PressedButton.Select] = selectButton
-        buttonsMisc[PressedButton.HomeButton] = homeButton
+        buttonsMisc[PressedButton.Home] = homeButton
 
     }
 
@@ -245,8 +247,8 @@ struct GBTouchControlsView: View {
         let aButton = CGRect(x: imageWidth * 0.55, y: 0, width: width, height: height)
         let bButton = CGRect(x: 0, y: imageHeight * 0.37, width: width, height: height)
 
-        buttons[PressedButton.ButtonCircle] = aButton
-        buttons[PressedButton.ButtonCross] = bButton
+        buttons[PressedButton.ButtonA] = aButton
+        buttons[PressedButton.ButtonB] = bButton
     }
 
     var body: some View {
