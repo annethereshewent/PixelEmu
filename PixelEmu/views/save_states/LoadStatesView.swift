@@ -94,7 +94,7 @@ struct LoadStatesView: View {
 
                             game = selectedGame
 
-                            path.append("GameView")
+                            path.append("NDSGameView")
 
                         } else {
                             isPresented = false

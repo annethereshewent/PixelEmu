@@ -12,6 +12,12 @@ import UIKit
 let ICON_WIDTH = 32
 let ICON_HEIGHT = 32
 
+// Note: Since the DS was the first emulator supported and the only one I had in mind,
+// I called this model Game.  Which in hindsight would have been better
+// if I had called it NDSGame. Now it's stuck, because migration with SwiftData
+// is an incredibly huge pain, and the alternative is for users to lose all their
+// save state data and libraries by deleting the app and reinstalling to make it
+// work again.
 @Model
 class Game: Playable {
     @Attribute(.unique)

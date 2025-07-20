@@ -83,10 +83,10 @@ struct GamesListViewInner: View {
             if let game = game as! Game? {
                 self.game = game
                 game.lastPlayed = Date.now
-                path.append("GameView")
+                path.append("NDSGameView")
             } else if let game = self.game as! Game? {
                 game.lastPlayed = Date.now
-                path.append("GameView")
+                path.append("NDSGameView")
             } else {
                 showGameError = true
             }
@@ -94,10 +94,10 @@ struct GamesListViewInner: View {
             if let game = game as! GBAGame? {
                 self.game = game
                 game.lastPlayed = Date.now
-                path.append("GBAGameView")
+                path.append("NDSGBAGameView")
             } else if let game = self.game as! GBAGame? {
                 game.lastPlayed = Date.now
-                path.append("GBAGameView")
+                path.append("NDSGBAGameView")
             } else {
                 showGameError = true
             }
@@ -105,10 +105,10 @@ struct GamesListViewInner: View {
             if let game = game as! GBCGame? {
                 self.game = game
                 game.lastPlayed = Date.now
-                path.append("GBCGameView")
+                path.append("NDSGBCGameView")
             } else if let game = self.game as! GBCGame? {
                 game.lastPlayed = Date.now
-                path.append("GBCGameView")
+                path.append("NDSGBCGameView")
             } else {
                 showGameError = true
             }
@@ -174,7 +174,7 @@ struct GamesListViewInner: View {
                     if resumeGame {
                         emulator?.setPaused(false)
                         switch gameType {
-                        case .nds: path.append("GameView")
+                        case .nds: path.append("NDSGameView")
                         case .gba: path.append("GBAGameView")
                         case .gbc: path.append("GBCGameView")
                         }

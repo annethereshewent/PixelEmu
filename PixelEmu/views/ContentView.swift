@@ -244,7 +244,7 @@ struct ContentView: View {
             }
             .navigationDestination(for: String.self) { view in
                 switch view {
-                case "GameView":
+                case "NDSGameView":
                     GameView(
                         isMenuPresented: $isMenuPresented,
                         emulator: $emulator,
