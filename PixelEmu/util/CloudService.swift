@@ -11,12 +11,14 @@ import GoogleSignIn
 enum SaveType {
     case nds
     case gba
+    case gbc
 }
 
 class CloudService {
     private var user: GIDGoogleUser
     private var dsFolderId: String? = nil
     private var gbaFolderId: String? = nil
+    private var gbcFolderId: String? = nil
     private let jsonDecoder = JSONDecoder()
 
 
@@ -34,6 +36,9 @@ class CloudService {
 
         if let gbaFolderId = defaults.string(forKey: "gbaFolderId") {
             self.gbaFolderId = gbaFolderId
+        }
+        if let gbcFolderId = defaults.string(forKey: "gbcFolderId") {
+            self.gbcFolderId = gbcFolderId
         }
     }
 
@@ -68,6 +73,13 @@ class CloudService {
         return nil
     }
 
+    private func checkForGbcFolder() async -> String? {
+        if let folderId = self.gbcFolderId {
+            return folderId
+        }
+        return await checkForFolder(folderName: "gbc-saves")
+    }
+
     private func checkForGbaFolder() async -> String? {
         if let folderId = self.gbaFolderId {
             return folderId
@@ -95,12 +107,17 @@ class CloudService {
                 if driveResponse.files.count > 0 {
                     let defaults = UserDefaults.standard
 
-                    if folderName == "ds-saves" {
+                    switch folderName {
+                    case "ds-saves":
                         self.dsFolderId = driveResponse.files[0].id
                         defaults.set(self.dsFolderId, forKey: "dsFolderId")
-                    } else if folderName == "gba-saves" {
+                    case "gba-saves":
                         self.gbaFolderId = driveResponse.files[0].id
                         defaults.set(self.gbaFolderId, forKey: "gbaFolderId")
+                    case "gbc-saves":
+                        self.gbcFolderId = driveResponse.files[0].id
+                        defaults.set(self.gbcFolderId, forKey: "gbcFolderId")
+                    default: break
                     }
 
                     return driveResponse.files[0].id
@@ -158,6 +175,7 @@ class CloudService {
         if let folderId = switch saveType {
         case .gba: await self.checkForGbaFolder()
         case .nds: await self.checkForDsFolder()
+        case .gbc: await self.checkForGbcFolder()
         } {
             let params = [URLQueryItem(name: "q", value: "parents in \"" + folderId + "\"")]
 
@@ -259,6 +277,7 @@ class CloudService {
         if let folderId = switch saveType {
         case .gba: await self.checkForGbaFolder()
         case .nds: await self.checkForDsFolder()
+        case .gbc: await self.checkForGbcFolder()
         } {
             if let driveResponse = await self.getSaveInfo(saveName, folderId) {
                 if driveResponse.files.count > 0 {
@@ -282,6 +301,7 @@ class CloudService {
         if let folderId = switch saveType {
         case .gba: await self.checkForGbaFolder()
         case .nds: await self.checkForDsFolder()
+        case .gbc: await self.checkForGbcFolder()
         } {
             if let driveResponse = await self.getSaveInfo(saveName, folderId) {
                 if driveResponse.files.count > 0 {
@@ -308,6 +328,7 @@ class CloudService {
         if let folderId = switch saveType {
         case .gba: await self.checkForGbaFolder()
         case .nds: await self.checkForDsFolder()
+        case .gbc: await self.checkForGbcFolder()
         } {
             if let driveResponse = await self.getSaveInfo(saveName, folderId) {
                 var headers = [String:String]()
@@ -349,7 +370,8 @@ class CloudService {
                         // finally move the file to correct saves folder
                         let params = switch saveType {
                         case .gba: [URLQueryItem(name: "uploadType", value: "media"), URLQueryItem(name: "addParents", value: self.gbaFolderId)]
-                        case .nds : [URLQueryItem(name: "uploadType", value: "media"), URLQueryItem(name: "addParents", value: self.dsFolderId)]
+                        case .nds: [URLQueryItem(name: "uploadType", value: "media"), URLQueryItem(name: "addParents", value: self.dsFolderId)]
+                        case .gbc: [URLQueryItem(name: "uploadType", value: "media"), URLQueryItem(name: "addParents", value: self.gbcFolderId)]
                         }
 
                         let fileId = fileResponse.id

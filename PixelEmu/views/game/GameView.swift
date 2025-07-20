@@ -56,7 +56,8 @@ struct GameView: View {
 
     @Binding var gameName: String
     @Binding var backupFile: BackupFile?
-    @Binding var gbaBackupFile: GBABackupFile?
+    @Binding var gbaBackupFile: GBBackupFile?
+    @Binding var gbcBackupFile: GBBackupFile?
     @Binding var gameController: GameController?
 
     @Binding var audioManager: AudioManager?
@@ -189,23 +190,19 @@ struct GameView: View {
                 debounceTimer?.invalidate()
 
                 debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { _ in
-                    self.saveGame()
+                    var saveType: SaveType!
+                    switch game!.type {
+                        case .nds: saveType = .nds
+                        case .gbc: saveType = .gbc
+                        case .gba: saveType = .gba
+                    }
+                    self.saveGame(saveType: saveType)
                 }
             }
         }
     }
 
-    private func saveGame() {
-        if let game = game {
-            switch game.type {
-            case .nds: saveDsGame()
-            case .gba: saveGbaGame()
-            case .gbc: print("warning, save game not implemented")
-            }
-        }
-    }
-
-    private func saveGbaGame() {
+    private func saveGame(saveType: SaveType) {
         if let emu = emulator {
             let ptr = emu.backupPointer()
             let backupLength = Int(emu.backupLength())
@@ -220,33 +217,7 @@ struct GameView: View {
                         await cloudService.uploadSave(
                             saveName: BackupFile.getSaveName(gameUrl: url),
                             data: data,
-                            saveType: .gba
-                        )
-                    }
-                }
-            } else {
-                backupFile?.saveGame(ptr: ptr, backupLength: backupLength)
-            }
-        }
-    }
-
-    private func saveDsGame() {
-        if let emu = emulator {
-            let ptr = emu.backupPointer();
-
-            let backupLength = Int(emu.backupLength())
-
-            if let cloudService = cloudService {
-                if let url = gameUrl {
-                    let buffer = UnsafeBufferPointer(start: ptr, count: backupLength)
-
-                    let data = Data(buffer)
-
-                    Task {
-                        await cloudService.uploadSave(
-                            saveName: BackupFile.getSaveName(gameUrl: url),
-                            data: data,
-                            saveType: .nds
+                            saveType: saveType
                         )
                     }
                 }
@@ -368,6 +339,24 @@ struct GameView: View {
             }
         }
     }
+
+//    private func loadGbcSave() async {
+//        if let emu = emulator, let gameUrl = gameUrl {
+//            loading = true
+//            if let saveData = await self.cloudService?.getSave(saveName: BackupFile.getSaveName(gameUrl: gameUrl), saveType: .gbc) {
+//                let ptr = BackupFile.getPointer(saveData)
+//                try! emu.loadSave(ptr)
+//            } else {
+//                gbaBackupFile = GBABackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupLength()))
+//                if let ptr = gbaBackupFile!.createBackupFile() {
+//                    try! emu.loadSave(ptr)
+//                }
+//            }
+//            loading = false
+//        }
+//    }
+
+
     private func loadNdsSave(_ game: Game) async {
         let gameCode = try! emulator?.getGameCode()
 
@@ -402,17 +391,29 @@ struct GameView: View {
         }
     }
 
-    private func loadGbaSave() async {
+    private func loadGbSave(saveType: SaveType) async {
         if let emu = emulator, let gameUrl = gameUrl {
             loading = true
-            if let saveData = await self.cloudService?.getSave(saveName: BackupFile.getSaveName(gameUrl: gameUrl), saveType: .gba) {
+            if let saveData = await self.cloudService?.getSave(saveName: BackupFile.getSaveName(gameUrl: gameUrl), saveType: saveType) {
                 let ptr = BackupFile.getPointer(saveData)
                 try! emu.loadSave(ptr)
             } else {
-                gbaBackupFile = GBABackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupLength()))
-                if let ptr = gbaBackupFile!.createBackupFile() {
-                    try! emu.loadSave(ptr)
+                switch saveType {
+                case .gbc:
+                    gbcBackupFile = GBBackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupLength()))
+
+                    if let ptr = gbcBackupFile!.createBackupFile() {
+                        try! emu.loadSave(ptr)
+                    }
+                case .gba:
+                    gbaBackupFile = GBBackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupLength()))
+                    
+                    if let ptr = gbaBackupFile!.createBackupFile() {
+                        try! emu.loadSave(ptr)
+                    }
+                case .nds: break
                 }
+
             }
             loading = false
         }
@@ -484,8 +485,8 @@ struct GameView: View {
         if let game = game {
             switch game.type {
             case .nds: await loadNdsSave(game as! Game)
-            case .gba: await loadGbaSave()
-            case .gbc: print("Warning, load save not implemented")
+            case .gba: await loadGbSave(saveType: .gba)
+            case .gbc: await loadGbSave(saveType: .gbc)
             }
             isRunning = true
 

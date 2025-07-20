@@ -1,5 +1,5 @@
 //
-//  GBABackupFile.swift
+//  GBBackupFile.swift
 //  PixelEmu
 //
 //  Created by Anne Castrillon on 12/4/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class GBABackupFile {
+class GBBackupFile {
 
     private var gameUrl: URL
     private var backupSize: Int

@@ -35,7 +35,7 @@
 		E8293CCE2E2A05E00052BEA4 /* EmulatorWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8293CCD2E2A05DE0052BEA4 /* EmulatorWrapper.swift */; };
 		E82A46F82D9B41210059BB67 /* PixelEmu-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E82A46F72D9B41210059BB67 /* PixelEmu-Info.plist */; };
 		E82A46FA2D9B41380059BB67 /* PixelEmuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */; };
-		E84B3A8C2D016205003E0061 /* GBABackupFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84B3A8B2D016205003E0061 /* GBABackupFile.swift */; };
+		E84B3A8C2D016205003E0061 /* GBBackupFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84B3A8B2D016205003E0061 /* GBBackupFile.swift */; };
 		E84EE44F2D04024700CF15ED /* GBASaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EE44E2D04024700CF15ED /* GBASaveState.swift */; };
 		E84EE4512D0403B000CF15ED /* GBAStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EE4502D0403B000CF15ED /* GBAStateView.swift */; };
 		E88C68492E2AFEB500A7085E /* GBCGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88C68482E2AFEB500A7085E /* GBCGame.swift */; };
@@ -117,7 +117,7 @@
 		E8293CCD2E2A05DE0052BEA4 /* EmulatorWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorWrapper.swift; sourceTree = "<group>"; };
 		E82A46F72D9B41210059BB67 /* PixelEmu-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PixelEmu-Info.plist"; sourceTree = "<group>"; };
 		E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelEmuApp.swift; sourceTree = "<group>"; };
-		E84B3A8B2D016205003E0061 /* GBABackupFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBABackupFile.swift; sourceTree = "<group>"; };
+		E84B3A8B2D016205003E0061 /* GBBackupFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBBackupFile.swift; sourceTree = "<group>"; };
 		E84EE44E2D04024700CF15ED /* GBASaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBASaveState.swift; sourceTree = "<group>"; };
 		E84EE4502D0403B000CF15ED /* GBAStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateView.swift; sourceTree = "<group>"; };
 		E88C68482E2AFEB500A7085E /* GBCGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBCGame.swift; sourceTree = "<group>"; };
@@ -271,7 +271,7 @@
 				E806EA7B2CA115FA0081D3E8 /* CloudService.swift */,
 				E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */,
 				E8EE5D962CC3491A00CD77B6 /* Colors.swift */,
-				E84B3A8B2D016205003E0061 /* GBABackupFile.swift */,
+				E84B3A8B2D016205003E0061 /* GBBackupFile.swift */,
 				E806EA312C9935D00081D3E8 /* GraphicsParser.swift */,
 				E8A214EC2CD052B700173E06 /* OrientationInfo.swift */,
 				E89681A62CD440CF00F7A316 /* StateManager.swift */,
@@ -596,7 +596,7 @@
 				E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */,
 				E8EE5D8A2CC2227600CD77B6 /* ImportGamesView.swift in Sources */,
 				E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */,
-				E84B3A8C2D016205003E0061 /* GBABackupFile.swift in Sources */,
+				E84B3A8C2D016205003E0061 /* GBBackupFile.swift in Sources */,
 				E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */,
 				E8A214ED2CD052B700173E06 /* OrientationInfo.swift in Sources */,
 				E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */,
