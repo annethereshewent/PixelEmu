@@ -67,7 +67,6 @@ struct MainLibraryView: View {
                             .foregroundColor(allColor)
                     }
                 }
-
                 Spacer()
             }
             .padding(.top, 10)
@@ -88,7 +87,8 @@ struct MainLibraryView: View {
                 themeColor: $themeColor,
                 isPaused: $isPaused
             )
-
+            Spacer()
+            Spacer()
         }
         .onAppear() {
             recentColor = themeColor
