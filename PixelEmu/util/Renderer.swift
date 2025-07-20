@@ -15,9 +15,6 @@ let fullscreenQuad: [TexturedVertex] = [
     TexturedVertex(position: [ 1, -1], uv: [1, 1])  // bottom-right
 ]
 
-let WIDTH = 160
-let HEIGHT = 144
-
 struct TexturedVertex {
     var position: SIMD2<Float>
     var uv: SIMD2<Float>
@@ -73,8 +70,8 @@ class Renderer: NSObject, MTKViewDelegate {
 
         let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
             pixelFormat: .rgba8Unorm,
-            width: 160,
-            height: 144,
+            width: renderingData.width,
+            height: renderingData.height,
             mipmapped: false
         )
         textureDescriptor.usage = [.shaderWrite, .shaderRead]
@@ -93,8 +90,8 @@ class Renderer: NSObject, MTKViewDelegate {
     }
 
     func draw(in view: MTKView) {
-        renderingData.shouldStep = true
         if let framebuffer = renderingData.framebuffer {
+            renderingData.shouldStep = true
             guard let drawable = view.currentDrawable,
                   let renderPass = view.currentRenderPassDescriptor,
                   let commandBuffer = commandQueue.makeCommandBuffer() else {
@@ -105,13 +102,13 @@ class Renderer: NSObject, MTKViewDelegate {
                 return
             }
 
-            let region = MTLRegionMake2D(0, 0, WIDTH, HEIGHT)
+            let region = MTLRegionMake2D(0, 0, renderingData.width, renderingData.height)
 
             outputTexture.replace(
                 region: region,
                 mipmapLevel: 0,
                 withBytes: framebuffer,
-                bytesPerRow: WIDTH * 4
+                bytesPerRow: renderingData.width * 4
             )
 
             renderEncoder.setRenderPipelineState(quadPipelineState)

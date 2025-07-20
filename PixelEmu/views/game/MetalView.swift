@@ -6,9 +6,16 @@
 //
 
 class RenderingData {
-    var framebuffer: UnsafePointer<UInt8>? = nil
+    var framebuffer: [UInt8]? = nil
     var shouldStep = true
     var mtkView: MTKView? = nil
+    var width: Int
+    var height: Int
+
+    init(_ width: Int, _ height: Int) {
+        self.width = width
+        self.height = height
+    }
 }
 
 import SwiftUI
