@@ -219,14 +219,6 @@ class CloudService {
         return []
     }
 
-//    func getSaves(games: [any Playable]) async -> [SaveEntry] {
-//        if games[0].type == .nds {
-//            await getDsSaves(games: games as! [Game])
-//        } else {
-//            await getGbaSaves(games: games as! [GBAGame])
-//        }
-//    }
-
     func getGbaSaves(games: [any Playable]) async -> [SaveEntry] {
         if let driveResponse = await getSavesData(saveType: .gba) {
             var gameDictionary = [String:any Playable]()
