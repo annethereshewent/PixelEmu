@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-This is a mobile emulator that uses https://github.com/annethereshewent/nds-plus as its core. It is currently a work in progress.
+This is a mobile emulator that supports several emulator cores, including NDS, GBA, and GBC.
 
 To get the project up and running locally, you'll need to go through the following steps:
 
