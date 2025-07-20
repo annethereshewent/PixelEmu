@@ -112,7 +112,16 @@ class AudioManager {
     }
 
     func stopMicrophone() {
-        mic?.removeTap(onBus: 0)
+        mic!.removeTap(onBus: 0)
+
+        audioEngine.disconnectNodeOutput(audioEngine.inputNode)
+        audioEngine.disconnectNodeOutput(mic!)
+
+        do {
+            try AVAudioSession.sharedInstance().setActive(false)
+        } catch {
+            print("Failed to update AVAudioSession: \(error)")
+        }
     }
 
     func getBufferPtr() -> UnsafeBufferPointer<Float>? {

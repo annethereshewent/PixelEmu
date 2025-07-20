@@ -588,6 +588,29 @@ struct GameView: View {
         }
     }
 
+    func pauseGame() {
+        if let emu = emulator {
+            isPaused = true
+            emu.setPaused(true)
+            audioManager?.muteAudio()
+
+            UIApplication.shared.isIdleTimerDisabled = false
+            if game.type == .nds {
+                audioManager?.stopMicrophone()
+            }
+        }
+    }
+
+    func resumeGame() {
+        emulator?.setPaused(false)
+        if game.type == .nds {
+            audioManager?.startMicrophoneAndAudio()
+        }
+        if isSoundOn {
+            audioManager?.resumeAudio()
+        }
+    }
+
     var body: some View {
         ZStack {
             if gameController?.controller?.extendedGamepad == nil {
@@ -786,15 +809,12 @@ struct GameView: View {
                     }
                     await self.run()
                 } else {
-                    if isSoundOn {
-                        audioManager?.resumeAudio()
-                    }
+                   resumeGame()
                 }
             }
         }
         .onDisappear {
-            UIApplication.shared.isIdleTimerDisabled = false
-            audioManager?.stopMicrophone()
+            pauseGame()
         }
         .onChange(of: shouldGoHome) {
             if shouldGoHome {
@@ -805,24 +825,13 @@ struct GameView: View {
             switch scenePhase {
             case .active:
                 if isPaused {
-                    if let emu = emulator {
-                        isPaused = false
-
-                        emu.setPaused(false)
-                        if isSoundOn {
-                            audioManager?.resumeAudio()
-                        }
-                    }
+                    resumeGame()
                 }
                 break
             case .inactive:
                 break
             case .background:
-                if let emu = emulator {
-                    isPaused = true
-                    emu.setPaused(true)
-                    audioManager?.muteAudio()
-                }
+                pauseGame()
                 break
             default:
                 break
