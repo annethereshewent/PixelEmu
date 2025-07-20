@@ -57,16 +57,16 @@ class GraphicsParser {
 
         let pixelsArr = Array(buffer)
 
-        return fromBytes(bytes: convertArr(pixelsArr), width: GBC_SCREEN_WIDTH, height: GBC_SCREEN_HEIGHT)
+        return fromBytes(bytes: convertArr(pixelsArr, GBC_SCREEN_WIDTH, GBC_SCREEN_HEIGHT), width: GBC_SCREEN_WIDTH, height: GBC_SCREEN_HEIGHT)
     }
 
-    func convertArr(_ arr: [UInt8]) -> [UInt8] {
-        var newArr: [UInt8] = Array(repeating: 0, count: GBC_SCREEN_WIDTH * GBC_SCREEN_HEIGHT * 4)
+    func convertArr(_ arr: [UInt8], _ width: Int, _ height: Int) -> [UInt8] {
+        var newArr: [UInt8] = Array(repeating: 0, count: width * height * 4)
 
-        for y in 0..<GBC_SCREEN_HEIGHT {
-            for x in 0..<GBC_SCREEN_WIDTH {
-                let newIndex = (x + y * GBC_SCREEN_WIDTH) * 4
-                let index = (x + y * GBC_SCREEN_WIDTH) * 3
+        for y in 0..<height {
+            for x in 0..<width {
+                let newIndex = (x + y * width) * 4
+                let index = (x + y * width) * 3
 
                 newArr[newIndex] = arr[index]
                 newArr[newIndex + 1] = arr[index + 1]

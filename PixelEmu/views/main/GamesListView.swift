@@ -30,6 +30,7 @@ struct GamesListView: View {
     @Binding var filter: LibraryFilter
     @Binding var themeColor: Color
     @Binding var isPaused: Bool
+    @Binding var renderingData: RenderingData?
 
     @Query private var games: [Game]
     @Query private var gbaGames: [GBAGame]
@@ -84,7 +85,8 @@ struct GamesListView: View {
                     isRunning: $isRunning,
                     path: $path,
                     isPaused: $isPaused,
-                    filteredGames: filteredGames as! [Game]?
+                    filteredGames: filteredGames as! [Game]?,
+                    renderingData: $renderingData
                 )
             case .gba:
                 GamesListViewInner(
@@ -102,7 +104,8 @@ struct GamesListView: View {
                     isRunning: $isRunning,
                     path: $path,
                     isPaused: $isPaused,
-                    filteredGbaGames: filteredGames as! [GBAGame]?
+                    filteredGbaGames: filteredGames as! [GBAGame]?,
+                    renderingData: $renderingData
                 )
             case .gbc:
                 GamesListViewInner(
@@ -120,7 +123,8 @@ struct GamesListView: View {
                     isRunning: $isRunning,
                     path: $path,
                     isPaused: $isPaused,
-                    filteredGbcGames: filteredGames as! [GBCGame]?
+                    filteredGbcGames: filteredGames as! [GBCGame]?,
+                    renderingData: $renderingData
                 )
             }
         }

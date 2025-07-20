@@ -17,6 +17,8 @@ struct GBScreenView: View {
     @Binding var emulator: (any EmulatorWrapper)?
     @Binding var heldButtons: Set<PressedButton>
 
+    var renderingData: RenderingData
+
     @EnvironmentObject var orientationInfo: OrientationInfo
 
     private var screenRatio: Float {
@@ -89,7 +91,7 @@ struct GBScreenView: View {
             Spacer()
         }
         ZStack {
-            GameScreenView(image: $image)
+            MetalView(renderingData: renderingData)
                 .frame(
                     width: CGFloat(screenWidth) * CGFloat(screenRatio),
                     height: CGFloat(screenHeight) * CGFloat(screenRatio)

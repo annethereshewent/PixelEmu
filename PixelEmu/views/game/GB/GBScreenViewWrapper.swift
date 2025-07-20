@@ -19,6 +19,7 @@ struct GBScreenViewWrapper: View {
     @Binding var isHoldButtonsPresented: Bool
     @Binding var heldButtons: Set<PressedButton>
     @Binding var themeColor: Color
+    var renderingData: RenderingData
 
     @EnvironmentObject var orientationInfo: OrientationInfo
 
@@ -108,7 +109,8 @@ struct GBScreenViewWrapper: View {
                         isHoldButtonsPresented: $isHoldButtonsPresented,
                         themeColor: $themeColor,
                         emulator: $emulator,
-                        heldButtons: $heldButtons
+                        heldButtons: $heldButtons,
+                        renderingData: renderingData
                     )
                 }
                 .padding(.top, padding)

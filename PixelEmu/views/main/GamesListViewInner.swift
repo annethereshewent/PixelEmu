@@ -54,6 +54,8 @@ struct GamesListViewInner: View {
     var filteredGbcGames: [GBCGame]? = nil
     var filteredGbaGames: [GBAGame]? = nil
 
+    @Binding var renderingData: RenderingData?
+
     private func updateLastPlayed() {
         switch gameType {
         case .gbc:
@@ -80,6 +82,7 @@ struct GamesListViewInner: View {
 
         switch gameType {
         case .nds:
+            renderingData = RenderingData(SCREEN_WIDTH, SCREEN_HEIGHT)
             if let game = game as! Game? {
                 self.game = game
                 game.lastPlayed = Date.now
@@ -91,6 +94,7 @@ struct GamesListViewInner: View {
                 showGameError = true
             }
         case .gba:
+            renderingData = RenderingData(GBA_SCREEN_WIDTH, GBA_SCREEN_HEIGHT)
             if let game = game as! GBAGame? {
                 self.game = game
                 game.lastPlayed = Date.now
@@ -102,6 +106,7 @@ struct GamesListViewInner: View {
                 showGameError = true
             }
         case .gbc:
+            renderingData = RenderingData(GBC_SCREEN_WIDTH, GBC_SCREEN_HEIGHT)
             if let game = game as! GBCGame? {
                 self.game = game
                 game.lastPlayed = Date.now

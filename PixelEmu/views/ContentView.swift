@@ -69,6 +69,8 @@ struct ContentView: View {
 
     @State private var gbcEmulator: GBCMobileEmulator? = nil
 
+    @State private var renderingData: RenderingData? = nil
+
     @AppStorage("themeColor") var themeColor: Color = Colors.accentColor
 
     init() {
@@ -84,10 +86,10 @@ struct ContentView: View {
 
     static func getDefaultMappings() -> [ButtonMapping:PressedButton] {
         return [
-            .a: .ButtonCircle,
-            .b: .ButtonCross,
-            .x: .ButtonTriangle,
-            .y: .ButtonSquare,
+            .b: .ButtonCircle,
+            .a: .ButtonCross,
+            .y: .ButtonTriangle,
+            .x: .ButtonSquare,
             .leftShoulder: .ButtonL,
             .rightShoulder: .ButtonR,
             .menu: .Start,
@@ -194,7 +196,8 @@ struct ContentView: View {
                             gbcGame: $gbcGame,
                             themeColor: $themeColor,
                             isPaused: $isPaused,
-                            currentLibrary: $currentLibrary
+                            currentLibrary: $currentLibrary,
+                            renderingData: $renderingData
                         )
                     case .importGames:
                         ImportGamesView(
@@ -272,7 +275,8 @@ struct ContentView: View {
                         bottomImage: $bottomImage,
                         image: .constant(nil),
                         isPaused: $isPaused,
-                        buttonDict: $buttonDict
+                        buttonDict: $buttonDict,
+                        renderingData: $renderingData
                     )
                 case "GBAGameView":
                     GameView(
@@ -301,7 +305,8 @@ struct ContentView: View {
                         bottomImage: .constant(nil),
                         image: $gbaImage,
                         isPaused: $isPaused,
-                        buttonDict: $buttonDict
+                        buttonDict: $buttonDict,
+                        renderingData: $renderingData
                     )
                 case "GBCGameView":
                     GameView(
@@ -330,7 +335,8 @@ struct ContentView: View {
                         bottomImage: .constant(nil),
                         image: $gbcImage,
                         isPaused: $isPaused,
-                        buttonDict: $buttonDict
+                        buttonDict: $buttonDict,
+                        renderingData: $renderingData
                     )
                 default: Text("UNSUPPORTED")
                 }
@@ -354,24 +360,20 @@ struct ContentView: View {
                 self.themeColor = themeColor
             }
 
-            do {
-                if let data = defaults.object(forKey: "buttonMappings") as? Data {
-                    let decodedButtonMappings = try JSONDecoder()
-                        .decode([ButtonMapping:String].self, from: data)
-
-                    buttonDict = Dictionary(
-                        uniqueKeysWithValues: decodedButtonMappings.map{ key, value in
-                            (key, PressedButton(rawValue: Int(value) ?? 0) ?? .ButtonL)
-                        }
-                    )
-
-                    if buttonDict.count(where: { $0.value == .ButtonL }) == buttonDict.count {
-                        buttonDict = ContentView.getDefaultMappings()
-                    }
-                }
-            } catch {
-                print(error)
-            }
+//            do {
+//                if let data = defaults.object(forKey: "buttonMappings") as? Data {
+//                    let decodedButtonMappings = try JSONDecoder()
+//                        .decode([ButtonMapping:String].self, from: data)
+//
+//                    buttonDict = Dictionary(
+//                        uniqueKeysWithValues: decodedButtonMappings.map{ key, value in
+//                            (key, PressedButton(rawValue: Int(value) ?? 0) ?? .ButtonL)
+//                        }
+//                    )
+//                }
+//            } catch {
+//                print(error)
+//            }
 
             GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
                 if let signedInUser = user {

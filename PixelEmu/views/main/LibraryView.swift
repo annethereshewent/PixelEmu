@@ -39,6 +39,7 @@ struct LibraryView: View {
     @Binding var themeColor: Color
     @Binding var isPaused: Bool
     @Binding var currentLibrary: String
+    @Binding var renderingData: RenderingData?
 
     var body: some View {
         VStack {
@@ -61,7 +62,8 @@ struct LibraryView: View {
                     path: $path,
                     game: $gbcGame,
                     themeColor: $themeColor,
-                    isPaused: $isPaused
+                    isPaused: $isPaused,
+                    renderingData: $renderingData
                 )
                 .tag("gbc")
                 MainLibraryView(
@@ -81,7 +83,8 @@ struct LibraryView: View {
                     path: $path,
                     game: $gbaGame,
                     themeColor: $themeColor,
-                    isPaused: $isPaused
+                    isPaused: $isPaused,
+                    renderingData: $renderingData
                 )
                 .tag("gba")
                 MainLibraryView(
@@ -101,7 +104,8 @@ struct LibraryView: View {
                     path: $path,
                     game: $game,
                     themeColor: $themeColor,
-                    isPaused: $isPaused
+                    isPaused: $isPaused,
+                    renderingData: $renderingData
                 )
                 .tag("nds")
             }.tabViewStyle(.page)

@@ -259,7 +259,7 @@ struct ControllerMappingsView: View {
                     buttonDict[value] = key
                 }
 
-                let toEncode = buttonDict.map{ key, value in (key, value.rawValue) }
+                let toEncode = buttonDict.map{ key, value in (key, String(value.rawValue)) }
 
                 let buttonMappingsEncoded = try JSONEncoder().encode(Dictionary(uniqueKeysWithValues: toEncode))
 

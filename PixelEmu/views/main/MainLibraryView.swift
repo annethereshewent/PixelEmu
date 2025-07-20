@@ -31,6 +31,7 @@ struct MainLibraryView: View {
     @Binding var game: (any Playable)?
     @Binding var themeColor: Color
     @Binding var isPaused: Bool
+    @Binding var renderingData: RenderingData?
 
     var body: some View {
         VStack {
@@ -86,7 +87,8 @@ struct MainLibraryView: View {
                 game: $game,
                 filter: $filter,
                 themeColor: $themeColor,
-                isPaused: $isPaused
+                isPaused: $isPaused,
+                renderingData: $renderingData
             )
 
         }
