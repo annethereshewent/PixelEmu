@@ -39,15 +39,22 @@ class Game: Playable {
         self.saveStates = saveStates
     }
 
-    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>? = nil) -> (any Playable)? {
+    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>? = nil, isZip: Bool) -> (any Playable)? {
         let buffer = UnsafeBufferPointer(start: iconPtr, count: ICON_WIDTH * ICON_HEIGHT * 4)
 
         let pixelsArr = Array(buffer)
 
         // store bookmark for later use
-        if url.startAccessingSecurityScopedResource() {
+        if isZip {
             if let bookmark = try? url.bookmarkData(options: []) {
                 return Game(gameName: gameName, bookmark: bookmark, gameIcon: pixelsArr, saveStates: [], lastPlayed: Date.now) as any Playable
+            }
+        }
+        else {
+            if url.startAccessingSecurityScopedResource() {
+                if let bookmark = try? url.bookmarkData(options: []) {
+                    return Game(gameName: gameName, bookmark: bookmark, gameIcon: pixelsArr, saveStates: [], lastPlayed: Date.now) as any Playable
+                }
             }
         }
 

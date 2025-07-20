@@ -36,13 +36,22 @@ class GBAGame: Playable {
         self.gbaSaveStates = saveStates
     }
 
-    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>? = nil) -> (any Playable)? {
+    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>? = nil, isZip: Bool) -> (any Playable)? {
         // store bookmark for later use
-        if url.startAccessingSecurityScopedResource() {
+        if isZip {
             if let bookmark = try? url.bookmarkData(options: []) {
                 return GBAGame(gameName: gameName, bookmark: bookmark, saveStates: [], lastPlayed: Date.now) as any Playable
             }
         }
+        else {
+            if url.startAccessingSecurityScopedResource() {
+                if let bookmark = try? url.bookmarkData(options: []) {
+                    return GBAGame(gameName: gameName, bookmark: bookmark, saveStates: [], lastPlayed: Date.now) as any Playable
+                }
+            }
+        }
+
+
 
         return nil
     }

@@ -34,8 +34,13 @@ class GBCGame: Playable {
     @Transient
     var saveStates: [SaveState]? = nil
 
-    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>? = nil) -> (any Playable)? {
+    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>? = nil, isZip: Bool = false) -> (any Playable)? {
         // store bookmark for later use
+        if isZip {
+            let bookmark = try! url.bookmarkData(options: [])
+            return GBCGame(gameName: gameName, bookmark: bookmark, lastPlayed: Date.now) as any Playable
+        }
+
         if url.startAccessingSecurityScopedResource() {
             let bookmark = try! url.bookmarkData(options: [])
             return GBCGame(gameName: gameName, bookmark: bookmark, lastPlayed: Date.now) as any Playable

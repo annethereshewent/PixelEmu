@@ -32,7 +32,7 @@ protocol Playable: Identifiable {
 
     var type: GameType { get }
 
-    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>?) -> (any Playable)?
+    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>?, isZip: Bool) -> (any Playable)?
 }
 
 

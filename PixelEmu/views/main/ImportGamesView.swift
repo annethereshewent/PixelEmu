@@ -44,49 +44,48 @@ struct ImportGamesView: View {
     @Binding var currentLibrary: String
 
 
-    private func storeGBAGame(data: Data, emu: (any EmulatorWrapper)?, url: URL) async {
+    private func storeGBAGame(data: Data, emu: (any EmulatorWrapper)?, url: URL, _ isZip: Bool) async {
         if var game = GBAGame.storeGame(
             gameName: gameName,
             data: data,
-            url: url
+            url: url,
+            isZip: isZip
         ) {
             if !gameNamesSet.contains(gameName) {
                 if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: GBA_ID) {
                     game.albumArt = artwork
                 }
                 context.insert(game as! GBAGame)
-                gameNamesSet.insert(gameName)
+                gameNamesSet.insert(game.gameName)
             }
         }
     }
 
-    private func storeGBCGame(data: Data, emu: (any EmulatorWrapper)?, url: URL) async {
+    private func storeGBCGame(data: Data, emu: (any EmulatorWrapper)?, url: URL, _ isZip: Bool) async {
         if var game = GBCGame.storeGame(
             gameName: gameName,
             data: data,
-            url: url
+            url: url,
+            isZip: isZip
         ) {
-            if !gameNamesSet.contains(gameName) {
-                Task {
-                    var id = 0
-                    if game.gameName.lowercased().contains(/\.gbc$/) {
-                        id = GBC_ID
-                    } else {
-                        id = GB_ID
-                    }
-                    if let artwork = await artworkService.fetchArtwork(for: game.gameName, systemId: id) {
-                        game.albumArt = artwork
-                    }
-
-                    context.insert(game as! GBCGame)
-                    gameNamesSet.insert(gameName)
+            if !gameNamesSet.contains(game.gameName) {
+                var id = 0
+                if game.gameName.lowercased().contains(/\.gbc$/) {
+                    id = GBC_ID
+                } else {
+                    id = GB_ID
+                }
+                if let artwork = await artworkService.fetchArtwork(for: game.gameName, systemId: id) {
+                    game.albumArt = artwork
                 }
 
+                context.insert(game as! GBCGame)
+                gameNamesSet.insert(game.gameName)
             }
         }
     }
 
-    private func storeDSGame(data: Data, emu: (any EmulatorWrapper)?, url: URL) async {
+    private func storeDSGame(data: Data, emu: (any EmulatorWrapper)?, url: URL, _ isZip: Bool) async {
         var emu = emu
         var romPtr: UnsafeBufferPointer<UInt8>!
 
@@ -124,7 +123,8 @@ struct ImportGamesView: View {
             gameName: gameName,
             data: romData!,
             url: url,
-            iconPtr: try! emu?.getGameIconPointer()
+            iconPtr: try! emu?.getGameIconPointer(),
+            isZip: isZip
         ) {
             // check if album artwork exists before inserting game into DB
             if !gameNamesSet.contains(gameName) {
@@ -182,31 +182,77 @@ struct ImportGamesView: View {
                                 defer {
                                     url.stopAccessingSecurityScopedResource()
                                 }
+
+                                var data: Data!
+                                var actualUrl = try FileManager.default.url(
+                                    for: .applicationSupportDirectory,
+                                    in: .userDomainMask,
+                                    appropriateFor: nil,
+                                    create: true
+                                )
+                                var isZip = false
+
                                 if url.pathExtension == "zip" {
+                                    isZip = true
                                     let fileManager = FileManager()
 
-                                    let currDirectory = fileManager.currentDirectoryPath
+                                    var destinationUrl = try FileManager.default.url(
+                                        for: .applicationSupportDirectory,
+                                        in: .userDomainMask,
+                                        appropriateFor: nil,
+                                        create: true
+                                    )
 
-                                    let destinationUrl = URL(fileURLWithPath: currDirectory)
+                                    destinationUrl.appendPathComponent("temp")
 
-                                    do {
-                                        try fileManager.unzipItem(at: url, to: destinationUrl)
-
-                                        let contents = try fileManager.contentsOfDirectory(at: destinationUrl, includingPropertiesForKeys: nil)
-
-                                        print(contents)
-                                    } catch {
-                                        print(error)
+                                    if fileManager.fileExists(atPath: destinationUrl.path) {
+                                        try fileManager.removeItem(at: destinationUrl)
                                     }
-                                    throw "testing 123...."
+                                    try fileManager.createDirectory(at: destinationUrl, withIntermediateDirectories: true)
+
+                                    try fileManager.unzipItem(at: url, to: destinationUrl)
+
+                                    let contents = try fileManager.contentsOfDirectory(at: destinationUrl, includingPropertiesForKeys: nil)
+
+                                    var tempUrl: URL!
+                                    for content in contents {
+                                        if ["nds", "gba", "gbc", "gb"].contains(content.pathExtension.lowercased()) {
+                                            tempUrl = content
+                                            break
+                                        }
+                                    }
+
+                                    if tempUrl == nil {
+                                        continue
+                                    }
+
+                                    data = try Data(contentsOf: tempUrl)
+
+                                    let fileName = tempUrl.lastPathComponent
+
+                                    actualUrl.appendPathComponent("unzipped-roms")
+
+                                    if !fileManager.fileExists(atPath: actualUrl.path()) {
+                                        try fileManager.createDirectory(at: actualUrl, withIntermediateDirectories: true, attributes: nil)
+                                    }
+
+                                    // overwrite the file if it exists
+                                    actualUrl.appendPathComponent(fileName)
+
+                                    if fileManager.fileExists(atPath: actualUrl.path) {
+                                        try fileManager.removeItem(at: actualUrl)
+                                    }
+
+                                    // move file and remove temp directory
+                                    try fileManager.moveItem(at: tempUrl, to: actualUrl)
+                                } else {
+                                    data = try Data(contentsOf: url)
+                                    actualUrl = url
                                 }
-
-
-                                let data = try Data(contentsOf: url)
 
                                 romData = data
 
-                                gameName = String(url
+                                gameName = String(actualUrl
                                     .relativeString
                                     .split(separator: "/")
                                     .last
@@ -215,11 +261,13 @@ struct ImportGamesView: View {
                                 .removingPercentEncoding
                                 .unsafelyUnwrapped
 
-                                switch url.pathExtension.lowercased() {
-                                case "nds": await storeDSGame(data: data, emu: emu, url: url)
-                                case "gba": await storeGBAGame(data: data, emu: emu, url: url)
-                                case "gbc": await storeGBCGame(data: data, emu: emu, url: url)
-                                case "gb": await storeGBCGame(data: data, emu: emu, url: url)
+                                print(actualUrl.pathExtension.lowercased())
+
+                                switch actualUrl.pathExtension.lowercased() {
+                                case "nds": await storeDSGame(data: data, emu: emu, url: actualUrl, isZip)
+                                case "gba": await storeGBAGame(data: data, emu: emu, url: actualUrl, isZip)
+                                case "gbc": await storeGBCGame(data: data, emu: emu, url: actualUrl, isZip)
+                                case "gb": await storeGBCGame(data: data, emu: emu, url: actualUrl, isZip)
                                 default: break
                                 }
                             }
@@ -237,8 +285,8 @@ struct ImportGamesView: View {
                         emu = nil
                     }
                 } catch {
-                    showErrorMessage = true
                     print(error)
+                    showErrorMessage = true
                 }
             }
             .onAppear() {
