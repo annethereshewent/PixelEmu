@@ -55,8 +55,7 @@ struct ContentView: View {
 
     @State private var gameName = ""
     @State private var backupFile: BackupFile? = nil
-    @State private var gbaBackupFile: GBBackupFile? = nil
-    @State private var gbcBackupFile: GBBackupFile? = nil
+    @State private var gbBackupFile: GBBackupFile? = nil
 
     @State private var buttonDict: [ButtonMapping:PressedButton] = getDefaultMappings()
 
@@ -264,8 +263,7 @@ struct ContentView: View {
                         themeColor: $themeColor,
                         gameName: $gameName,
                         backupFile: $backupFile,
-                        gbaBackupFile: .constant(nil),
-                        gbcBackupFile: .constant(nil),
+                        gbBackupFile: .constant(nil),
                         gameController: $gameController,
                         audioManager: $audioManager,
                         isRunning: $isRunning,
@@ -294,8 +292,7 @@ struct ContentView: View {
                         themeColor: $themeColor,
                         gameName: $gameName,
                         backupFile: $backupFile,
-                        gbaBackupFile: $gbaBackupFile,
-                        gbcBackupFile: .constant(nil),
+                        gbBackupFile: $gbBackupFile,
                         gameController: $gameController,
                         audioManager: $audioManager,
                         isRunning: $isRunning,
@@ -324,8 +321,7 @@ struct ContentView: View {
                         themeColor: $themeColor,
                         gameName: $gameName,
                         backupFile: $backupFile,
-                        gbaBackupFile: .constant(nil),
-                        gbcBackupFile: $gbcBackupFile,
+                        gbBackupFile: $gbBackupFile,
                         gameController: $gameController,
                         audioManager: $audioManager,
                         isRunning: $isRunning,

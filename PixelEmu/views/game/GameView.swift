@@ -56,8 +56,7 @@ struct GameView: View {
 
     @Binding var gameName: String
     @Binding var backupFile: BackupFile?
-    @Binding var gbaBackupFile: GBBackupFile?
-    @Binding var gbcBackupFile: GBBackupFile?
+    @Binding var gbBackupFile: GBBackupFile?
     @Binding var gameController: GameController?
 
     @Binding var audioManager: AudioManager?
@@ -340,23 +339,6 @@ struct GameView: View {
         }
     }
 
-//    private func loadGbcSave() async {
-//        if let emu = emulator, let gameUrl = gameUrl {
-//            loading = true
-//            if let saveData = await self.cloudService?.getSave(saveName: BackupFile.getSaveName(gameUrl: gameUrl), saveType: .gbc) {
-//                let ptr = BackupFile.getPointer(saveData)
-//                try! emu.loadSave(ptr)
-//            } else {
-//                gbaBackupFile = GBABackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupLength()))
-//                if let ptr = gbaBackupFile!.createBackupFile() {
-//                    try! emu.loadSave(ptr)
-//                }
-//            }
-//            loading = false
-//        }
-//    }
-
-
     private func loadNdsSave(_ game: Game) async {
         let gameCode = try! emulator?.getGameCode()
 
@@ -398,22 +380,11 @@ struct GameView: View {
                 let ptr = BackupFile.getPointer(saveData)
                 try! emu.loadSave(ptr)
             } else {
-                switch saveType {
-                case .gbc:
-                    gbcBackupFile = GBBackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupLength()))
+                gbBackupFile = GBBackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupLength()))
 
-                    if let ptr = gbcBackupFile!.createBackupFile() {
-                        try! emu.loadSave(ptr)
-                    }
-                case .gba:
-                    gbaBackupFile = GBBackupFile(gameUrl: gameUrl, backupSize: Int(emu.backupLength()))
-                    
-                    if let ptr = gbaBackupFile!.createBackupFile() {
-                        try! emu.loadSave(ptr)
-                    }
-                case .nds: break
+                if let ptr = gbBackupFile!.createBackupFile() {
+                    try! emu.loadSave(ptr)
                 }
-
             }
             loading = false
         }
