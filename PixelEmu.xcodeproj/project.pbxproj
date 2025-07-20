@@ -82,6 +82,9 @@
 		E8EE5D972CC3491A00CD77B6 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D962CC3491A00CD77B6 /* Colors.swift */; };
 		E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */; };
 		E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */; };
+		E8F1EE442E2CC2D9009F7301 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1EE432E2CC2D9009F7301 /* MetalView.swift */; };
+		E8F1EE482E2CC31B009F7301 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E8F1EE462E2CC31B009F7301 /* Shaders.metal */; };
+		E8F1EE4A2E2CC46B009F7301 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1EE492E2CC46B009F7301 /* Renderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -163,6 +166,9 @@
 		E8EE5D962CC3491A00CD77B6 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModal.swift; sourceTree = "<group>"; };
 		E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		E8F1EE432E2CC2D9009F7301 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
+		E8F1EE462E2CC31B009F7301 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		E8F1EE492E2CC46B009F7301 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		F6D72E464429EADD40F6E67D /* Pods-PixelEmu-PixelEmuUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; path = "Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -205,6 +211,7 @@
 		E806E9EB2C97E1B10081D3E8 = {
 			isa = PBXGroup;
 			children = (
+				E8F1EE472E2CC31B009F7301 /* shaders */,
 				E806EA992CA1284B0081D3E8 /* .gitignore */,
 				E806E9F62C97E1B10081D3E8 /* PixelEmu */,
 				E806E9F52C97E1B10081D3E8 /* Products */,
@@ -269,6 +276,7 @@
 				E896C28C2CA67FFA008161AA /* AudioManager.swift */,
 				E806EA732CA0EE100081D3E8 /* BackupFile.swift */,
 				E806EA7B2CA115FA0081D3E8 /* CloudService.swift */,
+				E8F1EE492E2CC46B009F7301 /* Renderer.swift */,
 				E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */,
 				E8EE5D962CC3491A00CD77B6 /* Colors.swift */,
 				E84B3A8B2D016205003E0061 /* GBBackupFile.swift */,
@@ -352,6 +360,7 @@
 		E8C245F12CBCC54F00B6DF67 /* game */ = {
 			isa = PBXGroup;
 			children = (
+				E8F1EE432E2CC2D9009F7301 /* MetalView.swift */,
 				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
 				E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */,
 				E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */,
@@ -424,6 +433,14 @@
 				E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */,
 			);
 			path = serializable;
+			sourceTree = "<group>";
+		};
+		E8F1EE472E2CC31B009F7301 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				E8F1EE462E2CC31B009F7301 /* Shaders.metal */,
+			);
+			path = shaders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -570,8 +587,11 @@
 				E88C68492E2AFEB500A7085E /* GBCGame.swift in Sources */,
 				E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */,
 				E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */,
+				E8F1EE482E2CC31B009F7301 /* Shaders.metal in Sources */,
 				E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */,
+				E8F1EE4A2E2CC46B009F7301 /* Renderer.swift in Sources */,
 				E89681A92CD561A100F7A316 /* ControllerMappingsView.swift in Sources */,
+				E8F1EE442E2CC2D9009F7301 /* MetalView.swift in Sources */,
 				E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */,
 				E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */,
 				E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */,
