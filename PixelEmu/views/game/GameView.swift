@@ -750,7 +750,26 @@ struct GameView: View {
                         isSoundOn: $isSoundOn,
                         gameController: $gameController
                     )
-                case .gbc: Text("TODO: Not implemented")
+                case .gbc:
+                    GameMenuView(
+                        gameType: .gbc,
+                        emulator: $emulator,
+                        isRunning: $isRunning,
+                        workItem: $workItem,
+                        audioManager: $audioManager,
+                        isMenuPresented: $isMenuPresented,
+                        gameName: $gameName,
+                        biosData: .constant(nil),
+                        bios7Data: .constant(nil),
+                        bios9Data: .constant(nil),
+                        firmwareData: .constant(nil),
+                        romData: $romData,
+                        shouldGoHome: $shouldGoHome,
+                        game: $game,
+                        isHoldButtonsPresented: $isHoldButtonsPresented,
+                        isSoundOn: $isSoundOn,
+                        gameController: $gameController
+                    )
                 }
             }
 
@@ -760,11 +779,8 @@ struct GameView: View {
             Task {
                 if !isRunning {
                     emulatorCopy = nil
-                    if let game = game {
-                        gameController = GameController() { controller in
-                            addControllerEventListeners(controller)
-                        }
-
+                    gameController = GameController() { controller in
+                        addControllerEventListeners(controller)
                     }
                     await self.run()
                 } else {
