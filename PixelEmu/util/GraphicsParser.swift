@@ -74,7 +74,6 @@ class GraphicsParser {
                 newArr[newIndex + 3] = 0xff
             }
         }
-
         return newArr
     }
 
