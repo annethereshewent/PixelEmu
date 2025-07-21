@@ -138,7 +138,6 @@ struct ImportGamesView: View {
     }
 
     func unzipGame(url: URL) -> (URL?, Data?) {
-        let isZip = true
         let fileManager = FileManager()
 
         do {
