@@ -109,8 +109,8 @@ struct MainSaveManagementView: View {
                 // get any local saves
                 switch gameType {
                 case .nds: localSaves = BackupFile.getLocalSaves(games: games)
-                case .gba: localSaves = BackupFile.getLocalGBASaves(games: gbaGames)
-                case .gbc: break
+                case .gba: localSaves = BackupFile.getLocalGBSaves(games: gbaGames, gameType: .gba)
+                case .gbc: localSaves = BackupFile.getLocalGBSaves(games: gbcGames, gameType: .gbc)
                 }
             }
             .onTapGesture {

@@ -186,7 +186,7 @@ class BackupFile {
         return saveEntries
     }
 
-    static func getLocalGBASaves(games: [GBAGame]) -> [SaveEntry] {
+    static func getLocalGBSaves(games: [any Playable], gameType: GameType) -> [SaveEntry] {
         var saveEntries = [SaveEntry]()
         do {
             var location = try FileManager.default.url(
@@ -203,14 +203,13 @@ class BackupFile {
 
             let items = try FileManager.default.contentsOfDirectory(atPath: location.path)
 
-            var gameDictionary = [String:GBAGame]()
+            var gameDictionary = [String:any Playable]()
+
+
 
             for game in games {
-                if game.gameName.contains(".GBA") {
-                    gameDictionary[game.gameName.replacing(".GBA", with: ".sav")] = game
-                } else {
-                    gameDictionary[game.gameName.replacing(".gba", with: ".sav")] = game
-                }
+                let gameName = "\(game.gameName[..<game.gameName.lastIndex(of: ".")!]).sav"
+                gameDictionary[gameName] = game
             }
 
             for item in items {
