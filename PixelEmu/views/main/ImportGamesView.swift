@@ -137,6 +137,76 @@ struct ImportGamesView: View {
         }
     }
 
+    func unzipGame(url: URL) -> (URL?, Data?) {
+        let isZip = true
+        let fileManager = FileManager()
+
+        do {
+            var destinationUrl = try FileManager.default.url(
+                for: .applicationSupportDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+
+            var actualUrl = try FileManager.default.url(
+                for: .applicationSupportDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+
+            destinationUrl.appendPathComponent("temp")
+
+            if fileManager.fileExists(atPath: destinationUrl.path) {
+                try fileManager.removeItem(at: destinationUrl)
+            }
+            try fileManager.createDirectory(at: destinationUrl, withIntermediateDirectories: true)
+
+            try fileManager.unzipItem(at: url, to: destinationUrl)
+
+            let contents = try fileManager.contentsOfDirectory(at: destinationUrl, includingPropertiesForKeys: nil)
+
+            var tempUrl: URL!
+            for content in contents {
+                if ["nds", "gba", "gbc", "gb"].contains(content.pathExtension.lowercased()) {
+                    tempUrl = content
+                    break
+                }
+            }
+
+            if tempUrl == nil {
+                return (nil, nil)
+            }
+
+            let data = try Data(contentsOf: tempUrl)
+
+            let fileName = tempUrl.lastPathComponent
+
+            actualUrl.appendPathComponent("unzipped-roms")
+
+            if !fileManager.fileExists(atPath: actualUrl.path()) {
+                try fileManager.createDirectory(at: actualUrl, withIntermediateDirectories: true, attributes: nil)
+            }
+
+            // overwrite the file if it exists
+            actualUrl.appendPathComponent(fileName)
+
+            if fileManager.fileExists(atPath: actualUrl.path) {
+                try fileManager.removeItem(at: actualUrl)
+            }
+
+            // move file and remove temp directory
+            try fileManager.moveItem(at: tempUrl, to: actualUrl)
+
+            return (actualUrl, data)
+        } catch {
+            print("couldn't open application support directory")
+
+            return (nil, nil)
+        }
+    }
+
     var body: some View {
         ZStack {
             VStack {
@@ -184,7 +254,7 @@ struct ImportGamesView: View {
                                 }
 
                                 var data: Data!
-                                var actualUrl = try FileManager.default.url(
+                                var actualUrl: URL! = try FileManager.default.url(
                                     for: .applicationSupportDirectory,
                                     in: .userDomainMask,
                                     appropriateFor: nil,
@@ -194,60 +264,14 @@ struct ImportGamesView: View {
 
                                 if url.pathExtension == "zip" {
                                     isZip = true
-                                    let fileManager = FileManager()
-
-                                    var destinationUrl = try FileManager.default.url(
-                                        for: .applicationSupportDirectory,
-                                        in: .userDomainMask,
-                                        appropriateFor: nil,
-                                        create: true
-                                    )
-
-                                    destinationUrl.appendPathComponent("temp")
-
-                                    if fileManager.fileExists(atPath: destinationUrl.path) {
-                                        try fileManager.removeItem(at: destinationUrl)
-                                    }
-                                    try fileManager.createDirectory(at: destinationUrl, withIntermediateDirectories: true)
-
-                                    try fileManager.unzipItem(at: url, to: destinationUrl)
-
-                                    let contents = try fileManager.contentsOfDirectory(at: destinationUrl, includingPropertiesForKeys: nil)
-
-                                    var tempUrl: URL!
-                                    for content in contents {
-                                        if ["nds", "gba", "gbc", "gb"].contains(content.pathExtension.lowercased()) {
-                                            tempUrl = content
-                                            break
-                                        }
-                                    }
-
-                                    if tempUrl == nil {
-                                        continue
-                                    }
-
-                                    data = try Data(contentsOf: tempUrl)
-
-                                    let fileName = tempUrl.lastPathComponent
-
-                                    actualUrl.appendPathComponent("unzipped-roms")
-
-                                    if !fileManager.fileExists(atPath: actualUrl.path()) {
-                                        try fileManager.createDirectory(at: actualUrl, withIntermediateDirectories: true, attributes: nil)
-                                    }
-
-                                    // overwrite the file if it exists
-                                    actualUrl.appendPathComponent(fileName)
-
-                                    if fileManager.fileExists(atPath: actualUrl.path) {
-                                        try fileManager.removeItem(at: actualUrl)
-                                    }
-
-                                    // move file and remove temp directory
-                                    try fileManager.moveItem(at: tempUrl, to: actualUrl)
+                                    (actualUrl, data) = unzipGame(url: url)
                                 } else {
                                     data = try Data(contentsOf: url)
                                     actualUrl = url
+                                }
+
+                                if (actualUrl == nil) {
+                                    continue
                                 }
 
                                 romData = data
