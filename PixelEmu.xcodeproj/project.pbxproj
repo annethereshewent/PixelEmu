@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B580D3BD94A71D8FFE5F6C8 /* Pods_PixelEmu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9E28C1D7CA0DA17FA63E1F6 /* Pods_PixelEmu.framework */; };
 		E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806E9F92C97E1B10081D3E8 /* ContentView.swift */; };
 		E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */; };
 		E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E806E9FE2C97E1B20081D3E8 /* Preview Assets.xcassets */; };
@@ -29,42 +30,37 @@
 		E806EAA02CA3AD080081D3E8 /* SaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */; };
 		E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */; };
 		E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */; };
+		E8293CBE2E28AD240052BEA4 /* GBCEmulatorMobile in Frameworks */ = {isa = PBXBuildFile; productRef = E8293CBD2E28AD240052BEA4 /* GBCEmulatorMobile */; };
+		E8293CCA2E28B6C30052BEA4 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8293CC92E28B6B20052BEA4 /* Playable.swift */; };
+		E8293CCE2E2A05E00052BEA4 /* EmulatorWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8293CCD2E2A05DE0052BEA4 /* EmulatorWrapper.swift */; };
 		E82A46F82D9B41210059BB67 /* PixelEmu-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E82A46F72D9B41210059BB67 /* PixelEmu-Info.plist */; };
 		E82A46FA2D9B41380059BB67 /* PixelEmuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */; };
-		E84B3A8C2D016205003E0061 /* GBABackupFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84B3A8B2D016205003E0061 /* GBABackupFile.swift */; };
+		E84B3A8C2D016205003E0061 /* GBBackupFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84B3A8B2D016205003E0061 /* GBBackupFile.swift */; };
 		E84EE44F2D04024700CF15ED /* GBASaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EE44E2D04024700CF15ED /* GBASaveState.swift */; };
 		E84EE4512D0403B000CF15ED /* GBAStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EE4502D0403B000CF15ED /* GBAStateView.swift */; };
+		E88C68492E2AFEB500A7085E /* GBCGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88C68482E2AFEB500A7085E /* GBCGame.swift */; };
+		E88C684D2E2B017D00A7085E /* GamesListViewInner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88C684C2E2B017D00A7085E /* GamesListViewInner.swift */; };
 		E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681A62CD440CF00F7A316 /* StateManager.swift */; };
 		E89681A92CD561A100F7A316 /* ControllerMappingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */; };
 		E89681AD2CD6D68500F7A316 /* ControllerMappingButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */; };
 		E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E896C28C2CA67FFA008161AA /* AudioManager.swift */; };
 		E8A214ED2CD052B700173E06 /* OrientationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A214EC2CD052B700173E06 /* OrientationInfo.swift */; };
 		E8A214EF2CD0553800173E06 /* DualScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A214EE2CD0553800173E06 /* DualScreenView.swift */; };
-		E8A334022CFABD6600765ABB /* GBATouchControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334012CFABD6600765ABB /* GBATouchControlsView.swift */; };
-		E8A334042CFACF8C00765ABB /* GBAScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334032CFACF8C00765ABB /* GBAScreenView.swift */; };
-		E8A334062CFAD03A00765ABB /* GBAScreenViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334052CFAD03A00765ABB /* GBAScreenViewWrapper.swift */; };
-		E8A5893E2D02C01C009D4337 /* DSSaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A5893D2D02C01C009D4337 /* DSSaveManagementView.swift */; };
-		E8A589402D02C030009D4337 /* GBASaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A5893F2D02C030009D4337 /* GBASaveManagementView.swift */; };
-		E8A589422D02C389009D4337 /* GBASaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589412D02C389009D4337 /* GBASaveEntry.swift */; };
-		E8A589462D03EA8D009D4337 /* GBAMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589452D03EA8D009D4337 /* GBAMenuView.swift */; };
+		E8A334022CFABD6600765ABB /* GBTouchControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334012CFABD6600765ABB /* GBTouchControlsView.swift */; };
+		E8A334042CFACF8C00765ABB /* GBScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334032CFACF8C00765ABB /* GBScreenView.swift */; };
+		E8A334062CFAD03A00765ABB /* GBScreenViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334052CFAD03A00765ABB /* GBScreenViewWrapper.swift */; };
+		E8A5893E2D02C01C009D4337 /* MainSaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A5893D2D02C01C009D4337 /* MainSaveManagementView.swift */; };
 		E8A589482D03ED2E009D4337 /* GBAStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589472D03ED2E009D4337 /* GBAStateEntriesView.swift */; };
-		E8A5894A2D03EEE2009D4337 /* GBAStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589492D03EEE2009D4337 /* GBAStateManager.swift */; };
-		E8AE9BF52D0637A600A834EC /* GBAEntryModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AE9BF42D0637A600A834EC /* GBAEntryModal.swift */; };
 		E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */; };
 		E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */; };
 		E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */; };
 		E8BA68202CC49A3900CE7E54 /* DepartureMono.woff in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */; };
 		E8BA68212CC49A3900CE7E54 /* DepartureMono.otf in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */; };
 		E8BBBC682CF96AD10065EF4E /* GBAGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC672CF96AD10065EF4E /* GBAGame.swift */; };
-		E8BBBC6A2CF96AEA0065EF4E /* DSLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC692CF96AEA0065EF4E /* DSLibraryView.swift */; };
-		E8BBBC6C2CF96CAB0065EF4E /* GBALibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC6B2CF96CAB0065EF4E /* GBALibraryView.swift */; };
+		E8BBBC6A2CF96AEA0065EF4E /* MainLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC692CF96AEA0065EF4E /* MainLibraryView.swift */; };
 		E8BBBC7E2CF981510065EF4E /* GBAEmulatorMobile in Frameworks */ = {isa = PBXBuildFile; productRef = E8BBBC7D2CF981510065EF4E /* GBAEmulatorMobile */; };
-		E8BBBC802CF9847B0065EF4E /* GBAListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC7F2CF9847B0065EF4E /* GBAListView.swift */; };
-		E8BBBC822CF9870D0065EF4E /* GBAEntryViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC812CF9870D0065EF4E /* GBAEntryViewWrapper.swift */; };
-		E8BBBC842CF987790065EF4E /* GBAEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC832CF987790065EF4E /* GBAEntryView.swift */; };
 		E8BBBC862CFA71A20065EF4E /* ArtworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */; };
 		E8BBBC882CFA91090065EF4E /* gba_bios.bin in Resources */ = {isa = PBXBuildFile; fileRef = E8BBBC872CFA91090065EF4E /* gba_bios.bin */; };
-		E8BBBC922CFA9A820065EF4E /* GBAGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BBBC912CFA9A820065EF4E /* GBAGameView.swift */; };
 		E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */; };
 		E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */; };
 		E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */; };
@@ -86,24 +82,10 @@
 		E8EE5D972CC3491A00CD77B6 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D962CC3491A00CD77B6 /* Colors.swift */; };
 		E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */; };
 		E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */; };
+		E8F1EE442E2CC2D9009F7301 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1EE432E2CC2D9009F7301 /* MetalView.swift */; };
+		E8F1EE482E2CC31B009F7301 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E8F1EE462E2CC31B009F7301 /* Shaders.metal */; };
+		E8F1EE4A2E2CC46B009F7301 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1EE492E2CC46B009F7301 /* Renderer.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		E806EA052C97E1B20081D3E8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E806E9EC2C97E1B10081D3E8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E806E9F32C97E1B10081D3E8;
-			remoteInfo = "NDS Plus";
-		};
-		E806EA0F2C97E1B20081D3E8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E806E9EC2C97E1B10081D3E8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E806E9F32C97E1B10081D3E8;
-			remoteInfo = "NDS Plus";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0F25C770C3BB0D97257F1E0A /* Pods-PixelEmu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu.release.xcconfig"; path = "Target Support Files/Pods-PixelEmu/Pods-PixelEmu.release.xcconfig"; sourceTree = "<group>"; };
@@ -111,12 +93,11 @@
 		86E4C2EF5B29D1271A65F62E /* Pods-PixelEmu-PixelEmuUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu-PixelEmuUITests.release.xcconfig"; path = "Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests.release.xcconfig"; sourceTree = "<group>"; };
 		886027EC5BD62B0B85C87910 /* Pods-PixelEmuTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmuTests.release.xcconfig"; path = "Target Support Files/Pods-PixelEmuTests/Pods-PixelEmuTests.release.xcconfig"; sourceTree = "<group>"; };
 		A4606BE077067A560D847119 /* Pods-PixelEmuTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmuTests.debug.xcconfig"; path = "Target Support Files/Pods-PixelEmuTests/Pods-PixelEmuTests.debug.xcconfig"; sourceTree = "<group>"; };
+		D9E28C1D7CA0DA17FA63E1F6 /* Pods_PixelEmu.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PixelEmu.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E806E9F42C97E1B10081D3E8 /* PixelEmu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PixelEmu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E806E9F92C97E1B10081D3E8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E806E9FB2C97E1B20081D3E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E806E9FE2C97E1B20081D3E8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		E806EA042C97E1B20081D3E8 /* PixelEmuTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PixelEmuTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E806EA0E2C97E1B20081D3E8 /* PixelEmuUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PixelEmuUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E806EA2C2C982E8B0081D3E8 /* CurrentFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentFile.swift; sourceTree = "<group>"; };
 		E806EA312C9935D00081D3E8 /* GraphicsParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphicsParser.swift; sourceTree = "<group>"; };
 		E806EA592C9A834D0081D3E8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -135,41 +116,35 @@
 		E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveManagementView.swift; sourceTree = "<group>"; };
 		E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEntryView.swift; sourceTree = "<group>"; };
+		E8293CC92E28B6B20052BEA4 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
+		E8293CCD2E2A05DE0052BEA4 /* EmulatorWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatorWrapper.swift; sourceTree = "<group>"; };
 		E82A46F72D9B41210059BB67 /* PixelEmu-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PixelEmu-Info.plist"; sourceTree = "<group>"; };
 		E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelEmuApp.swift; sourceTree = "<group>"; };
-		E84B3A8B2D016205003E0061 /* GBABackupFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBABackupFile.swift; sourceTree = "<group>"; };
+		E84B3A8B2D016205003E0061 /* GBBackupFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBBackupFile.swift; sourceTree = "<group>"; };
 		E84EE44E2D04024700CF15ED /* GBASaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBASaveState.swift; sourceTree = "<group>"; };
 		E84EE4502D0403B000CF15ED /* GBAStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateView.swift; sourceTree = "<group>"; };
+		E88C68482E2AFEB500A7085E /* GBCGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBCGame.swift; sourceTree = "<group>"; };
+		E88C684C2E2B017D00A7085E /* GamesListViewInner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListViewInner.swift; sourceTree = "<group>"; };
 		E89681A62CD440CF00F7A316 /* StateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManager.swift; sourceTree = "<group>"; };
 		E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerMappingsView.swift; sourceTree = "<group>"; };
 		E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerMappingButtonView.swift; sourceTree = "<group>"; };
 		E896C28C2CA67FFA008161AA /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		E8A214EC2CD052B700173E06 /* OrientationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationInfo.swift; sourceTree = "<group>"; };
 		E8A214EE2CD0553800173E06 /* DualScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DualScreenView.swift; sourceTree = "<group>"; };
-		E8A334012CFABD6600765ABB /* GBATouchControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBATouchControlsView.swift; sourceTree = "<group>"; };
-		E8A334032CFACF8C00765ABB /* GBAScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAScreenView.swift; sourceTree = "<group>"; };
-		E8A334052CFAD03A00765ABB /* GBAScreenViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAScreenViewWrapper.swift; sourceTree = "<group>"; };
-		E8A5893D2D02C01C009D4337 /* DSSaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSSaveManagementView.swift; sourceTree = "<group>"; };
-		E8A5893F2D02C030009D4337 /* GBASaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBASaveManagementView.swift; sourceTree = "<group>"; };
-		E8A589412D02C389009D4337 /* GBASaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBASaveEntry.swift; sourceTree = "<group>"; };
-		E8A589452D03EA8D009D4337 /* GBAMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAMenuView.swift; sourceTree = "<group>"; };
+		E8A334012CFABD6600765ABB /* GBTouchControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBTouchControlsView.swift; sourceTree = "<group>"; };
+		E8A334032CFACF8C00765ABB /* GBScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBScreenView.swift; sourceTree = "<group>"; };
+		E8A334052CFAD03A00765ABB /* GBScreenViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBScreenViewWrapper.swift; sourceTree = "<group>"; };
+		E8A5893D2D02C01C009D4337 /* MainSaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSaveManagementView.swift; sourceTree = "<group>"; };
 		E8A589472D03ED2E009D4337 /* GBAStateEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateEntriesView.swift; sourceTree = "<group>"; };
-		E8A589492D03EEE2009D4337 /* GBAStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateManager.swift; sourceTree = "<group>"; };
-		E8AE9BF42D0637A600A834EC /* GBAEntryModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAEntryModal.swift; sourceTree = "<group>"; };
 		E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDialog.swift; sourceTree = "<group>"; };
 		E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeGameDialog.swift; sourceTree = "<group>"; };
 		E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff2; sourceTree = "<group>"; };
 		E8BA681D2CC49A3900CE7E54 /* DepartureMono.woff */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff; sourceTree = "<group>"; };
 		E8BA681E2CC49A3900CE7E54 /* DepartureMono.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.otf; sourceTree = "<group>"; };
 		E8BBBC672CF96AD10065EF4E /* GBAGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAGame.swift; sourceTree = "<group>"; };
-		E8BBBC692CF96AEA0065EF4E /* DSLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSLibraryView.swift; sourceTree = "<group>"; };
-		E8BBBC6B2CF96CAB0065EF4E /* GBALibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBALibraryView.swift; sourceTree = "<group>"; };
-		E8BBBC7F2CF9847B0065EF4E /* GBAListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAListView.swift; sourceTree = "<group>"; };
-		E8BBBC812CF9870D0065EF4E /* GBAEntryViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAEntryViewWrapper.swift; sourceTree = "<group>"; };
-		E8BBBC832CF987790065EF4E /* GBAEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAEntryView.swift; sourceTree = "<group>"; };
+		E8BBBC692CF96AEA0065EF4E /* MainLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainLibraryView.swift; sourceTree = "<group>"; };
 		E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtworkService.swift; sourceTree = "<group>"; };
 		E8BBBC872CFA91090065EF4E /* gba_bios.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = gba_bios.bin; sourceTree = "<group>"; };
-		E8BBBC912CFA9A820065EF4E /* GBAGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAGameView.swift; sourceTree = "<group>"; };
 		E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreen.swift; sourceTree = "<group>"; };
 		E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScreenView.swift; sourceTree = "<group>"; };
 		E8C245E82CBCAA7300B6DF67 /* drastic_bios_readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = drastic_bios_readme.txt; path = "../../../../rust-projects/ds-emulator/desktop/freebios/drastic_bios_readme.txt"; sourceTree = "<group>"; };
@@ -191,6 +166,9 @@
 		E8EE5D962CC3491A00CD77B6 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModal.swift; sourceTree = "<group>"; };
 		E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		E8F1EE432E2CC2D9009F7301 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
+		E8F1EE462E2CC31B009F7301 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		E8F1EE492E2CC46B009F7301 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		F6D72E464429EADD40F6E67D /* Pods-PixelEmu-PixelEmuUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; path = "Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -201,20 +179,8 @@
 			files = (
 				E8BBBC7E2CF981510065EF4E /* GBAEmulatorMobile in Frameworks */,
 				E806EA302C991CF70081D3E8 /* DSEmulatorMobile in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E806EA012C97E1B20081D3E8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E806EA0B2C97E1B20081D3E8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				E8293CBE2E28AD240052BEA4 /* GBCEmulatorMobile in Frameworks */,
+				0B580D3BD94A71D8FFE5F6C8 /* Pods_PixelEmu.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,6 +190,7 @@
 		19D49655ECDEBBE8636FE769 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D9E28C1D7CA0DA17FA63E1F6 /* Pods_PixelEmu.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -244,6 +211,7 @@
 		E806E9EB2C97E1B10081D3E8 = {
 			isa = PBXGroup;
 			children = (
+				E8F1EE472E2CC31B009F7301 /* shaders */,
 				E806EA992CA1284B0081D3E8 /* .gitignore */,
 				E806E9F62C97E1B10081D3E8 /* PixelEmu */,
 				E806E9F52C97E1B10081D3E8 /* Products */,
@@ -256,8 +224,6 @@
 			isa = PBXGroup;
 			children = (
 				E806E9F42C97E1B10081D3E8 /* PixelEmu.app */,
-				E806EA042C97E1B20081D3E8 /* PixelEmuTests.xctest */,
-				E806EA0E2C97E1B20081D3E8 /* PixelEmuUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -305,14 +271,15 @@
 		E806EA642C9E9B290081D3E8 /* util */ = {
 			isa = PBXGroup;
 			children = (
+				E8293CCD2E2A05DE0052BEA4 /* EmulatorWrapper.swift */,
 				E8BBBC852CFA71A20065EF4E /* ArtworkService.swift */,
 				E896C28C2CA67FFA008161AA /* AudioManager.swift */,
 				E806EA732CA0EE100081D3E8 /* BackupFile.swift */,
 				E806EA7B2CA115FA0081D3E8 /* CloudService.swift */,
+				E8F1EE492E2CC46B009F7301 /* Renderer.swift */,
 				E8EE5DA32CC37A8300CD77B6 /* ColorExtension.swift */,
 				E8EE5D962CC3491A00CD77B6 /* Colors.swift */,
-				E84B3A8B2D016205003E0061 /* GBABackupFile.swift */,
-				E8A589492D03EEE2009D4337 /* GBAStateManager.swift */,
+				E84B3A8B2D016205003E0061 /* GBBackupFile.swift */,
 				E806EA312C9935D00081D3E8 /* GraphicsParser.swift */,
 				E8A214EC2CD052B700173E06 /* OrientationInfo.swift */,
 				E89681A62CD440CF00F7A316 /* StateManager.swift */,
@@ -323,12 +290,13 @@
 		E806EA652C9E9B340081D3E8 /* models */ = {
 			isa = PBXGroup;
 			children = (
+				E8293CC92E28B6B20052BEA4 /* Playable.swift */,
 				E806EA5D2C9BD6420081D3E8 /* Game.swift */,
 				E8BBBC672CF96AD10065EF4E /* GBAGame.swift */,
-				E8A589412D02C389009D4337 /* GBASaveEntry.swift */,
 				E806EAA32CA3B2300081D3E8 /* SaveEntry.swift */,
 				E8C245F72CBE043B00B6DF67 /* SaveState.swift */,
 				E84EE44E2D04024700CF15ED /* GBASaveState.swift */,
+				E88C68482E2AFEB500A7085E /* GBCGame.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -358,6 +326,26 @@
 			path = json;
 			sourceTree = "<group>";
 		};
+		E8293CC12E28AE680052BEA4 /* GB */ = {
+			isa = PBXGroup;
+			children = (
+				E8A334032CFACF8C00765ABB /* GBScreenView.swift */,
+				E8A334052CFAD03A00765ABB /* GBScreenViewWrapper.swift */,
+				E8A334012CFABD6600765ABB /* GBTouchControlsView.swift */,
+			);
+			path = GB;
+			sourceTree = "<group>";
+		};
+		E8293CC22E28AE6E0052BEA4 /* NDS */ = {
+			isa = PBXGroup;
+			children = (
+				E8A214EE2CD0553800173E06 /* DualScreenView.swift */,
+				E8C245EE2CBCC36F00B6DF67 /* DualScreenViewWrapper.swift */,
+				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
+			);
+			path = NDS;
+			sourceTree = "<group>";
+		};
 		E8C245E72CBCAA5000B6DF67 /* bin */ = {
 			isa = PBXGroup;
 			children = (
@@ -372,18 +360,13 @@
 		E8C245F12CBCC54F00B6DF67 /* game */ = {
 			isa = PBXGroup;
 			children = (
-				E8A214EE2CD0553800173E06 /* DualScreenView.swift */,
-				E8C245EE2CBCC36F00B6DF67 /* DualScreenViewWrapper.swift */,
-				E8C245F52CBDBA4500B6DF67 /* GameMenuView.swift */,
+				E8F1EE432E2CC2D9009F7301 /* MetalView.swift */,
+				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
 				E8C245E12CB0F4E300B6DF67 /* GameScreen.swift */,
 				E8C245E32CB0F88B00B6DF67 /* GameScreenView.swift */,
-				E806EA5F2C9BF9840081D3E8 /* GameView.swift */,
-				E8BBBC912CFA9A820065EF4E /* GBAGameView.swift */,
-				E8A589452D03EA8D009D4337 /* GBAMenuView.swift */,
-				E8A334032CFACF8C00765ABB /* GBAScreenView.swift */,
-				E8A334052CFAD03A00765ABB /* GBAScreenViewWrapper.swift */,
-				E8A334012CFABD6600765ABB /* GBATouchControlsView.swift */,
-				E806EA772CA1078F0081D3E8 /* TouchControlsView.swift */,
+				E8C245F52CBDBA4500B6DF67 /* GameMenuView.swift */,
+				E8293CC22E28AE6E0052BEA4 /* NDS */,
+				E8293CC12E28AE680052BEA4 /* GB */,
 			);
 			path = game;
 			sourceTree = "<group>";
@@ -391,23 +374,19 @@
 		E8C245F22CBCC55500B6DF67 /* main */ = {
 			isa = PBXGroup;
 			children = (
-				E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */,
-				E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */,
-				E8BBBC692CF96AEA0065EF4E /* DSLibraryView.swift */,
-				E8A5893D2D02C01C009D4337 /* DSSaveManagementView.swift */,
+				E8A5893D2D02C01C009D4337 /* MainSaveManagementView.swift */,
+				E8BBBC692CF96AEA0065EF4E /* MainLibraryView.swift */,
 				E806EAA52CA3B3540081D3E8 /* GameEntryView.swift */,
-				E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */,
 				E806EA792CA1117E0081D3E8 /* GamesListView.swift */,
-				E8BBBC832CF987790065EF4E /* GBAEntryView.swift */,
-				E8BBBC812CF9870D0065EF4E /* GBAEntryViewWrapper.swift */,
-				E8BBBC6B2CF96CAB0065EF4E /* GBALibraryView.swift */,
-				E8BBBC7F2CF9847B0065EF4E /* GBAListView.swift */,
-				E8A5893F2D02C030009D4337 /* GBASaveManagementView.swift */,
+				E8DF26BB2CC5F43800A88821 /* GameEntryViewWrapper.swift */,
+				E89681AC2CD6D68500F7A316 /* ControllerMappingButtonView.swift */,
 				E8EE5D892CC2227600CD77B6 /* ImportGamesView.swift */,
+				E89681A82CD561A100F7A316 /* ControllerMappingsView.swift */,
 				E8EE5D872CC2221600CD77B6 /* LibraryView.swift */,
 				E8EE5D922CC238F500CD77B6 /* NavigationBarView.swift */,
 				E806EA9F2CA3AD080081D3E8 /* SaveManagementView.swift */,
 				E806EA592C9A834D0081D3E8 /* SettingsView.swift */,
+				E88C684C2E2B017D00A7085E /* GamesListViewInner.swift */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -442,7 +421,6 @@
 				E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */,
 				E8EE5D992CC35F8B00CD77B6 /* AlertModal.swift */,
 				E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */,
-				E8AE9BF42D0637A600A834EC /* GBAEntryModal.swift */,
 			);
 			path = modals;
 			sourceTree = "<group>";
@@ -455,6 +433,14 @@
 				E806EA9D2CA2498B0081D3E8 /* FileJSON.swift */,
 			);
 			path = serializable;
+			sourceTree = "<group>";
+		};
+		E8F1EE472E2CC31B009F7301 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				E8F1EE462E2CC31B009F7301 /* Shaders.metal */,
+			);
+			path = shaders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -478,49 +464,11 @@
 			packageProductDependencies = (
 				E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */,
 				E8BBBC7D2CF981510065EF4E /* GBAEmulatorMobile */,
+				E8293CBD2E28AD240052BEA4 /* GBCEmulatorMobile */,
 			);
-			productName = "NDS Plus";
+			productName = PixelEmu;
 			productReference = E806E9F42C97E1B10081D3E8 /* PixelEmu.app */;
 			productType = "com.apple.product-type.application";
-		};
-		E806EA032C97E1B20081D3E8 /* PixelEmuTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E806EA1B2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuTests" */;
-			buildPhases = (
-				68E013BA5975AFC704C2EC49 /* [CP] Check Pods Manifest.lock */,
-				E806EA002C97E1B20081D3E8 /* Sources */,
-				E806EA012C97E1B20081D3E8 /* Frameworks */,
-				E806EA022C97E1B20081D3E8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E806EA062C97E1B20081D3E8 /* PBXTargetDependency */,
-			);
-			name = PixelEmuTests;
-			productName = "NDS PlusTests";
-			productReference = E806EA042C97E1B20081D3E8 /* PixelEmuTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		E806EA0D2C97E1B20081D3E8 /* PixelEmuUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E806EA1E2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuUITests" */;
-			buildPhases = (
-				E5FE161C9202045C777F415C /* [CP] Check Pods Manifest.lock */,
-				E806EA0A2C97E1B20081D3E8 /* Sources */,
-				E806EA0B2C97E1B20081D3E8 /* Frameworks */,
-				E806EA0C2C97E1B20081D3E8 /* Resources */,
-				F70EE5EB1E2D31EA9C2AE0E0 /* [CP] Embed Pods Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E806EA102C97E1B20081D3E8 /* PBXTargetDependency */,
-			);
-			name = PixelEmuUITests;
-			productName = "NDS PlusUITests";
-			productReference = E806EA0E2C97E1B20081D3E8 /* PixelEmuUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -534,14 +482,6 @@
 				TargetAttributes = {
 					E806E9F32C97E1B10081D3E8 = {
 						CreatedOnToolsVersion = 15.4;
-					};
-					E806EA032C97E1B20081D3E8 = {
-						CreatedOnToolsVersion = 15.4;
-						TestTargetID = E806E9F32C97E1B10081D3E8;
-					};
-					E806EA0D2C97E1B20081D3E8 = {
-						CreatedOnToolsVersion = 15.4;
-						TestTargetID = E806E9F32C97E1B10081D3E8;
 					};
 				};
 			};
@@ -557,14 +497,13 @@
 			packageReferences = (
 				E806EA2E2C991CF70081D3E8 /* XCLocalSwiftPackageReference "../../rust-projects/ds-emulator/mobile/DSEmulatorMobile" */,
 				E8BBBC7C2CF981510065EF4E /* XCLocalSwiftPackageReference "../../rust-projects/gba-emulator/mobile/GBAEmulatorMobile" */,
+				E8293CBC2E28AD240052BEA4 /* XCLocalSwiftPackageReference "../../rust-projects/gbc-plus/mobile/GBCEmulatorMobile" */,
 			);
 			productRefGroup = E806E9F52C97E1B10081D3E8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				E806E9F32C97E1B10081D3E8 /* PixelEmu */,
-				E806EA032C97E1B20081D3E8 /* PixelEmuTests */,
-				E806EA0D2C97E1B20081D3E8 /* PixelEmuUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -586,20 +525,6 @@
 				E806E9FF2C97E1B20081D3E8 /* Preview Assets.xcassets in Resources */,
 				E806E9FC2C97E1B20081D3E8 /* Assets.xcassets in Resources */,
 				E8C245EB2CBCAA7300B6DF67 /* drastic_bios_readme.txt in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E806EA022C97E1B20081D3E8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E806EA0C2C97E1B20081D3E8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,67 +570,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		68E013BA5975AFC704C2EC49 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PixelEmuTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E5FE161C9202045C777F415C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PixelEmu-PixelEmuUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F70EE5EB1E2D31EA9C2AE0E0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -718,49 +582,49 @@
 				E8EE5D862CC2216300CD77B6 /* CurrentView.swift in Sources */,
 				E8BBBC682CF96AD10065EF4E /* GBAGame.swift in Sources */,
 				E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */,
+				E88C684D2E2B017D00A7085E /* GamesListViewInner.swift in Sources */,
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
+				E88C68492E2AFEB500A7085E /* GBCGame.swift in Sources */,
 				E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */,
-				E8A589402D02C030009D4337 /* GBASaveManagementView.swift in Sources */,
 				E806EA9C2CA246760081D3E8 /* DriveResponse.swift in Sources */,
+				E8F1EE482E2CC31B009F7301 /* Shaders.metal in Sources */,
 				E806EAA42CA3B2300081D3E8 /* SaveEntry.swift in Sources */,
+				E8F1EE4A2E2CC46B009F7301 /* Renderer.swift in Sources */,
 				E89681A92CD561A100F7A316 /* ControllerMappingsView.swift in Sources */,
+				E8F1EE442E2CC2D9009F7301 /* MetalView.swift in Sources */,
 				E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */,
 				E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */,
 				E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */,
-				E8A589462D03EA8D009D4337 /* GBAMenuView.swift in Sources */,
 				E8A589482D03ED2E009D4337 /* GBAStateEntriesView.swift in Sources */,
-				E8BBBC6A2CF96AEA0065EF4E /* DSLibraryView.swift in Sources */,
+				E8BBBC6A2CF96AEA0065EF4E /* MainLibraryView.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
 				E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */,
 				E84EE4512D0403B000CF15ED /* GBAStateView.swift in Sources */,
-				E8BBBC822CF9870D0065EF4E /* GBAEntryViewWrapper.swift in Sources */,
 				E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */,
 				E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */,
 				E82A46FA2D9B41380059BB67 /* PixelEmuApp.swift in Sources */,
 				E806EA5E2C9BD6420081D3E8 /* Game.swift in Sources */,
-				E8A589422D02C389009D4337 /* GBASaveEntry.swift in Sources */,
 				E84EE44F2D04024700CF15ED /* GBASaveState.swift in Sources */,
 				E8BBBC862CFA71A20065EF4E /* ArtworkService.swift in Sources */,
 				E806EA322C9935D00081D3E8 /* GraphicsParser.swift in Sources */,
 				E8EE5D932CC238F500CD77B6 /* NavigationBarView.swift in Sources */,
 				E8A214EF2CD0553800173E06 /* DualScreenView.swift in Sources */,
 				E8DF26C02CC5FA5000A88821 /* LoadStateEntryView.swift in Sources */,
-				E8AE9BF52D0637A600A834EC /* GBAEntryModal.swift in Sources */,
 				E806E9FA2C97E1B10081D3E8 /* ContentView.swift in Sources */,
 				E806EA722CA0DA720081D3E8 /* GameEntry.swift in Sources */,
-				E8A5893E2D02C01C009D4337 /* DSSaveManagementView.swift in Sources */,
+				E8A5893E2D02C01C009D4337 /* MainSaveManagementView.swift in Sources */,
 				E896C28D2CA67FFA008161AA /* AudioManager.swift in Sources */,
 				E8EE5D8A2CC2227600CD77B6 /* ImportGamesView.swift in Sources */,
-				E8A5894A2D03EEE2009D4337 /* GBAStateManager.swift in Sources */,
 				E8EE5DA42CC37A8300CD77B6 /* ColorExtension.swift in Sources */,
-				E84B3A8C2D016205003E0061 /* GBABackupFile.swift in Sources */,
+				E84B3A8C2D016205003E0061 /* GBBackupFile.swift in Sources */,
 				E8C246022CBE08D600B6DF67 /* SaveStateView.swift in Sources */,
 				E8A214ED2CD052B700173E06 /* OrientationInfo.swift in Sources */,
 				E8EE5D9A2CC35F8B00CD77B6 /* AlertModal.swift in Sources */,
-				E8A334062CFAD03A00765ABB /* GBAScreenViewWrapper.swift in Sources */,
+				E8293CCE2E2A05E00052BEA4 /* EmulatorWrapper.swift in Sources */,
+				E8A334062CFAD03A00765ABB /* GBScreenViewWrapper.swift in Sources */,
 				E8EE5D952CC342CA00CD77B6 /* GameEntryModal.swift in Sources */,
-				E8A334042CFACF8C00765ABB /* GBAScreenView.swift in Sources */,
-				E8BBBC6C2CF96CAB0065EF4E /* GBALibraryView.swift in Sources */,
+				E8A334042CFACF8C00765ABB /* GBScreenView.swift in Sources */,
+				E8293CCA2E28B6C30052BEA4 /* Playable.swift in Sources */,
 				E8C245EF2CBCC36F00B6DF67 /* DualScreenViewWrapper.swift in Sources */,
 				E8C245FD2CBE06DD00B6DF67 /* SaveStateEntriesView.swift in Sources */,
 				E8DF26BE2CC5F99600A88821 /* LoadStatesView.swift in Sources */,
@@ -768,47 +632,17 @@
 				E8EE5D972CC3491A00CD77B6 /* Colors.swift in Sources */,
 				E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */,
 				E8C245F82CBE043B00B6DF67 /* SaveState.swift in Sources */,
-				E8BBBC842CF987790065EF4E /* GBAEntryView.swift in Sources */,
-				E8A334022CFABD6600765ABB /* GBATouchControlsView.swift in Sources */,
+				E8A334022CFABD6600765ABB /* GBTouchControlsView.swift in Sources */,
 				E806EA602C9BF9840081D3E8 /* GameView.swift in Sources */,
 				E806EAA62CA3B3540081D3E8 /* GameEntryView.swift in Sources */,
 				E806EA7C2CA115FA0081D3E8 /* CloudService.swift in Sources */,
-				E8BBBC922CFA9A820065EF4E /* GBAGameView.swift in Sources */,
 				E89681AD2CD6D68500F7A316 /* ControllerMappingButtonView.swift in Sources */,
-				E8BBBC802CF9847B0065EF4E /* GBAListView.swift in Sources */,
 				E8C245F62CBDBA4500B6DF67 /* GameMenuView.swift in Sources */,
 				E806EA2D2C982E8B0081D3E8 /* CurrentFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E806EA002C97E1B20081D3E8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E806EA0A2C97E1B20081D3E8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		E806EA062C97E1B20081D3E8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E806E9F32C97E1B10081D3E8 /* PixelEmu */;
-			targetProxy = E806EA052C97E1B20081D3E8 /* PBXContainerItemProxy */;
-		};
-		E806EA102C97E1B20081D3E8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E806E9F32C97E1B10081D3E8 /* PixelEmu */;
-			targetProxy = E806EA0F2C97E1B20081D3E8 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		E806EA162C97E1B20081D3E8 /* Debug */ = {
@@ -1006,90 +840,6 @@
 			};
 			name = Release;
 		};
-		E806EA1C2C97E1B20081D3E8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = A4606BE077067A560D847119 /* Pods-PixelEmuTests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 72VANXCC9C;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PixelEmu.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PixelEmu";
-			};
-			name = Debug;
-		};
-		E806EA1D2C97E1B20081D3E8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 886027EC5BD62B0B85C87910 /* Pods-PixelEmuTests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 72VANXCC9C;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PixelEmu.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PixelEmu";
-			};
-			name = Release;
-		};
-		E806EA1F2C97E1B20081D3E8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F6D72E464429EADD40F6E67D /* Pods-PixelEmu-PixelEmuUITests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 72VANXCC9C;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "NDS Plus";
-			};
-			name = Debug;
-		};
-		E806EA202C97E1B20081D3E8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 86E4C2EF5B29D1271A65F62E /* Pods-PixelEmu-PixelEmuUITests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 72VANXCC9C;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.annecastrillon.NDS-PlusUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "NDS Plus";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1111,30 +861,16 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E806EA1B2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E806EA1C2C97E1B20081D3E8 /* Debug */,
-				E806EA1D2C97E1B20081D3E8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E806EA1E2C97E1B20081D3E8 /* Build configuration list for PBXNativeTarget "PixelEmuUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E806EA1F2C97E1B20081D3E8 /* Debug */,
-				E806EA202C97E1B20081D3E8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
 		E806EA2E2C991CF70081D3E8 /* XCLocalSwiftPackageReference "../../rust-projects/ds-emulator/mobile/DSEmulatorMobile" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../rust-projects/ds-emulator/mobile/DSEmulatorMobile";
+		};
+		E8293CBC2E28AD240052BEA4 /* XCLocalSwiftPackageReference "../../rust-projects/gbc-plus/mobile/GBCEmulatorMobile" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../rust-projects/gbc-plus/mobile/GBCEmulatorMobile";
 		};
 		E8BBBC7C2CF981510065EF4E /* XCLocalSwiftPackageReference "../../rust-projects/gba-emulator/mobile/GBAEmulatorMobile" */ = {
 			isa = XCLocalSwiftPackageReference;
@@ -1146,6 +882,10 @@
 		E806EA2F2C991CF70081D3E8 /* DSEmulatorMobile */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DSEmulatorMobile;
+		};
+		E8293CBD2E28AD240052BEA4 /* GBCEmulatorMobile */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GBCEmulatorMobile;
 		};
 		E8BBBC7D2CF981510065EF4E /* GBAEmulatorMobile */ = {
 			isa = XCSwiftPackageProductDependency;

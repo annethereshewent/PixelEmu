@@ -25,7 +25,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E806E9F32C97E1B10081D3E8"
-               BuildableName = "NDS+.app"
+               BuildableName = "PixelEmu.app"
                BlueprintName = "PixelEmu"
                ReferencedContainer = "container:PixelEmu.xcodeproj">
             </BuildableReference>
@@ -45,9 +45,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E806EA032C97E1B20081D3E8"
-               BuildableName = "NDS PlusTests.xctest"
-               BlueprintName = "NDS PlusTests"
-               ReferencedContainer = "container:NDS Plus.xcodeproj">
+               BuildableName = "PixelEmuTests.xctest"
+               BlueprintName = "PixelEmuTests"
+               ReferencedContainer = "container:PixelEmu.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -56,9 +56,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E806EA0D2C97E1B20081D3E8"
-               BuildableName = "NDS PlusUITests.xctest"
-               BlueprintName = "NDS PlusUITests"
-               ReferencedContainer = "container:NDS Plus.xcodeproj">
+               BuildableName = "PixelEmuUITests.xctest"
+               BlueprintName = "PixelEmuUITests"
+               ReferencedContainer = "container:PixelEmu.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -78,7 +78,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E806E9F32C97E1B10081D3E8"
-            BuildableName = "NDS+.app"
+            BuildableName = "PixelEmu.app"
             BlueprintName = "PixelEmu"
             ReferencedContainer = "container:PixelEmu.xcodeproj">
          </BuildableReference>
@@ -98,7 +98,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E806E9F32C97E1B10081D3E8"
-            BuildableName = "NDS+.app"
+            BuildableName = "PixelEmu.app"
             BlueprintName = "PixelEmu"
             ReferencedContainer = "container:PixelEmu.xcodeproj">
          </BuildableReference>

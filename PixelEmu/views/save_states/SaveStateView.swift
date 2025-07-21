@@ -1,6 +1,6 @@
 //
 //  SaveStateView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/14/24.
 //
@@ -12,7 +12,7 @@ struct SaveStateView: View {
     let saveState: SaveState
     @State private var screenshot = UIImage()
     @State private var isPopoverPresented = false
-    
+
     @Binding var action: SaveStateAction
     @Binding var currentState: SaveState?
 
@@ -25,12 +25,12 @@ struct SaveStateView: View {
             VStack {
                 Image(uiImage: screenshot)
                     .resizable()
-                    .frame(width: CGFloat(SCREEN_WIDTH) * 0.5, height: CGFloat(SCREEN_HEIGHT))
+                    .frame(width: CGFloat(NDS_SCREEN_WIDTH) * 0.5, height: CGFloat(NDS_SCREEN_HEIGHT))
                 Text(saveState.saveName)
             }
         }
         .onAppear() {
-            if let image = graphicsParser.fromBytes(bytes: Array(saveState.screenshot), width: SCREEN_WIDTH, height: SCREEN_HEIGHT * 2) {
+            if let image = graphicsParser.fromBytes(bytes: Array(saveState.screenshot), width: NDS_SCREEN_WIDTH, height: NDS_SCREEN_HEIGHT * 2) {
                 screenshot = UIImage(cgImage: image)
             }
         }
@@ -58,7 +58,7 @@ struct SaveStateView: View {
                             .frame(width: 30, height: 30)
                             .foregroundColor(.green)
                         Text("Update save state")
-                        
+
                     }
                 }
                 Button() {

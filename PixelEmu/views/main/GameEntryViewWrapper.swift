@@ -1,27 +1,26 @@
 //
 //  GameEntryViewWrapper.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/20/24.
 //
 
 import SwiftUI
-import DSEmulatorMobile
 
 struct GameEntryViewWrapper: View {
     @Binding var showDeleteConfirmation: Bool
     @Binding var deleteAction: () -> Void
-    @Binding var gameToDelete: Game?
+    @Binding var gameToDelete: (any Playable)?
     @Binding var isLoadStatesPresented: Bool
-    @Binding var selectedGame: Game?
-   
-    
-    let game: Game
-    
+    @Binding var selectedGame: (any Playable)?
+    @Binding var themeColor: Color
+
+    let game: any Playable
+
     let callback: () -> Void
-    
+
     var body: some View {
-        GameEntryView(game: game) {
+        GameEntryView(game: game, themeColor: $themeColor) {
             callback()
         }
         .contextMenu {
@@ -38,7 +37,7 @@ struct GameEntryViewWrapper: View {
                     Image(systemName: "trash")
                 }
             }
-            
+
         }
     }
 }

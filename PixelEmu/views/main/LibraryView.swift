@@ -1,6 +1,6 @@
 //
 //  LibraryView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/17/24.
 //
@@ -8,6 +8,7 @@
 import SwiftUI
 import DSEmulatorMobile
 import GBAEmulatorMobile
+import GBCEmulatorMobile
 import SwiftData
 
 let TWELVE_HOURS = 60 * 60 * 12
@@ -29,12 +30,12 @@ struct LibraryView: View {
     @Binding var firmwareData: Data?
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
-    @Binding var emulator: MobileEmulator?
-    @Binding var gbaEmulator: GBAEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
-    @Binding var game: Game?
-    @Binding var gbaGame: GBAGame?
+    @Binding var game: (any Playable)?
+    @Binding var gbaGame: (any Playable)?
+    @Binding var gbcGame: (any Playable)?
     @Binding var themeColor: Color
     @Binding var isPaused: Bool
     @Binding var currentLibrary: String
@@ -43,11 +44,53 @@ struct LibraryView: View {
         VStack {
             Text("\(currentLibrary.uppercased()) library")
             TabView(selection: $currentLibrary) {
-                DSLibraryView(
+                MainLibraryView(
+                    gameType: .gbc,
                     recentColor: $recentColor,
                     allColor: $allColor,
                     filter: $filter,
                     romData: $romData,
+                    gbaBiosData: .constant(nil),
+                    bios7Data: .constant(nil),
+                    bios9Data: .constant(nil),
+                    firmwareData: .constant(nil),
+                    isRunning: $isRunning,
+                    workItem: $workItem,
+                    emulator: $emulator,
+                    gameUrl: $gameUrl,
+                    path: $path,
+                    game: $gbcGame,
+                    themeColor: $themeColor,
+                    isPaused: $isPaused
+                )
+                .tag("gbc")
+                MainLibraryView(
+                    gameType: .gba,
+                    recentColor: $recentColor,
+                    allColor: $allColor,
+                    filter: $filter,
+                    romData: $romData,
+                    gbaBiosData: $gbaBiosData,
+                    bios7Data: $bios7Data,
+                    bios9Data: $bios9Data,
+                    firmwareData: $firmwareData,
+                    isRunning: $isRunning,
+                    workItem: $workItem,
+                    emulator: $emulator,
+                    gameUrl: $gameUrl,
+                    path: $path,
+                    game: $gbaGame,
+                    themeColor: $themeColor,
+                    isPaused: $isPaused
+                )
+                .tag("gba")
+                MainLibraryView(
+                    gameType: .nds,
+                    recentColor: $recentColor,
+                    allColor: $allColor,
+                    filter: $filter,
+                    romData: $romData,
+                    gbaBiosData: $gbaBiosData,
                     bios7Data: $bios7Data,
                     bios9Data: $bios9Data,
                     firmwareData: $firmwareData,
@@ -57,25 +100,10 @@ struct LibraryView: View {
                     gameUrl: $gameUrl,
                     path: $path,
                     game: $game,
-                    themeColor: $themeColor
-                )
-                .tag("nds")
-                GBALibraryView(
-                    recentColor: $recentColor,
-                    allColor: $allColor,
-                    filter: $filter,
-                    romData: $romData,
-                    biosData: $gbaBiosData,
-                    isRunning: $isRunning,
-                    workItem: $workItem,
-                    emulator: $gbaEmulator,
-                    gameUrl: $gameUrl,
-                    path: $path,
-                    game: $gbaGame,
                     themeColor: $themeColor,
                     isPaused: $isPaused
                 )
-                .tag("gba")
+                .tag("nds")
             }.tabViewStyle(.page)
 
         }

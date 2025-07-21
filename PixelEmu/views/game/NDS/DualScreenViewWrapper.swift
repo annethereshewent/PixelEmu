@@ -1,23 +1,27 @@
 //
-//  GBAScreenViewWrapper.swift
-//  NDS Plus
+//  GameScreensViewWrapper.swift
+//  PixelEmu
 //
-//  Created by Anne Castrillon on 11/29/24.
+//  Created by Anne Castrillon on 10/13/24.
 //
 
 import SwiftUI
-import GBAEmulatorMobile
+import DSEmulatorMobile
 
-struct GBAScreenViewWrapper: View {
+struct DualScreenViewWrapper: View {
     @Binding var gameController: GameController?
-    @Binding var image: CGImage?
-    @Binding var emulator: GBAEmulator?
-    @Binding var buttonStarted: [GBAButtonEvent:Bool]
+    @Binding var topImage: CGImage?
+    @Binding var bottomImage: CGImage?
+    @Binding var emulator: (any EmulatorWrapper)?
+    @Binding var buttonStarted: [PressedButton:Bool]
     @Binding var audioManager: AudioManager?
     @Binding var isSoundOn: Bool
     @Binding var isHoldButtonsPresented: Bool
-    @Binding var heldButtons: Set<GBAButtonEvent>
+    @Binding var heldButtons: Set<PressedButton>
     @Binding var themeColor: Color
+
+    var renderingData: RenderingData
+    var renderingDataBottom: RenderingData
 
     @EnvironmentObject var orientationInfo: OrientationInfo
 
@@ -43,14 +47,8 @@ struct GBAScreenViewWrapper: View {
     }
 
     private var padding: CGFloat {
-        if orientationInfo.orientation == .portrait {
-            if gameController?.controller?.extendedGamepad == nil {
-                return 40.0
-            }
-        }
-
         if gameController?.controller?.extendedGamepad == nil {
-            return 25.0
+            return 40.0
         }
 
         return 0.0
@@ -65,19 +63,22 @@ struct GBAScreenViewWrapper: View {
     }
 
     private var rectangleWidth: CGFloat {
-        if orientationInfo.orientation == .portrait {
-            return CGFloat(GBA_SCREEN_WIDTH) * 1.8
-        }
+        switch orientationInfo.orientation {
+        case .landscape:
+            return rectangleImage!.size.height * 1.02
+        case .portrait:
+            return rectangleImage!.size.width * 1.05
 
-        return CGFloat(GBA_SCREEN_WIDTH) * 1.5
+        }
     }
 
     private var rectangleHeight: CGFloat {
-        if orientationInfo.orientation == .portrait {
-            return CGFloat(GBA_SCREEN_HEIGHT) * 2.0
+        switch orientationInfo.orientation {
+        case .landscape:
+            return rectangleImage!.size.width * 0.70
+        case .portrait:
+            return rectangleImage!.size.height * 0.9
         }
-
-        return CGFloat(GBA_SCREEN_WIDTH) * 1.1
     }
 
     private var landscapeLeading: CGFloat {
@@ -96,17 +97,38 @@ struct GBAScreenViewWrapper: View {
                     .frame(width: rectangleWidth, height: rectangleHeight )
             }
             VStack(spacing: 0) {
-                VStack {
-                    GBAScreenView(
-                        gameController: $gameController,
-                        image: $image,
-                        isHoldButtonsPresented: $isHoldButtonsPresented,
-                        themeColor: $themeColor,
-                        emulator: $emulator,
-                        heldButtons: $heldButtons
-                    )
+                if orientationInfo.orientation == .portrait {
+                    VStack {
+                        DualScreenView(
+                            gameController: $gameController,
+                            topImage: $topImage,
+                            bottomImage: $bottomImage,
+                            isHoldButtonsPresented: $isHoldButtonsPresented,
+                            themeColor: $themeColor,
+                            emulator: $emulator,
+                            heldButtons: $heldButtons,
+                            renderingData: renderingData,
+                            renderingDataBottom: renderingDataBottom
+                        )
+                    }
+                    .padding(.top, padding)
+                } else if orientationInfo.orientation == .landscape {
+                    HStack {
+                        DualScreenView(
+                            gameController: $gameController,
+                            topImage: $topImage,
+                            bottomImage: $bottomImage,
+                            isHoldButtonsPresented: $isHoldButtonsPresented,
+                            themeColor: $themeColor,
+                            emulator: $emulator,
+                            heldButtons: $heldButtons,
+                            renderingData: renderingData,
+                            renderingDataBottom: renderingDataBottom
+                        )
+                    }
+                    .padding(.top, landscapePadding)
+                    .padding(.leading, landscapeLeading)
                 }
-                .padding(.top, padding)
                 if gameController?.controller?.extendedGamepad == nil {
                     VStack(spacing: 0) {
                         HStack {
@@ -116,15 +138,15 @@ struct GBAScreenViewWrapper: View {
                                 .simultaneousGesture(
                                     DragGesture(minimumDistance: 0)
                                         .onChanged() { result in
-                                            if !buttonStarted[GBAButtonEvent.ButtonL]! {
+                                            if !buttonStarted[PressedButton.ButtonL]! {
                                                 feedbackGenerator.impactOccurred()
-                                                buttonStarted[GBAButtonEvent.ButtonL] = true
+                                                buttonStarted[PressedButton.ButtonL] = true
                                             }
-                                            emulator?.updateInput(GBAButtonEvent.ButtonL, true)
+                                            emulator?.updateInput(PressedButton.ButtonL, true)
                                         }
                                         .onEnded() { result in
-                                            buttonStarted[GBAButtonEvent.ButtonL] = false
-                                            emulator?.updateInput(GBAButtonEvent.ButtonL, false)
+                                            buttonStarted[PressedButton.ButtonL] = false
+                                            emulator?.updateInput(PressedButton.ButtonL, false)
                                         }
                                 )
                                 .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)
@@ -151,15 +173,15 @@ struct GBAScreenViewWrapper: View {
                                 .simultaneousGesture(
                                     DragGesture(minimumDistance: 0)
                                         .onChanged() { result in
-                                            if !buttonStarted[GBAButtonEvent.ButtonR]! {
+                                            if !buttonStarted[PressedButton.ButtonR]! {
                                                 feedbackGenerator.impactOccurred()
-                                                buttonStarted[GBAButtonEvent.ButtonR] = true
+                                                buttonStarted[PressedButton.ButtonR] = true
                                             }
-                                            emulator?.updateInput(GBAButtonEvent.ButtonR, true)
+                                            emulator?.updateInput(PressedButton.ButtonR, true)
                                         }
                                         .onEnded() { result in
-                                            buttonStarted[GBAButtonEvent.ButtonR] = false
-                                            emulator?.updateInput(GBAButtonEvent.ButtonR, false)
+                                            buttonStarted[PressedButton.ButtonR] = false
+                                            emulator?.updateInput(PressedButton.ButtonR, false)
                                         }
                                 )
                                 .frame(width: shoulderButton!.size.width * buttonScale, height: shoulderButton!.size.height * buttonScale)

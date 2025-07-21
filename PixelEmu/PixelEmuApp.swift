@@ -1,6 +1,6 @@
 //
 //  NDS_PlusApp.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/15/24.
 //
@@ -12,7 +12,7 @@ struct NDS_PlusApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .modelContainer(for: [Game.self, SaveState.self, GBAGame.self, GBASaveState.self])
+                .modelContainer(for: [Game.self, SaveState.self, GBAGame.self, GBASaveState.self, GBCGame.self])
                 .environmentObject(OrientationInfo())
         }
     }

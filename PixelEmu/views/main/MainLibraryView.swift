@@ -1,27 +1,34 @@
 //
-//  GBALibraryView.swift
-//  NDS Plus
+//  MainLibraryView.swift
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 11/28/24.
 //
 
 import SwiftUI
 
+import DSEmulatorMobile
 import GBAEmulatorMobile
+import GBCEmulatorMobile
 
-struct GBALibraryView: View {
+struct MainLibraryView: View {
+    let gameType: GameType
+
     @Binding var recentColor: Color
     @Binding var allColor: Color
     @Binding var filter: LibraryFilter
 
     @Binding var romData: Data?
-    @Binding var biosData: Data?
+    @Binding var gbaBiosData: Data?
+    @Binding var bios7Data: Data?
+    @Binding var bios9Data: Data?
+    @Binding var firmwareData: Data?
     @Binding var isRunning: Bool
     @Binding var workItem: DispatchWorkItem?
-    @Binding var emulator: GBAEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var gameUrl: URL?
     @Binding var path: NavigationPath
-    @Binding var game: GBAGame?
+    @Binding var game: (any Playable)?
     @Binding var themeColor: Color
     @Binding var isPaused: Bool
 
@@ -60,13 +67,16 @@ struct GBALibraryView: View {
                             .foregroundColor(allColor)
                     }
                 }
-
                 Spacer()
             }
             .padding(.top, 10)
-            GBAListView(
+            GamesListView(
+                gameType: gameType,
                 romData: $romData,
-                biosData: $biosData,
+                bios7Data: $bios7Data,
+                bios9Data: $bios9Data,
+                firmwareData: $firmwareData,
+                gbaBios: $gbaBiosData,
                 isRunning: $isRunning,
                 workItem: $workItem,
                 emulator: $emulator,
@@ -77,7 +87,8 @@ struct GBALibraryView: View {
                 themeColor: $themeColor,
                 isPaused: $isPaused
             )
-
+            Spacer()
+            Spacer()
         }
         .onAppear() {
             recentColor = themeColor

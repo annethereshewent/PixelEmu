@@ -1,29 +1,31 @@
 //
 //  GBAStateEntriesView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 12/6/24.
 //
 
 import SwiftUI
 import GBAEmulatorMobile
+import DSEmulatorMobile
 
 struct GBAStateEntriesView: View {
     @Environment(\.modelContext) private var context
 
     @State private var currentState: GBASaveState? = nil
+    private let dsEmu: MobileEmulator? = nil
 
-    @Binding var emulator: GBAEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
-    @Binding var game: GBAGame?
+    @Binding var game: (any Playable)?
 
     @Binding var biosData: Data?
     @Binding var romData: Data?
 
     @State private var action: SaveStateAction = .none
 
-    @State private var stateManager: GBAStateManager!
+    @State private var stateManager: StateManager!
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
@@ -31,8 +33,8 @@ struct GBAStateEntriesView: View {
         // create a new save state
 
         if let emu = emulator {
-            let dataPtr = emu.createSaveState()
-            let compressedLength = emu.compressedLength()
+            let dataPtr = try! emu.createSaveState()
+            let compressedLength = try! emu.compressedLength()
 
             let unsafeBufferPtr = UnsafeBufferPointer<UInt8>(start: dataPtr, count: Int(compressedLength))
 
@@ -42,7 +44,7 @@ struct GBAStateEntriesView: View {
             let saveName = "state_\(timestamp).save"
 
             do {
-                try stateManager.createSaveState(
+                try stateManager.createGbaSaveState(
                     data: data,
                     saveName: saveName,
                     timestamp: timestamp,
@@ -57,7 +59,7 @@ struct GBAStateEntriesView: View {
 
     private func loadSaveState() {
         do {
-            try stateManager.loadSaveState(currentState: currentState)
+            try stateManager.loadGbaSaveState(currentState: currentState)
         } catch {
             print(error)
         }
@@ -71,9 +73,9 @@ struct GBAStateEntriesView: View {
     }
 
     private func deleteSaveState() {
-        if let saveState = currentState, let game = game {
-            if let index = game.saveStates.firstIndex(of: saveState) {
-                game.saveStates.remove(at: index)
+        if let saveState = currentState, let game = game as! GBAGame? {
+            if let index = game.gbaSaveStates!.firstIndex(of: saveState) {
+                game.gbaSaveStates!.remove(at: index)
                 context.delete(saveState)
             }
         }
@@ -97,7 +99,7 @@ struct GBAStateEntriesView: View {
             ScrollView {
                 if let game = game {
                     LazyVGrid(columns: columns) {
-                        ForEach(game.saveStates.sorted { $0.compare($1) }) { saveState in
+                        ForEach(game.gbaSaveStates!.sorted { $0.compare($1) }) { saveState in
                             GBAStateView(
                                 saveState: saveState,
                                 action: $action,
@@ -111,12 +113,15 @@ struct GBAStateEntriesView: View {
         }
         .onAppear() {
             if let emu = emulator, let game = game, let biosData = biosData, let romData = romData {
-                stateManager = GBAStateManager(
+                stateManager = StateManager(
                     emu: emu,
                     game: game,
                     context: context,
                     biosData: biosData,
-                    romData: romData
+                    bios7Data: nil,
+                    bios9Data: nil,
+                    romData: romData,
+                    firmwareData: nil
                 )
             }
         }

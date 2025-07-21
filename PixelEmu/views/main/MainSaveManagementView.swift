@@ -1,6 +1,6 @@
 //
-//  DSSaveManagementView.swift
-//  NDS Plus
+//  MainSaveManagementView.swift
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 12/5/24.
 //
@@ -9,7 +9,8 @@ import SwiftUI
 import SwiftData
 import GoogleSignIn
 
-struct DSSaveManagementView: View {
+struct MainSaveManagementView: View {
+    let gameType: GameType
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
     @Binding var saveEntries: [SaveEntry]
@@ -30,6 +31,8 @@ struct DSSaveManagementView: View {
     @State private var deleteAction: () -> Void = {}
 
     @Query private var games: [Game]
+    @Query private var gbaGames: [GBAGame]
+    @Query private var gbcGames: [GBCGame]
 
     private let successTitle = "Success!"
 
@@ -37,14 +40,14 @@ struct DSSaveManagementView: View {
         ZStack {
             ScrollView {
                 if saveEntries.count > 0 {
-                    Text("NDS cloud saves")
+                    Text("\(gameType.getConsoleName()) cloud saves")
                         .foregroundColor(Colors.primaryColor)
                     LazyVGrid(columns: columns) {
                         ForEach(saveEntries, id: \.game.gameName) { saveEntry in
-                            GameEntryView(game: saveEntry.game) {
+                            GameEntryView(game: saveEntry.game, themeColor: $themeColor) {
                                 if cloudEntry == saveEntry {
                                     cloudEntry = nil
-                                    
+
                                 } else {
                                     cloudEntry = saveEntry
                                 }
@@ -56,11 +59,11 @@ struct DSSaveManagementView: View {
                     }
                 }
                 if localSaves.count > 0 {
-                    Text("NDS local saves")
+                    Text("\(gameType.getConsoleName()) local saves")
                         .foregroundColor(Colors.primaryColor)
                     LazyVGrid(columns: columns) {
                         ForEach(localSaves, id: \.game.gameName) { saveEntry in
-                            GameEntryView(game: saveEntry.game) {
+                            GameEntryView(game: saveEntry.game, themeColor: $themeColor) {
                                 if localEntry == saveEntry {
                                     localEntry = nil
                                 } else {
@@ -74,25 +77,46 @@ struct DSSaveManagementView: View {
                 if loading {
                     ProgressView()
                 }
-                
+
             }
             .onAppear {
                 if user != nil {
-                    loading = true
-                    Task {
-                        if let saveEntries = await cloudService?.getDsSaves(games: games) {
-                            self.saveEntries = saveEntries
+                    if games.count > 0 {
+                        loading = true
+                        Task {
+                            switch gameType {
+                            case .nds:
+                                if let saveEntries = await cloudService?.getSaves(games: games, saveType: .nds) {
+                                    self.saveEntries = saveEntries
+                                }
+                                loading = false
+                            case .gba:
+                                if let saveEntries = await cloudService?.getSaves(games: gbaGames, saveType: .gba) {
+                                    self.saveEntries = saveEntries
+                                }
+                                loading = false
+                            case .gbc:
+                                if let saveEntries = await cloudService?.getSaves(games: gbcGames, saveType: .gbc) {
+                                    self.saveEntries = saveEntries
+                                } else {
+                                    print("couldn't find em!")
+                                }
+                            }
+
                         }
-                        loading = false
                     }
                 }
                 // get any local saves
-                localSaves = BackupFile.getLocalSaves(games: games)
+                switch gameType {
+                case .nds: localSaves = BackupFile.getLocalSaves(games: games)
+                case .gba: localSaves = BackupFile.getLocalGBSaves(games: gbaGames, gameType: .gba)
+                case .gbc: localSaves = BackupFile.getLocalGBSaves(games: gbcGames, gameType: .gbc)
+                }
             }
             .onTapGesture {
                 cloudEntry = nil
                 localEntry = nil
-                
+
                 showDownloadAlert = false
                 showUploadAlert = false
                 showErrorAlert = false

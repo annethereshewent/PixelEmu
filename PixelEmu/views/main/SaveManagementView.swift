@@ -1,6 +1,6 @@
 //
 //  SaveManagementView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/24/24.
 //
@@ -15,15 +15,16 @@ struct SaveManagementView: View {
     @Binding var cloudService: CloudService?
     @Binding var themeColor: Color
 
-    @State private var gbaSaveEntries: [GBASaveEntry] = []
-    @State private var gbaCloudEntry: GBASaveEntry? = nil
     @State private var saveEntries: [SaveEntry] = []
+    @State private var gbaSaveEntries: [SaveEntry] = []
+    @State private var gbcSaveEntries: [SaveEntry] = []
     @State private var cloudEntry: SaveEntry? = nil
     @State private var isPresented = false
     @State private var loading = false
 
     @Query private var games: [Game]
     @Query private var gbaGames: [GBAGame]
+    @Query private var gbcGames: [GBCGame]
 
     private func handleSignInButton() {
         guard let rootViewController = (UIApplication.shared.connectedScenes.first
@@ -36,15 +37,17 @@ struct SaveManagementView: View {
                 print(error!)
                 return
             }
+
             user = result.user
             cloudService = CloudService(user: user!)
             Task {
-                saveEntries = await cloudService!.getDsSaves(games: games)
-                gbaSaveEntries = await cloudService!.getGbaSaves(games: gbaGames)
+                saveEntries = await cloudService!.getSaves(games: games, saveType: .nds)
+                gbaSaveEntries = await cloudService!.getSaves(games: gbaGames, saveType: .gba)
+                gbcSaveEntries = await cloudService!.getSaves(games: gbcGames, saveType: .gbc)
             }
         }
     }
-    
+
     var body: some View {
         VStack {
             Text("Save management")
@@ -69,17 +72,28 @@ struct SaveManagementView: View {
                 .foregroundColor(themeColor)
             }
             TabView {
-                DSSaveManagementView(
-                    saveEntries: $saveEntries,
+                MainSaveManagementView(
+                    gameType: .gbc,
+                    saveEntries: $gbcSaveEntries,
                     cloudEntry: $cloudEntry,
                     user: $user,
                     loading: $loading,
                     cloudService: $cloudService,
                     themeColor: $themeColor
                 )
-                GBASaveManagementView(
+                MainSaveManagementView(
+                    gameType: .gba,
                     saveEntries: $gbaSaveEntries,
-                    cloudEntry: $gbaCloudEntry,
+                    cloudEntry: $cloudEntry,
+                    user: $user,
+                    loading: $loading,
+                    cloudService: $cloudService,
+                    themeColor: $themeColor
+                )
+                MainSaveManagementView(
+                    gameType: .nds,
+                    saveEntries: $saveEntries,
+                    cloudEntry: $cloudEntry,
                     user: $user,
                     loading: $loading,
                     cloudService: $cloudService,

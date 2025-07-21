@@ -1,6 +1,6 @@
 //
 //  ControllerMappingButtonView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 11/2/24.
 //
@@ -10,46 +10,43 @@ import DSEmulatorMobile
 import GBAEmulatorMobile
 
 struct ControllerMappingButtonView: View {
-    var event: ButtonEvent
-    var gbaEvent: GBAButtonEvent?
-    @Binding var buttonMappings: [ButtonEvent:ButtonMapping]
-    @Binding var gbaButtonMappings: [GBAButtonEvent:ButtonMapping]
-    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
-    @Binding var gbaButtonDict: [ButtonMapping:GBAButtonEvent]
-    @Binding var awaitingInput: [ButtonEvent:Bool]
+    var pressedButton: PressedButton
+    @Binding var buttonMappings: [PressedButton:ButtonMapping]
+    @Binding var buttonDict: [ButtonMapping:PressedButton]
+    @Binding var awaitingInput: [PressedButton:Bool]
     @Binding var gameController: GameController?
 
     var defaultButton: String
     var buttonText: String
 
-    private func detectButtonPressed() -> ButtonMapping? {
+    private func detectButtonPressed() -> ButtonMapping {
         if let gamepad = gameController?.controller?.extendedGamepad {
             if gamepad.buttonA.isPressed {
-                return .a
+                return .cross
             } else if gamepad.buttonB.isPressed {
-                return .b
+                return .circle
             } else if gamepad.buttonX.isPressed {
-                return .x
+                return .square
             } else if gamepad.buttonY.isPressed {
-                return .y
+                return .triangle
             } else if gamepad.buttonMenu.isPressed {
-                return .menu
+                return .start
             } else if gamepad.buttonOptions?.isPressed ?? false {
-                return .options
+                return .select
             } else if gamepad.buttonHome?.isPressed ?? false {
                 return .home
             } else if gamepad.leftShoulder.isPressed {
-                return .leftShoulder
+                return .l1
             } else if gamepad.rightShoulder.isPressed {
-                return .rightShoulder
+                return .r1
             } else if gamepad.leftTrigger.isPressed {
-                return .leftTrigger
+                return .l2
             } else if gamepad.rightTrigger.isPressed {
-                return .rightTrigger
+                return .r2
             } else if gamepad.leftThumbstickButton?.isPressed ?? false {
-                return .leftThumbstick
+                return .leftStick
             } else if gamepad.rightThumbstickButton?.isPressed ?? false {
-                return .rightThumbstick
+                return .rightStick
             } else if gamepad.dpad.up.isPressed {
                 return .up
             } else if gamepad.dpad.down.isPressed {
@@ -59,45 +56,35 @@ struct ControllerMappingButtonView: View {
             } else if gamepad.dpad.right.isPressed {
                 return .right
             }
-
-            return nil
-        } else {
-            return .noButton
         }
+
+        return .noButton
     }
 
     var body: some View {
         Button {
-            awaitingInput[event] = true
+            awaitingInput[pressedButton] = true
             DispatchQueue.global().async {
-                while awaitingInput[event] ?? false {
-                    if let button = detectButtonPressed() {
-                        if button != .noButton {
-                            if let switchEvent = buttonEventDict[button], let oldButton = buttonMappings[event] {
-                                buttonMappings[switchEvent] = oldButton
-                            }
-                            buttonMappings[event] = button
-                            
-                            if let gbaEvent = gbaEvent {
-                                if let switchEvent = gbaButtonDict[button], let oldButton = gbaButtonMappings[gbaEvent] {
-                                    gbaButtonMappings[switchEvent] = oldButton
-                                }
-                                gbaButtonMappings[gbaEvent] = button
-                            }
+                while awaitingInput[pressedButton]! {
+                    let button = detectButtonPressed()
+                    if button != .noButton {
+                        if let switchEvent = buttonDict[button], let oldButton = buttonMappings[pressedButton] {
+                            buttonMappings[switchEvent] = oldButton
                         }
-                        awaitingInput[event] = false
+                        buttonMappings[pressedButton] = button
+                        awaitingInput[pressedButton] = false
                     }
                 }
             }
         } label: {
             HStack {
                 Text(buttonText)
-                if awaitingInput[event] ?? false {
+                if awaitingInput[pressedButton] ?? false {
                     Spacer()
                     ProgressView()
                 } else {
                     Spacer()
-                    Text(buttonMappings[event]?.description ?? defaultButton)
+                    Text(buttonMappings[pressedButton]?.description ?? defaultButton)
                         .foregroundColor(Colors.primaryColor)
                 }
 

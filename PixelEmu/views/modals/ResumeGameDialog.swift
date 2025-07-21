@@ -1,6 +1,6 @@
 //
 //  ResumeGameDialog.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/19/24.
 //
@@ -19,13 +19,13 @@ struct ResumeGameDialog: View {
                 .foregroundColor(themeColor)
                 .font(.custom("Departure Mono", size: 24))
             Text("Game is already running. Would you like to resume?")
-                
+
             HStack {
                 Button("Resume") {
                     resumeGame = true
                     settingChanged = !settingChanged
                     showDialog = false
-                    
+
                 }
                 .foregroundColor(.green)
                 .border(.gray)

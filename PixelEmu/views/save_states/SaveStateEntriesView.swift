@@ -1,6 +1,6 @@
 //
 //  SaveStateEntriesView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 10/14/24.
 //
@@ -18,14 +18,14 @@ enum SaveStateAction {
 
 struct SaveStateEntriesView: View {
     @Environment(\.modelContext) private var context
-    
+
     @State var currentState: SaveState? = nil
 
-    @Binding var emulator: MobileEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
-    @Binding var game: Game?
-    
+    @Binding var game: (any Playable)?
+
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
@@ -36,13 +36,13 @@ struct SaveStateEntriesView: View {
     @State private var stateManager: StateManager!
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-    
+
     private func createSaveState(updateState: SaveState? = nil) {
         // create a new save state
-        
+
         if let emu = emulator {
-            let dataPtr = emu.createSaveState()
-            let compressedLength = emu.compressedLength()
+            let dataPtr = try! emu.createSaveState()
+            let compressedLength = try! emu.compressedLength()
 
             let unsafeBufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(compressedLength))
 
@@ -64,7 +64,7 @@ struct SaveStateEntriesView: View {
         }
         isMenuPresented = false
     }
-    
+
     private func loadSaveState() {
         do {
             try stateManager.loadSaveState(currentState: currentState)
@@ -73,22 +73,22 @@ struct SaveStateEntriesView: View {
         }
         isMenuPresented = false
     }
-    
+
     private func updateSaveState() {
         if let currentState = currentState {
             createSaveState(updateState: currentState)
         }
     }
-    
+
     private func deleteSaveState() {
-        if let saveState = currentState, let game = game {
-            if let index = game.saveStates.firstIndex(of: saveState) {
-                game.saveStates.remove(at: index)
+        if let saveState = currentState, var game = game {
+            if let index = game.saveStates?.firstIndex(of: saveState) {
+                game.saveStates?.remove(at: index)
                 context.delete(saveState)
             }
         }
     }
-    
+
     var body: some View {
         VStack {
             HStack {
@@ -107,7 +107,7 @@ struct SaveStateEntriesView: View {
             ScrollView {
                 if let game = game {
                     LazyVGrid(columns: columns) {
-                        ForEach(game.saveStates.sorted { $0.compare($1) }) { saveState in
+                        ForEach(game.saveStates!.sorted { $0.compare($1) }) { saveState in
                             SaveStateView(
                                 saveState: saveState,
                                 action: $action,
@@ -125,6 +125,7 @@ struct SaveStateEntriesView: View {
                     emu: emu,
                     game: game,
                     context: context,
+                    biosData: nil,
                     bios7Data: bios7Data,
                     bios9Data: bios9Data,
                     romData: romData,

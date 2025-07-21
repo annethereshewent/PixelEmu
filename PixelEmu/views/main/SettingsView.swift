@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/17/24.
 //
@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 import GoogleSignIn
 import DSEmulatorMobile
 import GBAEmulatorMobile
+import GameController
 
 struct SettingsView: View {
     @Binding var bios7Data: Data?
@@ -20,7 +21,7 @@ struct SettingsView: View {
     @Binding var user: GIDGoogleUser?
     @Binding var cloudService: CloudService?
     @Binding var isSoundOn: Bool
-    
+
     @Binding var bios7Loaded: Bool
     @Binding var bios9Loaded: Bool
     @Binding var gbaBiosLoaded: Bool
@@ -29,8 +30,7 @@ struct SettingsView: View {
 
     @Binding var gameController: GameController?
 
-    @Binding var buttonEventDict: [ButtonMapping:ButtonEvent]
-    @Binding var gbaButtonDict: [ButtonMapping:GBAButtonEvent]
+    @Binding var buttonDict: [ButtonMapping:PressedButton]
 
     @State private var isActive = true
     @State private var showColorPickerModal = false
@@ -50,7 +50,7 @@ struct SettingsView: View {
             if let url = URL(string: "bios9.bin", relativeTo: location) {
                 try? data.write(to: url)
             }
-        
+
         case .firmware:
             if let url = URL(string: "firmware.bin", relativeTo: location) {
                 try? data.write(to: url)
@@ -175,6 +175,9 @@ struct SettingsView: View {
             }
             Spacer()
         }
+        .onAppear() {
+            gameController = GameController() { _ in }
+        }
         .font(.custom("Departure Mono", size: 20))
         .foregroundColor(Colors.primaryColor)
         .fileImporter(
@@ -194,12 +197,12 @@ struct SettingsView: View {
                             case .bios7:
                                 bios7Data = data
                                 bios7Loaded = true
-                                
+
                                 defaults.set(bios7Loaded, forKey: "bios7Loaded")
                             case .bios9:
                                 bios9Data = data
                                 bios9Loaded = true
-                                
+
                                 defaults.set(bios9Loaded, forKey: "bios9Loaded")
                             case .firmware:
                                 firmwareData = data
@@ -220,22 +223,21 @@ struct SettingsView: View {
                         }
                     }
                 }
-                
+
             }
-        
+
         }
         .sheet(isPresented: $isMappingsPresented) {
             ControllerMappingsView(
                 themeColor: $themeColor,
                 isPresented: $isMappingsPresented,
                 gameController: $gameController,
-                buttonEventDict: $buttonEventDict,
-                gbaButtonDict: $gbaButtonDict
+                buttonDict: $buttonDict
             )
         }
         .onChange(of: isSoundOn) {
             let defaults = UserDefaults.standard
-            
+
             defaults.setValue(isSoundOn, forKey: "isSoundOn")
         }
     }

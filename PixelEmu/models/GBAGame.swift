@@ -1,6 +1,6 @@
 //
 //  GBAGame.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 11/28/24.
 //
@@ -10,30 +10,48 @@ import SwiftData
 import UIKit
 
 @Model
-class GBAGame {
+class GBAGame: Playable {
     @Attribute(.unique)
     var gameName: String
     var bookmark: Data
     var albumArt: Data? = nil
     var lastPlayed: Date
 
+    @Transient
+    var gameIcon: Data? = nil
+
+    @Transient
+    var type: GameType = .gba
+
     @Relationship(deleteRule: .cascade, inverse: \GBASaveState.game)
-    var saveStates: [GBASaveState]
+    var gbaSaveStates: [GBASaveState]?
+
+    @Transient
+    var saveStates: [SaveState]? = nil
 
     init(gameName: String, bookmark: Data, saveStates: [GBASaveState], lastPlayed: Date) {
         self.gameName = gameName
         self.bookmark = bookmark
         self.lastPlayed = lastPlayed
-        self.saveStates = saveStates
+        self.gbaSaveStates = saveStates
     }
 
-    static func storeGame(gameName: String, data: Data, url: URL) -> GBAGame? {
+    static func storeGame(gameName: String, data: Data, url: URL, isZip: Bool) -> (any Playable)? {
         // store bookmark for later use
-        if url.startAccessingSecurityScopedResource() {
+        if isZip {
             if let bookmark = try? url.bookmarkData(options: []) {
-                return GBAGame(gameName: gameName, bookmark: bookmark, saveStates: [], lastPlayed: Date.now)
+                return GBAGame(gameName: gameName, bookmark: bookmark, saveStates: [], lastPlayed: Date.now) as any Playable
             }
         }
+        else {
+            if url.startAccessingSecurityScopedResource() {
+                if let bookmark = try? url.bookmarkData(options: []) {
+                    return GBAGame(gameName: gameName, bookmark: bookmark, saveStates: [], lastPlayed: Date.now) as any Playable
+                }
+            }
+        }
+
+
 
         return nil
     }

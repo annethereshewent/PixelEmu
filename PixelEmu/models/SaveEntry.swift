@@ -1,6 +1,6 @@
 //
 //  SaveEntry.swift
-//  NDS Plus
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 9/24/24.
 //
@@ -13,13 +13,13 @@ class SaveEntry: Equatable {
     static func == (lhs: SaveEntry, rhs: SaveEntry) -> Bool {
         lhs.game.gameName == rhs.game.gameName
     }
-    
-    let game: Game
-    
-    init(game: Game) {
+
+    let game: any Playable
+
+    init(game: any Playable) {
         self.game = game
     }
-    
+
     func copy() -> SaveEntry {
         return SaveEntry(game: game)
     }

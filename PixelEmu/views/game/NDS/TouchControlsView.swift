@@ -1,76 +1,82 @@
 //
-//  GBATouchControlsView.swift
-//  NDS Plus
+//  TouchControlsView.swift
+//  PixelEmu
 //
-//  Created by Anne Castrillon on 11/29/24.
+//  Created by Anne Castrillon on 9/22/24.
 //
 
 import SwiftUI
-import GBAEmulatorMobile
+import DSEmulatorMobile
 
-struct GBATouchControlsView: View {
+struct TouchControlsView: View {
 
     @Environment(\.presentationMode) var presentationMode
 
-    @Binding var emulator: GBAEmulator?
-    @Binding var emulatorCopy: GBAEmulator?
+    @Binding var emulator: (any EmulatorWrapper)?
     @Binding var audioManager: AudioManager?
     @Binding var workItem: DispatchWorkItem?
     @Binding var isRunning: Bool
-    @Binding var buttonStarted: [GBAButtonEvent:Bool]
+    @Binding var buttonStarted: [PressedButton:Bool]
+    @Binding var bios7Data: Data?
+    @Binding var bios9Data: Data?
+    @Binding var firmwareData: Data?
+    @Binding var romData: Data?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
     @Binding var isHoldButtonsPresented: Bool
-    @Binding var heldButtons: Set<GBAButtonEvent>
-    @Binding var isPaused: Bool
+    @Binding var heldButtons: Set<PressedButton>
 
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
-    @State private var buttons: [GBAButtonEvent:CGRect] = [GBAButtonEvent:CGRect]()
-    @State private var controlPad: [GBAButtonEvent:CGRect] = [GBAButtonEvent:CGRect]()
-    @State private var buttonsMisc: [GBAButtonEvent:CGRect] = [GBAButtonEvent:CGRect]()
+    @State private var buttons: [PressedButton:CGRect] = [PressedButton:CGRect]()
+    @State private var controlPad: [PressedButton:CGRect] = [PressedButton:CGRect]()
+    @State private var buttonsMisc: [PressedButton:CGRect] = [PressedButton:CGRect]()
 
     @EnvironmentObject var orientationInfo: OrientationInfo
 
     // for resizing images proportionately
-    private let buttonImage = UIImage(named: "GBA Buttons")
+    private let buttonImage = UIImage(named: "Buttons")
     private let controlPadImage = UIImage(named: "Control Pad")
     private let miscButtons = UIImage(named: "Buttons Misc")
     private let redButton = UIImage(named: "Red Button")
 
-    private let allButtons: Set<GBAButtonEvent> = [
-        .ButtonA,
-        .ButtonB,
-        .ButtonL,
-        .ButtonR,
-        .Down,
-        .Left,
-        .Right,
-        .Down,
-        .Select,
-        .Start
+    private let allButtons: Set<PressedButton> = [
+        PressedButton.ButtonA,
+        PressedButton.ButtonB,
+        PressedButton.ButtonL,
+        PressedButton.ButtonR,
+        PressedButton.ButtonX,
+        PressedButton.ButtonY,
+        PressedButton.Down,
+        PressedButton.Left,
+        PressedButton.Right,
+        PressedButton.Down,
+        PressedButton.Select,
+        PressedButton.Start
     ]
 
     private var buttonScale: CGFloat {
         if orientationInfo.orientation == .landscape {
-            return 1.0
+            return 0.90
         }
 
         let rect = UIScreen.main.bounds
 
         if rect.height > 852.0 {
-            return 1.6
-        } else {
             return 1.3
+        } else {
+            return 1.05
         }
     }
 
     private func releaseHapticFeedback() {
-        buttonStarted[GBAButtonEvent.ButtonA] = false
-        buttonStarted[GBAButtonEvent.ButtonB] = false
+        buttonStarted[PressedButton.ButtonA] = false
+        buttonStarted[PressedButton.ButtonB] = false
+        buttonStarted[PressedButton.ButtonY] = false
+        buttonStarted[PressedButton.ButtonX] = false
     }
 
-    private func checkForHapticFeedback(point: CGPoint, entries: [GBAButtonEvent:CGRect]) {
+    private func checkForHapticFeedback(point: CGPoint, entries: [PressedButton:CGRect]) {
         for entry in entries {
             if entry.value.contains(point) && !buttonStarted[entry.key]! {
                 feedbackGenerator.impactOccurred()
@@ -81,28 +87,30 @@ struct GBATouchControlsView: View {
     }
 
     private func initButtonState() {
-        self.buttonStarted[GBAButtonEvent.Up] = false
-        self.buttonStarted[GBAButtonEvent.Down] = false
-        self.buttonStarted[GBAButtonEvent.Left] = false
-        self.buttonStarted[GBAButtonEvent.Right] = false
+        self.buttonStarted[PressedButton.Up] = false
+        self.buttonStarted[PressedButton.Down] = false
+        self.buttonStarted[PressedButton.Left] = false
+        self.buttonStarted[PressedButton.Right] = false
 
-        self.buttonStarted[GBAButtonEvent.ButtonA] = false
-        self.buttonStarted[GBAButtonEvent.ButtonB] = false
+        self.buttonStarted[PressedButton.ButtonA] = false
+        self.buttonStarted[PressedButton.ButtonB] = false
+        self.buttonStarted[PressedButton.ButtonY] = false
+        self.buttonStarted[PressedButton.ButtonX] = false
 
-        self.buttonStarted[GBAButtonEvent.ButtonL] = false
-        self.buttonStarted[GBAButtonEvent.ButtonR] = false
+        self.buttonStarted[PressedButton.ButtonL] = false
+        self.buttonStarted[PressedButton.ButtonR] = false
 
-        self.buttonStarted[GBAButtonEvent.Start] = false
-        self.buttonStarted[GBAButtonEvent.Select] = false
+        self.buttonStarted[PressedButton.Start] = false
+        self.buttonStarted[PressedButton.Select] = false
 
-        self.buttonStarted[GBAButtonEvent.ButtonHome] = false
+        self.buttonStarted[PressedButton.Home] = false
     }
 
     private func handleControlPad(point: CGPoint) {
         self.handleInput(point: point, entries: controlPad)
     }
 
-    private func handleInput(point: CGPoint, entries: [GBAButtonEvent:CGRect]) {
+    private func handleInput(point: CGPoint, entries: [PressedButton:CGRect]) {
         if let emu = emulator {
             for entry in entries {
                 if entry.value.contains(point) {
@@ -132,10 +140,10 @@ struct GBATouchControlsView: View {
 
     private func releaseControlPad() {
         if let emu = emulator {
-            emu.updateInput(GBAButtonEvent.Up, false)
-            emu.updateInput(GBAButtonEvent.Left, false)
-            emu.updateInput(GBAButtonEvent.Right, false)
-            emu.updateInput(GBAButtonEvent.Down, false)
+            emu.updateInput(PressedButton.Up, false)
+            emu.updateInput(PressedButton.Left, false)
+            emu.updateInput(PressedButton.Right, false)
+            emu.updateInput(PressedButton.Down, false)
         }
     }
 
@@ -144,7 +152,7 @@ struct GBATouchControlsView: View {
     }
 
     private func releaseButtons() {
-        let buttons = [GBAButtonEvent.ButtonA, GBAButtonEvent.ButtonB]
+        let buttons = [PressedButton.ButtonA, PressedButton.ButtonB, PressedButton.ButtonY, PressedButton.ButtonX]
         if let emu = emulator {
             for button in buttons {
                 if !heldButtons.contains(button) {
@@ -155,20 +163,8 @@ struct GBATouchControlsView: View {
     }
 
     private func goHome() {
-        isPaused = true
-
-        // this isn't working
-        // emulator?.setPaused(true)
+        emulator?.setPaused(true)
         audioManager?.muteAudio()
-
-        workItem?.cancel()
-        workItem = nil
-
-        // this is a hack, otherwise when resuming game nothing seems to work for some reason
-        // seems like it's related to rust in some way and how it handles things.
-        // TODO: dig into this further
-        emulatorCopy = emulator
-        emulator = nil
 
         presentationMode.wrappedValue.dismiss()
     }
@@ -176,12 +172,15 @@ struct GBATouchControlsView: View {
     private func handleMiscButtons(point: CGPoint) {
         for entry in buttonsMisc {
             if entry.value.contains(point) {
-                if entry.key == .ButtonHome {
+                if entry.key != PressedButton.Home {
+                    if let emu = emulator {
+                        emu.updateInput(entry.key, true)
+                    }
+                } else {
                     goHome()
-                } else if let emu = emulator {
-                    emu.updateInput(entry.key, true)
+                    break
                 }
-            } else {
+            } else if entry.key != PressedButton.Home {
                 if let emu = emulator {
                     emu.updateInput(entry.key, false)
                 }
@@ -191,8 +190,8 @@ struct GBATouchControlsView: View {
 
     private func releaseMiscButtons() {
         if let emu = emulator {
-            emu.updateInput(GBAButtonEvent.Start, false)
-            emu.updateInput(GBAButtonEvent.Select, false)
+            emu.updateInput(PressedButton.Start, false)
+            emu.updateInput(PressedButton.Select, false)
         }
     }
 
@@ -213,10 +212,10 @@ struct GBATouchControlsView: View {
         let right = CGRect(x: (width / 3) * 2, y: 0, width: width / 3, height: height)
         let left = CGRect(x: 0, y: 0, width: width / 3, height: height)
 
-        controlPad[GBAButtonEvent.Up] = up
-        controlPad[GBAButtonEvent.Down] = down
-        controlPad[GBAButtonEvent.Left] = left
-        controlPad[GBAButtonEvent.Right] = right
+        controlPad[PressedButton.Up] = up
+        controlPad[PressedButton.Down] = down
+        controlPad[PressedButton.Left] = left
+        controlPad[PressedButton.Right] = right
     }
 
     private func calculateMiscButtons() {
@@ -237,23 +236,27 @@ struct GBATouchControlsView: View {
         let selectButton = CGRect(x: 0, y: selectY, width: width, height: height)
         let homeButton = CGRect(x:0, y: homeY, width: width, height: height)
 
-        buttonsMisc[GBAButtonEvent.Start] = startButton
-        buttonsMisc[GBAButtonEvent.Select] = selectButton
-        buttonsMisc[GBAButtonEvent.ButtonHome] = homeButton
+        buttonsMisc[PressedButton.Start] = startButton
+        buttonsMisc[PressedButton.Select] = selectButton
+        buttonsMisc[PressedButton.Home] = homeButton
 
     }
 
     private func recalculateButtons() {
         let imageWidth = buttonImage!.size.width * buttonScale
         let imageHeight = buttonImage!.size.height * buttonScale
-        let width = imageHeight * 0.61
-        let height = imageHeight * 0.61
+        let width = imageHeight * 0.35
+        let height = imageHeight * 0.35
 
-        let aButton = CGRect(x: imageWidth * 0.55, y: 0, width: width, height: height)
-        let bButton = CGRect(x: 0, y: imageHeight * 0.37, width: width, height: height)
+        let xButton = CGRect(x: imageWidth * 0.35, y: 0, width: width, height: height)
+        let yButton  = CGRect(x: 0, y: imageHeight * 0.35, width: width, height: height)
+        let aButton = CGRect(x: imageHeight * 0.69, y: imageHeight * 0.35, width: width, height: height)
+        let bButton = CGRect(x: imageWidth * 0.35, y: imageHeight * 0.69, width: width, height: height)
 
-        buttons[GBAButtonEvent.ButtonA] = aButton
-        buttons[GBAButtonEvent.ButtonB] = bButton
+        buttons[PressedButton.ButtonA] = aButton
+        buttons[PressedButton.ButtonX] = xButton
+        buttons[PressedButton.ButtonY] = yButton
+        buttons[PressedButton.ButtonB] = bButton
     }
 
     var body: some View {
@@ -273,10 +276,10 @@ struct GBATouchControlsView: View {
                                     let right = CGRect(x: (frame.maxX / 3) * 2, y: frame.minY, width: frame.width / 3, height: frame.height)
                                     let left = CGRect(x: frame.minX, y: frame.minY, width: frame.width / 3, height: frame.height)
 
-                                    controlPad[GBAButtonEvent.Up] = up
-                                    controlPad[GBAButtonEvent.Down] = down
-                                    controlPad[GBAButtonEvent.Left] = left
-                                    controlPad[GBAButtonEvent.Right] = right
+                                    controlPad[PressedButton.Up] = up
+                                    controlPad[PressedButton.Down] = down
+                                    controlPad[PressedButton.Left] = left
+                                    controlPad[PressedButton.Right] = right
                                 }
                         }
                     )
@@ -285,14 +288,14 @@ struct GBATouchControlsView: View {
                             .onChanged() { result in
                                 // you can use any of the control pad buttons here and it'll work ok
                                 // the choice to use up is arbitrary
-                                if !buttonStarted[GBAButtonEvent.Up]! {
+                                if !buttonStarted[PressedButton.Up]! {
                                     feedbackGenerator.impactOccurred()
-                                    buttonStarted[GBAButtonEvent.Up] = true
+                                    buttonStarted[PressedButton.Up] = true
                                 }
                                 handleControlPad(point: result.location)
                             }
                             .onEnded() { result in
-                                buttonStarted[GBAButtonEvent.Up] = false
+                                buttonStarted[PressedButton.Up] = false
                                 releaseControlPad()
                             }
                     )
@@ -308,8 +311,9 @@ struct GBATouchControlsView: View {
                                     handleMiscButtons(point: result.location)
                                 }
                                 .onEnded() { result in
-                                    buttonStarted[GBAButtonEvent.Start] = false
-                                    buttonStarted[GBAButtonEvent.Select] = false
+                                    buttonStarted[PressedButton.Start] = false
+                                    buttonStarted[PressedButton.Select] = false
+                                    buttonStarted[PressedButton.Home] = false
 
                                     releaseMiscButtons()
                                 }
@@ -326,7 +330,7 @@ struct GBATouchControlsView: View {
                     }
                 }
                 Spacer()
-                Image("GBA Buttons")
+                Image("Buttons")
                     .resizable()
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 0)

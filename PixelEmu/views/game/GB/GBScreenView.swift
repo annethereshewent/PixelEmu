@@ -1,6 +1,6 @@
 //
-//  GBAScreenView.swift
-//  NDS Plus
+//  GBScreenView.swift
+//  PixelEmu
 //
 //  Created by Anne Castrillon on 11/29/24.
 //
@@ -8,13 +8,16 @@
 import SwiftUI
 import GBAEmulatorMobile
 
-struct GBAScreenView: View {
+struct GBScreenView: View {
+    let gameType: GameType
     @Binding var gameController: GameController?
     @Binding var image: CGImage?
     @Binding var isHoldButtonsPresented: Bool
     @Binding var themeColor: Color
-    @Binding var emulator: GBAEmulator?
-    @Binding var heldButtons: Set<GBAButtonEvent>
+    @Binding var emulator: (any EmulatorWrapper)?
+    @Binding var heldButtons: Set<PressedButton>
+
+    var renderingData: RenderingData
 
     @EnvironmentObject var orientationInfo: OrientationInfo
 
@@ -22,18 +25,33 @@ struct GBAScreenView: View {
         switch orientationInfo.orientation {
         case .portrait:
             if gameController?.controller?.extendedGamepad == nil {
-                return GBA_SCREEN_RATIO
+                return gameType == .gba ? GBA_SCREEN_RATIO : GBC_SCREEN_RATIO
             }
 
-            return GBA_FULLSCREEN_RATIO
+            return gameType == .gba ? GBA_FULLSCREEN_RATIO : GBC_SCREEN_RATIO
         case .landscape:
             if gameController?.controller?.extendedGamepad == nil {
-                return GBA_LANDSCAPE_RATIO
+                return gameType == .gba ? GBA_LANDSCAPE_RATIO : GBC_LANDSCAPE_RATIO
             }
 
-            return GBA_LANDSCAPE_FULLSCREEN_RATIO
+            return gameType == .gba ? GBA_LANDSCAPE_FULLSCREEN_RATIO : GBC_LANDSCAPE_FULLSCREEN_RATIO
+        }
+    }
+
+    private var screenWidth: Int {
+        if gameType == .gba {
+            return GBA_SCREEN_WIDTH
         }
 
+        return GBC_SCREEN_WIDTH
+    }
+
+    private var screenHeight: Int {
+        if gameType == .gba {
+            return GBA_SCREEN_HEIGHT
+        }
+
+        return GBC_SCREEN_HEIGHT
     }
 
     private var currentHoldButtons: String {
@@ -72,10 +90,10 @@ struct GBAScreenView: View {
             Spacer()
         }
         ZStack {
-            GameScreenView(image: $image)
+            MetalView(renderingData: renderingData, width: screenWidth, height: screenHeight)
                 .frame(
-                    width: CGFloat(SCREEN_WIDTH) * CGFloat(screenRatio),
-                    height: CGFloat(SCREEN_HEIGHT) * CGFloat(screenRatio)
+                    width: CGFloat(screenWidth) * CGFloat(screenRatio),
+                    height: CGFloat(screenHeight) * CGFloat(screenRatio)
                 )
             if isHoldButtonsPresented {
                 VStack {
@@ -103,6 +121,8 @@ struct GBAScreenView: View {
             }
         }
         if gameController?.controller?.extendedGamepad != nil {
+            Spacer()
+            Spacer()
             Spacer()
         }
     }
