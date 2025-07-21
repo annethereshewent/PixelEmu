@@ -32,6 +32,7 @@ struct MainSaveManagementView: View {
 
     @Query private var games: [Game]
     @Query private var gbaGames: [GBAGame]
+    @Query private var gbcGames: [GBCGame]
 
     private let successTitle = "Success!"
 
@@ -85,17 +86,21 @@ struct MainSaveManagementView: View {
                         Task {
                             switch gameType {
                             case .nds:
-                                if let saveEntries = await cloudService?.getDsSaves(games: games) {
+                                if let saveEntries = await cloudService?.getSaves(games: games, saveType: .nds) {
                                     self.saveEntries = saveEntries
                                 }
                                 loading = false
                             case .gba:
-                                if let saveEntries = await cloudService?.getGbaSaves(games: gbaGames) {
+                                if let saveEntries = await cloudService?.getSaves(games: gbaGames, saveType: .gba) {
                                     self.saveEntries = saveEntries
                                 }
                                 loading = false
                             case .gbc:
-                                break
+                                if let saveEntries = await cloudService?.getSaves(games: gbcGames, saveType: .gbc) {
+                                    self.saveEntries = saveEntries
+                                } else {
+                                    print("couldn't find em!")
+                                }
                             }
 
                         }

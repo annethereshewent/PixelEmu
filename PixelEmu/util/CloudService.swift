@@ -195,42 +195,36 @@ class CloudService {
         return nil
     }
 
-    func getDsSaves(games: [Game]) async -> [SaveEntry] {
-        if let driveResponse = await getSavesData(saveType: .nds) {
-            var gameDictionary = [String:Game]()
-
-            for game in games {
-                gameDictionary[game.gameName] = game
-            }
-
-            var saveEntries = [SaveEntry]()
-
-            for file in driveResponse.files {
-                let gameName = file.name.replacing(".sav", with: ".nds")
-                if let game = gameDictionary[gameName] {
-                    saveEntries.append(SaveEntry(game: game))
-                }
-            }
-
-            return saveEntries
+    func getSaves(games: [any Playable], saveType: SaveType) async -> [SaveEntry] {
+        if games.count == 0 {
+            return []
         }
 
-
-        return []
-    }
-
-    func getGbaSaves(games: [any Playable]) async -> [SaveEntry] {
-        if let driveResponse = await getSavesData(saveType: .gba) {
+        if let driveResponse = await getSavesData(saveType: saveType) {
             var gameDictionary = [String:any Playable]()
 
             for game in games {
-                gameDictionary[game.gameName.replacing(".GBA", with: ".gba")] = game
+                // normalize game names so it's easier to match them with the dictionaries. that way
+                // we only need to match on gb and gba, and not GBA and gbc as well.
+                let gameName = switch saveType {
+                case .gba: game.gameName.replacing(".GBA", with: ".gba")
+                case .gbc: game.gameName.replacing(".gbc", with: ".gb")
+                case .nds: game.gameName
+                }
+
+                gameDictionary[gameName] = game
             }
 
             var saveEntries = [SaveEntry]()
 
+            let fileExtension = switch saveType {
+            case .nds: ".nds"
+            case .gba: ".gba"
+            case .gbc: ".gb"
+            }
+
             for file in driveResponse.files {
-                let gameName = file.name.replacing(".sav", with: ".gba")
+                let gameName = file.name.replacing(".sav", with: fileExtension)
                 if let game = gameDictionary[gameName] {
                     saveEntries.append(SaveEntry(game: game))
                 }
@@ -239,10 +233,8 @@ class CloudService {
             return saveEntries
         }
 
-
         return []
     }
-
     private func getSaveInfo(_ saveName: String, _ folderId: String) async -> DriveResponse? {
         let params = [
             URLQueryItem(name: "q", value: "name = \"\(saveName)\" and parents in \"\(folderId)\""),

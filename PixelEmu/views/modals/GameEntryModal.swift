@@ -29,94 +29,12 @@ struct GameEntryModal: View {
 
     private let savType = UTType(filenameExtension: "sav", conformingTo: .data)
 
-    private func downloadCloudGbaSave() {
-        // download save for offline use
-        let saveName = getGbaSaveName()
-
-        loading = true
-        Task {
-            if let save = await cloudService?.getSave(saveName: saveName, saveType: .gba) {
-                BackupFile.saveCloudFile(saveName: saveName, saveFile: save)
-                let saveEntry = SaveEntry(game: entry!.game)
-                if !localSaves.contains(saveEntry) {
-                    localSaves.append(saveEntry)
-                }
-                showDownloadAlert = true
-            } else {
-                showErrorAlert = true
-            }
-            entry = nil
-            loading = false
-        }
-    }
-
-    private func uploadGbaSave() {
-        // upload local entry to cloud
-        loading = true
-        Task {
-            if let entry = entry {
-                let saveName = getGbaSaveName()
-
-                if let saveData = BackupFile.getSave(saveName: saveName) {
-                    await self.cloudService?.uploadSave(saveName: saveName, data: saveData, saveType: .gba)
-                    loading = false
-                    if cloudSaves.firstIndex(of: entry) == nil {
-                        cloudSaves.insert(SaveEntry(game: entry.game), at: 0)
-                    }
-
-                    showUploadAlert = true
-                }
-            }
-            entry = nil
-        }
-    }
-
-    private func modifyGbaCloudSave(_ result: Result<URL, any Error>) {
-        do {
-            let url = try result.get()
-
-            if url.startAccessingSecurityScopedResource() {
-                defer {
-                    url.stopAccessingSecurityScopedResource()
-                }
-
-                let data = try Data(contentsOf: url)
-                loading = true
-
-                Task {
-                    await cloudService?.uploadSave(
-                        saveName: getGbaSaveName(),
-                        data: data,
-                        saveType: .gba
-                    )
-                    showUploadAlert = true
-
-                    loading = false
-                    entry = nil
-                }
-            }
-        } catch {
-            print(error)
-        }
-    }
-
-    private func getGbaSaveName() -> String {
-        if entry!.game.gameName.hasSuffix(".GBA") {
-            return entry!.game.gameName.replacing(".GBA", with: ".sav")
-        }
-
-        return entry!.game.gameName.replacing(".gba", with: ".sav")
-    }
-
-    private func deleteGbaSave() {
-
+    private func deleteSave(saveType: SaveType) {
         if let entry = entry {
-            let entryCopy = entry.copy()
             showDeleteDialog = true
-
-            let saveName = getGbaSaveName()
-
             if !isCloudSave {
+                let saveName = replaceExtension()
+                let entryCopy = entry
                 deleteAction = {
                     if BackupFile.deleteSave(saveName: saveName) {
                         showDeleteAlert = true
@@ -126,10 +44,12 @@ struct GameEntryModal: View {
                     }
                 }
             } else {
+                let saveName = replaceExtension()
+                let entryCopy = entry
                 deleteAction = {
                     loading = true
                     Task {
-                        let success = await cloudService?.deleteSave(saveName: saveName, saveType: .gba) ?? false
+                        let success = await cloudService?.deleteSave(saveName: saveName, saveType: saveType) ?? false
 
                         loading = false
                         if success {
@@ -147,15 +67,23 @@ struct GameEntryModal: View {
         entry = nil
     }
 
-    private func downloadCloudSave() {
+    private func getExtension() -> String {
+        return entry != nil ? String(entry!.game.gameName[entry!.game.gameName.lastIndex(of: ".")!...]) : ""
+    }
+
+    private func replaceExtension() -> String {
+        return entry != nil ? entry!.game.gameName.replacing(getExtension(), with: ".sav") : ""
+    }
+
+    private func downloadCloudSave(saveType: SaveType) {
         // download save for offline use
-        let saveName = entry!.game.gameName.replacing(".nds" ,with: ".sav")
+        let saveName = replaceExtension()
 
         loading = true
         Task {
-            if let save = await cloudService?.getSave(saveName: saveName, saveType: .nds) {
+            if let save = await cloudService?.getSave(saveName: saveName, saveType: saveType), let entry = entry {
                 BackupFile.saveCloudFile(saveName: saveName, saveFile: save)
-                let saveEntry = SaveEntry(game: entry!.game)
+                let saveEntry = SaveEntry(game: entry.game)
                 if !localSaves.contains(saveEntry) {
                     localSaves.append(saveEntry)
                 }
@@ -168,14 +96,14 @@ struct GameEntryModal: View {
         }
     }
 
-    private func uploadSave() {
+    private func uploadSave(saveType: SaveType) {
         // upload local entry to cloud
         loading = true
         Task {
             if let entry = entry {
-                let saveName = entry.game.gameName.replacing(".nds", with: ".sav")
+                let saveName = replaceExtension()
                 if let saveData = BackupFile.getSave(saveName: saveName) {
-                    await self.cloudService?.uploadSave(saveName: saveName, data: saveData, saveType: .nds)
+                    await self.cloudService?.uploadSave(saveName: saveName, data: saveData, saveType: saveType)
                     loading = false
                     if cloudSaves.firstIndex(of: entry) == nil {
                         cloudSaves.insert(SaveEntry(game: entry.game), at: 0)
@@ -188,7 +116,7 @@ struct GameEntryModal: View {
         }
     }
 
-    private func modifyCloudSave(_ result: Result<URL, any Error>) {
+    private func modifyCloudSave(_ result: Result<URL, any Error>, saveType: SaveType) {
         do {
             let url = try result.get()
 
@@ -201,9 +129,9 @@ struct GameEntryModal: View {
                 loading = true
                 Task {
                     await cloudService?.uploadSave(
-                        saveName: entry!.game.gameName.replacing(".nds", with: ".sav"),
+                        saveName: replaceExtension(),
                         data: data,
-                        saveType: .nds
+                        saveType: saveType
                     )
                     showUploadAlert = true
 
@@ -214,44 +142,6 @@ struct GameEntryModal: View {
         } catch {
             print(error)
         }
-    }
-
-    private func deleteSave() {
-
-        if let entry = entry {
-            let entryCopy = entry.copy()
-            showDeleteDialog = true
-            if !isCloudSave {
-                deleteAction = {
-                    if BackupFile.deleteSave(saveName: entryCopy.game.gameName.replacing(".nds", with: ".sav")) {
-                        showDeleteAlert = true
-                        if let index = localSaves.firstIndex(of: entryCopy) {
-                            localSaves.remove(at: index)
-                        }
-                    }
-                }
-            } else {
-                deleteAction = {
-                    let saveName = entryCopy.game.gameName.replacing(".nds", with: ".sav")
-
-                    loading = true
-                    Task {
-                        let success = await cloudService?.deleteSave(saveName: saveName, saveType: .nds) ?? false
-
-                        loading = false
-                        if success {
-                            if let index = cloudSaves.firstIndex(of: entryCopy) {
-                                cloudSaves.remove(at: index)
-                            }
-
-                            showDeleteAlert = true
-                        }
-                    }
-                }
-            }
-        }
-
-        entry = nil
     }
 
     var body: some View {
@@ -274,10 +164,12 @@ struct GameEntryModal: View {
                     .padding(.top, 20)
 
                     Button {
-                        switch entry!.game.type {
-                        case .gba: downloadCloudGbaSave()
-                        case .nds: downloadCloudSave()
-                        case .gbc: break
+                        if let entry = entry {
+                            switch entry.game.type {
+                            case .gba: downloadCloudSave(saveType: .gba)
+                            case .nds: downloadCloudSave(saveType: .nds)
+                            case .gbc: downloadCloudSave(saveType: .gbc)
+                            }
                         }
 
                     } label: {
@@ -289,10 +181,12 @@ struct GameEntryModal: View {
                     }
                 } else {
                     Button {
-                        switch entry!.game.type {
-                        case .gba: uploadGbaSave()
-                        case .nds: uploadSave()
-                        case .gbc: break
+                        if let entry = entry {
+                            switch entry.game.type {
+                            case .gba: uploadSave(saveType: .gba)
+                            case .nds: uploadSave(saveType: .nds)
+                            case .gbc: uploadSave(saveType: .gbc)
+                            }
                         }
                     } label: {
                         HStack {
@@ -303,10 +197,12 @@ struct GameEntryModal: View {
                     }
                 }
                 Button {
-                    switch entry!.game.type {
-                    case .gba: deleteGbaSave()
-                    case .nds: deleteSave()
-                    case .gbc: break
+                    if let entry = entry {
+                        switch entry.game.type {
+                        case .gba: deleteSave(saveType: .gba)
+                        case .nds: deleteSave(saveType: .nds)
+                        case .gbc: deleteSave(saveType: .gbc)
+                        }
                     }
                 } label: {
                     HStack {
@@ -326,7 +222,13 @@ struct GameEntryModal: View {
         .opacity(0.80)
         .frame(width: 225, height: 225)
         .fileImporter(isPresented: $isPresented, allowedContentTypes: [savType!]) { result in
-            modifyCloudSave(result)
+            if let entry = entry {
+                switch entry.game.type {
+                case .nds: modifyCloudSave(result, saveType: .nds)
+                case .gba: modifyCloudSave(result, saveType: .gba)
+                case .gbc: modifyCloudSave(result, saveType: .gbc)
+                }
+            }
         }
     }
 }
