@@ -246,6 +246,8 @@ struct ImportGamesView: View {
                     var emu: (any EmulatorWrapper)?
                     let urls = try result.get()
                     loading = true
+                    var actualUrl: URL!
+                    var firstUrl: URL!
                     Task {
                         for url in urls {
                             if url.startAccessingSecurityScopedResource() {
@@ -254,12 +256,13 @@ struct ImportGamesView: View {
                                 }
 
                                 var data: Data!
-                                var actualUrl: URL! = try FileManager.default.url(
+                                actualUrl = try FileManager.default.url(
                                     for: .applicationSupportDirectory,
                                     in: .userDomainMask,
                                     appropriateFor: nil,
                                     create: true
                                 )
+
                                 var isZip = false
 
                                 if url.pathExtension == "zip" {
@@ -272,6 +275,10 @@ struct ImportGamesView: View {
 
                                 if (actualUrl == nil) {
                                     continue
+                                }
+
+                                if firstUrl == nil {
+                                    firstUrl = actualUrl
                                 }
 
                                 romData = data
@@ -298,7 +305,12 @@ struct ImportGamesView: View {
                         currentView = .library
                         loading = false
 
-                        currentLibrary = urls[0].pathExtension.lowercased()
+                        var current = firstUrl.pathExtension.lowercased()
+
+                        if current == "gb" {
+                            current = "gbc"
+                        }
+                        currentLibrary = current
 
                         let defaults = UserDefaults.standard
 
