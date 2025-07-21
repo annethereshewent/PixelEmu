@@ -36,7 +36,7 @@ class GBAGame: Playable {
         self.gbaSaveStates = saveStates
     }
 
-    static func storeGame(gameName: String, data: Data, url: URL, iconPtr: UnsafePointer<UInt8>? = nil, isZip: Bool) -> (any Playable)? {
+    static func storeGame(gameName: String, data: Data, url: URL, isZip: Bool) -> (any Playable)? {
         // store bookmark for later use
         if isZip {
             if let bookmark = try? url.bookmarkData(options: []) {

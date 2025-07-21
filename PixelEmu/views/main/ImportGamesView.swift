@@ -44,15 +44,23 @@ struct ImportGamesView: View {
     @Binding var currentLibrary: String
 
 
-    private func storeGBAGame(data: Data, emu: (any EmulatorWrapper)?, url: URL, _ isZip: Bool) async {
+    private func storeGBAGame(
+        data: Data,
+        emu: (any EmulatorWrapper)?,
+        url: URL,
+        romData: Data,
+        gameName: String,
+        _ isZip: Bool
+    ) async {
         if var game = GBAGame.storeGame(
             gameName: gameName,
             data: data,
             url: url,
             isZip: isZip
         ) {
-            if !gameNamesSet.contains(gameName) {
-                if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: GBA_ID) {
+            print(gameName)
+            if !gameNamesSet.contains(game.gameName) {
+                if let artwork = await artworkService.fetchArtwork(for: game.gameName, systemId: GBA_ID) {
                     game.albumArt = artwork
                 }
                 context.insert(game as! GBAGame)
@@ -61,7 +69,14 @@ struct ImportGamesView: View {
         }
     }
 
-    private func storeGBCGame(data: Data, emu: (any EmulatorWrapper)?, url: URL, _ isZip: Bool) async {
+    private func storeGBCGame(
+        data: Data,
+        emu: (any EmulatorWrapper)?,
+        url: URL,
+        romData: Data,
+        gameName: String,
+        _ isZip: Bool
+    ) async {
         if var game = GBCGame.storeGame(
             gameName: gameName,
             data: data,
@@ -85,75 +100,81 @@ struct ImportGamesView: View {
         }
     }
 
-    private func storeDSGame(data: Data, emu: (any EmulatorWrapper)?, url: URL, _ isZip: Bool) async {
-        var emu = emu
-        var romPtr: UnsafeBufferPointer<UInt8>!
-
-        let dataArr = Array(data)
-
-        dataArr.withUnsafeBufferPointer { ptr in
-            romPtr = ptr
-        }
-
-        if emu == nil {
-            if let bios7Data = bios7Data, let bios9Data = bios9Data {
-                var bios7Bytes: UnsafeBufferPointer<UInt8>!
-                var bios9Bytes: UnsafeBufferPointer<UInt8>!
-                var firmwareBytes: UnsafeBufferPointer<UInt8>!
-
-                Array(bios7Data).withUnsafeBufferPointer { ptr in
-                    bios7Bytes = ptr
-                }
-                Array(bios9Data).withUnsafeBufferPointer { ptr in
-                    bios9Bytes = ptr
-                }
-
-                Array([]).withUnsafeBufferPointer { ptr in
-                    firmwareBytes = ptr
-                }
-
-                emu = DSEmulatorWrapper(emu: MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr))
-            }
-        } else {
-            try! emu?.reloadRom(romPtr)
-        }
-
-        try! emu?.loadIcon()
+    private func storeDSGame(
+        data: Data,
+        emu: (any EmulatorWrapper)?,
+        url: URL,
+        romData: Data,
+        gameName: String,
+        _ isZip: Bool
+    ) async {
         if var game = Game.storeGame(
             gameName: gameName,
-            data: romData!,
+            data: romData,
             url: url,
-            iconPtr: try! emu?.getGameIconPointer(),
             isZip: isZip
         ) {
             // check if album artwork exists before inserting game into DB
             if !gameNamesSet.contains(gameName) {
                 if let artwork = await artworkService.fetchArtwork(for: gameName, systemId: DS_ID) {
                     game.albumArt = artwork
+                } else {
+                    var emu = emu
+                    var romPtr: UnsafeBufferPointer<UInt8>!
+
+                    let dataArr = Array(data)
+
+                    dataArr.withUnsafeBufferPointer { ptr in
+                        romPtr = ptr
+                    }
+
+                    if emu == nil {
+                        if let bios7Data = bios7Data, let bios9Data = bios9Data {
+                            var bios7Bytes: UnsafeBufferPointer<UInt8>!
+                            var bios9Bytes: UnsafeBufferPointer<UInt8>!
+                            var firmwareBytes: UnsafeBufferPointer<UInt8>!
+
+                            Array(bios7Data).withUnsafeBufferPointer { ptr in
+                                bios7Bytes = ptr
+                            }
+                            Array(bios9Data).withUnsafeBufferPointer { ptr in
+                                bios9Bytes = ptr
+                            }
+
+                            Array([]).withUnsafeBufferPointer { ptr in
+                                firmwareBytes = ptr
+                            }
+
+                            emu = DSEmulatorWrapper(emu: MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr))
+                        }
+                    } else {
+                        try! emu?.reloadRom(romPtr)
+                    }
+
+                    try! emu?.loadIcon()
+
+                    if let iconPtr = try! emu?.getGameIconPointer() {
+
+                        let buffer = UnsafeBufferPointer(start: iconPtr, count: ICON_WIDTH * ICON_HEIGHT * 4)
+
+                        game.gameIcon = Data(buffer)
+                    }
+
                 }
 
                 context.insert(game as! Game)
             }
         }
+
     }
 
-    func unzipGame(url: URL) -> (URL?, Data?) {
+    func unzipGame(url: URL, appSupportUrl: URL) -> (URL?, Data?) {
         let fileManager = FileManager()
 
         do {
-            var destinationUrl = try FileManager.default.url(
-                for: .applicationSupportDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true
-            )
+            var destinationUrl = appSupportUrl
 
-            var actualUrl = try FileManager.default.url(
-                for: .applicationSupportDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true
-            )
+            var actualUrl = appSupportUrl
 
             destinationUrl.appendPathComponent("temp")
 
@@ -241,86 +262,133 @@ struct ImportGamesView: View {
                 allowedContentTypes: [ndsType!, gbaType!, gbType!, gbcType!, zipType!],
                 allowsMultipleSelection: true
             ) { result in
+                var emu: (any EmulatorWrapper)?
+                var urls: [URL] = []
                 do {
-                    var emu: (any EmulatorWrapper)?
-                    let urls = try result.get()
-                    loading = true
-                    var actualUrl: URL!
-                    var firstUrl: URL!
-                    Task {
+                    urls = try result.get()
+                } catch {
+                    print(error)
+                }
+                loading = true
+                var actualUrl: URL!
+                var firstUrl: URL!
+                var appSupportUrl: URL!
+
+                do {
+                    appSupportUrl = try FileManager.default.url(
+                        for: .applicationSupportDirectory,
+                        in: .userDomainMask,
+                        appropriateFor: nil,
+                        create: true
+                    )
+                } catch {
+                    print(error)
+                }
+
+                Task {
+                    await withTaskGroup(of: Void.self) { group in
                         for url in urls {
-                            if url.startAccessingSecurityScopedResource() {
-                                defer {
-                                    url.stopAccessingSecurityScopedResource()
-                                }
+                            group.addTask {
+                                do {
+                                    if url.startAccessingSecurityScopedResource() {
+                                        defer {
+                                            url.stopAccessingSecurityScopedResource()
+                                        }
 
-                                var data: Data!
-                                actualUrl = try FileManager.default.url(
-                                    for: .applicationSupportDirectory,
-                                    in: .userDomainMask,
-                                    appropriateFor: nil,
-                                    create: true
-                                )
+                                        var data: Data!
 
-                                var isZip = false
+                                        var isZip = false
 
-                                if url.pathExtension == "zip" {
-                                    isZip = true
-                                    (actualUrl, data) = unzipGame(url: url)
-                                } else {
-                                    data = try Data(contentsOf: url)
-                                    actualUrl = url
-                                }
+                                        if url.pathExtension == "zip" {
+                                            isZip = true
+                                            (actualUrl, data) = await unzipGame(url: url, appSupportUrl: appSupportUrl)
+                                        } else {
+                                            data = try Data(contentsOf: url)
+                                            actualUrl = url
+                                        }
 
-                                if (actualUrl == nil) {
-                                    continue
-                                }
+                                        if (actualUrl == nil) {
+                                            return
+                                        }
 
-                                if firstUrl == nil {
-                                    firstUrl = actualUrl
-                                }
+                                        if firstUrl == nil {
+                                            firstUrl = actualUrl
+                                        }
 
-                                romData = data
+                                        let gameName = String(actualUrl
+                                            .relativeString
+                                            .split(separator: "/")
+                                            .last
+                                            .unsafelyUnwrapped
+                                        )
+                                        .removingPercentEncoding
+                                        .unsafelyUnwrapped
 
-                                gameName = String(actualUrl
-                                    .relativeString
-                                    .split(separator: "/")
-                                    .last
-                                    .unsafelyUnwrapped
-                                )
-                                .removingPercentEncoding
-                                .unsafelyUnwrapped
+                                        print(gameName)
 
-                                switch actualUrl.pathExtension.lowercased() {
-                                case "nds": await storeDSGame(data: data, emu: emu, url: actualUrl, isZip)
-                                case "gba": await storeGBAGame(data: data, emu: emu, url: actualUrl, isZip)
-                                case "gbc": await storeGBCGame(data: data, emu: emu, url: actualUrl, isZip)
-                                case "gb": await storeGBCGame(data: data, emu: emu, url: actualUrl, isZip)
-                                default: break
+                                        switch actualUrl.pathExtension.lowercased() {
+                                        case "nds": await storeDSGame(
+                                            data: data,
+                                            emu: emu,
+                                            url: actualUrl,
+                                            romData: data!,
+                                            gameName: gameName,
+                                            isZip
+                                        )
+                                        case "gba": await storeGBAGame(
+                                            data: data,
+                                            emu: emu,
+                                            url: actualUrl,
+                                            romData: data!,
+                                            gameName: gameName,
+                                            isZip
+                                        )
+                                        case "gbc": await storeGBCGame(
+                                            data: data,
+                                            emu: emu,
+                                            url: actualUrl,
+                                            romData: data!,
+                                            gameName: gameName,
+                                            isZip
+                                        )
+                                        case "gb": await storeGBCGame(
+                                            data: data,
+                                            emu: emu,
+                                            url: actualUrl,
+                                            romData: data!,
+                                            gameName: gameName,
+                                            isZip
+                                        )
+                                        default: break
+                                        }
+
+                                    }
+                                } catch {
+                                    print(error)
                                 }
                             }
                         }
-                        // once done processing all games, return back to library view
-                        currentView = .library
-                        loading = false
-
-                        var current = firstUrl.pathExtension.lowercased()
-
-                        if current == "gb" {
-                            current = "gbc"
-                        }
-                        currentLibrary = current
-
-                        let defaults = UserDefaults.standard
-
-                        defaults.set(currentLibrary, forKey: "currentLibrary")
-
-                        emu = nil
                     }
-                } catch {
-                    print(error)
-                    showErrorMessage = true
+
+                    // once done processing all games, return back to library view
+                    currentView = .library
+                    loading = false
+
+                    var current = firstUrl.pathExtension.lowercased()
+
+
+                    if current == "gb" {
+                        current = "gbc"
+                    }
+                    currentLibrary = current
+
+                    let defaults = UserDefaults.standard
+
+                    defaults.set(currentLibrary, forKey: "currentLibrary")
+
+                    emu = nil
                 }
+
             }
             .onAppear() {
                 for game in games {
