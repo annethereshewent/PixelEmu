@@ -22,6 +22,9 @@ class GBCGame: Playable {
     var albumArt: Data? = nil
     var lastPlayed: Date
 
+    @Relationship(deleteRule: .cascade, inverse: \GBCSaveState.gbcGame)
+    var gbcSaveStates: [GBCSaveState]?
+
     @Transient
     var gameIcon: Data? = nil
 

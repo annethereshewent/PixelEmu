@@ -11,10 +11,9 @@ import GBAEmulatorMobile
 import SwiftData
 
 struct GamesListView: View {
-    let gameType: GameType
-
     @State private var showGameError = false
 
+    let gameType: GameType
     @Binding var romData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
@@ -66,7 +65,7 @@ struct GamesListView: View {
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
     var body: some View {
-        if games.count > 0 {
+        HStack {
             switch gameType {
             case .nds:
                 GamesListViewInner(

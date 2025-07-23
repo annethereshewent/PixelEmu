@@ -98,8 +98,6 @@ struct MainSaveManagementView: View {
                             case .gbc:
                                 if let saveEntries = await cloudService?.getSaves(games: gbcGames, saveType: .gbc) {
                                     self.saveEntries = saveEntries
-                                } else {
-                                    print("couldn't find em!")
                                 }
                             }
 

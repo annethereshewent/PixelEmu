@@ -36,7 +36,7 @@ protocol EmulatorWrapper {
     func releaseScreen() throws
     func touchScreenController(_ x: Float, _ y: Float) throws
     func loadSaveState(_ ptr: UnsafeBufferPointer<UInt8>)
-    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) throws
+    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>)
     func reloadFirmware(_ ptr: UnsafeBufferPointer<UInt8>) throws
     func hleFirmware() throws
     func reloadBios(_ bios7: UnsafeBufferPointer<UInt8>, _ bios9: UnsafeBufferPointer<UInt8>) throws
@@ -165,7 +165,7 @@ class DSEmulatorWrapper: EmulatorWrapper {
         emu.loadSaveState(ptr)
     }
 
-    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) throws {
+    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) {
         emu.reloadRom(ptr)
     }
 
@@ -305,7 +305,7 @@ class GBAEmulatorWrapper: EmulatorWrapper {
         emu.loadSaveState(ptr)
     }
 
-    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) throws {
+    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) {
         emu.reloadRom(ptr)
     }
 
@@ -389,7 +389,6 @@ class GBCEmulatorWrapper : EmulatorWrapper {
     }
 
     func setBackup(_ save_type: String, _ ram_capacity: UInt, _ bytes: UnsafeBufferPointer<UInt8>) throws {
-        // do nothing
         throw "not implemented"
     }
 
@@ -444,8 +443,8 @@ class GBCEmulatorWrapper : EmulatorWrapper {
         emu.loadSaveState(ptr)
     }
 
-    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) throws {
-        throw "todo: not implemented"
+    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) {
+        emu.reloadRom(ptr)
     }
 
     func reloadFirmware(_ ptr: UnsafeBufferPointer<UInt8>) throws {

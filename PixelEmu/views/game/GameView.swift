@@ -176,8 +176,8 @@ struct GameView: View {
                     quickSaveLoadKeyPressed = true
 
                     if let emu = emulator {
-                        let dataPtr = try! emu.createSaveState()
-                        let dataSize = try! emu.compressedLength()
+                        let dataPtr = emu.createSaveState()
+                        let dataSize = emu.compressedLength()
 
                         let bufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(dataSize))
                         let data = Data(bufferPtr)

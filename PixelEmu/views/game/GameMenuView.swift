@@ -165,7 +165,12 @@ struct GameMenuView: View {
                     romData: $romData
                 )
             case .gbc:
-                Text("TODO")
+                GBCStateEntriesView(
+                    emulator: $emulator,
+                    gameName: $gameName,
+                    isMenuPresented: $isMenuPresented,
+                    game: $game
+                )
             }
 
         }

@@ -23,7 +23,7 @@ class GBAGame: Playable {
     @Transient
     var type: GameType = .gba
 
-    @Relationship(deleteRule: .cascade, inverse: \GBASaveState.game)
+    @Relationship(deleteRule: .cascade, inverse: \GBASaveState.gbaGame)
     var gbaSaveStates: [GBASaveState]?
 
     @Transient

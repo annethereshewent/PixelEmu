@@ -9,12 +9,17 @@ import Foundation
 import SwiftData
 
 @Model
-class SaveState {
+class SaveState : Snapshottable {
     var saveName: String
     var screenshot: Data
     var bookmark: Data
     @Attribute(.unique)
     var game: Game?
+
+    @Transient
+    var gbaGame: GBAGame? = nil
+    @Transient
+    var gbcGame: GBCGame? = nil
 
     var timestamp: Int
 

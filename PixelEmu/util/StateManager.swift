@@ -218,7 +218,7 @@ class StateManager {
                     romPtr = ptr
                 }
 
-                try! emu.loadSaveState(dataPtr)
+                emu.loadSaveState(dataPtr)
                 try! emu.reloadBios(bios7Ptr, bios9Ptr)
 
                 if let firmwareData = firmwareData {
@@ -233,7 +233,7 @@ class StateManager {
                 } else {
                     try! emu.hleFirmware()
                 }
-                try! emu.reloadRom(romPtr)
+                emu.reloadRom(romPtr)
             }
         }
     }
@@ -288,10 +288,10 @@ class StateManager {
                         biosPtr = ptr
                     }
 
-                    try! emu.loadSaveState(dataPtr)
+                    emu.loadSaveState(dataPtr)
                     try! emu.loadBios(biosPtr)
 
-                    try! emu.reloadRom(romPtr)
+                    emu.reloadRom(romPtr)
                 }
             }
         }
