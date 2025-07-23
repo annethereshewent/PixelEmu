@@ -617,6 +617,16 @@ struct GameView: View {
             audioManager?.resumeAudio()
         }
 
+        if audioManager == nil {
+            audioManager = AudioManager()
+
+            if game.type == .nds {
+                audioManager!.startMicrophoneAndAudio()
+            } else {
+                audioManager!.startAudio()
+            }
+        }
+
         isPaused = false
 
         workItem = DispatchWorkItem {

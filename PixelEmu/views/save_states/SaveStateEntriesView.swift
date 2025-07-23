@@ -35,7 +35,7 @@ struct SaveStateEntriesView: View {
 
     @State private var stateManager: StateManager!
 
-    private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+    private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
     private func createSaveState(updateState: SaveState? = nil) {
         // create a new save state

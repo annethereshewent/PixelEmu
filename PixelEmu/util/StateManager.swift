@@ -257,7 +257,7 @@ class StateManager {
                 try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
             }
 
-            let gameFolder = game.gameName.replacing(".nds", with: "")
+            let gameFolder = game.gameName.replacing(".gba", with: "").replacing(".GBA", with: "")
 
             url.appendPathComponent(gameFolder)
 

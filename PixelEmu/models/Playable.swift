@@ -29,6 +29,7 @@ protocol Playable: Identifiable {
 
     var saveStates: [SaveState]? { get set }
     var gbaSaveStates: [GBASaveState]? { get set }
+    var gbcSaveStates: [GBCSaveState]? { get set }
 
     var type: GameType { get }
 

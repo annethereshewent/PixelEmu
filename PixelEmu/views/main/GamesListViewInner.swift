@@ -40,6 +40,7 @@ struct GamesListViewInner: View {
     @Binding var gameUrl: URL?
     @Binding var themeColor: Color
     @Binding var romData: Data?
+    @Binding var biosData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
@@ -318,10 +319,11 @@ struct GamesListViewInner: View {
                 .sheet(isPresented: $isLoadStatesPresented) {
                     LoadStatesView(
                         emulator: $emulator,
-                        selectedGame: $selectedDsGame,
-                        game: $dsGame,
+                        selectedGame: $selectedGame,
+                        game: $game,
                         isPresented: $isLoadStatesPresented,
                         romData: $romData,
+                        biosData: $biosData,
                         bios7Data: $bios7Data,
                         bios9Data: $bios9Data,
                         firmwareData: $firmwareData,
