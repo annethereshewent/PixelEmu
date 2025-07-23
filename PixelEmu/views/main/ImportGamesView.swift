@@ -324,8 +324,6 @@ struct ImportGamesView: View {
                                         .removingPercentEncoding
                                         .unsafelyUnwrapped
 
-                                        print(gameName)
-
                                         switch actualUrl.pathExtension.lowercased() {
                                         case "nds": await storeDSGame(
                                             data: data,

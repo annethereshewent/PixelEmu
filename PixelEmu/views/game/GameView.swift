@@ -108,6 +108,10 @@ struct GameView: View {
 
         audioManager?.muteAudio()
 
+        workItem?.cancel()
+        workItem = nil
+        isPaused = true
+
         presentationMode.wrappedValue.dismiss()
     }
 
@@ -494,6 +498,9 @@ struct GameView: View {
                 mainGameLoop()
             }
 
+            // just in case this was set to true in another game.
+            isPaused = false
+
             DispatchQueue.global().async(execute: workItem!)
         }
     }
@@ -581,7 +588,7 @@ struct GameView: View {
                     self.checkSaves()
                 }
 
-                if !isRunning {
+                if !isRunning || isPaused {
                     break
                 }
             }
@@ -609,6 +616,14 @@ struct GameView: View {
         if isSoundOn {
             audioManager?.resumeAudio()
         }
+
+        isPaused = false
+
+        workItem = DispatchWorkItem {
+            mainGameLoop()
+        }
+
+        DispatchQueue.global().async(execute: workItem!)
     }
 
     var body: some View {
