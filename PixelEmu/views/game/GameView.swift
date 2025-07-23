@@ -182,11 +182,20 @@ struct GameView: View {
                         let bufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(dataSize))
                         let data = Data(bufferPtr)
 
+                        // TODO: DRY this code up and add code for createGbcSaveState
                         do {
-                            try stateManager?.createSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
+                            switch game.type {
+                            case .nds:
+                                try stateManager?.createNdsSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
+                            case .gba:
+                                try stateManager?.createGbSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
+                            case .gbc:
+                                try stateManager?.createGbSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
+                            }
                         } catch {
                             print(error)
                         }
+
 
                         Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
                             quickSaveLoadKeyPressed = false

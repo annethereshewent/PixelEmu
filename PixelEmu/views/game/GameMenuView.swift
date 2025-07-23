@@ -150,26 +150,35 @@ struct GameMenuView: View {
                     gameName: $gameName,
                     isMenuPresented: $isMenuPresented,
                     game: $game,
+                    biosData: $biosData,
                     bios7Data: $bios7Data,
                     bios9Data: $bios9Data,
                     firmwareData: $firmwareData,
                     romData: $romData
                 )
             case .gba:
-                GBAStateEntriesView(
+                SaveStateEntriesView(
                     emulator: $emulator,
                     gameName: $gameName,
                     isMenuPresented: $isMenuPresented,
                     game: $game,
                     biosData: $biosData,
+                    bios7Data: $bios7Data,
+                    bios9Data: $bios9Data,
+                    firmwareData: $firmwareData,
                     romData: $romData
                 )
             case .gbc:
-                GBCStateEntriesView(
+                SaveStateEntriesView(
                     emulator: $emulator,
                     gameName: $gameName,
                     isMenuPresented: $isMenuPresented,
-                    game: $game
+                    game: $game,
+                    biosData: $biosData,
+                    bios7Data: $bios7Data,
+                    bios9Data: $bios9Data,
+                    firmwareData: $firmwareData,
+                    romData: $romData
                 )
             }
 

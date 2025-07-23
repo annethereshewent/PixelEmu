@@ -19,13 +19,14 @@ enum SaveStateAction {
 struct SaveStateEntriesView: View {
     @Environment(\.modelContext) private var context
 
-    @State var currentState: SaveState? = nil
+    @State var currentState: (any Snapshottable)? = nil
 
     @Binding var emulator: (any EmulatorWrapper)?
     @Binding var gameName: String
     @Binding var isMenuPresented: Bool
     @Binding var game: (any Playable)?
 
+    @Binding var biosData: Data?
     @Binding var bios7Data: Data?
     @Binding var bios9Data: Data?
     @Binding var firmwareData: Data?
@@ -37,7 +38,7 @@ struct SaveStateEntriesView: View {
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
-    private func createSaveState(updateState: SaveState? = nil) {
+    private func createSaveState(updateState: (any Snapshottable)? = nil) {
         // create a new save state
 
         if let emu = emulator {
@@ -52,12 +53,29 @@ struct SaveStateEntriesView: View {
             let saveName = "state_\(timestamp).save"
 
             do {
-                try stateManager.createSaveState(
-                    data: data,
-                    saveName: saveName,
-                    timestamp: timestamp,
-                    updateState: updateState
-                )
+                switch game!.type {
+                case .nds:
+                    try stateManager.createNdsSaveState(
+                        data: data,
+                        saveName: saveName,
+                        timestamp: timestamp,
+                        updateState: updateState as! SaveState?
+                    )
+                case .gba:
+                    try stateManager.createGbSaveState(
+                        data: data,
+                        saveName: saveName,
+                        timestamp: timestamp,
+                        updateState: updateState as! GBASaveState?
+                    )
+                case .gbc:
+                    try stateManager.createGbSaveState(
+                        data: data,
+                        saveName: saveName,
+                        timestamp: timestamp,
+                        updateState: updateState as! GBCSaveState?
+                    )
+                }
             } catch {
                 print(error)
             }
@@ -67,7 +85,7 @@ struct SaveStateEntriesView: View {
 
     private func loadSaveState() {
         do {
-            try stateManager.loadSaveState(currentState: currentState)
+            try stateManager.loadSaveState(currentState: currentState!)
         } catch {
             print(error)
         }
@@ -82,10 +100,24 @@ struct SaveStateEntriesView: View {
 
     private func deleteSaveState() {
         if let saveState = currentState, var game = game {
-            if let index = game.saveStates?.firstIndex(of: saveState) {
-                game.saveStates?.remove(at: index)
-                context.delete(saveState)
+            switch game.type {
+            case .nds:
+                if let index = game.saveStates?.firstIndex(of: saveState as! SaveState) {
+                    game.saveStates?.remove(at: index)
+                    context.delete(saveState as! SaveState)
+                }
+            case .gba:
+                if let index = game.gbaSaveStates?.firstIndex(of: saveState as! GBASaveState) {
+                    game.gbaSaveStates?.remove(at: index)
+                    context.delete(saveState as! GBASaveState)
+                }
+            case .gbc:
+                if let index = game.gbcSaveStates?.firstIndex(of: saveState as! GBCSaveState) {
+                    game.gbcSaveStates?.remove(at: index)
+                    context.delete(saveState as! GBCSaveState)
+                }
             }
+
         }
     }
 
@@ -107,31 +139,84 @@ struct SaveStateEntriesView: View {
             ScrollView {
                 if let game = game {
                     LazyVGrid(columns: columns) {
-                        ForEach(game.saveStates!.sorted { $0.compare($1) }) { saveState in
-                            SaveStateView(
-                                saveState: saveState,
-                                action: $action,
-                                currentState: $currentState
-                            )
+                        switch game.type {
+                        case .nds:
+                            ForEach(game.saveStates!.sorted { $0.compare($1) }) { saveState in
+                                SaveStateView(
+                                    gameType: game.type,
+                                    saveState: saveState,
+                                    action: $action,
+                                    currentState: $currentState
+                                )
+                            }
+                        case .gba:
+                            ForEach(game.gbaSaveStates!.sorted { $0.compare($1) }) { saveState in
+                                SaveStateView(
+                                    gameType: game.type,
+                                    saveState: saveState,
+                                    action: $action,
+                                    currentState: $currentState
+                                )
+                            }
+                        case .gbc:
+                            ForEach(game.gbcSaveStates!.sorted { $0.compare($1) }) { saveState in
+                                SaveStateView(
+                                    gameType: game.type,
+                                    saveState: saveState,
+                                    action: $action,
+                                    currentState: $currentState
+                                )
+                            }
                         }
+
                     }
                 }
             }
             Spacer()
         }
         .onAppear() {
-            if let emu = emulator, let game = game, let bios7Data = bios7Data, let bios9Data = bios9Data, let romData = romData {
-                stateManager = StateManager(
-                    emu: emu,
-                    game: game,
-                    context: context,
-                    biosData: nil,
-                    bios7Data: bios7Data,
-                    bios9Data: bios9Data,
-                    romData: romData,
-                    firmwareData: firmwareData
-                )
+            switch game!.type {
+            case .nds:
+                if let emu = emulator, let game = game, let bios7Data = bios7Data, let bios9Data = bios9Data, let romData = romData {
+                    stateManager = StateManager(
+                        emu: emu,
+                        game: game,
+                        context: context,
+                        biosData: biosData,
+                        bios7Data: bios7Data,
+                        bios9Data: bios9Data,
+                        romData: romData,
+                        firmwareData: firmwareData
+                    )
+                }
+            case .gba:
+                if let emu = emulator, let game = game, let biosData = biosData, let romData = romData {
+                    stateManager = StateManager(
+                        emu: emu,
+                        game: game,
+                        context: context,
+                        biosData: biosData,
+                        bios7Data: nil,
+                        bios9Data: nil,
+                        romData: romData,
+                        firmwareData: nil
+                    )
+                }
+            case .gbc:
+                if let emu = emulator, let game = game, let romData = romData {
+                    stateManager = StateManager(
+                        emu: emu,
+                        game: game,
+                        context: context,
+                        biosData: nil,
+                        bios7Data: nil,
+                        bios9Data: nil,
+                        romData: romData,
+                        firmwareData: nil
+                    )
+                }
             }
+
         }
         .onChange(of: action) {
             switch action {
