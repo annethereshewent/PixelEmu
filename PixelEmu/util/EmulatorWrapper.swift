@@ -45,6 +45,7 @@ protocol EmulatorWrapper {
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws
     func hasSamples() -> Bool
     func popSample() throws -> Float
+    func setPausedAudio(_ value: Bool)
 }
 
 class DSEmulatorWrapper: EmulatorWrapper {
@@ -183,6 +184,10 @@ class DSEmulatorWrapper: EmulatorWrapper {
 
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws {
         throw "not implemented"
+    }
+
+    func setPausedAudio(_ value: Bool) {
+        emu.setPausedAudio(value)
     }
 }
 
@@ -323,6 +328,10 @@ class GBAEmulatorWrapper: EmulatorWrapper {
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws {
         emu.loadSave(ptr)
     }
+
+    func setPausedAudio(_ value: Bool) {
+        emu.setPausedAudio(value)
+    }
 }
 
 class GBCEmulatorWrapper : EmulatorWrapper {
@@ -460,5 +469,9 @@ class GBCEmulatorWrapper : EmulatorWrapper {
 
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws {
         emu.loadSave(ptr)
+    }
+
+    func setPausedAudio(_ value: Bool) {
+        emu.setPausedAudio(value)
     }
 }

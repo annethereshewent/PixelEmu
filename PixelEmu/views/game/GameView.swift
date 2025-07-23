@@ -513,24 +513,26 @@ struct GameView: View {
                     let playerPaused = audioManager?.playerPaused ?? true
 
                     if !playerPaused {
-                        var audioBufferPtr: UnsafePointer<Float>!
-                        var audioBufferLength: UInt!
-
                         switch game.type {
                         case .nds:
-                            audioBufferLength = try! emu.audioBufferLength()
-                            audioBufferPtr = try! emu.audioBufferPtr()
+                            let audioBufferLength = try! emu.audioBufferLength()
+                            let audioBufferPtr = try! emu.audioBufferPtr()
 
                             let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
 
                             self.audioManager?.updateBuffer(samples: audioSamples)
                         case .gba, .gbc:
-                            audioBufferPtr = try! emu.audioBufferPtr()
-                            audioBufferLength = try! emu.audioBufferLength()
+                            if self.audioManager != nil && !self.audioManager!.playerPaused {
+                                let audioBufferPtr = try! emu.audioBufferPtr()
+                                let audioBufferLength = try! emu.audioBufferLength()
 
-                            let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
+                                if audioBufferLength > 0 {
+                                    let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
 
-                            self.audioManager?.updateBuffer(samples: audioSamples)
+                                    self.audioManager?.updateBuffer(samples: audioSamples)
+                                }
+                            }
+                            break
                         }
                     }
 
