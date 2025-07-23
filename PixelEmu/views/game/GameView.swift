@@ -522,15 +522,13 @@ struct GameView: View {
 
                             self.audioManager?.updateBuffer(samples: audioSamples)
                         case .gba, .gbc:
-                            if self.audioManager != nil && !self.audioManager!.playerPaused {
+                            if !audioManager!.playerPaused {
                                 let audioBufferPtr = try! emu.audioBufferPtr()
                                 let audioBufferLength = try! emu.audioBufferLength()
 
-                                if audioBufferLength > 0 {
-                                    let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
+                                let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
 
-                                    self.audioManager?.updateBuffer(samples: audioSamples)
-                                }
+                                audioManager?.updateBuffer(samples: audioSamples)
                             }
                             break
                         }
