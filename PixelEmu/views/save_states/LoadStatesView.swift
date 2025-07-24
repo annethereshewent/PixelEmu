@@ -30,49 +30,41 @@ struct LoadStatesView: View {
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
     private func loadGbState(saveState: any Snapshottable, _ gameType: GameType) throws {
-        var isStale = false
-        let url = try URL(resolvingBookmarkData: saveState.bookmark, bookmarkDataIsStale: &isStale)
-        let data = try Array(Data(contentsOf: url))
-
-        var isStale2 = false
-
         if let emu = emulator, let selectedGame = selectedGame {
+            var isStale = false
+            let url = try URL(resolvingBookmarkData: saveState.bookmark, bookmarkDataIsStale: &isStale)
+            let data = try Array(Data(contentsOf: url))
+
+            var isStale2 = false
             let romUrl = try URL(resolvingBookmarkData: selectedGame.bookmark, bookmarkDataIsStale: &isStale2)
             let romData = try Data(contentsOf: romUrl)
-            var dataPtr: UnsafeBufferPointer<UInt8>!
 
             data.withUnsafeBufferPointer { ptr in
-                dataPtr = ptr
+                emu.loadSaveState(ptr)
             }
-
-            var romPtr: UnsafeBufferPointer<UInt8>!
-            Array(romData).withUnsafeBufferPointer { ptr in
-                romPtr = ptr
-            }
-
-            emu.loadSaveState(dataPtr)
 
             if gameType == .gba {
                 if let biosData = biosData {
-                    var biosPtr: UnsafeBufferPointer<UInt8>!
                     Array(biosData).withUnsafeBufferPointer { ptr in
-                        biosPtr = ptr
+                        try! emu.loadBios(ptr)
                     }
-                    try! emu.loadBios(biosPtr)
+
                 } else {
                     print("[Warning] GBA selected but BIOS not found. Emulation may fail.")
                     return
                 }
             }
-            emu.reloadRom(romPtr)
+
+            let romArr = Array(romData)
+
+            romArr.withUnsafeBufferPointer { ptr in
+                emu.reloadRom(ptr)
+            }
 
             workItem?.cancel()
             isRunning = true
 
             workItem = nil
-
-            var isStale = false
-            let url = try URL(resolvingBookmarkData: selectedGame.bookmark, bookmarkDataIsStale: &isStale)
 
             gameUrl = url
 
