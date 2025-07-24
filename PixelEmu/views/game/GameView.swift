@@ -616,21 +616,20 @@ struct GameView: View {
 
     func resumeGame() {
         emulator?.setPaused(false)
-        if game.type == .nds {
-            audioManager?.startMicrophoneAndAudio()
-        }
-        if isSoundOn {
-            audioManager?.resumeAudio()
-        }
-
         if audioManager == nil {
             audioManager = AudioManager()
+        }
 
+        if !audioManager!.audioNode.isPlaying {
             if game.type == .nds {
                 audioManager!.startMicrophoneAndAudio()
             } else {
                 audioManager!.startAudio()
             }
+        }
+
+        if isSoundOn {
+            audioManager?.resumeAudio()
         }
 
         isPaused = false
