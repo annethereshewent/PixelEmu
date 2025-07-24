@@ -52,6 +52,6 @@ Todo:
 
 ## Special Thanks
 
-Thanks to Zedanov for helping out with the UX and designs of the app!
+Thanks to [abdllrhmanzedan](https://github.com/abdllrhmanzedan) for helping out with the UX and designs of the app!
 
 
