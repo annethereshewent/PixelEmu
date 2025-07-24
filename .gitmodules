@@ -5,5 +5,5 @@
 	path = external/gba-plus-emulator
 	url = git@github.com:annethereshewent/gba-plus.git
 [submodule "external/gbc-plus-emulator"]
-	path = external/gba-plus-emulator
+	path = external/gbc-plus-emulator
 	url = git@github.com:annethereshewent/gbc-plus.git
