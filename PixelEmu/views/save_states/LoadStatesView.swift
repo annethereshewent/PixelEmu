@@ -163,55 +163,15 @@ struct LoadStatesView: View {
     private func initEmu() throws {
         if let saveState = currentState, let selectedGame = selectedGame {
             switch selectedGame.type {
-            case .nds: initDsEmu(saveState: saveState, selectedGame: selectedGame)
+            case .nds:
+                emulator = DSEmulatorWrapper(emu: DSEmulatorMobile.newLoadState())
+                try loadDsState(saveState: saveState)
             case .gba:
                 emulator = GBAEmulatorWrapper(emu: GBAEmulator())
                 try loadGbState(saveState: saveState, selectedGame.type)
             case .gbc:
                 emulator = GBCEmulatorWrapper(emu: GBCMobileEmulator())
                 try loadGbState(saveState: saveState, selectedGame.type)
-            }
-        }
-    }
-
-    private func initDsEmu(saveState: any Snapshottable, selectedGame: any Playable) {
-        var bios7Ptr: UnsafeBufferPointer<UInt8>!
-        var bios9Ptr: UnsafeBufferPointer<UInt8>!
-        var firmwarePtr: UnsafeBufferPointer<UInt8>!
-        var romPtr: UnsafeBufferPointer<UInt8>!
-
-        if let bios7Data = bios7Data, let bios9Data = bios9Data {
-            Array(bios7Data).withUnsafeBufferPointer { ptr in
-                bios7Ptr = ptr
-            }
-            Array(bios9Data).withUnsafeBufferPointer { ptr in
-                bios9Ptr = ptr
-            }
-
-            if let firmwareData = firmwareData {
-                Array(firmwareData).withUnsafeBufferPointer { ptr in
-                    firmwarePtr = ptr
-                }
-            } else {
-                [].withUnsafeBufferPointer { ptr in
-                    firmwarePtr = ptr
-                }
-            }
-            var isStale = false
-            do {
-                let url = try URL(resolvingBookmarkData: selectedGame.bookmark, bookmarkDataIsStale: &isStale)
-                let data = try Data(contentsOf: url)
-
-                romData = data
-
-                Array(data).withUnsafeBufferPointer { ptr in
-                    romPtr = ptr
-                }
-
-                emulator = DSEmulatorWrapper(emu: MobileEmulator(bios7Ptr, bios9Ptr, firmwarePtr, romPtr))
-                try loadDsState(saveState: saveState)
-            } catch {
-                print(error)
             }
         }
     }
