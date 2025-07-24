@@ -65,66 +65,64 @@ struct GamesListView: View {
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
     var body: some View {
-        HStack {
-            switch gameType {
-            case .nds:
-                GamesListViewInner(
-                    gameType: gameType,
-                    showGameError: $showGameError,
-                    gameUrl: $gameUrl,
-                    themeColor: $themeColor,
-                    romData: $romData,
-                    biosData: .constant(nil),
-                    bios7Data: $bios7Data,
-                    bios9Data: $bios9Data,
-                    firmwareData: $firmwareData,
-                    emulator: $emulator,
-                    game: $game,
-                    workItem: $workItem,
-                    isRunning: $isRunning,
-                    path: $path,
-                    isPaused: $isPaused,
-                    filteredGames: filteredGames as! [Game]?
-                )
-            case .gba:
-                GamesListViewInner(
-                    gameType: gameType,
-                    showGameError: $showGameError,
-                    gameUrl: $gameUrl,
-                    themeColor: $themeColor,
-                    romData: $romData,
-                    biosData: $gbaBios,
-                    bios7Data: .constant(nil),
-                    bios9Data: .constant(nil),
-                    firmwareData: .constant(nil),
-                    emulator: $emulator,
-                    game: $game,
-                    workItem: $workItem,
-                    isRunning: $isRunning,
-                    path: $path,
-                    isPaused: $isPaused,
-                    filteredGbaGames: filteredGames as! [GBAGame]?
-                )
-            case .gbc:
-                GamesListViewInner(
-                    gameType: gameType,
-                    showGameError: $showGameError,
-                    gameUrl: $gameUrl,
-                    themeColor: $themeColor,
-                    romData: $romData,
-                    biosData: .constant(nil),
-                    bios7Data: .constant(nil),
-                    bios9Data: .constant(nil),
-                    firmwareData: .constant(nil),
-                    emulator: $emulator,
-                    game: $game,
-                    workItem: $workItem,
-                    isRunning: $isRunning,
-                    path: $path,
-                    isPaused: $isPaused,
-                    filteredGbcGames: filteredGames as! [GBCGame]?
-                )
-            }
+        switch gameType {
+        case .nds:
+            GamesListViewInner(
+                gameType: gameType,
+                showGameError: $showGameError,
+                gameUrl: $gameUrl,
+                themeColor: $themeColor,
+                romData: $romData,
+                biosData: .constant(nil),
+                bios7Data: $bios7Data,
+                bios9Data: $bios9Data,
+                firmwareData: $firmwareData,
+                emulator: $emulator,
+                game: $game,
+                workItem: $workItem,
+                isRunning: $isRunning,
+                path: $path,
+                isPaused: $isPaused,
+                filteredGames: filteredGames as! [Game]?
+            )
+        case .gba:
+            GamesListViewInner(
+                gameType: gameType,
+                showGameError: $showGameError,
+                gameUrl: $gameUrl,
+                themeColor: $themeColor,
+                romData: $romData,
+                biosData: $gbaBios,
+                bios7Data: .constant(nil),
+                bios9Data: .constant(nil),
+                firmwareData: .constant(nil),
+                emulator: $emulator,
+                game: $game,
+                workItem: $workItem,
+                isRunning: $isRunning,
+                path: $path,
+                isPaused: $isPaused,
+                filteredGbaGames: filteredGames as! [GBAGame]?
+            )
+        case .gbc:
+            GamesListViewInner(
+                gameType: gameType,
+                showGameError: $showGameError,
+                gameUrl: $gameUrl,
+                themeColor: $themeColor,
+                romData: $romData,
+                biosData: .constant(nil),
+                bios7Data: .constant(nil),
+                bios9Data: .constant(nil),
+                firmwareData: .constant(nil),
+                emulator: $emulator,
+                game: $game,
+                workItem: $workItem,
+                isRunning: $isRunning,
+                path: $path,
+                isPaused: $isPaused,
+                filteredGbcGames: filteredGames as! [GBCGame]?
+            )
         }
     }
 }

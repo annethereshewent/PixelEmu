@@ -29,65 +29,16 @@ struct LoadStatesView: View {
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
-    private func loadGbcState(saveState: any Snapshottable) throws {
+    private func loadGbState(saveState: any Snapshottable, _ gameType: GameType) throws {
         var isStale = false
         let url = try URL(resolvingBookmarkData: saveState.bookmark, bookmarkDataIsStale: &isStale)
         let data = try Array(Data(contentsOf: url))
 
         var isStale2 = false
 
-        let romUrl = try URL(resolvingBookmarkData: saveState.gbcGame!.bookmark, bookmarkDataIsStale: &isStale2)
-        let romData = try Data(contentsOf: romUrl)
-
-        if let emu = emulator {
-            var dataPtr: UnsafeBufferPointer<UInt8>!
-
-            data.withUnsafeBufferPointer { ptr in
-                dataPtr = ptr
-            }
-
-            emu.loadSaveState(dataPtr)
-
-            var romPtr: UnsafeBufferPointer<UInt8>!
-
-            Array(romData).withUnsafeBufferPointer { ptr in
-                romPtr = ptr
-            }
-
-            emu.reloadRom(romPtr)
-
-            workItem?.cancel()
-            isRunning = true
-
-            workItem = nil
-
-            var isStale = false
-            let url = try URL(resolvingBookmarkData: selectedGame!.bookmark, bookmarkDataIsStale: &isStale)
-
-            gameUrl = url
-
-            game = selectedGame
-
-            isPresented = false
-
-            path.append("GBCGameView")
-        }
-    }
-
-    private func loadGbaState(saveState: any Snapshottable) throws {
-        var isStale = false
-        let url = try URL(resolvingBookmarkData: saveState.bookmark, bookmarkDataIsStale: &isStale)
-        let data = try Array(Data(contentsOf: url))
-
-        var isStale2 = false
-
-        let romUrl = try URL(resolvingBookmarkData: saveState.gbaGame!.bookmark, bookmarkDataIsStale: &isStale2)
-        let romData = try Data(contentsOf: romUrl)
-
-        if
-            let emu = emulator,
-            let biosData = biosData
-        {
+        if let emu = emulator, let selectedGame = selectedGame {
+            let romUrl = try URL(resolvingBookmarkData: selectedGame.bookmark, bookmarkDataIsStale: &isStale2)
+            let romData = try Data(contentsOf: romUrl)
             var dataPtr: UnsafeBufferPointer<UInt8>!
 
             data.withUnsafeBufferPointer { ptr in
@@ -99,14 +50,20 @@ struct LoadStatesView: View {
                 romPtr = ptr
             }
 
-            var biosPtr: UnsafeBufferPointer<UInt8>!
-            Array(biosData).withUnsafeBufferPointer { ptr in
-                biosPtr = ptr
-            }
-
             emu.loadSaveState(dataPtr)
 
-            try! emu.loadBios(biosPtr)
+            if gameType == .gba {
+                if let biosData = biosData {
+                    var biosPtr: UnsafeBufferPointer<UInt8>!
+                    Array(biosData).withUnsafeBufferPointer { ptr in
+                        biosPtr = ptr
+                    }
+                    try! emu.loadBios(biosPtr)
+                } else {
+                    print("[Warning] GBA selected but BIOS not found. Emulation may fail.")
+                    return
+                }
+            }
             emu.reloadRom(romPtr)
 
             workItem?.cancel()
@@ -115,7 +72,7 @@ struct LoadStatesView: View {
             workItem = nil
 
             var isStale = false
-            let url = try URL(resolvingBookmarkData: selectedGame!.bookmark, bookmarkDataIsStale: &isStale)
+            let url = try URL(resolvingBookmarkData: selectedGame.bookmark, bookmarkDataIsStale: &isStale)
 
             gameUrl = url
 
@@ -123,7 +80,11 @@ struct LoadStatesView: View {
 
             isPresented = false
 
-            path.append("GBAGameView")
+            if gameType == .gba {
+                path.append("GBAGameView")
+            } else {
+                path.append("GBCGameView")
+            }
 
         } else {
             isPresented = false
@@ -213,10 +174,10 @@ struct LoadStatesView: View {
             case .nds: initDsEmu(saveState: saveState, selectedGame: selectedGame)
             case .gba:
                 emulator = GBAEmulatorWrapper(emu: GBAEmulator())
-                try loadGbaState(saveState: saveState)
+                try loadGbState(saveState: saveState, selectedGame.type)
             case .gbc:
                 emulator = GBCEmulatorWrapper(emu: GBCMobileEmulator())
-                try loadGbcState(saveState: saveState)
+                try loadGbState(saveState: saveState, selectedGame.type)
             }
         }
     }
