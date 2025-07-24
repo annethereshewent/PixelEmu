@@ -10,7 +10,7 @@ import AVFoundation
 
 class AudioManager {
     private let audioEngine = AVAudioEngine()
-    let audioNode = AVAudioPlayerNode()
+    private let audioNode = AVAudioPlayerNode()
     private let audioFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)
     private var mic: AVAudioInputNode?
 
