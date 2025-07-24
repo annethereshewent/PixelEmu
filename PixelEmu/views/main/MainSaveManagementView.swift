@@ -39,9 +39,9 @@ struct MainSaveManagementView: View {
     var body: some View {
         ZStack {
             ScrollView {
+                Text("\(gameType.getConsoleName()) cloud saves")
+                    .foregroundColor(Colors.primaryColor)
                 if saveEntries.count > 0 {
-                    Text("\(gameType.getConsoleName()) cloud saves")
-                        .foregroundColor(Colors.primaryColor)
                     LazyVGrid(columns: columns) {
                         ForEach(saveEntries, id: \.game.gameName) { saveEntry in
                             GameEntryView(game: saveEntry.game, themeColor: $themeColor) {
