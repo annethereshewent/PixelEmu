@@ -10,7 +10,7 @@ import SwiftData
 import UIKit
 
 @Model
-class GBAGame: Playable {
+class GBAGame: Playable {    
     @Attribute(.unique)
     var gameName: String
     var bookmark: Data
@@ -23,11 +23,13 @@ class GBAGame: Playable {
     @Transient
     var type: GameType = .gba
 
-    @Relationship(deleteRule: .cascade, inverse: \GBASaveState.game)
+    @Relationship(deleteRule: .cascade, inverse: \GBASaveState.gbaGame)
     var gbaSaveStates: [GBASaveState]?
 
     @Transient
     var saveStates: [SaveState]? = nil
+    @Transient
+    var gbcSaveStates: [GBCSaveState]? = nil
 
     init(gameName: String, bookmark: Data, saveStates: [GBASaveState], lastPlayed: Date) {
         self.gameName = gameName

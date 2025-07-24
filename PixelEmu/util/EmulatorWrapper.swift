@@ -13,8 +13,8 @@ import GBCEmulatorMobile
 protocol EmulatorWrapper {
     func setPaused(_ paused: Bool)
     func stepFrame()
-    func createSaveState() throws -> UnsafePointer<UInt8>?
-    func compressedLength() throws -> UInt
+    func createSaveState() -> UnsafePointer<UInt8>?
+    func compressedLength() -> UInt
     func hasSaved() -> Bool
     func setSaved(_ value: Bool) throws
     func setBackup(_ save_type: String, _ ram_capacity: UInt, _ bytes: UnsafeBufferPointer<UInt8>) throws
@@ -35,8 +35,8 @@ protocol EmulatorWrapper {
     func pressScreen() throws
     func releaseScreen() throws
     func touchScreenController(_ x: Float, _ y: Float) throws
-    func loadSaveState(_ ptr: UnsafeBufferPointer<UInt8>) throws
-    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) throws
+    func loadSaveState(_ ptr: UnsafeBufferPointer<UInt8>)
+    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>)
     func reloadFirmware(_ ptr: UnsafeBufferPointer<UInt8>) throws
     func hleFirmware() throws
     func reloadBios(_ bios7: UnsafeBufferPointer<UInt8>, _ bios9: UnsafeBufferPointer<UInt8>) throws
@@ -45,6 +45,7 @@ protocol EmulatorWrapper {
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws
     func hasSamples() -> Bool
     func popSample() throws -> Float
+    func setPausedAudio(_ value: Bool)
 }
 
 class DSEmulatorWrapper: EmulatorWrapper {
@@ -102,7 +103,7 @@ class DSEmulatorWrapper: EmulatorWrapper {
         emu.stepFrame()
     }
 
-    func compressedLength() throws -> UInt {
+    func compressedLength() -> UInt {
         return emu.compressedLength()
     }
 
@@ -165,7 +166,7 @@ class DSEmulatorWrapper: EmulatorWrapper {
         emu.loadSaveState(ptr)
     }
 
-    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) throws {
+    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) {
         emu.reloadRom(ptr)
     }
 
@@ -183,6 +184,10 @@ class DSEmulatorWrapper: EmulatorWrapper {
 
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws {
         throw "not implemented"
+    }
+
+    func setPausedAudio(_ value: Bool) {
+        emu.setPausedAudio(value)
     }
 }
 
@@ -237,7 +242,7 @@ class GBAEmulatorWrapper: EmulatorWrapper {
         emu.stepFrame()
     }
 
-    func compressedLength() throws -> UInt {
+    func compressedLength() -> UInt {
         return emu.compressedLength()
     }
 
@@ -305,7 +310,7 @@ class GBAEmulatorWrapper: EmulatorWrapper {
         emu.loadSaveState(ptr)
     }
 
-    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) throws {
+    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) {
         emu.reloadRom(ptr)
     }
 
@@ -322,6 +327,10 @@ class GBAEmulatorWrapper: EmulatorWrapper {
 
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws {
         emu.loadSave(ptr)
+    }
+
+    func setPausedAudio(_ value: Bool) {
+        emu.setPausedAudio(value)
     }
 }
 
@@ -356,8 +365,8 @@ class GBCEmulatorWrapper : EmulatorWrapper {
         return emu.getScreen()
     }
 
-    func createSaveState() throws -> UnsafePointer<UInt8>? {
-        throw "todo: not implemented"
+    func createSaveState() -> UnsafePointer<UInt8>? {
+        return emu.createSaveState()
     }
 
     func backupPointer() -> UnsafePointer<UInt8> {
@@ -376,8 +385,8 @@ class GBCEmulatorWrapper : EmulatorWrapper {
         emu.stepFrame()
     }
 
-    func compressedLength() throws -> UInt {
-        throw "todo: not implemented"
+    func compressedLength() -> UInt {
+        return emu.saveStateLength()
     }
 
     func hasSaved() -> Bool {
@@ -389,7 +398,6 @@ class GBCEmulatorWrapper : EmulatorWrapper {
     }
 
     func setBackup(_ save_type: String, _ ram_capacity: UInt, _ bytes: UnsafeBufferPointer<UInt8>) throws {
-        // do nothing
         throw "not implemented"
     }
 
@@ -440,12 +448,12 @@ class GBCEmulatorWrapper : EmulatorWrapper {
         throw "not implemented"
     }
 
-    func loadSaveState(_ ptr: UnsafeBufferPointer<UInt8>) throws {
-        throw "todo: not implemented"
+    func loadSaveState(_ ptr: UnsafeBufferPointer<UInt8>) {
+        emu.loadSaveState(ptr)
     }
 
-    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) throws {
-        throw "todo: not implemented"
+    func reloadRom(_ ptr: UnsafeBufferPointer<UInt8>) {
+        emu.reloadRom(ptr)
     }
 
     func reloadFirmware(_ ptr: UnsafeBufferPointer<UInt8>) throws {
@@ -461,5 +469,9 @@ class GBCEmulatorWrapper : EmulatorWrapper {
 
     func loadSave(_ ptr: UnsafeBufferPointer<UInt8>) throws {
         emu.loadSave(ptr)
+    }
+
+    func setPausedAudio(_ value: Bool) {
+        emu.setPausedAudio(value)
     }
 }

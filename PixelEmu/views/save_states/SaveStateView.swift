@@ -9,14 +9,31 @@ import SwiftUI
 import DSEmulatorMobile
 
 struct SaveStateView: View {
-    let saveState: SaveState
+    let gameType: GameType
+    let saveState: any Snapshottable
     @State private var screenshot = UIImage()
     @State private var isPopoverPresented = false
 
     @Binding var action: SaveStateAction
-    @Binding var currentState: SaveState?
+    @Binding var currentState: (any Snapshottable)?
 
     let graphicsParser = GraphicsParser()
+
+    var width: Int {
+        switch gameType {
+        case .nds: return NDS_SCREEN_WIDTH
+        case .gba: return GBA_SCREEN_WIDTH
+        case .gbc: return GBC_SCREEN_WIDTH
+        }
+    }
+
+    var height: Int {
+        switch gameType {
+        case .nds: return NDS_SCREEN_HEIGHT * 2
+        case .gba: return GBA_SCREEN_HEIGHT
+        case .gbc: return GBC_SCREEN_HEIGHT
+        }
+    }
 
     var body: some View {
         Button() {
@@ -25,12 +42,12 @@ struct SaveStateView: View {
             VStack {
                 Image(uiImage: screenshot)
                     .resizable()
-                    .frame(width: CGFloat(NDS_SCREEN_WIDTH) * 0.5, height: CGFloat(NDS_SCREEN_HEIGHT))
+                    .frame(width: CGFloat(width) * 0.5, height: CGFloat(height) * 0.5)
                 Text(saveState.saveName)
             }
         }
         .onAppear() {
-            if let image = graphicsParser.fromBytes(bytes: Array(saveState.screenshot), width: NDS_SCREEN_WIDTH, height: NDS_SCREEN_HEIGHT * 2) {
+            if let image = graphicsParser.fromBytes(bytes: Array(saveState.screenshot), width: width, height: height) {
                 screenshot = UIImage(cgImage: image)
             }
         }

@@ -43,7 +43,6 @@ struct ImportGamesView: View {
 
     @Binding var currentLibrary: String
 
-
     private func storeGBAGame(
         data: Data,
         emu: (any EmulatorWrapper)?,
@@ -58,7 +57,6 @@ struct ImportGamesView: View {
             url: url,
             isZip: isZip
         ) {
-            print(gameName)
             if !gameNamesSet.contains(game.gameName) {
                 if let artwork = await artworkService.fetchArtwork(for: game.gameName, systemId: GBA_ID) {
                     game.albumArt = artwork
@@ -148,7 +146,7 @@ struct ImportGamesView: View {
                             emu = DSEmulatorWrapper(emu: MobileEmulator(bios7Bytes, bios9Bytes, firmwareBytes, romPtr))
                         }
                     } else {
-                        try! emu?.reloadRom(romPtr)
+                        emu?.reloadRom(romPtr)
                     }
 
                     try! emu?.loadIcon()
@@ -323,8 +321,6 @@ struct ImportGamesView: View {
                                         )
                                         .removingPercentEncoding
                                         .unsafelyUnwrapped
-
-                                        print(gameName)
 
                                         switch actualUrl.pathExtension.lowercased() {
                                         case "nds": await storeDSGame(

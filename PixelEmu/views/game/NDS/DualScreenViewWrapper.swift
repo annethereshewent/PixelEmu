@@ -158,6 +158,8 @@ struct DualScreenViewWrapper: View {
 
                                     isSoundOn = !manager.playerPaused
 
+                                    emulator!.setPausedAudio(manager.playerPaused)
+
                                     let defaults = UserDefaults.standard
 
                                     defaults.setValue(isSoundOn, forKey: "isSoundOn")

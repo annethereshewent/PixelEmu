@@ -1,38 +1,38 @@
 //
-//  GBASaveState.swift
+//  GBCSaveState.swift
 //  PixelEmu
 //
-//  Created by Anne Castrillon on 12/6/24.
+//  Created by Anne Castrillon on 7/22/25.
 //
 
 import Foundation
 import SwiftData
 
 @Model
-class GBASaveState : Snapshottable {
+class GBCSaveState : Snapshottable {
     var saveName: String
     var screenshot: Data
     var bookmark: Data
     @Attribute(.unique)
-    var gbaGame: GBAGame?
+    var gbcGame: GBCGame?
 
     @Transient
-    var gbcGame: GBCGame? = nil
+    var gbaGame: GBAGame? = nil
     @Transient
     var game: Game? = nil
 
     var timestamp: Int
 
-    init(saveName: String, screenshot: [UInt8], bookmark: Data, timestamp: Int, game: GBAGame? = nil) {
+    init(saveName: String, screenshot: [UInt8], bookmark: Data, timestamp: Int, game: GBCGame? = nil) {
         self.saveName = saveName
         self.screenshot = Data(screenshot)
         self.bookmark = bookmark
         self.timestamp = timestamp
 
-        self.gbaGame = game
+        self.gbcGame = game
     }
 
-    func compare(_ rhs: GBASaveState) -> Bool {
+    func compare(_ rhs: GBCSaveState) -> Bool {
         return self.timestamp < rhs.timestamp
     }
 }

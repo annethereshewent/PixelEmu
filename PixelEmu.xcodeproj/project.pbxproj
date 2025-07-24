@@ -37,7 +37,6 @@
 		E82A46FA2D9B41380059BB67 /* PixelEmuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */; };
 		E84B3A8C2D016205003E0061 /* GBBackupFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84B3A8B2D016205003E0061 /* GBBackupFile.swift */; };
 		E84EE44F2D04024700CF15ED /* GBASaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EE44E2D04024700CF15ED /* GBASaveState.swift */; };
-		E84EE4512D0403B000CF15ED /* GBAStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E84EE4502D0403B000CF15ED /* GBAStateView.swift */; };
 		E88C68492E2AFEB500A7085E /* GBCGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88C68482E2AFEB500A7085E /* GBCGame.swift */; };
 		E88C684D2E2B017D00A7085E /* GamesListViewInner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88C684C2E2B017D00A7085E /* GamesListViewInner.swift */; };
 		E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89681A62CD440CF00F7A316 /* StateManager.swift */; };
@@ -50,7 +49,6 @@
 		E8A334042CFACF8C00765ABB /* GBScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334032CFACF8C00765ABB /* GBScreenView.swift */; };
 		E8A334062CFAD03A00765ABB /* GBScreenViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A334052CFAD03A00765ABB /* GBScreenViewWrapper.swift */; };
 		E8A5893E2D02C01C009D4337 /* MainSaveManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A5893D2D02C01C009D4337 /* MainSaveManagementView.swift */; };
-		E8A589482D03ED2E009D4337 /* GBAStateEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A589472D03ED2E009D4337 /* GBAStateEntriesView.swift */; };
 		E8BA68132CC4537100CE7E54 /* DeleteDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */; };
 		E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */; };
 		E8BA681F2CC49A3900CE7E54 /* DepartureMono.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */; };
@@ -85,6 +83,8 @@
 		E8F1EE442E2CC2D9009F7301 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1EE432E2CC2D9009F7301 /* MetalView.swift */; };
 		E8F1EE482E2CC31B009F7301 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E8F1EE462E2CC31B009F7301 /* Shaders.metal */; };
 		E8F1EE4A2E2CC46B009F7301 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1EE492E2CC46B009F7301 /* Renderer.swift */; };
+		E8F1EE502E30B020009F7301 /* GBCSaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1EE4F2E30B020009F7301 /* GBCSaveState.swift */; };
+		E8F1EE522E30B0F4009F7301 /* Snapshottable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F1EE512E30B0F4009F7301 /* Snapshottable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -122,7 +122,6 @@
 		E82A46F92D9B41380059BB67 /* PixelEmuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelEmuApp.swift; sourceTree = "<group>"; };
 		E84B3A8B2D016205003E0061 /* GBBackupFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBBackupFile.swift; sourceTree = "<group>"; };
 		E84EE44E2D04024700CF15ED /* GBASaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBASaveState.swift; sourceTree = "<group>"; };
-		E84EE4502D0403B000CF15ED /* GBAStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateView.swift; sourceTree = "<group>"; };
 		E88C68482E2AFEB500A7085E /* GBCGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBCGame.swift; sourceTree = "<group>"; };
 		E88C684C2E2B017D00A7085E /* GamesListViewInner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListViewInner.swift; sourceTree = "<group>"; };
 		E89681A62CD440CF00F7A316 /* StateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManager.swift; sourceTree = "<group>"; };
@@ -135,7 +134,6 @@
 		E8A334032CFACF8C00765ABB /* GBScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBScreenView.swift; sourceTree = "<group>"; };
 		E8A334052CFAD03A00765ABB /* GBScreenViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBScreenViewWrapper.swift; sourceTree = "<group>"; };
 		E8A5893D2D02C01C009D4337 /* MainSaveManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSaveManagementView.swift; sourceTree = "<group>"; };
-		E8A589472D03ED2E009D4337 /* GBAStateEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBAStateEntriesView.swift; sourceTree = "<group>"; };
 		E8BA68122CC4537100CE7E54 /* DeleteDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDialog.swift; sourceTree = "<group>"; };
 		E8BA68142CC4790800CE7E54 /* ResumeGameDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeGameDialog.swift; sourceTree = "<group>"; };
 		E8BA681C2CC49A3900CE7E54 /* DepartureMono.woff2 */ = {isa = PBXFileReference; lastKnownFileType = file; path = DepartureMono.woff2; sourceTree = "<group>"; };
@@ -169,6 +167,8 @@
 		E8F1EE432E2CC2D9009F7301 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
 		E8F1EE462E2CC31B009F7301 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		E8F1EE492E2CC46B009F7301 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		E8F1EE4F2E30B020009F7301 /* GBCSaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GBCSaveState.swift; sourceTree = "<group>"; };
+		E8F1EE512E30B0F4009F7301 /* Snapshottable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshottable.swift; sourceTree = "<group>"; };
 		F6D72E464429EADD40F6E67D /* Pods-PixelEmu-PixelEmuUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; path = "Target Support Files/Pods-PixelEmu-PixelEmuUITests/Pods-PixelEmu-PixelEmuUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -297,6 +297,8 @@
 				E8C245F72CBE043B00B6DF67 /* SaveState.swift */,
 				E84EE44E2D04024700CF15ED /* GBASaveState.swift */,
 				E88C68482E2AFEB500A7085E /* GBCGame.swift */,
+				E8F1EE4F2E30B020009F7301 /* GBCSaveState.swift */,
+				E8F1EE512E30B0F4009F7301 /* Snapshottable.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -398,8 +400,6 @@
 				E8C246012CBE08D600B6DF67 /* SaveStateView.swift */,
 				E8DF26BD2CC5F99600A88821 /* LoadStatesView.swift */,
 				E8DF26BF2CC5FA5000A88821 /* LoadStateEntryView.swift */,
-				E8A589472D03ED2E009D4337 /* GBAStateEntriesView.swift */,
-				E84EE4502D0403B000CF15ED /* GBAStateView.swift */,
 			);
 			path = save_states;
 			sourceTree = "<group>";
@@ -583,6 +583,7 @@
 				E8BBBC682CF96AD10065EF4E /* GBAGame.swift in Sources */,
 				E89681A72CD440CF00F7A316 /* StateManager.swift in Sources */,
 				E88C684D2E2B017D00A7085E /* GamesListViewInner.swift in Sources */,
+				E8F1EE522E30B0F4009F7301 /* Snapshottable.swift in Sources */,
 				E806EA5A2C9A834D0081D3E8 /* SettingsView.swift in Sources */,
 				E88C68492E2AFEB500A7085E /* GBCGame.swift in Sources */,
 				E8C245E42CB0F88B00B6DF67 /* GameScreenView.swift in Sources */,
@@ -592,14 +593,13 @@
 				E8F1EE4A2E2CC46B009F7301 /* Renderer.swift in Sources */,
 				E89681A92CD561A100F7A316 /* ControllerMappingsView.swift in Sources */,
 				E8F1EE442E2CC2D9009F7301 /* MetalView.swift in Sources */,
+				E8F1EE502E30B020009F7301 /* GBCSaveState.swift in Sources */,
 				E8BA68152CC4790800CE7E54 /* ResumeGameDialog.swift in Sources */,
 				E8C245E22CB0F4E300B6DF67 /* GameScreen.swift in Sources */,
 				E806EA9E2CA2498B0081D3E8 /* FileJSON.swift in Sources */,
-				E8A589482D03ED2E009D4337 /* GBAStateEntriesView.swift in Sources */,
 				E8BBBC6A2CF96AEA0065EF4E /* MainLibraryView.swift in Sources */,
 				E806EA5C2C9A8EA70081D3E8 /* GameController.swift in Sources */,
 				E806EA742CA0EE100081D3E8 /* BackupFile.swift in Sources */,
-				E84EE4512D0403B000CF15ED /* GBAStateView.swift in Sources */,
 				E806EA7A2CA1117E0081D3E8 /* GamesListView.swift in Sources */,
 				E8DF26BC2CC5F43800A88821 /* GameEntryViewWrapper.swift in Sources */,
 				E82A46FA2D9B41380059BB67 /* PixelEmuApp.swift in Sources */,

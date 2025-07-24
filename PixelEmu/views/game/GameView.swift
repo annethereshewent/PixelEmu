@@ -108,6 +108,10 @@ struct GameView: View {
 
         audioManager?.muteAudio()
 
+        workItem?.cancel()
+        workItem = nil
+        isPaused = true
+
         presentationMode.wrappedValue.dismiss()
     }
 
@@ -172,17 +176,23 @@ struct GameView: View {
                     quickSaveLoadKeyPressed = true
 
                     if let emu = emulator {
-                        let dataPtr = try! emu.createSaveState()
-                        let dataSize = try! emu.compressedLength()
+                        let dataPtr = emu.createSaveState()
+                        let dataSize = emu.compressedLength()
 
                         let bufferPtr = UnsafeBufferPointer(start: dataPtr, count: Int(dataSize))
                         let data = Data(bufferPtr)
 
                         do {
-                            try stateManager?.createSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
+                            switch game.type {
+                            case .nds:
+                                try stateManager?.createNdsSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
+                            case .gba, .gbc:
+                                try stateManager?.createGbSaveState(data: data, saveName: "quick_save.save", timestamp: Int(Date().timeIntervalSince1970))
+                            }
                         } catch {
                             print(error)
                         }
+
 
                         Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
                             quickSaveLoadKeyPressed = false
@@ -494,6 +504,9 @@ struct GameView: View {
                 mainGameLoop()
             }
 
+            // just in case this was set to true in another game.
+            isPaused = false
+
             DispatchQueue.global().async(execute: workItem!)
         }
     }
@@ -506,24 +519,24 @@ struct GameView: View {
                     let playerPaused = audioManager?.playerPaused ?? true
 
                     if !playerPaused {
-                        var audioBufferPtr: UnsafePointer<Float>!
-                        var audioBufferLength: UInt!
-
                         switch game.type {
                         case .nds:
-                            audioBufferLength = try! emu.audioBufferLength()
-                            audioBufferPtr = try! emu.audioBufferPtr()
+                            let audioBufferLength = try! emu.audioBufferLength()
+                            let audioBufferPtr = try! emu.audioBufferPtr()
 
                             let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
 
                             self.audioManager?.updateBuffer(samples: audioSamples)
                         case .gba, .gbc:
-                            audioBufferPtr = try! emu.audioBufferPtr()
-                            audioBufferLength = try! emu.audioBufferLength()
+                            if !audioManager!.playerPaused {
+                                let audioBufferPtr = try! emu.audioBufferPtr()
+                                let audioBufferLength = try! emu.audioBufferLength()
 
-                            let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
+                                let audioSamples = Array(UnsafeBufferPointer(start: audioBufferPtr, count: Int(audioBufferLength)))
 
-                            self.audioManager?.updateBuffer(samples: audioSamples)
+                                audioManager?.updateBuffer(samples: audioSamples)
+                            }
+                            break
                         }
                     }
 
@@ -581,7 +594,7 @@ struct GameView: View {
                     self.checkSaves()
                 }
 
-                if !isRunning {
+                if !isRunning || isPaused {
                     break
                 }
             }
@@ -603,12 +616,29 @@ struct GameView: View {
 
     func resumeGame() {
         emulator?.setPaused(false)
-        if game.type == .nds {
-            audioManager?.startMicrophoneAndAudio()
+        if audioManager == nil {
+            audioManager = AudioManager()
         }
+
+        if !audioManager!.audioNode.isPlaying {
+            if game.type == .nds {
+                audioManager!.startMicrophoneAndAudio()
+            } else {
+                audioManager!.startAudio()
+            }
+        }
+
         if isSoundOn {
             audioManager?.resumeAudio()
         }
+
+        isPaused = false
+
+        workItem = DispatchWorkItem {
+            mainGameLoop()
+        }
+
+        DispatchQueue.global().async(execute: workItem!)
     }
 
     var body: some View {

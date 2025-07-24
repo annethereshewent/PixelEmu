@@ -42,9 +42,9 @@ class StateManager {
         self.firmwareData = firmwareData
     }
 
-    func saveGbaState(
-        _ game: GBAGame,
-        _ updateState: GBASaveState?,
+    func saveGbState(
+        _ game: any Playable,
+        _ updateState: (any Snapshottable)?,
         screenshot: [UInt8],
         bookmark: Data,
         timestamp: Int,
@@ -52,41 +52,77 @@ class StateManager {
     ) {
         let dateString = getCurrentDateString()
 
-        var saveState: GBASaveState!
+        var saveState: (any Snapshottable)!
         if (saveName == "quick_save.save") {
-            saveState = GBASaveState(
-                saveName: "Quick save",
-                screenshot: screenshot,
-                bookmark: bookmark,
-                timestamp: timestamp
-            )
+            if game.type == .gba {
+                saveState = GBASaveState(
+                    saveName: "Quick save",
+                    screenshot: screenshot,
+                    bookmark: bookmark,
+                    timestamp: timestamp
+                )
+            } else {
+                saveState = GBCSaveState(
+                    saveName: "Quick save",
+                    screenshot: screenshot,
+                    bookmark: bookmark,
+                    timestamp: timestamp
+                )
+            }
         } else {
-            saveState = GBASaveState(
-                saveName: "Save on \(dateString)",
-                screenshot: screenshot,
-                bookmark: bookmark,
-                timestamp: timestamp
-            )
+            if game.type == .gba {
+                saveState = GBASaveState(
+                    saveName: "Save on \(dateString)",
+                    screenshot: screenshot,
+                    bookmark: bookmark,
+                    timestamp: timestamp
+                )
+            } else {
+                saveState = GBCSaveState(
+                    saveName: "Save on \(dateString)",
+                    screenshot: screenshot,
+                    bookmark: bookmark,
+                    timestamp: timestamp
+                )
+            }
         }
 
         var index: Int?
 
         if let updateState = updateState {
-            index = game.gbaSaveStates!.firstIndex(of: updateState)
+            index =
+                game.type == .gba ? game.gbaSaveStates!.firstIndex(of: updateState as! GBASaveState) :
+                game.gbcSaveStates!.firstIndex(of: updateState as! GBCSaveState)
         } else if saveName == "quick_save.save" {
-            index = game.gbaSaveStates!.map({ $0.saveName }).firstIndex(of: "Quick save")
+            index =
+                game.type == .gbc ? game.gbcSaveStates!.map({ $0.saveName }).firstIndex(of: "Quick save") :
+                game.gbcSaveStates!.map({ $0.saveName }).firstIndex(of: "Quick save")
         }
 
         if let index = index {
-            let currState = game.gbaSaveStates![index]
+            if game.type == .gbc {
+                let currState = game.gbcSaveStates![index]
 
-            currState.screenshot = Data(saveState.screenshot)
-            currState.bookmark = saveState.bookmark
+                currState.screenshot = Data(saveState.screenshot)
+                currState.bookmark = saveState.bookmark
 
-            context.insert(currState)
+                context.insert(currState)
+            } else {
+                let currState = game.gbaSaveStates![index]
+
+                currState.screenshot = Data(saveState.screenshot)
+                currState.bookmark = saveState.bookmark
+                
+                context.insert(currState)
+            }
         } else {
-            game.gbaSaveStates!.append(saveState)
-            context.insert(saveState)
+            if game.type == .gba {
+                (game as! GBAGame).gbaSaveStates!.append(saveState as! GBASaveState)
+                context.insert(saveState as! GBASaveState)
+            } else {
+                (game as! GBCGame).gbcSaveStates!.append(saveState as! GBCSaveState)
+                context.insert(saveState as! GBCSaveState)
+            }
         }
     }
 
@@ -158,7 +194,7 @@ class StateManager {
         return dateString
     }
 
-    func loadSaveState(currentState: SaveState?, isQuickSave: Bool = false) throws {
+    func loadNdsSaveState(currentState: SaveState?, isQuickSave: Bool = false) throws {
         var url: URL!
         if let saveState = currentState {
             var isStale = false
@@ -218,7 +254,7 @@ class StateManager {
                     romPtr = ptr
                 }
 
-                try! emu.loadSaveState(dataPtr)
+                emu.loadSaveState(dataPtr)
                 try! emu.reloadBios(bios7Ptr, bios9Ptr)
 
                 if let firmwareData = firmwareData {
@@ -233,12 +269,19 @@ class StateManager {
                 } else {
                     try! emu.hleFirmware()
                 }
-                try! emu.reloadRom(romPtr)
+                emu.reloadRom(romPtr)
             }
         }
     }
 
-    func loadGbaSaveState(currentState: GBASaveState?, isQuickSave: Bool = false) throws {
+    func loadSaveState(currentState: (any Snapshottable)?, isQuickSave: Bool = false) throws {
+        switch game.type {
+        case .nds: try loadNdsSaveState(currentState: currentState as! SaveState?, isQuickSave: isQuickSave)
+        case .gba, .gbc: try loadGbSaveState(currentState: currentState, isQuickSave: isQuickSave)
+        }
+    }
+
+    func loadGbSaveState(currentState: (any Snapshottable)?, isQuickSave: Bool = false) throws {
         var url: URL!
         if let saveState = currentState {
             var isStale = false
@@ -257,7 +300,7 @@ class StateManager {
                 try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
             }
 
-            let gameFolder = game.gameName.replacing(".nds", with: "")
+            let gameFolder = game.gameName.replacing(".gba", with: "").replacing(".GBA", with: "")
 
             url.appendPathComponent(gameFolder)
 
@@ -269,35 +312,37 @@ class StateManager {
         } else {
             return
         }
+
         if let emu = emu {
             if let data = try? Array(Data(contentsOf: url)) {
+                var dataPtr: UnsafeBufferPointer<UInt8>!
+                data.withUnsafeBufferPointer { ptr in
+                    dataPtr = ptr
+                }
+
+                var biosPtr: UnsafeBufferPointer<UInt8>!
+                var romPtr: UnsafeBufferPointer<UInt8>!
+
+                Array(romData).withUnsafeBufferPointer { ptr in
+                    romPtr = ptr
+                }
+
+                emu.loadSaveState(dataPtr)
+
                 if let biosData = biosData {
-                    var dataPtr: UnsafeBufferPointer<UInt8>!
-                    data.withUnsafeBufferPointer { ptr in
-                        dataPtr = ptr
-                    }
-
-                    var biosPtr: UnsafeBufferPointer<UInt8>!
-                    var romPtr: UnsafeBufferPointer<UInt8>!
-
-                    Array(romData).withUnsafeBufferPointer { ptr in
-                        romPtr = ptr
-                    }
-
                     Array(biosData).withUnsafeBufferPointer { ptr in
                         biosPtr = ptr
                     }
 
-                    try! emu.loadSaveState(dataPtr)
                     try! emu.loadBios(biosPtr)
-
-                    try! emu.reloadRom(romPtr)
                 }
+
+                emu.reloadRom(romPtr)
             }
         }
     }
 
-    func createGbaSaveState(data: Data, saveName: String, timestamp: Int, updateState: GBASaveState? = nil) throws {
+    func createGbSaveState(data: Data, saveName: String, timestamp: Int, updateState: (any Snapshottable)? = nil) throws {
         var location = try FileManager.default.url(
              for: .applicationSupportDirectory,
              in: .userDomainMask,
@@ -311,7 +356,11 @@ class StateManager {
             try FileManager.default.createDirectory(at: location, withIntermediateDirectories: true)
         }
 
-        let gameFolder = game.gameName.replacing(".gba", with: "")
+        let gameFolder = if game.type == .gba {
+            game.gameName.replacing(".gba", with: "").replacing(".GBA", with: "")
+        } else {
+            game.gameName.hasSuffix(".gb") ? game.gameName.replacing(".gb", with: "") : game.gameName.replacing(".gbc", with: "")
+        }
 
         location.appendPathComponent(gameFolder)
 
@@ -328,12 +377,23 @@ class StateManager {
 
         let picturePtr = try! emu?.getPicturePtr()
 
-        let bufferPtr = UnsafeBufferPointer(start: picturePtr, count: GBA_SCREEN_WIDTH * GBA_SCREEN_HEIGHT * 4)
+        var width = 0
+        var height = 0
+
+        if game.type == .gba {
+            width = GBA_SCREEN_WIDTH
+            height = GBA_SCREEN_HEIGHT
+        } else {
+            width = GBC_SCREEN_WIDTH
+            height = GBC_SCREEN_HEIGHT
+        }
+
+        let bufferPtr = UnsafeBufferPointer(start: picturePtr, count: width * height * 4)
 
         screenshot = Array(bufferPtr)
 
-        saveGbaState(
-            game as! GBAGame,
+        saveGbState(
+            game,
             updateState,
             screenshot: screenshot,
             bookmark: bookmark,
@@ -342,7 +402,7 @@ class StateManager {
         )
     }
 
-    func createSaveState(data: Data, saveName: String, timestamp: Int, updateState: SaveState? = nil) throws {
+    func createNdsSaveState(data: Data, saveName: String, timestamp: Int, updateState: SaveState? = nil) throws {
         if let emu = emu {
             var location = try FileManager.default.url(
                 for: .applicationSupportDirectory,

@@ -139,11 +139,12 @@ struct GBScreenViewWrapper: View {
                             }
                             Spacer()
                             Button {
-                                if let manager = audioManager {
+                                if let manager = audioManager, let emulator = emulator {
                                     feedbackGenerator.impactOccurred()
                                     manager.toggleAudio()
 
                                     isSoundOn = !manager.playerPaused
+                                    emulator.setPausedAudio(manager.playerPaused)
 
                                     let defaults = UserDefaults.standard
 

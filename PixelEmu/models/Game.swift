@@ -35,6 +35,8 @@ class Game: Playable {
     var type: GameType = .nds
     @Transient
     var gbaSaveStates: [GBASaveState]? = nil
+    @Transient
+    var gbcSaveStates: [GBCSaveState]? = nil
 
 
     init(gameName: String, bookmark: Data, gameIcon: [UInt8], saveStates: [SaveState], lastPlayed: Date) {
