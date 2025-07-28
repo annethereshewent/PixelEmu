@@ -1,6 +1,10 @@
 # PixelEmu
 
-## Getting Started
+# Installation
+
+To install on iOS you will need to find a way to sideload the app onto your phone. AltStore is a good choice for doing so, there are many guides online that show how to do so.
+
+## Building project
 
 This is a mobile emulator that supports several emulator cores, including NDS, GBA, and GBC.
 
@@ -42,7 +46,6 @@ Supported features:
 - Save states
 
 Todo: 
-
 - Debugging tools
 
 ## Screenshots
