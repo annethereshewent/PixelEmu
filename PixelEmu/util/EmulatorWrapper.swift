@@ -46,6 +46,7 @@ protocol EmulatorWrapper {
     func hasSamples() -> Bool
     func popSample() throws -> Float
     func setPausedAudio(_ value: Bool)
+    func setPalette(_ value: UInt) throws
 }
 
 class DSEmulatorWrapper: EmulatorWrapper {
@@ -53,6 +54,10 @@ class DSEmulatorWrapper: EmulatorWrapper {
 
     init (emu: MobileEmulator) {
         self.emu = emu
+    }
+
+    func setPalette(_ value: UInt) throws {
+        throw "not implemented"
     }
 
     func hasSamples() -> Bool {
@@ -198,6 +203,11 @@ class GBAEmulatorWrapper: EmulatorWrapper {
         self.emu = emu
     }
 
+    func setPalette(_ value: UInt) throws {
+        throw "not implemented"
+    }
+
+
     func hasSamples() -> Bool {
         false
     }
@@ -340,6 +350,11 @@ class GBCEmulatorWrapper : EmulatorWrapper {
     init (emu: GBCMobileEmulator) {
         self.emu = emu
     }
+
+    func setPalette(_ value: UInt) {
+        emu.setPalette(value)
+    }
+
 
     func hasSamples() -> Bool {
        return self.emu.hasSamples()

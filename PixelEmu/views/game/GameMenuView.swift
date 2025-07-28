@@ -28,8 +28,10 @@ struct GameMenuView: View {
     @Binding var isHoldButtonsPresented: Bool
     @Binding var isSoundOn: Bool
     @Binding var gameController: GameController?
+    @Binding var themeColor: Color
 
-    @State var isStateEntriesPresented: Bool = false
+    @State private var isStateEntriesPresented: Bool = false
+    @State private var isPalettePickerPresented: Bool = false
 
     private var color: Color {
         switch colorScheme {
@@ -59,7 +61,6 @@ struct GameMenuView: View {
             }
             .padding(.leading, 25)
             HStack {
-                Spacer()
                 Button() {
                     isStateEntriesPresented = true
                 } label: {
@@ -70,7 +71,6 @@ struct GameMenuView: View {
                         Text("Save states")
                     }
                 }
-                Spacer()
                 if gameController?.controller?.extendedGamepad == nil {
                     Button() {
                         isHoldButtonsPresented = true
@@ -85,7 +85,7 @@ struct GameMenuView: View {
 
                     }
                 } else {
-                    Button() {
+                    Button {
                         isSoundOn = !isSoundOn
 
                         if isSoundOn {
@@ -115,7 +115,6 @@ struct GameMenuView: View {
                         }
                     }
                 }
-                Spacer()
                 Button() {
                     isMenuPresented = false
                 } label: {
@@ -126,8 +125,19 @@ struct GameMenuView: View {
                         Text("Resume game")
                     }
                 }
+                if game!.type == .gbc {
+                    Button {
+                        isPalettePickerPresented = true
+                    } label: {
+                        VStack {
+                            Image(systemName: "paintpalette")
+                                .resizable()
+                                .frame(width: 35, height: 35)
+                            Text("Pick palette")
+                        }
 
-                Spacer()
+                    }
+                }
             }
             .onDisappear() {
                 if !isHoldButtonsPresented && !shouldGoHome {
@@ -143,45 +153,25 @@ struct GameMenuView: View {
         .font(.custom("Departure Mono", size: 16))
         .foregroundColor(color)
         .sheet(isPresented: $isStateEntriesPresented) {
-            switch gameType {
-            case .nds:
-                SaveStateEntriesView(
-                    emulator: $emulator,
-                    gameName: $gameName,
-                    isMenuPresented: $isMenuPresented,
-                    game: $game,
-                    biosData: $biosData,
-                    bios7Data: $bios7Data,
-                    bios9Data: $bios9Data,
-                    firmwareData: $firmwareData,
-                    romData: $romData
-                )
-            case .gba:
-                SaveStateEntriesView(
-                    emulator: $emulator,
-                    gameName: $gameName,
-                    isMenuPresented: $isMenuPresented,
-                    game: $game,
-                    biosData: $biosData,
-                    bios7Data: $bios7Data,
-                    bios9Data: $bios9Data,
-                    firmwareData: $firmwareData,
-                    romData: $romData
-                )
-            case .gbc:
-                SaveStateEntriesView(
-                    emulator: $emulator,
-                    gameName: $gameName,
-                    isMenuPresented: $isMenuPresented,
-                    game: $game,
-                    biosData: $biosData,
-                    bios7Data: $bios7Data,
-                    bios9Data: $bios9Data,
-                    firmwareData: $firmwareData,
-                    romData: $romData
-                )
-            }
-
+            SaveStateEntriesView(
+                emulator: $emulator,
+                gameName: $gameName,
+                isMenuPresented: $isMenuPresented,
+                game: $game,
+                biosData: $biosData,
+                bios7Data: $bios7Data,
+                bios9Data: $bios9Data,
+                firmwareData: $firmwareData,
+                romData: $romData
+            )
+        }
+        .sheet(isPresented: $isPalettePickerPresented) {
+            PalettePickerView(
+                themeColor: $themeColor,
+                emulator: $emulator,
+                isPresented: $isPalettePickerPresented,
+                isMenuPresented: $isMenuPresented
+            )
         }
     }
 }

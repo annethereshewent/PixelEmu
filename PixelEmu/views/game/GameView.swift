@@ -453,12 +453,14 @@ struct GameView: View {
                 }
 
 
-                emulator =  DSEmulatorWrapper(emu: MobileEmulator(
+                emulator = DSEmulatorWrapper(emu: MobileEmulator(
                     bios7Ptr!,
                     bios9Ptr!,
                     firmwarePtr!,
                     romPtr!
                 ))
+
+
             case .gba:
                 let biosArr = Array(gbaBiosData!)
                 var biosPtr: UnsafeBufferPointer<UInt8>!
@@ -476,6 +478,15 @@ struct GameView: View {
                     emulator = GBCEmulatorWrapper(emu: GBCMobileEmulator())
 
                     try! emulator!.load(romPtr)
+                }
+            }
+
+            let defaults = UserDefaults.standard
+
+            let currentPalette = defaults.integer(forKey: "currentPalette")
+            if let game = game {
+                if game.type == .gbc {
+                    try! emulator!.setPalette(UInt(currentPalette))
                 }
             }
         }
@@ -765,68 +776,26 @@ struct GameView: View {
             isPresented: $isMenuPresented
         ) {
             if let game = game {
-                switch game.type {
-                case .nds:
-                    GameMenuView(
-                        gameType: .nds,
-                        emulator: $emulator,
-                        isRunning: $isRunning,
-                        workItem: $workItem,
-                        audioManager: $audioManager,
-                        isMenuPresented: $isMenuPresented,
-                        gameName: $gameName,
-                        biosData: .constant(nil),
-                        bios7Data: $bios7Data,
-                        bios9Data: $bios9Data,
-                        firmwareData: $firmwareData,
-                        romData: $romData,
-                        shouldGoHome: $shouldGoHome,
-                        game: $game,
-                        isHoldButtonsPresented: $isHoldButtonsPresented,
-                        isSoundOn: $isSoundOn,
-                        gameController: $gameController
-                    )
-                case .gba:
-                    GameMenuView(
-                        gameType: .gba,
-                        emulator: $emulator,
-                        isRunning: $isRunning,
-                        workItem: $workItem,
-                        audioManager: $audioManager,
-                        isMenuPresented: $isMenuPresented,
-                        gameName: $gameName,
-                        biosData: $gbaBiosData,
-                        bios7Data: .constant(nil),
-                        bios9Data: .constant(nil),
-                        firmwareData: .constant(nil),
-                        romData: $romData,
-                        shouldGoHome: $shouldGoHome,
-                        game: $game,
-                        isHoldButtonsPresented: $isHoldButtonsPresented,
-                        isSoundOn: $isSoundOn,
-                        gameController: $gameController
-                    )
-                case .gbc:
-                    GameMenuView(
-                        gameType: .gbc,
-                        emulator: $emulator,
-                        isRunning: $isRunning,
-                        workItem: $workItem,
-                        audioManager: $audioManager,
-                        isMenuPresented: $isMenuPresented,
-                        gameName: $gameName,
-                        biosData: .constant(nil),
-                        bios7Data: .constant(nil),
-                        bios9Data: .constant(nil),
-                        firmwareData: .constant(nil),
-                        romData: $romData,
-                        shouldGoHome: $shouldGoHome,
-                        game: $game,
-                        isHoldButtonsPresented: $isHoldButtonsPresented,
-                        isSoundOn: $isSoundOn,
-                        gameController: $gameController
-                    )
-                }
+                GameMenuView(
+                    gameType: game.type,
+                    emulator: $emulator,
+                    isRunning: $isRunning,
+                    workItem: $workItem,
+                    audioManager: $audioManager,
+                    isMenuPresented: $isMenuPresented,
+                    gameName: $gameName,
+                    biosData: $gbaBiosData,
+                    bios7Data: $bios7Data,
+                    bios9Data: $bios9Data,
+                    firmwareData: $firmwareData,
+                    romData: $romData,
+                    shouldGoHome: $shouldGoHome,
+                    game: $game,
+                    isHoldButtonsPresented: $isHoldButtonsPresented,
+                    isSoundOn: $isSoundOn,
+                    gameController: $gameController,
+                    themeColor: $themeColor
+                )
             }
 
         }
