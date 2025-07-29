@@ -459,8 +459,6 @@ struct GameView: View {
                     firmwarePtr!,
                     romPtr!
                 ))
-
-
             case .gba:
                 let biosArr = Array(gbaBiosData!)
                 var biosPtr: UnsafeBufferPointer<UInt8>!
