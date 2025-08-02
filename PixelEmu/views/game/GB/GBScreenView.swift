@@ -19,23 +19,20 @@ struct GBScreenView: View {
 
     var renderingData: RenderingData
 
-    @EnvironmentObject var orientationInfo: OrientationInfo
-
     private var screenRatio: Float {
-        switch orientationInfo.orientation {
-        case .portrait:
+        if UIDevice.current.orientation.isPortrait {
             if gameController?.controller?.extendedGamepad == nil {
                 return gameType == .gba ? GBA_SCREEN_RATIO : GBC_SCREEN_RATIO
             }
 
             return gameType == .gba ? GBA_FULLSCREEN_RATIO : GBC_SCREEN_RATIO
-        case .landscape:
-            if gameController?.controller?.extendedGamepad == nil {
-                return gameType == .gba ? GBA_LANDSCAPE_RATIO : GBC_LANDSCAPE_RATIO
-            }
-
-            return gameType == .gba ? GBA_LANDSCAPE_FULLSCREEN_RATIO : GBC_LANDSCAPE_FULLSCREEN_RATIO
         }
+
+        if gameController?.controller?.extendedGamepad == nil {
+            return gameType == .gba ? GBA_LANDSCAPE_RATIO : GBC_LANDSCAPE_RATIO
+        }
+
+        return gameType == .gba ? GBA_LANDSCAPE_FULLSCREEN_RATIO : GBC_LANDSCAPE_FULLSCREEN_RATIO
     }
 
     private var screenWidth: Int {

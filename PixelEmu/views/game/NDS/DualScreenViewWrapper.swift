@@ -23,8 +23,6 @@ struct DualScreenViewWrapper: View {
     var renderingData: RenderingData
     var renderingDataBottom: RenderingData
 
-    @EnvironmentObject var orientationInfo: OrientationInfo
-
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
     // these are to access image width/height easily, and scale them proportionately
@@ -33,7 +31,7 @@ struct DualScreenViewWrapper: View {
     private let volumeButton = UIImage(named: "Volume Button")
 
     private var buttonScale: CGFloat {
-        if orientationInfo.orientation == .landscape {
+        if UIDevice.current.orientation.isLandscape{
             return 0.90
         }
 
@@ -63,22 +61,19 @@ struct DualScreenViewWrapper: View {
     }
 
     private var rectangleWidth: CGFloat {
-        switch orientationInfo.orientation {
-        case .landscape:
+        if UIDevice.current.orientation.isLandscape {
             return rectangleImage!.size.height * 1.02
-        case .portrait:
-            return rectangleImage!.size.width * 1.05
-
         }
+
+        return rectangleImage!.size.width * 1.05
     }
 
     private var rectangleHeight: CGFloat {
-        switch orientationInfo.orientation {
-        case .landscape:
+        if UIDevice.current.orientation.isLandscape {
             return rectangleImage!.size.width * 0.70
-        case .portrait:
-            return rectangleImage!.size.height * 0.9
         }
+
+        return rectangleImage!.size.height * 0.9
     }
 
     private var landscapeLeading: CGFloat {
@@ -97,7 +92,7 @@ struct DualScreenViewWrapper: View {
                     .frame(width: rectangleWidth, height: rectangleHeight )
             }
             VStack(spacing: 0) {
-                if orientationInfo.orientation == .portrait {
+                if UIDevice.current.orientation.isPortrait {
                     VStack {
                         DualScreenView(
                             gameController: $gameController,
@@ -112,7 +107,7 @@ struct DualScreenViewWrapper: View {
                         )
                     }
                     .padding(.top, padding)
-                } else if orientationInfo.orientation == .landscape {
+                } else {
                     HStack {
                         DualScreenView(
                             gameController: $gameController,

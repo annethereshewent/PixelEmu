@@ -14,7 +14,7 @@ enum SaveType {
     case gbc
 }
 
-class CloudService {
+class CloudService: @unchecked Sendable {
     private var user: GIDGoogleUser
     private var dsFolderId: String? = nil
     private var gbaFolderId: String? = nil

@@ -21,8 +21,6 @@ struct GBScreenViewWrapper: View {
     @Binding var themeColor: Color
     var renderingData: RenderingData
 
-    @EnvironmentObject var orientationInfo: OrientationInfo
-
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
     // these are to access image width/height easily, and scale them proportionately
@@ -31,7 +29,7 @@ struct GBScreenViewWrapper: View {
     private let volumeButton = UIImage(named: "Volume Button")
 
     private var buttonScale: CGFloat {
-        if orientationInfo.orientation == .landscape {
+        if UIDevice.current.orientation.isLandscape {
             return 0.90
         }
 
@@ -45,7 +43,7 @@ struct GBScreenViewWrapper: View {
     }
 
     private var padding: CGFloat {
-        if orientationInfo.orientation == .portrait {
+        if UIDevice.current.orientation.isPortrait {
             if gameController?.controller?.extendedGamepad == nil {
                 return 40.0
             }
@@ -68,7 +66,7 @@ struct GBScreenViewWrapper: View {
 
     private var rectangleWidth: CGFloat {
         let width = gameType == .gba ? GBA_SCREEN_WIDTH : GBC_SCREEN_WIDTH
-        if orientationInfo.orientation == .portrait {
+        if UIDevice.current.orientation.isPortrait {
             return gameType == .gba ? CGFloat(width) * 1.7 : CGFloat(width) * 2.2
         }
 
@@ -78,7 +76,7 @@ struct GBScreenViewWrapper: View {
     private var rectangleHeight: CGFloat {
         let height = gameType == .gba ? GBA_SCREEN_HEIGHT : GBC_SCREEN_WIDTH
 
-        if orientationInfo.orientation == .portrait {
+        if UIDevice.current.orientation.isPortrait {
             return gameType == .gba ? CGFloat(height) * 1.8 : CGFloat(height) * 1.97
         }
 

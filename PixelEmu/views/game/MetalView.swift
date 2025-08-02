@@ -47,7 +47,7 @@ struct MetalView: UIViewRepresentable {
         var renderer: Renderer?
 
         func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-            view.drawableSize = size
+            // view.drawableSize = size
         }
     }
 }

@@ -20,24 +20,19 @@ struct DualScreenView: View {
     var renderingData: RenderingData
     var renderingDataBottom: RenderingData
 
-    @EnvironmentObject var orientationInfo: OrientationInfo
-
     private var screenRatio: Float {
-        switch orientationInfo.orientation {
-        case .portrait:
+        if UIDevice.current.orientation.isPortrait {
             if gameController?.controller?.extendedGamepad == nil {
                 return SCREEN_RATIO
             }
-
             return FULLSCREEN_RATIO
-        case .landscape:
+        } else {
             if gameController?.controller?.extendedGamepad == nil {
                 return LANDSCAPE_RATIO
             }
 
             return LANDSCAPE_FULLSCREEN_RATIO
         }
-
     }
 
     private var currentHoldButtons: String {
