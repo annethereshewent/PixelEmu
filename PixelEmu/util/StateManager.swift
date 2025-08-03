@@ -300,7 +300,17 @@ class StateManager {
                 try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
             }
 
-            let gameFolder = game.gameName.replacing(".gba", with: "").replacing(".GBA", with: "")
+            let gameFolder = if game.type == .gba {
+                game.gameName.replacing(".gba", with: "").replacing(".GBA", with: "")
+            } else if game.type == .gbc {
+                if game.gameName.hasSuffix(".gbc") {
+                    game.gameName.replacing(".gbc", with: "")
+                } else {
+                    game.gameName.replacing(".gb", with: "")
+                }
+            } else {
+                throw "Invalid game type passed"
+            }
 
             url.appendPathComponent(gameFolder)
 

@@ -160,7 +160,10 @@ struct GameView: View {
                     quickSaveLoadKeyPressed = true
 
                     do {
-                        try stateManager?.loadSaveState(currentState: nil, isQuickSave: true)
+                        switch game.type {
+                        case .nds: try stateManager?.loadNdsSaveState(currentState: nil, isQuickSave: true)
+                        case .gba, .gbc: try stateManager?.loadGbSaveState(currentState: nil, isQuickSave: true)
+                        }
                     } catch {
                         print(error)
                     }
@@ -172,6 +175,7 @@ struct GameView: View {
 
                 return true
             case .QuickSave:
+
                 if pressed && !quickSaveLoadKeyPressed {
                     quickSaveLoadKeyPressed = true
 
@@ -487,6 +491,17 @@ struct GameView: View {
                     try! emulator!.setPalette(UInt(currentPalette))
                 }
             }
+
+            stateManager = StateManager(
+                emu: emulator,
+                game: game,
+                context: context,
+                biosData: gbaBiosData,
+                bios7Data: bios7Data,
+                bios9Data: bios9Data,
+                romData: romData!,
+                firmwareData: firmwareData
+            )
         }
 
         if let game = game {
@@ -646,6 +661,17 @@ struct GameView: View {
         workItem = DispatchWorkItem {
             mainGameLoop()
         }
+
+        stateManager = StateManager(
+            emu: emulator,
+            game: game,
+            context: context,
+            biosData: gbaBiosData,
+            bios7Data: bios7Data,
+            bios9Data: bios9Data,
+            romData: romData!,
+            firmwareData: firmwareData
+        )
 
         DispatchQueue.global().async(execute: workItem!)
     }

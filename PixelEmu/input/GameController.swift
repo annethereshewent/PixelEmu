@@ -69,10 +69,10 @@ class GameController {
             return
         }
 
+        gameController.physicalInputProfile.buttons[GCInputButtonHome]?.preferredSystemGestureState = GCControllerElement.SystemGestureState.disabled
+
         self.controller = gameController
 
         eventListenerClosure(gameController)
-
-        gameController.physicalInputProfile.buttons[GCInputButtonHome]?.preferredSystemGestureState = GCControllerElement.SystemGestureState.disabled
     }
 }
