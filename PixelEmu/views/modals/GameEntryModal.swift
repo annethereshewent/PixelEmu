@@ -81,7 +81,7 @@ struct GameEntryModal: View {
 
         loading = true
         Task {
-            if let save = await cloudService?.getSave(saveName: saveName, saveType: saveType), let entry = entry {
+            if let save = await cloudService?.getFile(fileName: saveName, saveType: saveType), let entry = entry {
                 BackupFile.saveCloudFile(saveName: saveName, saveFile: save)
                 let saveEntry = SaveEntry(game: entry.game)
                 if !localSaves.contains(saveEntry) {
@@ -103,7 +103,7 @@ struct GameEntryModal: View {
             if let entry = entry {
                 let saveName = replaceExtension()
                 if let saveData = BackupFile.getSave(saveName: saveName) {
-                    await self.cloudService?.uploadSave(saveName: saveName, data: saveData, saveType: saveType)
+                    await self.cloudService?.uploadFile(fileName: saveName, data: saveData, saveType: saveType)
                     loading = false
                     if cloudSaves.firstIndex(of: entry) == nil {
                         cloudSaves.insert(SaveEntry(game: entry.game), at: 0)
@@ -128,8 +128,8 @@ struct GameEntryModal: View {
                 let data = try Data(contentsOf: url)
                 loading = true
                 Task {
-                    await cloudService?.uploadSave(
-                        saveName: replaceExtension(),
+                    await cloudService?.uploadFile(
+                        fileName: replaceExtension(),
                         data: data,
                         saveType: saveType
                     )
