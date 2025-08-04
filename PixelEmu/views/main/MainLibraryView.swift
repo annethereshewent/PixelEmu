@@ -32,6 +32,8 @@ struct MainLibraryView: View {
     @Binding var themeColor: Color
     @Binding var isPaused: Bool
 
+    let callback: () -> Void
+
     var body: some View {
         VStack {
             HStack {
@@ -85,7 +87,8 @@ struct MainLibraryView: View {
                 game: $game,
                 filter: $filter,
                 themeColor: $themeColor,
-                isPaused: $isPaused
+                isPaused: $isPaused,
+                callback: callback
             )
             Spacer()
             Spacer()

@@ -62,7 +62,10 @@ struct LibraryView: View {
                     game: $gbcGame,
                     themeColor: $themeColor,
                     isPaused: $isPaused
-                )
+                ) {
+                    game = nil
+                    gbaGame = nil
+                }
                 .tag("gbc")
                 MainLibraryView(
                     gameType: .gba,
@@ -82,7 +85,10 @@ struct LibraryView: View {
                     game: $gbaGame,
                     themeColor: $themeColor,
                     isPaused: $isPaused
-                )
+                ) {
+                    game = nil
+                    gbcGame = nil
+                }
                 .tag("gba")
                 MainLibraryView(
                     gameType: .nds,
@@ -102,7 +108,10 @@ struct LibraryView: View {
                     game: $game,
                     themeColor: $themeColor,
                     isPaused: $isPaused
-                )
+                ) {
+                    gbcGame = nil
+                    gbaGame = nil
+                }
                 .tag("nds")
             }.tabViewStyle(.page)
 

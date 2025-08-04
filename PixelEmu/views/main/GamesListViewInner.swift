@@ -55,6 +55,9 @@ struct GamesListViewInner: View {
     var filteredGbcGames: [GBCGame]? = nil
     var filteredGbaGames: [GBAGame]? = nil
 
+
+    var callback: () -> Void
+
     private func updateLastPlayed() {
         switch gameType {
         case .gbc:
@@ -78,6 +81,8 @@ struct GamesListViewInner: View {
         isRunning = false
 
         workItem = nil
+
+        callback()
 
         switch gameType {
         case .nds:
@@ -185,16 +190,34 @@ struct GamesListViewInner: View {
                 }
                 .onChange(of: game?.gameName) {
                     switch gameType {
-                    case .gba: gbaGame = game as! GBAGame?
-                    case .nds: dsGame = game as! Game?
-                    case .gbc: gbcGame = game as! GBCGame?
+                    case .gba:
+                        gbaGame = game as! GBAGame?
+                        dsGame = nil
+                        gbcGame = nil
+                    case .nds:
+                        dsGame = game as! Game?
+                        gbcGame = nil
+                        gbaGame = nil
+                    case .gbc:
+                        gbcGame = game as! GBCGame?
+                        dsGame = nil
+                        gbaGame = nil
                     }
                 }
                 .onChange(of: selectedGame?.gameName) {
                     switch gameType {
-                    case .nds: selectedDsGame = selectedGame as! Game?
-                    case .gba: selectedGbaGame = selectedGame as! GBAGame?
-                    case .gbc: selectedGbcGame = selectedGame as! GBCGame?
+                    case .nds:
+                        selectedDsGame = selectedGame as! Game?
+                        selectedGbaGame = nil
+                        selectedGbcGame = nil
+                    case .gba:
+                        selectedGbaGame = selectedGame as! GBAGame?
+                        selectedDsGame = nil
+                        selectedGbcGame = nil
+                    case .gbc:
+                        selectedGbcGame = selectedGame as! GBCGame?
+                        selectedDsGame = nil
+                        selectedGbaGame = nil
                     }
                 }
                 .onChange(of: gameToDelete?.gameName) {
@@ -212,9 +235,18 @@ struct GamesListViewInner: View {
                 }
                 .onAppear() {
                     switch gameType {
-                    case .nds: dsGame = game as! Game?
-                    case .gba: gbaGame = game as! GBAGame?
-                    case .gbc: gbcGame = game as! GBCGame?
+                    case .nds:
+                        dsGame = game as! Game?
+                        gbaGame = nil
+                        gbcGame = nil
+                    case .gba:
+                        gbaGame = game as! GBAGame?
+                        gbcGame = nil
+                        dsGame = nil
+                    case .gbc:
+                        gbcGame = game as! GBCGame?
+                        gbaGame = nil
+                        dsGame = nil
                     }
 
                     filteredGamesClosure = { game in

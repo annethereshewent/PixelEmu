@@ -30,6 +30,8 @@ struct GamesListView: View {
     @Binding var themeColor: Color
     @Binding var isPaused: Bool
 
+    var callback: () -> Void
+
     @Query private var games: [Game]
     @Query private var gbaGames: [GBAGame]
     @Query private var gbcGames: [GBCGame]
@@ -83,7 +85,8 @@ struct GamesListView: View {
                 isRunning: $isRunning,
                 path: $path,
                 isPaused: $isPaused,
-                filteredGames: filteredGames as! [Game]?
+                filteredGames: filteredGames as! [Game]?,
+                callback: callback
             )
         case .gba:
             GamesListViewInner(
@@ -102,7 +105,8 @@ struct GamesListView: View {
                 isRunning: $isRunning,
                 path: $path,
                 isPaused: $isPaused,
-                filteredGbaGames: filteredGames as! [GBAGame]?
+                filteredGbaGames: filteredGames as! [GBAGame]?,
+                callback: callback
             )
         case .gbc:
             GamesListViewInner(
@@ -121,7 +125,8 @@ struct GamesListView: View {
                 isRunning: $isRunning,
                 path: $path,
                 isPaused: $isPaused,
-                filteredGbcGames: filteredGames as! [GBCGame]?
+                filteredGbcGames: filteredGames as! [GBCGame]?,
+                callback: callback
             )
         }
     }
