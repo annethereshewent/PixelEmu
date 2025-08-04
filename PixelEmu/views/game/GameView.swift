@@ -539,7 +539,7 @@ struct GameView: View {
             }
 
             if game.type == .gbc && emulator!.hasRtc() {
-                Timer.scheduledTimer(withTimeInterval: 60 * 5, repeats: true) { _ in
+                Timer.scheduledTimer(withTimeInterval: 60 * 30, repeats: true) { _ in
                     Task {
                         await updateRtc()
                     }
