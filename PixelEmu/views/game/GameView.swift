@@ -657,6 +657,7 @@ struct GameView: View {
                         renderingData.framebuffer = arrCopy
                     case .gbc:
                         if emu.isRtcDirty() {
+                            try! emu.clearRtcDirty()
                             Task {
                                 await updateRtc()
                             }
