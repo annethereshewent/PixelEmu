@@ -62,7 +62,7 @@ class DSEmulatorWrapper: EmulatorWrapper {
     }
 
     func hasRtc() -> Bool {
-        false
+        return false
     }
 
     func fetchRtc() throws -> String {
@@ -86,7 +86,7 @@ class DSEmulatorWrapper: EmulatorWrapper {
     }
 
     func hasSamples() -> Bool {
-        false
+        return false
     }
 
     func popSample() throws -> Float {
@@ -233,7 +233,7 @@ class GBAEmulatorWrapper: EmulatorWrapper {
     }
 
     func hasRtc() -> Bool {
-        false
+        return false
     }
 
 
@@ -255,7 +255,7 @@ class GBAEmulatorWrapper: EmulatorWrapper {
 
 
     func hasSamples() -> Bool {
-        false
+        return false
     }
 
     func popSample() throws -> Float {
