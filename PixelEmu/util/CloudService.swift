@@ -257,13 +257,13 @@ class CloudService {
         return nil
     }
 
-    func getSave(saveName: String, saveType: SaveType) async -> Data? {
+    func getFile(fileName: String, saveType: SaveType) async -> Data? {
         if let folderId = switch saveType {
         case .gba: await self.checkForGbaFolder()
         case .nds: await self.checkForDsFolder()
         case .gbc: await self.checkForGbcFolder()
         } {
-            if let driveResponse = await self.getSaveInfo(saveName, folderId) {
+            if let driveResponse = await self.getSaveInfo(fileName, folderId) {
                 if driveResponse.files.count > 0 {
                     let fileId = driveResponse.files[0].id
 
@@ -308,13 +308,13 @@ class CloudService {
         return false
     }
 
-    func uploadSave(saveName: String, data: Data, saveType: SaveType) async {
+    func uploadFile(fileName: String, data: Data, saveType: SaveType) async {
         if let folderId = switch saveType {
         case .gba: await self.checkForGbaFolder()
         case .nds: await self.checkForDsFolder()
         case .gbc: await self.checkForGbcFolder()
         } {
-            if let driveResponse = await self.getSaveInfo(saveName, folderId) {
+            if let driveResponse = await self.getSaveInfo(fileName, folderId) {
                 var headers = [String:String]()
 
                 headers["Content-Type"] = "application/octet-stream"
@@ -367,7 +367,7 @@ class CloudService {
 
                         request.httpMethod = "PATCH"
 
-                        request.httpBody = try JSONEncoder().encode(FileJSON(name: saveName, mimeType: "application/octet-stream"))
+                        request.httpBody = try JSONEncoder().encode(FileJSON(name: fileName, mimeType: "application/octet-stream"))
 
                         let _ = await self.cloudRequest(request: request)
                     } catch {

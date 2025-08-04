@@ -47,6 +47,11 @@ protocol EmulatorWrapper {
     func popSample() throws -> Float
     func setPausedAudio(_ value: Bool)
     func setPalette(_ value: UInt) throws
+    func loadRtc(_ json: String) throws
+    func fetchRtc() throws -> String
+    func isRtcDirty() -> Bool
+    func clearRtcDirty() throws
+    func hasRtc() -> Bool
 }
 
 class DSEmulatorWrapper: EmulatorWrapper {
@@ -56,12 +61,32 @@ class DSEmulatorWrapper: EmulatorWrapper {
         self.emu = emu
     }
 
+    func hasRtc() -> Bool {
+        return false
+    }
+
+    func fetchRtc() throws -> String {
+        throw "not implemented"
+    }
+
+    func loadRtc(_ json: String) throws {
+        throw "not implemented"
+    }
+
+    func isRtcDirty() -> Bool {
+        return false
+    }
+
+    func clearRtcDirty() throws {
+        throw "not implemented"
+    }
+
     func setPalette(_ value: UInt) throws {
         throw "not implemented"
     }
 
     func hasSamples() -> Bool {
-        false
+        return false
     }
 
     func popSample() throws -> Float {
@@ -203,13 +228,34 @@ class GBAEmulatorWrapper: EmulatorWrapper {
         self.emu = emu
     }
 
+    func fetchRtc() throws -> String {
+        throw "not implemented"
+    }
+
+    func hasRtc() -> Bool {
+        return false
+    }
+
+
+    func loadRtc(_ json: String) throws {
+        throw "not implemented"
+    }
+
+    func isRtcDirty() -> Bool {
+        return false
+    }
+
+    func clearRtcDirty() throws {
+        throw "not implemented"
+    }
+
     func setPalette(_ value: UInt) throws {
         throw "not implemented"
     }
 
 
     func hasSamples() -> Bool {
-        false
+        return false
     }
 
     func popSample() throws -> Float {
@@ -355,6 +401,26 @@ class GBCEmulatorWrapper : EmulatorWrapper {
         emu.setPalette(value)
     }
 
+    func hasRtc() -> Bool {
+        return emu.hasRtc()
+    }
+
+
+    func fetchRtc() throws -> String {
+        return emu.fetchRtc().toString()
+    }
+
+    func loadRtc(_ json: String) throws {
+        emu.loadRtc(json)
+    }
+
+    func isRtcDirty() -> Bool {
+        return emu.isRtcDirty()
+    }
+
+    func clearRtcDirty() throws {
+        emu.clearRtcDirty()
+    }
 
     func hasSamples() -> Bool {
        return self.emu.hasSamples()

@@ -131,7 +131,6 @@ struct GameView: View {
 
                     Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { _ in
                         homePressed = false
-
                     }
                 }
                 return true
@@ -226,7 +225,7 @@ struct GameView: View {
                         case .gbc: saveType = .gbc
                         case .gba: saveType = .gba
                     }
-                    self.saveGame(saveType: saveType)
+                    saveGame(saveType: saveType)
                 }
             }
         }
@@ -244,8 +243,8 @@ struct GameView: View {
                     let data = Data(buffer)
 
                     Task {
-                        await cloudService.uploadSave(
-                            saveName: BackupFile.getSaveName(gameUrl: url),
+                        await cloudService.uploadFile(
+                            fileName: BackupFile.getSaveName(gameUrl: url),
                             data: data,
                             saveType: saveType
                         )
@@ -379,7 +378,7 @@ struct GameView: View {
                 if user != nil {
                     if let url = gameUrl {
                         loading = true
-                        if let saveData = await self.cloudService!.getSave(saveName: BackupFile.getSaveName(gameUrl: url), saveType: .nds) {
+                        if let saveData = await self.cloudService!.getFile(fileName: BackupFile.getSaveName(gameUrl: url), saveType: .nds) {
                             let ptr = BackupFile.getPointer(saveData)
                             try! emulator?.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
                         } else {
@@ -407,7 +406,7 @@ struct GameView: View {
     private func loadGbSave(saveType: SaveType) async {
         if let emu = emulator, let gameUrl = gameUrl {
             loading = true
-            if let saveData = await self.cloudService?.getSave(saveName: BackupFile.getSaveName(gameUrl: gameUrl), saveType: saveType) {
+            if let saveData = await self.cloudService?.getFile(fileName: BackupFile.getSaveName(gameUrl: gameUrl), saveType: saveType) {
                 let ptr = BackupFile.getPointer(saveData)
                 try! emu.loadSave(ptr)
             } else {
@@ -418,6 +417,17 @@ struct GameView: View {
                 }
             }
             loading = false
+        }
+    }
+
+    private func updateRtc() async {
+        if let cloudService = cloudService, let emu = emulator {
+            let json = try! emu.fetchRtc()
+            await cloudService.uploadFile(fileName: GBBackupFile.getRtcName(gameUrl: gameUrl!), data: json.data(using: .utf8)!, saveType: .gbc)
+        } else {
+            if let gbBackupFile = gbBackupFile {
+                gbBackupFile.saveRtc(try! emulator!.fetchRtc())
+            }
         }
     }
 
@@ -508,7 +518,11 @@ struct GameView: View {
             switch game.type {
             case .nds: await loadNdsSave(game as! Game)
             case .gba: await loadGbSave(saveType: .gba)
-            case .gbc: await loadGbSave(saveType: .gbc)
+            case .gbc:
+                await loadGbSave(saveType: .gbc)
+                if emulator!.hasRtc() {
+                    await loadRtc()
+                }
             }
             isRunning = true
 
@@ -524,6 +538,14 @@ struct GameView: View {
                 audioManager?.muteAudio()
             }
 
+            if emulator!.hasRtc() {
+                Timer.scheduledTimer(withTimeInterval: 60 * 30, repeats: true) { _ in
+                    Task {
+                        await updateRtc()
+                    }
+                }
+            }
+
             workItem = DispatchWorkItem {
                 mainGameLoop()
             }
@@ -532,6 +554,39 @@ struct GameView: View {
             isPaused = false
 
             DispatchQueue.global().async(execute: workItem!)
+        }
+    }
+
+    private func loadRtc() async {
+        if let cloudService = cloudService {
+            if let data = await cloudService.getFile(fileName: GBBackupFile.getRtcName(gameUrl: gameUrl!), saveType: .gbc) {
+                if let json = String(data: data, encoding: .utf8) {
+                    try! emulator!.loadRtc(json)
+                }
+            } else {
+                let json = try! emulator!.fetchRtc()
+
+                await cloudService.uploadFile(
+                    fileName: GBBackupFile.getRtcName(gameUrl: gameUrl!),
+                    data: json.data(using: .utf8)!,
+                    saveType: .gbc
+                )
+            }
+        } else {
+            if let ptr = gbBackupFile!.loadRtcFile() {
+                if ptr.count > 0 {
+                    let data = Data(ptr)
+
+                    if let json = String(data: data, encoding: .utf8) {
+                        try! emulator!.loadRtc(json)
+                    }
+                } else {
+                    // create the file from scratch
+                    let json = try! emulator!.fetchRtc()
+
+                    gbBackupFile!.saveRtc(json)
+                }
+            }
         }
     }
 
@@ -601,6 +656,13 @@ struct GameView: View {
 
                         renderingData.framebuffer = arrCopy
                     case .gbc:
+                        if emu.isRtcDirty() {
+                            try! emu.clearRtcDirty()
+                            Task {
+                                await updateRtc()
+                            }
+                        }
+
                         let ptr = try! emu.getPicturePtr()
 
                         let arr = Array(UnsafeBufferPointer(start: ptr, count: GBC_SCREEN_WIDTH * GBC_SCREEN_HEIGHT * 4))
@@ -615,7 +677,7 @@ struct GameView: View {
                         renderingData.framebuffer = arrCopy
                     }
 
-                    self.checkSaves()
+                    checkSaves()
                 }
 
                 if !isRunning || isPaused {
@@ -830,7 +892,7 @@ struct GameView: View {
                     gameController = GameController() { controller in
                         addControllerEventListeners(controller)
                     }
-                    await self.run()
+                    await run()
                 } else {
                    resumeGame()
                 }
