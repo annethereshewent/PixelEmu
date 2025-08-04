@@ -538,7 +538,7 @@ struct GameView: View {
                 audioManager?.muteAudio()
             }
 
-            if game.type == .gbc && emulator!.hasRtc() {
+            if emulator!.hasRtc() {
                 Timer.scheduledTimer(withTimeInterval: 60 * 30, repeats: true) { _ in
                     Task {
                         await updateRtc()
