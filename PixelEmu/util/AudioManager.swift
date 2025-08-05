@@ -8,6 +8,10 @@
 import Foundation
 import AVFoundation
 
+let FRAME_LENGTH = 8192
+let NUM_SAMPLES = FRAME_LENGTH * 2
+
+
 class AudioManager {
     private let audioEngine = AVAudioEngine()
     let audioNode = AVAudioPlayerNode()
@@ -48,10 +52,6 @@ class AudioManager {
             try self.audioEngine.start()
 
             self.audioNode.play()
-
-            DispatchQueue.global().async {
-                self.playAudio()
-            }
         } catch {
             print(error)
         }
@@ -102,10 +102,6 @@ class AudioManager {
             try self.audioEngine.start()
 
             self.audioNode.play()
-
-            DispatchQueue.global().async {
-                self.playAudio()
-            }
         } catch {
             print(error)
         }
@@ -148,17 +144,23 @@ class AudioManager {
     func updateBuffer(samples: [Float]) {
         if audioNode.isPlaying {
             nslock.lock()
+
             buffer.append(contentsOf: samples)
+
+            // note: this is incredibly hacky and not the
+            // "correct" way to do this, but i couldn't
+            // find any other way to minimize the number
+            // of pops from the gameboy emulator otherwise.
+            // TODO: find a way to get it to work correctly
+            if buffer.count >= NUM_SAMPLES {
+                DispatchQueue.global().async {
+                    if let outputBuffer = self.playAudio() {
+                        self.audioNode.scheduleBuffer(outputBuffer) { [weak self, weak node = self.audioNode] in  /* do nothing */ }
+                    }
+                }
+            }
             nslock.unlock()
         }
-    }
-
-    func popSamples(emu: EmulatorWrapper) {
-        nslock.lock()
-        while emu.hasSamples() {
-            try! buffer.append(emu.popSample())
-        }
-        nslock.unlock()
     }
 
     func toggleAudio() {
@@ -183,8 +185,8 @@ class AudioManager {
         }
     }
 
-    private func playAudio() {
-        if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.audioFormat!, frameCapacity: AVAudioFrameCount(4096 * 2)) {
+    private func playAudio() -> AVAudioPCMBuffer? {
+        if let outputBuffer = AVAudioPCMBuffer(pcmFormat: self.audioFormat!, frameCapacity: AVAudioFrameCount(NUM_SAMPLES)) {
             // we just need one inputBuffer
             if let floatBuffer = outputBuffer.floatChannelData {
                 var isEven = true
@@ -193,7 +195,8 @@ class AudioManager {
                 var rightIndex = 0
 
                 nslock.lock()
-                while buffer.count > 0 {
+                let sampleCount = min(buffer.count, NUM_SAMPLES)
+                for _ in 0..<sampleCount {
                     let sample = buffer.removeFirst()
                     if isEven {
                         floatBuffer[0][leftIndex] = sample
@@ -206,19 +209,13 @@ class AudioManager {
                 }
                 nslock.unlock()
 
-                let frameLength = AVAudioFrameCount(4096)
+                let frameLength = AVAudioFrameCount(FRAME_LENGTH)
                 outputBuffer.frameLength = frameLength
             }
 
-            self.audioNode.scheduleBuffer(outputBuffer) { [weak self, weak node = self.audioNode] in
-                if node?.isPlaying == true {
-                    if let self = self {
-                        DispatchQueue.global().async {
-                            self.playAudio()
-                        }
-                    }
-                }
-            }
+            return outputBuffer
         }
+
+        return nil
     }
 }

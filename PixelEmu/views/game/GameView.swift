@@ -385,6 +385,7 @@ struct GameView: View {
                             let ptr = BackupFile.getPointer(Data())
                             try! emulator?.setBackup(entries[0].saveType, entries[0].ramCapacity, ptr)
                         }
+
                         loading = false
                     }
                 } else {
@@ -416,7 +417,9 @@ struct GameView: View {
                     try! emu.loadSave(ptr)
                 }
             }
-            loading = false
+            if !emu.hasRtc() {
+                loading = false
+            }
         }
     }
 
@@ -521,7 +524,9 @@ struct GameView: View {
             case .gbc:
                 await loadGbSave(saveType: .gbc)
                 if emulator!.hasRtc() {
+                    loading = true
                     await loadRtc()
+                    loading = false
                 }
             }
             isRunning = true
