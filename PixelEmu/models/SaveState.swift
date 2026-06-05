@@ -13,7 +13,7 @@ class SaveState : Snapshottable {
     var saveName: String
     var screenshot: Data
     var bookmark: Data
-    @Attribute(.unique)
+
     var game: Game?
 
     @Transient

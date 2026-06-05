@@ -13,7 +13,6 @@ class GBCSaveState : Snapshottable {
     var saveName: String
     var screenshot: Data
     var bookmark: Data
-    @Attribute(.unique)
     var gbcGame: GBCGame?
 
     @Transient

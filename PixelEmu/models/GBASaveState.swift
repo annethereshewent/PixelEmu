@@ -13,7 +13,6 @@ class GBASaveState : Snapshottable {
     var saveName: String
     var screenshot: Data
     var bookmark: Data
-    @Attribute(.unique)
     var gbaGame: GBAGame?
 
     @Transient

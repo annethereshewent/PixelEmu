@@ -173,10 +173,6 @@ class StateManager {
         }
     }
 
-    func saveGbcGame(_ game: Game) {
-
-    }
-
     func getCurrentDateString() -> String {
         let date = Date()
         let calendar = Calendar.current
