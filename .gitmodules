@@ -1,9 +1,9 @@
 [submodule "external/nds-plus-emulator"]
 	path = external/nds-plus-emulator
 	url = git@github.com:annethereshewent/nds-plus.git
-[submodule "gba-plus"]
-	path = gba-plus
-	url = git@github.com:annethereshewent/gba-plus.git
-[submodule "gbc-plus"]
-	path = gbc-plus
+[submodule "external/gbc-plus"]
+	path = external/gbc-plus
 	url = git@github.com:annethereshewent/gbc-plus.git
+[submodule "external/gba-plus"]
+	path = external/gba-plus
+	url = git@github.com:annethereshewent/gba-plus.git
